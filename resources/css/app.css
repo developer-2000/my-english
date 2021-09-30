@@ -1,0 +1,37 @@
+html, body {
+    background-color: #fff;
+    color: black;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 200;
+    font-size: 15px;
+    height: 100vh;
+    margin: 0;
+}
+#app{
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+    cursor: default;
+}
+body {overflow: hidden;}
+.container{
+    width: 100%;
+    max-width: 100%;
+}
+.links > a {
+    color: #636b6f;
+    padding: 0 25px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+h1, h2, h3, h4, h5{
+    font-weight: 700;
+}
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
