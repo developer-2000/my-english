@@ -4,7 +4,7 @@ namespace App\Http\Requests\Word;
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
 
-class CreateWordRequest extends ApiFormRequest
+class DeleteWordRequest extends ApiFormRequest
 {
 
     /**
@@ -20,14 +20,10 @@ class CreateWordRequest extends ApiFormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
-     * правила проверки
      */
     public function rules() {
         return [
-            'word' => 'required|string|min:1|unique:words,word',
-            'translation' => 'required|string|min:1',
-            'description' => 'nullable|string',
-            'type' => 'required|integer',
+            'id' => 'required|integer|exists:words,id',
         ];
     }
 

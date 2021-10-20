@@ -10,13 +10,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+// 1
 Route::resource('word', WordController::class)->only([
     'index','store','update'
 ]);
+Route::post('word/delete-word', [WordController::class, 'deleteWord']);
+
+// 2
 Route::resource('sentence', SentenceController::class)->only([
     'index','store','update'
 ]);
+Route::get('sentence/search-word', [SentenceController::class, 'searchWord']);
+
+// 3
 Route::resource('type', TypeController::class)->only([
     'store','update'
 ]);

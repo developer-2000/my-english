@@ -227,4 +227,25 @@ table.sentence .but_td > span a {
   margin-bottom: 0px !important;
 }
 
+.vgt-global-search__input.vgt-pull-left span.sr-only {
+  position: absolute !important;
+  left: 37px !important;
+  width: 35px !important;
+  height: 30px !important;
+  top: 2px !important;
+  opacity: 1 !important;
+  display: none;
+  clip: auto !important;
+  clip-path: border-box;
+  background: white;
+  border: 1px solid #ffc4c4;
+}
+.vgt-global-search__input.vgt-pull-left span.sr-only span {
+  font-size: 22px;
+  line-height: 28px;
+  padding-left: 9px;
+  color: #f00;
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=app.css.map */

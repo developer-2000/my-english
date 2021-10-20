@@ -180,12 +180,14 @@
                             <!-- new word -->
                             <div class="form-group">
                                 <label for="new_word" class="col-form-label">New word</label>
-                                <input type="text" class="form-control" placeholder="Insert new word" id="new_word"
+                                <input type="text" class="form-control entry-field-help" placeholder="Insert new word" id="new_word"
                                     v-model="new_word"
                                     @blur="touchNewWord()"
+                                    @keyup="searchHelpWord"
                                     :class="{'is-invalid': $v.new_word.$error}"
                                     required
                                 >
+                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_word.required">The field is empty!</div>
                                 <div class="invalid-feedback" v-if="(!$v.new_word.minLength)">Number of characters {{ this.new_word.length }} less needed</div>
                             </div>
@@ -253,12 +255,14 @@
                             <!-- word -->
                             <div class="form-group">
                                 <label for="old_word" class="col-form-label">Update word</label>
-                                <input type="text" class="form-control" placeholder="Insert word" id="old_word"
+                                <input type="text" class="form-control entry-field-help" placeholder="Insert word" id="old_word"
                                        v-model="new_word"
                                        @blur="touchNewWord()"
+                                       @keyup="searchHelpWord"
                                        :class="{'is-invalid': $v.new_word.$error}"
                                        required
                                 >
+                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_word.required">The field is empty!</div>
                                 <div class="invalid-feedback" v-if="(!$v.new_word.minLength)">Number of characters {{ this.new_word.length }} less needed</div>
                             </div>
@@ -325,7 +329,11 @@
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
     // mixins
+    import good_table_mixin from "../../mixins/good_table_mixin";
     import response_methods_mixin from "../../mixins/response_methods_mixin";
+    import help_search_word_mixin from "../../mixins/help_search_word_mixin";
+
+    import helpSearchWord from "../details/HelpSearchWord";
 
     export default {
         data() {
@@ -365,9 +373,10 @@
                             field: (val) => {
                                 return '' +
                                     '<div class="trigger">'+val.word1+'</div>' +
-                                    '<a class="btn btn-warning btn_word" role="button">\<n></n>' +
-                                    '   <span class="fa fa-edit"></span>\n' +
-                                    '</a>';
+                                    '<div class="btn_block_column">' +
+                                    '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' +
+                                    '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' +
+                                    '</div>';
                             }
                         },
                         {
@@ -379,9 +388,10 @@
                             field: (val) => {
                                 return '' +
                                     '<div class="trigger">'+val.word2+'</div>' +
-                                    '<a class="btn btn-warning btn_word" role="button">\<n></n>' +
-                                    '   <span class="fa fa-edit"></span>\n' +
-                                    '</a>';
+                                    '<div class="btn_block_column">' +
+                                    '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' +
+                                    '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' +
+                                    '</div>';
                             }
                         },
                         {
@@ -393,9 +403,10 @@
                             field: (val) => {
                                 return '' +
                                     '<div class="trigger">'+val.word3+'</div>' +
-                                    '<a class="btn btn-warning btn_word" role="button">\<n></n>' +
-                                    '   <span class="fa fa-edit"></span>\n' +
-                                    '</a>';
+                                    '<div class="btn_block_column">' +
+                                    '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' +
+                                    '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' +
+                                    '</div>';
                             }
                         },
                         {
@@ -407,9 +418,10 @@
                             field: (val) => {
                                 return '' +
                                     '<div class="trigger">'+val.word4+'</div>' +
-                                    '<a class="btn btn-warning btn_word" role="button">\<n></n>' +
-                                    '   <span class="fa fa-edit"></span>\n' +
-                                    '</a>';
+                                    '<div class="btn_block_column">' +
+                                    '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' +
+                                    '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' +
+                                    '</div>';
                             }
                         },
                         {
@@ -421,9 +433,10 @@
                             field: (val) => {
                                 return '' +
                                     '<div class="trigger">'+val.word5+'</div>' +
-                                    '<a class="btn btn-warning btn_word" role="button">\<n></n>' +
-                                    '   <span class="fa fa-edit"></span>\n' +
-                                    '</a>';
+                                    '<div class="btn_block_column">' +
+                                    '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' +
+                                    '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' +
+                                    '</div>';
                             }
                         },
                     ],
@@ -456,10 +469,10 @@
         },
         mixins: [
             response_methods_mixin,
+            good_table_mixin,
+            help_search_word_mixin
         ],
-        components: {
-            VueGoodTable,
-        },
+        components: { VueGoodTable, helpSearchWord },
         methods: {
             touchNewWord() {
                 this.$v.new_word.$touch();
@@ -498,16 +511,17 @@
                 this.showStyleDataOnSelectType();
                 this.updateColumnTable();
                 this.initialClickButWordUpdate();
+                this.makeButtonClearSearch();
             },
             async createWord() {
+                let data = {
+                    word: this.new_word,
+                    translation: this.translation_word,
+                    description: this.description,
+                    type: this.select_type,
+                };
                 try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}word`, {
-                        word: this.new_word,
-                        translation: this.translation_word,
-                        description: this.description,
-                        type: this.select_type,
-                    });
-
+                    const response = await this.$http.post(`${this.$http.apiUrl()}word`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#create_word').modal('hide');
@@ -538,12 +552,26 @@
                     console.log(e);
                 }
             },
+            async deleteWord(word_id) {
+                let data = { id: word_id };
+                try {
+                    this.confirmMessage('message', 'success');
+                    const response = await this.$http.post(`${this.$http.apiUrl()}word/delete-word`, data);
+                    if(this.checkSuccess(response)){
+                        this.$swal.close()
+                        this.initialData();
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
             async loadWordsAndTypes() {
                 try {
                     this.isLoading = true;
                     const response = await this.$http.get(
 `${this.$http.apiUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
                     );
+
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
                         this.makeObjectDataForTable(response.data.data.list);
@@ -630,33 +658,12 @@
                 this.table.rows.push(row);
             },
             // methods table
-            onSearch(search) {
-                this.updateParams({search: search.searchTerm});
-                this.initialData();
-            },
-            onPageChange(params) {
-                this.updateParams({page: params.currentPage});
-                this.initialData();
-            },
-            onPerPageChange(params) {
-                this.updateParams({page: 0, perPage: params.currentPerPage});
-                this.initialData();
-            },
-            onSortChange(params) {
-                this.updateParams({page: 0, sort: params});
-
-                // console.log(this.serverParams)
-                this.initialData();
-            },
-            updateParams(newProps) {
-                this.serverParams = Object.assign({}, this.serverParams, newProps);
-            },
             updateColumnTable(){
                 let timerId = setTimeout(() => {
                     let row = '';
                     let prev = '';
 
-                    document.querySelectorAll("#vgt-table td span a").forEach((tag) => {
+                    document.querySelectorAll("#vgt-table .btn_block_column").forEach((tag) => {
                         prev = $(tag).prev();
                         // нет слова в столбце
                         if(prev.text() == ''){
@@ -753,14 +760,22 @@ ${row.description == null ? '' : row.description.toLowerCase()}
             },
             initialClickButWordUpdate(){
                 let a = setTimeout(() => {
-                    $('.btn_word').bind('click', (e) => {
+                    $('.btn-danger').bind('click', (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
-                        let word = queryObj.prev(".trigger").text();
+                        let word = queryObj.parent().prev(".trigger").text();
+                        let row = this.getRowForWord(word);
+                        // confirm delete
+                        this.confirmMessage('Really delete word ?', 'success', row.id)
+                    });
+
+                    $('.btn-warning').bind('click', (e) => {
+                        let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
+                        let word = queryObj.parent().prev(".trigger").text();
                         let row = this.getRowForWord(word);
                         this.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description);
                         this.setStyleDataModal(row.type);
                         $('#update_word').modal('show');
-                    })
+                    });
                 }, 1000);
             },
             openModalCreateWord(){
@@ -802,11 +817,15 @@ ${row.description == null ? '' : row.description.toLowerCase()}
         mounted() {
             this.initialData();
 
-            $('#collapseExample1').collapse('hide');
-            $('#collapseExample2').collapse('hide');
+            $(".modal").on("hidden.bs.modal", () => {
+                this.help_dynamic = "";
+            })
+            // $('#collapseExample1').collapse('hide');
+            // $('#collapseExample2').collapse('hide');
         },
         beforeDestroy: function () {
-            $('.btn_word').unbind('click');
+            $('.btn-warning').unbind('click');
+            $('.btn-danger').unbind('click');
         },
         validations: {
             new_word: {
@@ -867,4 +886,5 @@ ${row.description == null ? '' : row.description.toLowerCase()}
     #collapse_select_new {
         padding: 0px;
     }
+
 </style>

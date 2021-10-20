@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Word\CreateSentenceRequest;
 use App\Http\Requests\Word\CreateWordRequest;
+use App\Http\Requests\Word\SearchWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateSentenceRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
@@ -42,4 +43,13 @@ class SentenceController extends Controller
         return new ApiResponse(compact('coll'));
     }
 
+    public function searchWord(SearchWordRequest $request) {
+        $coll = Word::where('word', 'like', $request['word'] . '%')
+            ->get()
+            ->pluck('word');
+
+        $string = implode(" ", $coll->toArray());
+
+        return new ApiResponse(compact('string'));
+    }
 }

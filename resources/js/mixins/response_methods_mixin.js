@@ -31,6 +31,21 @@ export default {
                 title: msg
             })
         },
+        confirmMessage(msg = '', icon, id) {
+            this.$swal({
+                title: '',
+                text: msg,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteWord(id);
+                }
+            })
+        },
     },
     props: [ ],
     mounted() { }

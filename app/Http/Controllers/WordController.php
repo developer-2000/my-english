@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Word\CreateWordRequest;
+use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
@@ -36,5 +37,12 @@ class WordController extends Controller
             ->update(Arr::except($request->validated(),'id'));
 
         return new ApiResponse(compact('coll'));
+    }
+
+    public function deleteWord(DeleteWordRequest $request) {
+        Word::where('id',$request->id)
+            ->delete();
+
+        return new ApiResponse([]);
     }
 }

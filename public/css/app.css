@@ -107,6 +107,7 @@ table.sentence .text_td > span {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  line-height: 18px;
 }
 table.sentence .but_td > span a {
   height: 42px;
@@ -215,6 +216,15 @@ table.sentence .but_td > span a {
   border-color: #f9db84;
 }
 
+.btn-danger {
+  background-color: #fb8a95;
+  border-color: #fb8a95;
+}
+.btn-danger:hover {
+  background-color: #ff5465;
+  border-color: #ff5465;
+}
+
 #select_type {
   padding: 0px;
 }
@@ -225,6 +235,35 @@ table.sentence .but_td > span a {
 .block_table {
   margin-top: 12px;
   margin-bottom: 0px !important;
+}
+
+.table_wrapper .btn_block_column {
+  display: flex;
+}
+.table_wrapper .btn_block_column .btn-danger {
+  margin-right: 10px;
+}
+
+.vgt-global-search__input.vgt-pull-left span.sr-only {
+  position: absolute !important;
+  left: 37px !important;
+  width: 35px !important;
+  height: 30px !important;
+  top: 2px !important;
+  opacity: 1 !important;
+  display: none;
+  clip: auto !important;
+  -webkit-clip-path: border-box;
+          clip-path: border-box;
+  background: white;
+  border: 1px solid #ffc4c4;
+}
+.vgt-global-search__input.vgt-pull-left span.sr-only span {
+  font-size: 22px;
+  line-height: 28px;
+  padding-left: 9px;
+  color: #f00;
+  cursor: pointer;
 }
 html, body {
     background-color: #fff;

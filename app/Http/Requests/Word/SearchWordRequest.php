@@ -4,10 +4,9 @@ namespace App\Http\Requests\Word;
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
 
-class CreateWordRequest extends ApiFormRequest
-{
+class SearchWordRequest extends ApiFormRequest {
 
-    /**
+        /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -24,10 +23,7 @@ class CreateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'word' => 'required|string|min:1|unique:words,word',
-            'translation' => 'required|string|min:1',
-            'description' => 'nullable|string',
-            'type' => 'required|integer',
+            'word' => 'required|string',
         ];
     }
 

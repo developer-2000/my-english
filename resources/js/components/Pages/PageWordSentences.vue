@@ -1,7 +1,7 @@
 <template>
     <div id="page_list_worlds">
 
-        <!-- 0 Wrapper -->
+        <!-- body -->
         <div class="wrapper">
             <!-- верхнее меню -->
             <div class="card card-primary card-outline top_menu">
@@ -57,10 +57,11 @@
 
             </div>
         </div>
-        <!-- / Wrapper -->
+        <!-- / body -->
 
         <!-- Modals -->
-        <div class="modal fade" id="create_sentence" tabindex="-1" role="dialog" aria-labelledby="create_sentence" aria-hidden="true">
+        <div class="modal fade" id="create_sentence" tabindex="-1" role="dialog" aria-labelledby="create_sentence"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -74,13 +75,14 @@
                             <!-- new sentence -->
                             <div class="form-group">
                                 <label for="new_sentence" class="col-form-label">New sentence</label>
-<!--                                @keyup="checkLetter"-->
-                                <textarea class="form-control" placeholder="Insert new sentence" id="new_sentence"
+                                <textarea class="form-control entry-field-help" placeholder="Insert new sentence" id="new_sentence"
                                           v-model="new_sentence"
                                           @blur="touchNewSentence()"
+                                          @keyup="searchHelpWord"
                                           :class="{'is-invalid': $v.new_sentence.$error}"
                                           required
                                 ></textarea>
+                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
                                 <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters {{ this.new_sentence.length }} less needed</div>
                             </div>
@@ -112,7 +114,8 @@
             </div>
         </div>
         <!-- 2 -->
-        <div class="modal fade" id="update_sentence" tabindex="-1" role="dialog" aria-labelledby="update_sentence" aria-hidden="true">
+        <div class="modal fade" id="update_sentence" tabindex="-1" role="dialog" aria-labelledby="update_sentence"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -126,12 +129,14 @@
                             <!-- sentence -->
                             <div class="form-group">
                                 <label for="old_sentence" class="col-form-label">Sentence</label>
-                                <textarea class="form-control" placeholder="Insert new sentence" id="old_sentence"
+                                <textarea class="form-control entry-field-help" placeholder="Insert new sentence" id="old_sentence"
                                           v-model="new_sentence"
                                           @blur="touchNewSentence()"
+                                          @keyup="searchHelpWord"
                                           :class="{'is-invalid': $v.new_sentence.$error}"
                                           required
                                 ></textarea>
+                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
                                 <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters {{ this.new_sentence.length }} less needed</div>
                             </div>
@@ -173,7 +178,11 @@
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
     // mixins
+    import good_table_mixin from "../../mixins/good_table_mixin";
     import response_methods_mixin from "../../mixins/response_methods_mixin";
+    import help_search_word_mixin from "../../mixins/help_search_word_mixin";
+
+    import helpSearchWord from "../details/HelpSearchWord";
 
     export default {
         data() {
@@ -257,17 +266,16 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     cycle: 0,
                     arrEng: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
                     arrRu: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я'],
-                    // changeLetter: {ш:'i'},
                     changeLetter: [ ['ш', 'i'], ],
                 },
             };
         },
         mixins: [
             response_methods_mixin,
+            good_table_mixin,
+            help_search_word_mixin
         ],
-        components: {
-            VueGoodTable,
-        },
+        components: { VueGoodTable, helpSearchWord },
         methods: {
             touchNewSentence() {
                 this.$v.new_sentence.$touch();
@@ -289,6 +297,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                 this.loadSenteces();
                 this.initialClickButSentenceUpdate();
                 this.makeCheckboxTH();
+                this.makeButtonClearSearch();
             },
             async loadSenteces() {
                 try {
@@ -312,11 +321,11 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                         sentence: this.new_sentence,
                         translation: this.translation_sentence,
                     };
+                    $('#create_sentence').modal('hide');
+                    $('.modal-backdrop.fade.show').remove();
                     const response = await this.$http.post(`${this.$http.apiUrl()}sentence`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
-                        $('#create_sentence').modal('hide');
-                        $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
                     console.log(e);
@@ -353,25 +362,6 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     this.table.rows.push(row);
                 }
             },
-            onSearch(search) {
-                this.updateParams({search: search.searchTerm});
-                this.initialData();
-            },
-            onPageChange(params) {
-                this.updateParams({page: params.currentPage});
-                this.initialData();
-            },
-            onPerPageChange(params) {
-                this.updateParams({page: 0, perPage: params.currentPerPage});
-                this.initialData();
-            },
-            onSortChange(params) {
-                this.updateParams({page: 0, sort: params});
-                this.initialData();
-            },
-            updateParams(newProps) {
-                this.serverParams = Object.assign({}, this.serverParams, newProps);
-            },
             openModalCreateSentence(){
                 this.setVariableDefault();
                 $('#create_sentence').modal('show');
@@ -381,7 +371,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                 this.new_sentence = sentence;
                 this.translation_sentence = translation;
             },
-            getRowForSentence(id){
+            getSentenceCollection(id){
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {
                     if (this.table.origin_rows[i].id == id) {
@@ -396,9 +386,10 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     $('.btn_sentence').bind('click' , (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let id = queryObj.attr("data-id");
-                        let row = this.getRowForSentence(id);
+                        let row = this.getSentenceCollection(id);
                         this.setVariableDefault(row.id, row.sentence, row.translation);
                         $('#update_sentence').modal('show');
+                        this.help_dynamic = '';
                     })
                 }, 1000);
             },
@@ -445,6 +436,10 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
         },
         mounted() {
             this.initialData();
+
+            $(".modal").on("hidden.bs.modal", () => {
+                this.help_dynamic = "";
+            })
         },
         validations: {
             new_sentence: {
@@ -459,6 +454,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
         beforeDestroy: function () {
             $('.btn_sentence').unbind('click');
             $('#checkbox').unbind('click');
+            $('#clear_search').unbind('click');
         },
         name: "PageWordSentences.vue"
     }
