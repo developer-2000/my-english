@@ -300,7 +300,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       speak: {
         arrText: [],
-        this_checkbox: [],
+        nextCheckbox: [],
         cycle: 0,
         lang: [{
           lang: 'en-US',
@@ -308,8 +308,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, {
           lang: 'ru-RU',
           alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
-        }],
-        changeLetter: [['ш', 'i']]
+        }]
       }
     };
   },
@@ -537,7 +536,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     initialSpeak: function initialSpeak() {
       this.speak.cycle = 0;
       this.setText();
-      this.addNextCheckbox();
+      this.soundSpeak();
     },
     // сбор текста в выбранных checkbox eng и перевод
     // [ ['eng','ru'], [] ]
@@ -576,43 +575,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }
     },
-    soundSpeak: function soundSpeak(last_checkbox) {
+    // вернуть следущий checkbox
+    addNextCheckbox: function addNextCheckbox() {
+      if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
+        this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]); // новый checkbox
+
+        return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
+      }
+
+      return false;
+    },
+    soundSpeak: function soundSpeak() {
       var _this6 = this;
 
+      var last_checkbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var text = '';
-      var synthesis = window.speechSynthesis; // выбрать доступный текст
-
-      if (this.speak.cycle < last_checkbox.length) {
-        text = last_checkbox[this.speak.cycle];
-        var utterance = new SpeechSynthesisUtterance(text);
-        var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
-        setTimeout(function () {
-          utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
-
-          synthesis.speak(utterance);
-        }, 1000); // событие завершения озвучки
-
-        utterance.addEventListener('end', function (event) {
-          console.log('end');
-          _this6.speak.cycle++;
-
-          _this6.soundSpeak(last_checkbox);
-        });
-      } // выбрать следущий checkbox
-      else {
-        this.speak.cycle = 0;
-        this.addNextCheckbox();
-      }
-    },
-    addNextCheckbox: function addNextCheckbox() {
       window.speechSynthesis.cancel();
-      var last_checkbox = []; // добавить следущий checkbox
+      var synthesis = window.speechSynthesis;
 
-      if (this.speak.this_checkbox.length < this.speak.arrText.length) {
-        this.speak.this_checkbox.push(this.speak.arrText[this.speak.this_checkbox.length]);
-        last_checkbox = this.speak.this_checkbox[this.speak.this_checkbox.length - 1]; // озвучить
+      if (last_checkbox.length === 0) {
+        last_checkbox = this.addNextCheckbox();
+      }
 
-        this.soundSpeak(last_checkbox);
+      if (last_checkbox) {
+        // существует елемент текста
+        if (this.speak.cycle < last_checkbox.length) {
+          text = last_checkbox[this.speak.cycle];
+          var utterance = new SpeechSynthesisUtterance(text); // определить язык текста
+
+          var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
+          setTimeout(function () {
+            utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
+
+            synthesis.speak(utterance);
+          }, 1000); // событие завершения озвучки
+
+          utterance.addEventListener('end', function (event) {
+            _this6.speak.cycle++;
+
+            _this6.soundSpeak(last_checkbox);
+          });
+        } // выбрать следущий checkbox
+        else {
+          this.speak.cycle = 0;
+          this.soundSpeak();
+        }
       }
     }
   },

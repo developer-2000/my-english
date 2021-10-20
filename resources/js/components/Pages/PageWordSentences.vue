@@ -281,7 +281,7 @@
                 },
                 speak: {
                     arrText: [],
-                    this_checkbox: [],
+                    nextCheckbox: [],
                     cycle: 0,
                     lang: [
                         {
@@ -292,8 +292,7 @@
                             lang: 'ru-RU',
                             alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
                         },
-                    ],
-                    changeLetter: [['ш', 'i'],],
+                    ]
                 },
             };
         },
@@ -428,7 +427,7 @@
             initialSpeak() {
                 this.speak.cycle = 0;
                 this.setText();
-                this.addNextCheckbox();
+                this.soundSpeak();
             },
             // сбор текста в выбранных checkbox eng и перевод
             // [ ['eng','ru'], [] ]
@@ -470,45 +469,48 @@
                     }
                 }
             },
-            soundSpeak(last_checkbox) {
-                let text = '';
-                let synthesis = window.speechSynthesis;
-
-                // выбрать доступный текст
-                if (this.speak.cycle < last_checkbox.length) {
-                    text = last_checkbox[this.speak.cycle];
-                    let utterance = new SpeechSynthesisUtterance(text);
-                    let index_lang = this.getIndexLanguage(text, synthesis.getVoices());
-
-                    setTimeout(() => {
-                        utterance.voice = synthesis.getVoices()[index_lang];
-                        // озвучить текст
-                        synthesis.speak(utterance);
-                    }, 1000);
-
-                    // событие завершения озвучки
-                    utterance.addEventListener('end', (event) => {
-                        console.log('end');
-                        this.speak.cycle++;
-                        this.soundSpeak(last_checkbox);
-                    });
-                }
-                // выбрать следущий checkbox
-                else {
-                    this.speak.cycle = 0;
-                    this.addNextCheckbox();
-                }
-            },
+            // вернуть следущий checkbox
             addNextCheckbox() {
+                if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
+                    this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]);
+                    // новый checkbox
+                    return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
+                }
+                return false;
+            },
+            soundSpeak(last_checkbox = []) {
+                let text = '';
                 window.speechSynthesis.cancel();
-                let last_checkbox = [];
+                let synthesis = window.speechSynthesis;
+                if(last_checkbox.length === 0){
+                    last_checkbox = this.addNextCheckbox();
+                }
 
-                // добавить следущий checkbox
-                if (this.speak.this_checkbox.length < this.speak.arrText.length) {
-                    this.speak.this_checkbox.push(this.speak.arrText[this.speak.this_checkbox.length]);
-                    last_checkbox = this.speak.this_checkbox[this.speak.this_checkbox.length - 1];
-                    // озвучить
-                    this.soundSpeak(last_checkbox);
+                if(last_checkbox){
+                    // существует елемент текста
+                    if (this.speak.cycle < last_checkbox.length) {
+                        text = last_checkbox[this.speak.cycle];
+                        let utterance = new SpeechSynthesisUtterance(text);
+                        // определить язык текста
+                        let index_lang = this.getIndexLanguage(text, synthesis.getVoices());
+
+                        setTimeout(() => {
+                            utterance.voice = synthesis.getVoices()[index_lang];
+                            // озвучить текст
+                            synthesis.speak(utterance);
+                        }, 1000);
+
+                        // событие завершения озвучки
+                        utterance.addEventListener('end', (event) => {
+                            this.speak.cycle++;
+                            this.soundSpeak(last_checkbox);
+                        });
+                    }
+                    // выбрать следущий checkbox
+                    else {
+                        this.speak.cycle = 0;
+                        this.soundSpeak();
+                    }
                 }
             },
         },
