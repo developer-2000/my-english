@@ -282,9 +282,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       speak: {
         arrText: [],
+        this_checkbox: [],
         cycle: 0,
-        arrEng: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-        arrRu: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я'],
+        lang: [{
+          lang: 'en-US',
+          alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        }, {
+          lang: 'ru-RU',
+          alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
+        }],
         changeLetter: [['ш', 'i']]
       }
     };
@@ -513,14 +519,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     initialSpeak: function initialSpeak() {
       this.speak.cycle = 0;
       this.setText();
-      this.speakText();
+      this.addNextCheckbox();
     },
+    // сбор текста в выбранных checkbox eng и перевод
+    // [ ['eng','ru'], [] ]
     setText: function setText() {
       var checkboxes = document.getElementsByClassName('check');
       this.speak.arrText = [];
-      var id = 0;
+      var id = 0; // все checkboxes
 
       for (var i = 0; i < checkboxes.length; i++) {
+        // он выбран
         if (checkboxes[i].checked) {
           id = checkboxes[i].getAttribute('data-id');
 
@@ -531,23 +540,70 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }
-    } // checkLetter(e){
-    //     let text = $(e.target).val();
-    //     for (var i = 0; i < this.speak.changeLetter.length; i++) {
-    //         if (this.speak.changeLetter[i][0] === text.slice(-1)) {
-    //             text = text.slice(0, text.length-1) + this.speak.changeLetter[i][1];
-    //             break;
-    //         }
-    //     }
-    // },
+    },
+    getIndexLanguage: function getIndexLanguage(text, synthesis) {
+      // все языки
+      for (var i = 0; i < this.speak.lang.length; i++) {
+        // все буквы языка
+        for (var s = 0; s < this.speak.lang[i].alpha.length; s++) {
+          if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
+            // доступные языки в обьекте озвучки
+            for (var l = 0; l < synthesis.length; l++) {
+              if (synthesis[l].lang === this.speak.lang[i].lang) {
+                // вернуть индекс доступного языка
+                return l;
+              }
+            }
+          }
+        }
+      }
+    },
+    soundSpeak: function soundSpeak(last_checkbox) {
+      var _this6 = this;
 
+      var text = '';
+      var synthesis = window.speechSynthesis; // выбрать доступный текст
+
+      if (this.speak.cycle < last_checkbox.length) {
+        text = last_checkbox[this.speak.cycle];
+        var utterance = new SpeechSynthesisUtterance(text);
+        var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
+        setTimeout(function () {
+          utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
+
+          synthesis.speak(utterance);
+        }, 1000); // событие завершения озвучки
+
+        utterance.addEventListener('end', function (event) {
+          console.log('end');
+          _this6.speak.cycle++;
+
+          _this6.soundSpeak(last_checkbox);
+        });
+      } // выбрать следущий checkbox
+      else {
+        this.speak.cycle = 0;
+        this.addNextCheckbox();
+      }
+    },
+    addNextCheckbox: function addNextCheckbox() {
+      window.speechSynthesis.cancel();
+      var last_checkbox = []; // добавить следущий checkbox
+
+      if (this.speak.this_checkbox.length < this.speak.arrText.length) {
+        this.speak.this_checkbox.push(this.speak.arrText[this.speak.this_checkbox.length]);
+        last_checkbox = this.speak.this_checkbox[this.speak.this_checkbox.length - 1]; // озвучить
+
+        this.soundSpeak(last_checkbox);
+      }
+    }
   },
   mounted: function mounted() {
-    var _this6 = this;
+    var _this7 = this;
 
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this6.help_dynamic = "";
+      _this7.help_dynamic = "";
     });
   },
   validations: {
