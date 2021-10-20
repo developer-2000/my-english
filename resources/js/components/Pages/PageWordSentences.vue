@@ -6,11 +6,11 @@
             <!-- верхнее меню -->
             <div class="card card-primary card-outline top_menu">
                 <div class="card-header">
-                    <button class="btn bg-gradient-success" @click="initialSpeak" >
+                    <button @click="initialSpeak" class="btn bg-gradient-success">
                         <i class="fas fa-play"></i>
                         Speak text
                     </button>
-                    <button class="btn bg-gradient-primary" @click="openModalCreateSentence">
+                    <button @click="openModalCreateSentence" class="btn bg-gradient-primary">
                         Add sentence
                     </button>
                 </div>
@@ -28,21 +28,21 @@
                             <!-- Table -->
                             <div class="table_wrapper">
                                 <vue-good-table
+                                    :columns="table.columns"
                                     :isLoading.sync="table.isLoading"
                                     :mode="table.mode"
-                                    :totalRows="table.totalRecords"
-                                    :rows="table.rows"
-                                    :columns="table.columns"
                                     :pagination-options="table.optionsPaginate"
+                                    :rows="table.rows"
                                     :search-options="{
                                         enabled: true,
                                         placeholder: 'Search word',
                                     }"
-                                    styleClass="vgt-table bordered sentence"
-                                    @on-search="onSearch"
+                                    :totalRows="table.totalRecords"
                                     @on-page-change="onPageChange"
                                     @on-per-page-change="onPerPageChange"
+                                    @on-search="onSearch"
                                     @on-sort-change="onSortChange"
+                                    styleClass="vgt-table bordered sentence"
                                 >
                                     <template slot="loadingContent">
                                         <div></div>
@@ -60,13 +60,13 @@
         <!-- / body -->
 
         <!-- Modals -->
-        <div class="modal fade" id="create_sentence" tabindex="-1" role="dialog" aria-labelledby="create_sentence"
-             aria-hidden="true">
+        <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade" id="create_sentence" role="dialog"
+             tabindex="-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Create new sentence</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -74,39 +74,48 @@
                         <form action="#">
                             <!-- new sentence -->
                             <div class="form-group">
-                                <label for="new_sentence" class="col-form-label">New sentence</label>
-                                <textarea class="form-control entry-field-help" placeholder="Insert new sentence" id="new_sentence"
-                                          v-model="new_sentence"
-                                          @blur="touchNewSentence()"
+                                <label class="col-form-label" for="new_sentence">New sentence</label>
+                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
                                           @keyup="searchHelpWord"
-                                          :class="{'is-invalid': $v.new_sentence.$error}"
+                                          class="form-control entry-field-help"
+                                          id="new_sentence"
+                                          placeholder="Insert new sentence"
                                           required
+                                          v-model="new_sentence"
                                 ></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters {{ this.new_sentence.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters
+                                    {{ this.new_sentence.length }} less needed
+                                </div>
                             </div>
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label for="translation_sentence" class="col-form-label">Translation</label>
-                                <textarea class="form-control" placeholder="Insert translation sentence" id="translation_sentence"
-                                          v-model="translation_sentence"
-                                          @blur="touchTranslationSentence()"
-                                          :class="{'is-invalid': $v.translation_sentence.$error}"
+                                <label class="col-form-label" for="translation_sentence">Translation</label>
+                                <textarea :class="{'is-invalid': $v.translation_sentence.$error}" @blur="touchTranslationSentence()"
+                                          class="form-control"
+                                          id="translation_sentence"
+                                          placeholder="Insert translation sentence"
                                           required
+                                          v-model="translation_sentence"
                                 ></textarea>
-                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of characters {{ this.translation_sentence.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is
+                                    empty!
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of
+                                    characters {{ this.translation_sentence.length }} less needed
+                                </div>
                             </div>
 
                             <!-- button save -->
                             <div class="button_footer">
-                                <button type="button" class="btn btn-primary"
-                                        :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
+                                <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}" :disabled="$v.$invalid"
                                         @click="createSentence"
-                                >Save</button>
+                                        class="btn btn-primary"
+                                        type="button"
+                                >Save
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -114,13 +123,13 @@
             </div>
         </div>
         <!-- 2 -->
-        <div class="modal fade" id="update_sentence" tabindex="-1" role="dialog" aria-labelledby="update_sentence"
-             aria-hidden="true">
+        <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade" id="update_sentence" role="dialog"
+             tabindex="-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Update sentence</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -128,39 +137,48 @@
                         <form action="#">
                             <!-- sentence -->
                             <div class="form-group">
-                                <label for="old_sentence" class="col-form-label">Sentence</label>
-                                <textarea class="form-control entry-field-help" placeholder="Insert new sentence" id="old_sentence"
-                                          v-model="new_sentence"
-                                          @blur="touchNewSentence()"
+                                <label class="col-form-label" for="old_sentence">Sentence</label>
+                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
                                           @keyup="searchHelpWord"
-                                          :class="{'is-invalid': $v.new_sentence.$error}"
+                                          class="form-control entry-field-help"
+                                          id="old_sentence"
+                                          placeholder="Insert new sentence"
                                           required
+                                          v-model="new_sentence"
                                 ></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters {{ this.new_sentence.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters
+                                    {{ this.new_sentence.length }} less needed
+                                </div>
                             </div>
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label for="old_translation" class="col-form-label">Translation</label>
-                                <textarea class="form-control" placeholder="Insert translation sentence" id="old_translation"
-                                          v-model="translation_sentence"
-                                          @blur="touchTranslationSentence()"
-                                          :class="{'is-invalid': $v.translation_sentence.$error}"
+                                <label class="col-form-label" for="old_translation">Translation</label>
+                                <textarea :class="{'is-invalid': $v.translation_sentence.$error}" @blur="touchTranslationSentence()"
+                                          class="form-control"
+                                          id="old_translation"
+                                          placeholder="Insert translation sentence"
                                           required
+                                          v-model="translation_sentence"
                                 ></textarea>
-                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of characters {{ this.translation_sentence.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is
+                                    empty!
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of
+                                    characters {{ this.translation_sentence.length }} less needed
+                                </div>
                             </div>
 
                             <!-- button save -->
                             <div class="button_footer">
-                                <button type="button" class="btn btn-primary"
-                                        :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
+                                <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}" :disabled="$v.$invalid"
                                         @click="updateSentence"
-                                >Update</button>
+                                        class="btn btn-primary"
+                                        type="button"
+                                >Update
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -173,10 +191,10 @@
 
 <script>
     // validate
-    import { required, minLength } from 'vuelidate/lib/validators'
+    import {required, minLength} from 'vuelidate/lib/validators'
     // table
     import 'vue-good-table/dist/vue-good-table.css'
-    import { VueGoodTable } from 'vue-good-table';
+    import {VueGoodTable} from 'vue-good-table';
     // mixins
     import good_table_mixin from "../../mixins/good_table_mixin";
     import response_methods_mixin from "../../mixins/response_methods_mixin";
@@ -187,15 +205,15 @@
     export default {
         data() {
             return {
-                sentence_id:0,
-                new_sentence:'',
-                translation_sentence:'',
+                sentence_id: 0,
+                new_sentence: '',
+                translation_sentence: '',
                 table: {
                     // max rows in database
                     totalRecords: 0,
                     translation: '',
                     description: '',
-                    origin_rows:[],
+                    origin_rows: [],
                     // settings title
                     columns: [
                         {
@@ -234,7 +252,7 @@
                             sortable: false,
                             html: true,
                             field: (val) => {
-return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button"> <span class="fa fa-edit"></span> </a>';
+                                return '<a data-id=' + val.but + ' class="btn btn-warning btn_sentence" role="button"> <span class="fa fa-edit"></span> </a>';
                             }
                         },
                     ],
@@ -266,10 +284,16 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     this_checkbox: [],
                     cycle: 0,
                     lang: [
-                        {lang:'en-US', alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']},
-                        {lang:'ru-RU', alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']},
+                        {
+                            lang: 'en-US',
+                            alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+                        },
+                        {
+                            lang: 'ru-RU',
+                            alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
+                        },
                     ],
-                    changeLetter: [ ['ш', 'i'], ],
+                    changeLetter: [['ш', 'i'],],
                 },
             };
         },
@@ -278,17 +302,16 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
             good_table_mixin,
             help_search_word_mixin
         ],
-        components: { VueGoodTable, helpSearchWord },
+        components: {VueGoodTable, helpSearchWord},
         methods: {
             touchNewSentence() {
                 this.$v.new_sentence.$touch();
             },
             touchCheckbox() {
-                $('#checkbox').bind('click' , (e) => {
-                    if($(e.target).prop('checked')){
+                $('#checkbox').bind('click', (e) => {
+                    if ($(e.target).prop('checked')) {
                         $('.check').prop('checked', true);
-                    }
-                    else{
+                    } else {
                         $('.check').prop('checked', false);
                     }
                 })
@@ -308,7 +331,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     const response = await this.$http.get(
                         `${this.$http.apiUrl()}sentence?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=sentence&sortType=${this.serverParams.sort[0].type}`
                     );
-                    if(this.checkSuccess(response)){
+                    if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;
                         this.makeObjectDataForTable(response.data.data.sentences.list);
                         this.table.origin_rows = response.data.data.sentences.list;
@@ -327,7 +350,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     $('#create_sentence').modal('hide');
                     $('.modal-backdrop.fade.show').remove();
                     const response = await this.$http.post(`${this.$http.apiUrl()}sentence`, data);
-                    if(this.checkSuccess(response)){
+                    if (this.checkSuccess(response)) {
                         this.initialData();
                     }
                 } catch (e) {
@@ -341,7 +364,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                         translation: this.translation_sentence,
                     };
                     const response = await this.$http.patch(`${this.$http.apiUrl()}sentence/${this.sentence_id}`, data);
-                    if(this.checkSuccess(response)){
+                    if (this.checkSuccess(response)) {
                         this.initialData();
                         $('#update_sentence').modal('hide');
                         $('.modal-backdrop.fade.show').remove();
@@ -354,27 +377,27 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                 let row = '';
                 this.table.rows = [];
 
-                for(let i=0; i < list.length; i++){
+                for (let i = 0; i < list.length; i++) {
                     row = {
-                        checkbox:list[i].id,
-                        id:list[i].id,
-                        sentence:list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
+                        checkbox: list[i].id,
+                        id: list[i].id,
+                        sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
                         translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
                         but: list[i].id
                     };
                     this.table.rows.push(row);
                 }
             },
-            openModalCreateSentence(){
+            openModalCreateSentence() {
                 this.setVariableDefault();
                 $('#create_sentence').modal('show');
             },
-            setVariableDefault(sentence_id=0, sentence='', translation=''){
+            setVariableDefault(sentence_id = 0, sentence = '', translation = '') {
                 this.sentence_id = sentence_id;
                 this.new_sentence = sentence;
                 this.translation_sentence = translation;
             },
-            getSentenceCollection(id){
+            getSentenceCollection(id) {
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {
                     if (this.table.origin_rows[i].id == id) {
@@ -384,9 +407,9 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                 }
                 return row;
             },
-            initialClickButSentenceUpdate(){
+            initialClickButSentenceUpdate() {
                 let a = setTimeout(() => {
-                    $('.btn_sentence').bind('click' , (e) => {
+                    $('.btn_sentence').bind('click', (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let id = queryObj.attr("data-id");
                         let row = this.getSentenceCollection(id);
@@ -396,7 +419,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     })
                 }, 1000);
             },
-            makeCheckboxTH(){
+            makeCheckboxTH() {
                 let a = setTimeout(() => {
                     $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
                     this.touchCheckbox();
@@ -409,7 +432,7 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
             },
             // сбор текста в выбранных checkbox eng и перевод
             // [ ['eng','ru'], [] ]
-            setText(){
+            setText() {
                 let checkboxes = document.getElementsByClassName('check');
                 this.speak.arrText = [];
                 let id = 0;
@@ -430,15 +453,15 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     }
                 }
             },
-            getIndexLanguage(text, synthesis){
+            getIndexLanguage(text, synthesis) {
                 // все языки
                 for (let i = 0; i < this.speak.lang.length; i++) {
                     // все буквы языка
                     for (let s = 0; s < this.speak.lang[i].alpha.length; s++) {
-                        if(text.indexOf(this.speak.lang[i].alpha[s]) !== -1){
+                        if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
                             // доступные языки в обьекте озвучки
                             for (let l = 0; l < synthesis.length; l++) {
-                                if(synthesis[l].lang === this.speak.lang[i].lang){
+                                if (synthesis[l].lang === this.speak.lang[i].lang) {
                                     // вернуть индекс доступного языка
                                     return l;
                                 }
@@ -447,12 +470,12 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
                     }
                 }
             },
-            soundSpeak(last_checkbox){
+            soundSpeak(last_checkbox) {
                 let text = '';
                 let synthesis = window.speechSynthesis;
 
                 // выбрать доступный текст
-                if(this.speak.cycle < last_checkbox.length){
+                if (this.speak.cycle < last_checkbox.length) {
                     text = last_checkbox[this.speak.cycle];
                     let utterance = new SpeechSynthesisUtterance(text);
                     let index_lang = this.getIndexLanguage(text, synthesis.getVoices());
@@ -465,23 +488,23 @@ return '<a data-id='+val.but+' class="btn btn-warning btn_sentence" role="button
 
                     // событие завершения озвучки
                     utterance.addEventListener('end', (event) => {
-                        console.log('end')
+                        console.log('end');
                         this.speak.cycle++;
                         this.soundSpeak(last_checkbox);
                     });
                 }
                 // выбрать следущий checkbox
-                else{
+                else {
                     this.speak.cycle = 0;
                     this.addNextCheckbox();
                 }
             },
-            addNextCheckbox(){
+            addNextCheckbox() {
                 window.speechSynthesis.cancel();
                 let last_checkbox = [];
 
                 // добавить следущий checkbox
-                if(this.speak.this_checkbox.length < this.speak.arrText.length){
+                if (this.speak.this_checkbox.length < this.speak.arrText.length) {
                     this.speak.this_checkbox.push(this.speak.arrText[this.speak.this_checkbox.length]);
                     last_checkbox = this.speak.this_checkbox[this.speak.this_checkbox.length - 1];
                     // озвучить

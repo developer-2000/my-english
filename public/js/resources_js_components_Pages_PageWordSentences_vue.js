@@ -199,6 +199,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // validate
  // table
 
@@ -11778,16 +11796,16 @@ var render = function() {
                       "vue-good-table",
                       {
                         attrs: {
+                          columns: _vm.table.columns,
                           isLoading: _vm.table.isLoading,
                           mode: _vm.table.mode,
-                          totalRows: _vm.table.totalRecords,
-                          rows: _vm.table.rows,
-                          columns: _vm.table.columns,
                           "pagination-options": _vm.table.optionsPaginate,
+                          rows: _vm.table.rows,
                           "search-options": {
                             enabled: true,
                             placeholder: "Search word"
                           },
+                          totalRows: _vm.table.totalRecords,
                           styleClass: "vgt-table bordered sentence"
                         },
                         on: {
@@ -11797,9 +11815,9 @@ var render = function() {
                           "update:is-loading": function($event) {
                             return _vm.$set(_vm.table, "isLoading", $event)
                           },
-                          "on-search": _vm.onSearch,
                           "on-page-change": _vm.onPageChange,
                           "on-per-page-change": _vm.onPerPageChange,
+                          "on-search": _vm.onSearch,
                           "on-sort-change": _vm.onSortChange
                         }
                       },
@@ -11821,11 +11839,11 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "create_sentence",
-          tabindex: "-1",
-          role: "dialog",
+          "aria-hidden": "true",
           "aria-labelledby": "create_sentence",
-          "aria-hidden": "true"
+          id: "create_sentence",
+          role: "dialog",
+          tabindex: "-1"
         }
       },
       [
@@ -11863,8 +11881,8 @@ var render = function() {
                         staticClass: "form-control entry-field-help",
                         class: { "is-invalid": _vm.$v.new_sentence.$error },
                         attrs: {
-                          placeholder: "Insert new sentence",
                           id: "new_sentence",
+                          placeholder: "Insert new sentence",
                           required: ""
                         },
                         domProps: { value: _vm.new_sentence },
@@ -11895,9 +11913,9 @@ var render = function() {
                       !_vm.$v.new_sentence.minLength
                         ? _c("div", { staticClass: "invalid-feedback" }, [
                             _vm._v(
-                              "Number of characters " +
+                              "Number of characters\n                                " +
                                 _vm._s(this.new_sentence.length) +
-                                " less needed"
+                                " less needed\n                            "
                             )
                           ])
                         : _vm._e()
@@ -11929,8 +11947,8 @@ var render = function() {
                         "is-invalid": _vm.$v.translation_sentence.$error
                       },
                       attrs: {
-                        placeholder: "Insert translation sentence",
                         id: "translation_sentence",
+                        placeholder: "Insert translation sentence",
                         required: ""
                       },
                       domProps: { value: _vm.translation_sentence },
@@ -11949,16 +11967,18 @@ var render = function() {
                     _vm._v(" "),
                     !_vm.$v.translation_sentence.required
                       ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v("The field is empty!")
+                          _vm._v(
+                            "The field is\n                                empty!\n                            "
+                          )
                         ])
                       : _vm._e(),
                     _vm._v(" "),
                     !_vm.$v.translation_sentence.minLength
                       ? _c("div", { staticClass: "invalid-feedback" }, [
                           _vm._v(
-                            "Number of characters " +
+                            "Number of\n                                characters " +
                               _vm._s(this.translation_sentence.length) +
-                              " less needed"
+                              " less needed\n                            "
                           )
                         ])
                       : _vm._e()
@@ -11973,10 +11993,10 @@ var render = function() {
                           un_active: _vm.$v.$invalid,
                           active2: !_vm.$v.$invalid
                         },
-                        attrs: { type: "button", disabled: _vm.$v.$invalid },
+                        attrs: { disabled: _vm.$v.$invalid, type: "button" },
                         on: { click: _vm.createSentence }
                       },
-                      [_vm._v("Save")]
+                      [_vm._v("Save\n                            ")]
                     )
                   ])
                 ])
@@ -11992,11 +12012,11 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "update_sentence",
-          tabindex: "-1",
-          role: "dialog",
+          "aria-hidden": "true",
           "aria-labelledby": "update_sentence",
-          "aria-hidden": "true"
+          id: "update_sentence",
+          role: "dialog",
+          tabindex: "-1"
         }
       },
       [
@@ -12034,8 +12054,8 @@ var render = function() {
                         staticClass: "form-control entry-field-help",
                         class: { "is-invalid": _vm.$v.new_sentence.$error },
                         attrs: {
-                          placeholder: "Insert new sentence",
                           id: "old_sentence",
+                          placeholder: "Insert new sentence",
                           required: ""
                         },
                         domProps: { value: _vm.new_sentence },
@@ -12066,9 +12086,9 @@ var render = function() {
                       !_vm.$v.new_sentence.minLength
                         ? _c("div", { staticClass: "invalid-feedback" }, [
                             _vm._v(
-                              "Number of characters " +
+                              "Number of characters\n                                " +
                                 _vm._s(this.new_sentence.length) +
-                                " less needed"
+                                " less needed\n                            "
                             )
                           ])
                         : _vm._e()
@@ -12100,8 +12120,8 @@ var render = function() {
                         "is-invalid": _vm.$v.translation_sentence.$error
                       },
                       attrs: {
-                        placeholder: "Insert translation sentence",
                         id: "old_translation",
+                        placeholder: "Insert translation sentence",
                         required: ""
                       },
                       domProps: { value: _vm.translation_sentence },
@@ -12120,16 +12140,18 @@ var render = function() {
                     _vm._v(" "),
                     !_vm.$v.translation_sentence.required
                       ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v("The field is empty!")
+                          _vm._v(
+                            "The field is\n                                empty!\n                            "
+                          )
                         ])
                       : _vm._e(),
                     _vm._v(" "),
                     !_vm.$v.translation_sentence.minLength
                       ? _c("div", { staticClass: "invalid-feedback" }, [
                           _vm._v(
-                            "Number of characters " +
+                            "Number of\n                                characters " +
                               _vm._s(this.translation_sentence.length) +
-                              " less needed"
+                              " less needed\n                            "
                           )
                         ])
                       : _vm._e()
@@ -12144,10 +12166,10 @@ var render = function() {
                           un_active: _vm.$v.$invalid,
                           active2: !_vm.$v.$invalid
                         },
-                        attrs: { type: "button", disabled: _vm.$v.$invalid },
+                        attrs: { disabled: _vm.$v.$invalid, type: "button" },
                         on: { click: _vm.updateSentence }
                       },
-                      [_vm._v("Update")]
+                      [_vm._v("Update\n                            ")]
                     )
                   ])
                 ])
@@ -12172,9 +12194,9 @@ var staticRenderFns = [
         {
           staticClass: "close",
           attrs: {
-            type: "button",
+            "aria-label": "Close",
             "data-dismiss": "modal",
-            "aria-label": "Close"
+            type: "button"
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
@@ -12193,9 +12215,9 @@ var staticRenderFns = [
         {
           staticClass: "close",
           attrs: {
-            type: "button",
+            "aria-label": "Close",
             "data-dismiss": "modal",
-            "aria-label": "Close"
+            type: "button"
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
