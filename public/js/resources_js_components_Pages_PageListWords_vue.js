@@ -1085,6 +1085,22 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {
+    // заполнить обьект данных для таблица
+    makeObjectDataForTable: function makeObjectDataForTable(list) {
+      var row = '';
+      this.table.rows = [];
+
+      for (var i = 0; i < list.length; i++) {
+        row = {
+          check_sound: list[i].id,
+          id: list[i].id,
+          sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
+          translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
+          but: list[i].id
+        };
+        this.table.rows.push(row);
+      }
+    },
     onSearch: function onSearch(search) {
       this.updateParams({
         search: search.searchTerm
@@ -1138,7 +1154,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   mounted: function mounted() {}
-}); // .vgt-global-search__input.vgt-pull-left span.sr-only
+});
 
 /***/ }),
 

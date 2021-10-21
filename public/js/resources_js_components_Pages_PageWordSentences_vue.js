@@ -250,7 +250,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           sortable: false,
           html: true,
           field: function field(val) {
-            return "<input data-id=\"".concat(val.checkbox, "\" class=\"check\" type=\"checkbox\" id=\"check_").concat(val.checkbox, "\">");
+            return "<input data-id=\"".concat(val.check_sound, "\" class=\"check\" type=\"checkbox\" id=\"check_").concat(val.check_sound, "\">");
           }
         }, {
           tdClass: 'id_td',
@@ -310,10 +310,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   methods: {
+    // --- validate
     touchNewSentence: function touchNewSentence() {
       this.$v.new_sentence.$touch();
     },
-    touchCheckbox: function touchCheckbox() {
+    touchTranslationSentence: function touchTranslationSentence() {
+      this.$v.translation_sentence.$touch();
+    },
+    // set all
+    initialData: function initialData() {
+      this.loadSenteces();
+      this.initialClickButSentenceUpdate();
+      this.makeCheckboxTH();
+      this.makeButtonClearSearch();
+    },
+    // --- checkbox
+    makeCheckboxTH: function makeCheckboxTH() {
+      var _this = this;
+
+      var a = setTimeout(function () {
+        $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
+
+        _this.initialCheckbox();
+      }, 1000);
+    },
+    initialCheckbox: function initialCheckbox() {
       $('#checkbox').bind('click', function (e) {
         if ($(e.target).prop('checked')) {
           $('.check').prop('checked', true);
@@ -322,17 +343,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     },
-    touchTranslationSentence: function touchTranslationSentence() {
-      this.$v.translation_sentence.$touch();
-    },
-    initialData: function initialData() {
-      this.loadSenteces();
-      this.initialClickButSentenceUpdate();
-      this.makeCheckboxTH();
-      this.makeButtonClearSearch();
-    },
+    // --- предложения
     loadSenteces: function loadSenteces() {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var response;
@@ -341,19 +354,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                _this.isLoading = true;
+                _this2.isLoading = true;
                 _context.next = 4;
-                return _this.$http.get("".concat(_this.$http.apiUrl(), "sentence?search=").concat(_this.serverParams.search, "&page=").concat(_this.serverParams.page, "&perPage=").concat(_this.serverParams.perPage, "&sortField=sentence&sortType=").concat(_this.serverParams.sort[0].type));
+                return _this2.$http.get("".concat(_this2.$http.apiUrl(), "sentence?search=").concat(_this2.serverParams.search, "&page=").concat(_this2.serverParams.page, "&perPage=").concat(_this2.serverParams.perPage, "&sortField=sentence&sortType=").concat(_this2.serverParams.sort[0].type));
 
               case 4:
                 response = _context.sent;
 
-                if (_this.checkSuccess(response)) {
-                  _this.table.totalRecords = response.data.data.sentences.total_count;
+                if (_this2.checkSuccess(response)) {
+                  _this2.table.totalRecords = response.data.data.sentences.total_count;
 
-                  _this.makeObjectDataForTable(response.data.data.sentences.list);
+                  _this2.makeObjectDataForTable(response.data.data.sentences.list);
 
-                  _this.table.origin_rows = response.data.data.sentences.list;
+                  _this2.table.origin_rows = response.data.data.sentences.list;
                 }
 
                 _context.next = 11;
@@ -365,7 +378,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(_context.t0);
 
               case 11:
-                _this.isLoading = false;
+                _this2.isLoading = false;
 
               case 12:
               case "end":
@@ -376,7 +389,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     createSentence: function createSentence() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         var data, response;
@@ -386,19 +399,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.prev = 0;
                 data = {
-                  sentence: _this2.new_sentence,
-                  translation: _this2.translation_sentence
+                  sentence: _this3.new_sentence,
+                  translation: _this3.translation_sentence
                 };
                 $('#create_sentence').modal('hide');
                 $('.modal-backdrop.fade.show').remove();
                 _context2.next = 6;
-                return _this2.$http.post("".concat(_this2.$http.apiUrl(), "sentence"), data);
+                return _this3.$http.post("".concat(_this3.$http.apiUrl(), "sentence"), data);
 
               case 6:
                 response = _context2.sent;
 
-                if (_this2.checkSuccess(response)) {
-                  _this2.initialData();
+                if (_this3.checkSuccess(response)) {
+                  _this3.initialData();
                 }
 
                 _context2.next = 13;
@@ -418,7 +431,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     updateSentence: function updateSentence() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var data, response;
@@ -428,17 +441,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context3.prev = 0;
                 data = {
-                  sentence: _this3.new_sentence,
-                  translation: _this3.translation_sentence
+                  sentence: _this4.new_sentence,
+                  translation: _this4.translation_sentence
                 };
                 _context3.next = 4;
-                return _this3.$http.patch("".concat(_this3.$http.apiUrl(), "sentence/").concat(_this3.sentence_id), data);
+                return _this4.$http.patch("".concat(_this4.$http.apiUrl(), "sentence/").concat(_this4.sentence_id), data);
 
               case 4:
                 response = _context3.sent;
 
-                if (_this3.checkSuccess(response)) {
-                  _this3.initialData();
+                if (_this4.checkSuccess(response)) {
+                  _this4.initialData();
 
                   $('#update_sentence').modal('hide');
                   $('.modal-backdrop.fade.show').remove();
@@ -459,25 +472,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee3, null, [[0, 8]]);
       }))();
-    },
-    makeObjectDataForTable: function makeObjectDataForTable(list) {
-      var row = '';
-      this.table.rows = [];
-
-      for (var i = 0; i < list.length; i++) {
-        row = {
-          checkbox: list[i].id,
-          id: list[i].id,
-          sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
-          translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
-          but: list[i].id
-        };
-        this.table.rows.push(row);
-      }
-    },
-    openModalCreateSentence: function openModalCreateSentence() {
-      this.setVariableDefault();
-      $('#create_sentence').modal('show');
     },
     setVariableDefault: function setVariableDefault() {
       var sentence_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -500,30 +494,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return row;
     },
     initialClickButSentenceUpdate: function initialClickButSentenceUpdate() {
-      var _this4 = this;
+      var _this5 = this;
 
       var a = setTimeout(function () {
         $('.btn_sentence').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var id = queryObj.attr("data-id");
 
-          var row = _this4.getSentenceCollection(id);
+          var row = _this5.getSentenceCollection(id);
 
-          _this4.setVariableDefault(row.id, row.sentence, row.translation);
+          _this5.setVariableDefault(row.id, row.sentence, row.translation);
 
           $('#update_sentence').modal('show');
-          _this4.help_dynamic = '';
+          _this5.help_dynamic = '';
         });
       }, 1000);
     },
-    makeCheckboxTH: function makeCheckboxTH() {
-      var _this5 = this;
-
-      var a = setTimeout(function () {
-        $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
-
-        _this5.touchCheckbox();
-      }, 1000);
+    openModalCreateSentence: function openModalCreateSentence() {
+      this.setVariableDefault();
+      $('#create_sentence').modal('show');
     }
   },
   mounted: function mounted() {
@@ -595,6 +584,22 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {
+    // заполнить обьект данных для таблица
+    makeObjectDataForTable: function makeObjectDataForTable(list) {
+      var row = '';
+      this.table.rows = [];
+
+      for (var i = 0; i < list.length; i++) {
+        row = {
+          check_sound: list[i].id,
+          id: list[i].id,
+          sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
+          translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
+          but: list[i].id
+        };
+        this.table.rows.push(row);
+      }
+    },
     onSearch: function onSearch(search) {
       this.updateParams({
         search: search.searchTerm
@@ -648,7 +653,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   mounted: function mounted() {}
-}); // .vgt-global-search__input.vgt-pull-left span.sr-only
+});
 
 /***/ }),
 
@@ -858,6 +863,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       speak: {
+        stop: false,
+        synthesis: window.speechSynthesis,
         arrText: [],
         nextCheckbox: [],
         cycle: 0,
@@ -875,49 +882,79 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     initialSpeak: function initialSpeak() {
       this.speak.cycle = 0;
       this.speak.nextCheckbox = [];
-      this.setText().then();
-      this.soundSpeak();
+      this.speak.synthesis.cancel(); // остановить возможно предыдущий запущеный sound
+
+      this.speak.stop = true;
+
+      if (this.setText()) {
+        this.forSpeak();
+      }
     },
     // сбор текста в выбранных checkbox eng и перевод
     // [ ['eng','ru'], [] ]
     setText: function setText() {
+      var checkboxes = document.getElementsByClassName('check');
+      this.speak.arrText = [];
+      var id = 0; // все checkboxes
+
+      for (var i = 0; i < checkboxes.length; i++) {
+        // он выбран
+        if (checkboxes[i].checked) {
+          id = checkboxes[i].getAttribute('data-id');
+
+          for (var r = 0; r < this.table.rows.length; r++) {
+            if (id == this.table.rows[r].id) {
+              this.speak.arrText.push([this.table.rows[r].sentence, this.table.rows[r].translation]);
+            }
+          }
+        }
+      }
+
+      return 1;
+    },
+    forSpeak: function forSpeak() {
       var _this = this;
 
+      setTimeout(function () {
+        _this.speak.stop = false;
+
+        _this.speak.arrText.forEach(function (arrRow, index1) {
+          Promise.all(arrRow.map(_this.readSound)).then(function (data) {// console.log(data)
+          });
+        });
+      }, 200);
+    },
+    readSound: function readSound(text, index) {
+      var _this2 = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var checkboxes, id, promise;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                checkboxes = document.getElementsByClassName('check');
-                _this.speak.arrText = [];
-                id = 0;
-                _context.next = 5;
-                return new Promise(function (resolve, reject) {
-                  // все checkboxes
-                  for (var i = 0; i < checkboxes.length; i++) {
-                    // он выбран
-                    if (checkboxes[i].checked) {
-                      id = checkboxes[i].getAttribute('data-id');
+                return _context.abrupt("return", new Promise(function (resolve) {
+                  var utterance = new SpeechSynthesisUtterance(text); // определить язык текста
 
-                      for (var r = 0; r < _this.table.rows.length; r++) {
-                        if (id == _this.table.rows[r].id) {
-                          _this.speak.arrText.push([_this.table.rows[r].sentence, _this.table.rows[r].translation]);
-                        }
-                      }
+                  // определить язык текста
+                  var index_lang = _this2.getIndexLanguage(text, _this2.speak.synthesis.getVoices()); // установить переводчика
+
+
+                  // установить переводчика
+                  utterance.voice = _this2.speak.synthesis.getVoices()[index_lang]; // озвучить текст
+
+                  // озвучить текст
+                  _this2.speak.synthesis.speak(utterance); // событие завершения озвучки
+
+
+                  // событие завершения озвучки
+                  utterance.addEventListener('end', function (event) {
+                    if (!_this2.speak.stop) {
+                      return resolve(text);
                     }
-                  }
-                });
+                  });
+                }));
 
-              case 5:
-                promise = _context.sent;
-                _context.next = 8;
-                return promise;
-
-              case 8:
-                return _context.abrupt("return", _context.sent);
-
-              case 9:
+              case 1:
               case "end":
                 return _context.stop();
             }
@@ -925,62 +962,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    soundSpeak: function soundSpeak() {
-      var _this2 = this;
-
-      var last_checkbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var text = '';
-      window.speechSynthesis.cancel();
-      var synthesis = window.speechSynthesis; // вернуть следущий checkbox
-
-      if (last_checkbox.length === 0) {
-        last_checkbox = this.addNextCheckbox();
-      }
-
-      if (last_checkbox) {
-        // существует елемент текста
-        if (this.speak.cycle < last_checkbox.length) {
-          text = last_checkbox[this.speak.cycle];
-          var utterance = new SpeechSynthesisUtterance(text); // определить язык текста
-
-          var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
-          setTimeout(function () {
-            utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
-
-            synthesis.speak(utterance);
-          }, 1000); // событие завершения озвучки
-
-          utterance.addEventListener('end', function (event) {
-            _this2.speak.cycle++;
-
-            _this2.soundSpeak(last_checkbox);
-          });
-        } // выбрать следущий checkbox
-        else {
-          this.speak.cycle = 0;
-          this.soundSpeak();
-        }
-      }
-    },
-    // вернуть следущий checkbox
-    addNextCheckbox: function addNextCheckbox() {
-      if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
-        this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]); // новый checkbox
-
-        return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
-      }
-
-      return false;
-    },
-    getIndexLanguage: function getIndexLanguage(text, synthesis) {
+    getIndexLanguage: function getIndexLanguage(text, synthVoices) {
       // все языки
       for (var i = 0; i < this.speak.lang.length; i++) {
         // все буквы языка
         for (var s = 0; s < this.speak.lang[i].alpha.length; s++) {
           if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
             // доступные языки в обьекте озвучки
-            for (var l = 0; l < synthesis.length; l++) {
-              if (synthesis[l].lang === this.speak.lang[i].lang) {
+            for (var l = 0; l < synthVoices.length; l++) {
+              if (synthVoices[l].lang === this.speak.lang[i].lang) {
                 // вернуть индекс доступного языка
                 return l;
               }

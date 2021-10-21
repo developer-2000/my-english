@@ -224,7 +224,7 @@
                             sortable: false,
                             html: true,
                             field: (val) => {
-                                return `<input data-id="${val.checkbox}" class="check" type="checkbox" id="check_${val.checkbox}">`;
+                                return `<input data-id="${val.check_sound}" class="check" type="checkbox" id="check_${val.check_sound}">`;
                             }
                         },
                         {
@@ -292,10 +292,28 @@
         ],
         components: {VueGoodTable, helpSearchWord},
         methods: {
+            // --- validate
             touchNewSentence() {
                 this.$v.new_sentence.$touch();
             },
-            touchCheckbox() {
+            touchTranslationSentence() {
+                this.$v.translation_sentence.$touch();
+            },
+            // set all
+            initialData() {
+                this.loadSenteces();
+                this.initialClickButSentenceUpdate();
+                this.makeCheckboxTH();
+                this.makeButtonClearSearch();
+            },
+            // --- checkbox
+            makeCheckboxTH() {
+                let a = setTimeout(() => {
+                    $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
+                    this.initialCheckbox();
+                }, 1000);
+            },
+            initialCheckbox() {
                 $('#checkbox').bind('click', (e) => {
                     if ($(e.target).prop('checked')) {
                         $('.check').prop('checked', true);
@@ -304,15 +322,7 @@
                     }
                 })
             },
-            touchTranslationSentence() {
-                this.$v.translation_sentence.$touch();
-            },
-            initialData() {
-                this.loadSenteces();
-                this.initialClickButSentenceUpdate();
-                this.makeCheckboxTH();
-                this.makeButtonClearSearch();
-            },
+            // --- предложения
             async loadSenteces() {
                 try {
                     this.isLoading = true;
@@ -361,25 +371,6 @@
                     console.log(e);
                 }
             },
-            makeObjectDataForTable(list) {
-                let row = '';
-                this.table.rows = [];
-
-                for (let i = 0; i < list.length; i++) {
-                    row = {
-                        checkbox: list[i].id,
-                        id: list[i].id,
-                        sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
-                        translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
-                        but: list[i].id
-                    };
-                    this.table.rows.push(row);
-                }
-            },
-            openModalCreateSentence() {
-                this.setVariableDefault();
-                $('#create_sentence').modal('show');
-            },
             setVariableDefault(sentence_id = 0, sentence = '', translation = '') {
                 this.sentence_id = sentence_id;
                 this.new_sentence = sentence;
@@ -407,16 +398,13 @@
                     })
                 }, 1000);
             },
-            makeCheckboxTH() {
-                let a = setTimeout(() => {
-                    $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
-                    this.touchCheckbox();
-                }, 1000);
+            openModalCreateSentence() {
+                this.setVariableDefault();
+                $('#create_sentence').modal('show');
             },
         },
         mounted() {
             this.initialData();
-
             $(".modal").on("hidden.bs.modal", () => {
                 this.help_dynamic = "";
             })

@@ -3,6 +3,8 @@ export default {
     data() {
         return {
             speak: {
+                stop: false,
+                synthesis: window.speechSynthesis,
                 arrText: [],
                 nextCheckbox: [],
                 cycle: 0,
@@ -23,91 +25,74 @@ export default {
         initialSpeak() {
             this.speak.cycle = 0;
             this.speak.nextCheckbox = [];
-            this.setText().then();
-            this.soundSpeak();
+            this.speak.synthesis.cancel();
+            // остановить возможно предыдущий запущеный sound
+            this.speak.stop = true;
+            if(this.setText()){
+                this.forSpeak();
+            }
         },
         // сбор текста в выбранных checkbox eng и перевод
         // [ ['eng','ru'], [] ]
-        async setText() {
+        setText() {
             let checkboxes = document.getElementsByClassName('check');
             this.speak.arrText = [];
             let id = 0;
 
-            let promise = await new Promise((resolve, reject) => {
-                // все checkboxes
-                for (let i = 0; i < checkboxes.length; i++) {
-                    // он выбран
-                    if (checkboxes[i].checked) {
-                        id = checkboxes[i].getAttribute('data-id');
+            // все checkboxes
+            for (let i = 0; i < checkboxes.length; i++) {
+                // он выбран
+                if (checkboxes[i].checked) {
+                    id = checkboxes[i].getAttribute('data-id');
 
-                        for (let r = 0; r < this.table.rows.length; r++) {
-                            if (id == this.table.rows[r].id) {
-                                this.speak.arrText.push([
-                                    this.table.rows[r].sentence,
-                                    this.table.rows[r].translation
-                                ]);
-                            }
+                    for (let r = 0; r < this.table.rows.length; r++) {
+                        if (id == this.table.rows[r].id) {
+                            this.speak.arrText.push([
+                                this.table.rows[r].sentence,
+                                this.table.rows[r].translation
+                            ]);
                         }
                     }
                 }
+            }
+            return 1;
+        },
+        forSpeak() {
+            setTimeout(() => {
+                this.speak.stop = false;
+                this.speak.arrText.forEach((arrRow, index1) => {
+                    Promise.all( arrRow.map(this.readSound) ).then( data => {
+                        // console.log(data)
+                    } );
+                })
+            }, 200);
+        },
+        async readSound(text, index) {
+            return new Promise(resolve => {
+                let utterance = new SpeechSynthesisUtterance(text);
+                // определить язык текста
+                let index_lang = this.getIndexLanguage(text, this.speak.synthesis.getVoices());
+                // установить переводчика
+                utterance.voice = this.speak.synthesis.getVoices()[index_lang];
+                // озвучить текст
+                this.speak.synthesis.speak(utterance);
+                // событие завершения озвучки
+                utterance.addEventListener('end', (event) => {
+                    if(!this.speak.stop){
+                        return resolve(text);
+                    }
+                });
             });
-            return await promise;
         },
-        soundSpeak(last_checkbox = []) {
-            let text = '';
-            window.speechSynthesis.cancel();
-            let synthesis = window.speechSynthesis;
-
-            // вернуть следущий checkbox
-            if(last_checkbox.length === 0){
-                last_checkbox = this.addNextCheckbox();
-            }
-
-            if(last_checkbox){
-                // существует елемент текста
-                if (this.speak.cycle < last_checkbox.length) {
-                    text = last_checkbox[this.speak.cycle];
-                    let utterance = new SpeechSynthesisUtterance(text);
-                    // определить язык текста
-                    let index_lang = this.getIndexLanguage(text, synthesis.getVoices());
-
-                    setTimeout(() => {
-                        utterance.voice = synthesis.getVoices()[index_lang];
-                        // озвучить текст
-                        synthesis.speak(utterance);
-                    }, 1000);
-
-                    // событие завершения озвучки
-                    utterance.addEventListener('end', (event) => {
-                        this.speak.cycle++;
-                        this.soundSpeak(last_checkbox);
-                    });
-                }
-                // выбрать следущий checkbox
-                else {
-                    this.speak.cycle = 0;
-                    this.soundSpeak();
-                }
-            }
-        },
-        // вернуть следущий checkbox
-        addNextCheckbox() {
-            if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
-                this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]);
-                // новый checkbox
-                return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
-            }
-            return false;
-        },
-        getIndexLanguage(text, synthesis) {
+        getIndexLanguage(text, synthVoices) {
             // все языки
             for (let i = 0; i < this.speak.lang.length; i++) {
                 // все буквы языка
                 for (let s = 0; s < this.speak.lang[i].alpha.length; s++) {
                     if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
                         // доступные языки в обьекте озвучки
-                        for (let l = 0; l < synthesis.length; l++) {
-                            if (synthesis[l].lang === this.speak.lang[i].lang) {
+                        for (let l = 0; l < synthVoices.length; l++) {
+                            if (synthVoices[l].lang === this.speak.lang[i].lang) {
                                 // вернуть индекс доступного языка
                                 return l;
                             }
@@ -116,6 +101,6 @@ export default {
                 }
             }
         },
-    }
+    },
 }
 

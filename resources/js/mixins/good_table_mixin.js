@@ -4,6 +4,22 @@ export default {
         return { }
     },
     methods: {
+        // заполнить обьект данных для таблица
+        makeObjectDataForTable(list) {
+            let row = '';
+            this.table.rows = [];
+
+            for (let i = 0; i < list.length; i++) {
+                row = {
+                    check_sound: list[i].id,
+                    id: list[i].id,
+                    sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
+                    translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
+                    but: list[i].id
+                };
+                this.table.rows.push(row);
+            }
+        },
         onSearch(search) {
             this.updateParams({search: search.searchTerm});
             this.initialData();
@@ -46,6 +62,4 @@ export default {
     mounted() { }
 }
 
-
-    // .vgt-global-search__input.vgt-pull-left span.sr-only
 
