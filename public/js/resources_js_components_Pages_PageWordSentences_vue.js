@@ -13,13 +13,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-good-table/dist/vue-good-table.css */ "./node_modules/vue-good-table/dist/vue-good-table.css");
-/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
+/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
 /* harmony import */ var _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../mixins/good_table_mixin */ "./resources/js/mixins/good_table_mixin.js");
 /* harmony import */ var _mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../mixins/response_methods_mixin */ "./resources/js/mixins/response_methods_mixin.js");
 /* harmony import */ var _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../mixins/help_search_word_mixin */ "./resources/js/mixins/help_search_word_mixin.js");
 /* harmony import */ var _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../details/HelpSearchWord */ "./resources/js/components/details/HelpSearchWord.vue");
+/* harmony import */ var _mixins_sound_word_mixin__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../mixins/sound_word_mixin */ "./resources/js/mixins/sound_word_mixin.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -221,10 +222,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  // table
 
 
- // mixins
+
+ // sweetalerts
+
+ // help_search_word
 
 
-
+ // sound_word
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -297,24 +301,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           field: '',
           type: ''
         }]
-      },
-      speak: {
-        arrText: [],
-        nextCheckbox: [],
-        cycle: 0,
-        lang: [{
-          lang: 'en-US',
-          alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-        }, {
-          lang: 'ru-RU',
-          alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
-        }]
       }
     };
   },
-  mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_4__["default"]],
+  mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_sound_word_mixin__WEBPACK_IMPORTED_MODULE_6__["default"]],
   components: {
-    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_6__.VueGoodTable,
+    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_7__.VueGoodTable,
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   methods: {
@@ -532,113 +524,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
         _this5.touchCheckbox();
       }, 1000);
-    },
-    initialSpeak: function initialSpeak() {
-      this.speak.cycle = 0;
-      this.setText();
-      this.soundSpeak();
-    },
-    // сбор текста в выбранных checkbox eng и перевод
-    // [ ['eng','ru'], [] ]
-    setText: function setText() {
-      var checkboxes = document.getElementsByClassName('check');
-      this.speak.arrText = [];
-      var id = 0; // все checkboxes
-
-      for (var i = 0; i < checkboxes.length; i++) {
-        // он выбран
-        if (checkboxes[i].checked) {
-          id = checkboxes[i].getAttribute('data-id');
-
-          for (var r = 0; r < this.table.rows.length; r++) {
-            if (id == this.table.rows[r].id) {
-              this.speak.arrText.push([this.table.rows[r].sentence, this.table.rows[r].translation]);
-            }
-          }
-        }
-      }
-    },
-    getIndexLanguage: function getIndexLanguage(text, synthesis) {
-      // все языки
-      for (var i = 0; i < this.speak.lang.length; i++) {
-        // все буквы языка
-        for (var s = 0; s < this.speak.lang[i].alpha.length; s++) {
-          if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
-            // доступные языки в обьекте озвучки
-            for (var l = 0; l < synthesis.length; l++) {
-              if (synthesis[l].lang === this.speak.lang[i].lang) {
-                // вернуть индекс доступного языка
-                return l;
-              }
-            }
-          }
-        }
-      }
-    },
-    // вернуть следущий checkbox
-    addNextCheckbox: function addNextCheckbox() {
-      if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
-        this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]); // новый checkbox
-
-        return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
-      }
-
-      return false;
-    },
-    soundSpeak: function soundSpeak() {
-      var _this6 = this;
-
-      var last_checkbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var text = '';
-      window.speechSynthesis.cancel();
-      var synthesis = window.speechSynthesis;
-
-      if (last_checkbox.length === 0) {
-        last_checkbox = this.addNextCheckbox();
-      }
-
-      if (last_checkbox) {
-        // существует елемент текста
-        if (this.speak.cycle < last_checkbox.length) {
-          text = last_checkbox[this.speak.cycle];
-          var utterance = new SpeechSynthesisUtterance(text); // определить язык текста
-
-          var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
-          setTimeout(function () {
-            utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
-
-            synthesis.speak(utterance);
-          }, 1000); // событие завершения озвучки
-
-          utterance.addEventListener('end', function (event) {
-            _this6.speak.cycle++;
-
-            _this6.soundSpeak(last_checkbox);
-          });
-        } // выбрать следущий checkbox
-        else {
-          this.speak.cycle = 0;
-          this.soundSpeak();
-        }
-      }
     }
   },
   mounted: function mounted() {
-    var _this7 = this;
+    var _this6 = this;
 
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this7.help_dynamic = "";
+      _this6.help_dynamic = "";
     });
   },
   validations: {
     new_sentence: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_7__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_7__.minLength)(3)
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_8__.required,
+      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_8__.minLength)(3)
     },
     translation_sentence: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_7__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_7__.minLength)(3)
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_8__.required,
+      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_8__.minLength)(3)
     }
   },
   beforeDestroy: function beforeDestroy() {
@@ -929,6 +832,164 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: [],
   mounted: function mounted() {}
+});
+
+/***/ }),
+
+/***/ "./resources/js/mixins/sound_word_mixin.js":
+/*!*************************************************!*\
+  !*** ./resources/js/mixins/sound_word_mixin.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      speak: {
+        arrText: [],
+        nextCheckbox: [],
+        cycle: 0,
+        lang: [{
+          lang: 'en-US',
+          alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        }, {
+          lang: 'ru-RU',
+          alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
+        }]
+      }
+    };
+  },
+  methods: {
+    initialSpeak: function initialSpeak() {
+      this.speak.cycle = 0;
+      this.speak.nextCheckbox = [];
+      this.setText().then();
+      this.soundSpeak();
+    },
+    // сбор текста в выбранных checkbox eng и перевод
+    // [ ['eng','ru'], [] ]
+    setText: function setText() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var checkboxes, id, promise;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                checkboxes = document.getElementsByClassName('check');
+                _this.speak.arrText = [];
+                id = 0;
+                _context.next = 5;
+                return new Promise(function (resolve, reject) {
+                  // все checkboxes
+                  for (var i = 0; i < checkboxes.length; i++) {
+                    // он выбран
+                    if (checkboxes[i].checked) {
+                      id = checkboxes[i].getAttribute('data-id');
+
+                      for (var r = 0; r < _this.table.rows.length; r++) {
+                        if (id == _this.table.rows[r].id) {
+                          _this.speak.arrText.push([_this.table.rows[r].sentence, _this.table.rows[r].translation]);
+                        }
+                      }
+                    }
+                  }
+                });
+
+              case 5:
+                promise = _context.sent;
+                _context.next = 8;
+                return promise;
+
+              case 8:
+                return _context.abrupt("return", _context.sent);
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    soundSpeak: function soundSpeak() {
+      var _this2 = this;
+
+      var last_checkbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var text = '';
+      window.speechSynthesis.cancel();
+      var synthesis = window.speechSynthesis; // вернуть следущий checkbox
+
+      if (last_checkbox.length === 0) {
+        last_checkbox = this.addNextCheckbox();
+      }
+
+      if (last_checkbox) {
+        // существует елемент текста
+        if (this.speak.cycle < last_checkbox.length) {
+          text = last_checkbox[this.speak.cycle];
+          var utterance = new SpeechSynthesisUtterance(text); // определить язык текста
+
+          var index_lang = this.getIndexLanguage(text, synthesis.getVoices());
+          setTimeout(function () {
+            utterance.voice = synthesis.getVoices()[index_lang]; // озвучить текст
+
+            synthesis.speak(utterance);
+          }, 1000); // событие завершения озвучки
+
+          utterance.addEventListener('end', function (event) {
+            _this2.speak.cycle++;
+
+            _this2.soundSpeak(last_checkbox);
+          });
+        } // выбрать следущий checkbox
+        else {
+          this.speak.cycle = 0;
+          this.soundSpeak();
+        }
+      }
+    },
+    // вернуть следущий checkbox
+    addNextCheckbox: function addNextCheckbox() {
+      if (this.speak.nextCheckbox.length < this.speak.arrText.length) {
+        this.speak.nextCheckbox.push(this.speak.arrText[this.speak.nextCheckbox.length]); // новый checkbox
+
+        return this.speak.nextCheckbox[this.speak.nextCheckbox.length - 1];
+      }
+
+      return false;
+    },
+    getIndexLanguage: function getIndexLanguage(text, synthesis) {
+      // все языки
+      for (var i = 0; i < this.speak.lang.length; i++) {
+        // все буквы языка
+        for (var s = 0; s < this.speak.lang[i].alpha.length; s++) {
+          if (text.indexOf(this.speak.lang[i].alpha[s]) !== -1) {
+            // доступные языки в обьекте озвучки
+            for (var l = 0; l < synthesis.length; l++) {
+              if (synthesis[l].lang === this.speak.lang[i].lang) {
+                // вернуть индекс доступного языка
+                return l;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 });
 
 /***/ }),
