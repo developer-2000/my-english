@@ -1,4 +1,3 @@
-
 export default {
     data() {
         return {
@@ -28,7 +27,7 @@ export default {
             this.speak.synthesis.cancel();
             // остановить возможно предыдущий запущеный sound
             this.speak.stop = true;
-            if(this.setText()){
+            if (this.setText()) {
                 this.forSpeak();
             }
         },
@@ -61,9 +60,9 @@ export default {
             setTimeout(() => {
                 this.speak.stop = false;
                 this.speak.arrText.forEach((arrRow, index1) => {
-                    Promise.all( arrRow.map(this.readSound) ).then( data => {
+                    Promise.all(arrRow.map(this.readSound)).then(data => {
                         // console.log(data)
-                    } );
+                    });
                 })
             }, 200);
         },
@@ -78,7 +77,7 @@ export default {
                 this.speak.synthesis.speak(utterance);
                 // событие завершения озвучки
                 utterance.addEventListener('end', (event) => {
-                    if(!this.speak.stop){
+                    if (!this.speak.stop) {
                         return resolve(text);
                     }
                 });
