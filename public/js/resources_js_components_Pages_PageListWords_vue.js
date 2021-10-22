@@ -1092,7 +1092,7 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var i = 0; i < list.length; i++) {
         row = {
-          check_sound: list[i].id,
+          sound_all: list[i].id,
           id: list[i].id,
           sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
           translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),

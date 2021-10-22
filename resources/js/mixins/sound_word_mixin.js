@@ -3,10 +3,15 @@ export default {
         return {
             speak: {
                 stop: false,
+                // true обычная озвучка
+                start: false,
+                // true пауза
+                pause: false,
                 synthesis: window.speechSynthesis,
                 arrText: [],
-                nextCheckbox: [],
-                cycle: 0,
+                arrIdCollText: [],
+                counter_index_sound: 0,
+                pauseArrText: [],
                 lang: [
                     {
                         lang: 'en-US',
@@ -22,10 +27,9 @@ export default {
     },
     methods: {
         initialSpeak() {
-            this.speak.cycle = 0;
-            this.speak.nextCheckbox = [];
-            this.speak.synthesis.cancel();
+            this.speak.start = true;
             // остановить возможно предыдущий запущеный sound
+            this.speak.synthesis.cancel();
             this.speak.stop = true;
             if (this.setText()) {
                 this.forSpeak();
@@ -36,6 +40,7 @@ export default {
         setText() {
             let checkboxes = document.getElementsByClassName('check');
             this.speak.arrText = [];
+            this.speak.arrIdCollText = [];
             let id = 0;
 
             // все checkboxes
@@ -50,18 +55,39 @@ export default {
                                 this.table.rows[r].sentence,
                                 this.table.rows[r].translation
                             ]);
+                            this.speak.arrIdCollText.push(id);
                         }
                     }
                 }
             }
-            return 1;
+            this.speak.pauseArrText = [...this.speak.arrText];
+            this.speak.pauseIdCollText = [...this.speak.arrIdCollText];
+            return true;
         },
         forSpeak() {
+            let item_count = 0;
+            let arr_count = this.speak.arrText.length;
+            this.speak.counter_index_sound = 0;
+
             setTimeout(() => {
                 this.speak.stop = false;
-                this.speak.arrText.forEach((arrRow, index1) => {
+                // 1 прокрутка к тексту
+                this.scrollingScrolling(this.speak.arrIdCollText[0]);
+
+                this.speak.arrText.forEach((arrRow, index) => {
+                    // по очереди прочесть эти языки
                     Promise.all(arrRow.map(this.readSound)).then(data => {
-                        // console.log(data)
+                        // считаем сколько отработало индексов озвучки
+                        this.speak.counter_index_sound++;
+
+                        // 2 прокрутка к тексту
+                        this.scrollingScrolling(this.speak.arrIdCollText[this.speak.counter_index_sound]);
+
+                        // 3 востановить кнопку озвучки
+                        item_count = data ? (item_count + 1) : item_count;
+                        if (item_count === arr_count) {
+                            this.speak.start = false;
+                        }
                     });
                 })
             }, 200);
@@ -75,9 +101,15 @@ export default {
                 utterance.voice = this.speak.synthesis.getVoices()[index_lang];
                 // озвучить текст
                 this.speak.synthesis.speak(utterance);
+
                 // событие завершения озвучки
                 utterance.addEventListener('end', (event) => {
                     if (!this.speak.stop) {
+                        // чистка масива для pause
+                        if (index == 1) {
+                            this.speak.pauseArrText.shift();
+                            this.speak.pauseIdCollText.shift();
+                        }
                         return resolve(text);
                     }
                 });
@@ -100,6 +132,40 @@ export default {
                 }
             }
         },
+        pauseReadSound() {
+            this.speak.stop = true;
+            this.speak.pause = true;
+            this.speak.synthesis.cancel();
+            this.speak.arrText = [...this.speak.pauseArrText];
+            this.speak.arrIdCollText = [...this.speak.pauseIdCollText];
+        },
+        stopReadSound() {
+            this.speak.stop = false;
+            this.speak.pause = false;
+            this.speak.start = false;
+            this.speak.synthesis.cancel();
+        },
+        continueReadSound() {
+            this.speak.pause = false;
+            this.forSpeak();
+        },
+        scrollingScrolling(id) {
+            if (id !== undefined) {
+                let parent = $('#content-wrapper');
+                // положение скроллинга
+                let scrolling = parent.scrollTop();
+                let elTop = document.getElementById('check_' + id).getBoundingClientRect().top;
+                elTop = scrolling == 0 ? elTop : (elTop + scrolling);
+                let elHeight = $('#check_' + id).height();
+                let parentHeight = parent.height();
+                let offset = elTop - ((parentHeight - elHeight) / 2);
+
+                parent.animate({scrollTop: offset}, 700);
+            }
+        },
+    },
+    mounted() {
+
     },
 }
 

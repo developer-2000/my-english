@@ -1,23 +1,39 @@
 <template>
     <div id="page_list_worlds">
 
-        <!-- body -->
+        <!-- body page -->
         <div class="wrapper">
             <!-- верхнее меню -->
             <div class="card card-primary card-outline top_menu">
                 <div class="card-header">
-                    <button @click="initialSpeak" class="btn bg-gradient-success">
+                    <!-- start -->
+                    <button v-if="!speak.start" @click="initialSpeak" class="btn bg-gradient-success">
                         <i class="fas fa-play"></i>
-                        Speak text
+                        Sound translation
                     </button>
+                    <!-- pause -->
+                    <button v-if="speak.start && !speak.pause" @click="pauseReadSound" class="btn btn-outline-warning">
+                        <i class="fas fa-pause"></i>
+                        Pause
+                    </button>
+                    <!-- continue -->
+                    <button v-if="speak.pause" @click="continueReadSound" class="btn bg-gradient-success">
+                        <i class="fas fa-play"></i>
+                        Continue
+                    </button>
+                    <!-- stop -->
+                    <button v-if="speak.start" @click="stopReadSound" class="btn btn-outline-danger">
+                        <i class="fas fa-stop"></i>
+                        Stop
+                    </button>
+
                     <button @click="openModalCreateSentence" class="btn bg-gradient-primary">
                         Add sentence
                     </button>
                 </div>
             </div>
-
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
+            <!-- body -->
+            <div class="content-wrapper" id="content-wrapper">
                 <div class="content-header">
                     <div class="container-fluid">
                         <!-- заголовок окна-->
@@ -53,11 +69,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.content-header -->
-
             </div>
+            <!-- / body -->
         </div>
-        <!-- / body -->
+        <!-- / body page -->
 
         <!-- Modals -->
         <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade" id="create_sentence" role="dialog"
@@ -224,7 +239,7 @@
                             sortable: false,
                             html: true,
                             field: (val) => {
-                                return `<input data-id="${val.check_sound}" class="check" type="checkbox" id="check_${val.check_sound}">`;
+                                return `<input data-id="${val.sound_all}" class="check" type="checkbox" id="check_${val.sound_all}">`;
                             }
                         },
                         {

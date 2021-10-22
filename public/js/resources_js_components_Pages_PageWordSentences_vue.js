@@ -218,6 +218,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // validate
  // table
 
@@ -250,7 +265,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           sortable: false,
           html: true,
           field: function field(val) {
-            return "<input data-id=\"".concat(val.check_sound, "\" class=\"check\" type=\"checkbox\" id=\"check_").concat(val.check_sound, "\">");
+            return "<input data-id=\"".concat(val.sound_all, "\" class=\"check\" type=\"checkbox\" id=\"check_").concat(val.sound_all, "\">");
           }
         }, {
           tdClass: 'id_td',
@@ -591,7 +606,7 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var i = 0; i < list.length; i++) {
         row = {
-          check_sound: list[i].id,
+          sound_all: list[i].id,
           id: list[i].id,
           sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
           translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
@@ -859,15 +874,32 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       speak: {
         stop: false,
+        // true обычная озвучка
+        start: false,
+        // true пауза
+        pause: false,
         synthesis: window.speechSynthesis,
         arrText: [],
-        nextCheckbox: [],
-        cycle: 0,
+        arrIdCollText: [],
+        counter_index_sound: 0,
+        pauseArrText: [],
         lang: [{
           lang: 'en-US',
           alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -880,10 +912,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     initialSpeak: function initialSpeak() {
-      this.speak.cycle = 0;
-      this.speak.nextCheckbox = [];
-      this.speak.synthesis.cancel(); // остановить возможно предыдущий запущеный sound
+      this.speak.start = true; // остановить возможно предыдущий запущеный sound
 
+      this.speak.synthesis.cancel();
       this.speak.stop = true;
 
       if (this.setText()) {
@@ -895,6 +926,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     setText: function setText() {
       var checkboxes = document.getElementsByClassName('check');
       this.speak.arrText = [];
+      this.speak.arrIdCollText = [];
       var id = 0; // все checkboxes
 
       for (var i = 0; i < checkboxes.length; i++) {
@@ -905,21 +937,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           for (var r = 0; r < this.table.rows.length; r++) {
             if (id == this.table.rows[r].id) {
               this.speak.arrText.push([this.table.rows[r].sentence, this.table.rows[r].translation]);
+              this.speak.arrIdCollText.push(id);
             }
           }
         }
       }
 
-      return 1;
+      this.speak.pauseArrText = _toConsumableArray(this.speak.arrText);
+      this.speak.pauseIdCollText = _toConsumableArray(this.speak.arrIdCollText);
+      return true;
     },
     forSpeak: function forSpeak() {
       var _this = this;
 
+      var item_count = 0;
+      var arr_count = this.speak.arrText.length;
+      this.speak.counter_index_sound = 0;
       setTimeout(function () {
-        _this.speak.stop = false;
+        _this.speak.stop = false; // 1 прокрутка к тексту
 
-        _this.speak.arrText.forEach(function (arrRow, index1) {
-          Promise.all(arrRow.map(_this.readSound)).then(function (data) {// console.log(data)
+        _this.scrollingScrolling(_this.speak.arrIdCollText[0]);
+
+        _this.speak.arrText.forEach(function (arrRow, index) {
+          // по очереди прочесть эти языки
+          Promise.all(arrRow.map(_this.readSound)).then(function (data) {
+            // считаем сколько отработало индексов озвучки
+            _this.speak.counter_index_sound++; // 2 прокрутка к тексту
+
+            _this.scrollingScrolling(_this.speak.arrIdCollText[_this.speak.counter_index_sound]); // 3 востановить кнопку озвучки
+
+
+            item_count = data ? item_count + 1 : item_count;
+
+            if (item_count === arr_count) {
+              _this.speak.start = false;
+            }
           });
         });
       }, 200);
@@ -949,6 +1001,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   // событие завершения озвучки
                   utterance.addEventListener('end', function (event) {
                     if (!_this2.speak.stop) {
+                      // чистка масива для pause
+                      if (index == 1) {
+                        _this2.speak.pauseArrText.shift();
+
+                        _this2.speak.pauseIdCollText.shift();
+                      }
+
                       return resolve(text);
                     }
                   });
@@ -978,8 +1037,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }
+    },
+    pauseReadSound: function pauseReadSound() {
+      this.speak.stop = true;
+      this.speak.pause = true;
+      this.speak.synthesis.cancel();
+      this.speak.arrText = _toConsumableArray(this.speak.pauseArrText);
+      this.speak.arrIdCollText = _toConsumableArray(this.speak.pauseIdCollText);
+    },
+    stopReadSound: function stopReadSound() {
+      this.speak.stop = false;
+      this.speak.pause = false;
+      this.speak.start = false;
+      this.speak.synthesis.cancel();
+    },
+    continueReadSound: function continueReadSound() {
+      this.speak.pause = false;
+      this.forSpeak();
+    },
+    scrollingScrolling: function scrollingScrolling(id) {
+      if (id !== undefined) {
+        var parent = $('#content-wrapper'); // положение скроллинга
+
+        var scrolling = parent.scrollTop();
+        var elTop = document.getElementById('check_' + id).getBoundingClientRect().top;
+        elTop = scrolling == 0 ? elTop : elTop + scrolling;
+        var elHeight = $('#check_' + id).height();
+        var parentHeight = parent.height();
+        var offset = elTop - (parentHeight - elHeight) / 2;
+        parent.animate({
+          scrollTop: offset
+        }, 700);
+      }
     }
-  }
+  },
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -11812,17 +11904,63 @@ var render = function() {
     _c("div", { staticClass: "wrapper" }, [
       _c("div", { staticClass: "card card-primary card-outline top_menu" }, [
         _c("div", { staticClass: "card-header" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn bg-gradient-success",
-              on: { click: _vm.initialSpeak }
-            },
-            [
-              _c("i", { staticClass: "fas fa-play" }),
-              _vm._v("\n                    Speak text\n                ")
-            ]
-          ),
+          !_vm.speak.start
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn bg-gradient-success",
+                  on: { click: _vm.initialSpeak }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-play" }),
+                  _vm._v(
+                    "\n                    Sound translation\n                "
+                  )
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.speak.start && !_vm.speak.pause
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-warning",
+                  on: { click: _vm.pauseReadSound }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-pause" }),
+                  _vm._v("\n                    Pause\n                ")
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.speak.pause
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn bg-gradient-success",
+                  on: { click: _vm.continueReadSound }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-play" }),
+                  _vm._v("\n                    Continue\n                ")
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.speak.start
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-danger",
+                  on: { click: _vm.stopReadSound }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-stop" }),
+                  _vm._v("\n                    Stop\n                ")
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "button",
@@ -11835,61 +11973,69 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "content-wrapper" }, [
-        _c("div", { staticClass: "content-header" }, [
-          _c("div", { staticClass: "container-fluid" }, [
-            _c("h1", { staticClass: "m-0 text-dark" }, [
-              _vm._v("List sentences")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card card-primary card-outline block_table" },
-              [
-                _c(
-                  "div",
-                  { staticClass: "table_wrapper" },
-                  [
-                    _c(
-                      "vue-good-table",
-                      {
-                        attrs: {
-                          columns: _vm.table.columns,
-                          isLoading: _vm.table.isLoading,
-                          mode: _vm.table.mode,
-                          "pagination-options": _vm.table.optionsPaginate,
-                          rows: _vm.table.rows,
-                          "search-options": {
-                            enabled: true,
-                            placeholder: "Search word"
+      _c(
+        "div",
+        { staticClass: "content-wrapper", attrs: { id: "content-wrapper" } },
+        [
+          _c("div", { staticClass: "content-header" }, [
+            _c("div", { staticClass: "container-fluid" }, [
+              _c("h1", { staticClass: "m-0 text-dark" }, [
+                _vm._v("List sentences")
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "card card-primary card-outline block_table" },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "table_wrapper" },
+                    [
+                      _c(
+                        "vue-good-table",
+                        {
+                          attrs: {
+                            columns: _vm.table.columns,
+                            isLoading: _vm.table.isLoading,
+                            mode: _vm.table.mode,
+                            "pagination-options": _vm.table.optionsPaginate,
+                            rows: _vm.table.rows,
+                            "search-options": {
+                              enabled: true,
+                              placeholder: "Search word"
+                            },
+                            totalRows: _vm.table.totalRecords,
+                            styleClass: "vgt-table bordered sentence"
                           },
-                          totalRows: _vm.table.totalRecords,
-                          styleClass: "vgt-table bordered sentence"
+                          on: {
+                            "update:isLoading": function($event) {
+                              return _vm.$set(_vm.table, "isLoading", $event)
+                            },
+                            "update:is-loading": function($event) {
+                              return _vm.$set(_vm.table, "isLoading", $event)
+                            },
+                            "on-page-change": _vm.onPageChange,
+                            "on-per-page-change": _vm.onPerPageChange,
+                            "on-search": _vm.onSearch,
+                            "on-sort-change": _vm.onSortChange
+                          }
                         },
-                        on: {
-                          "update:isLoading": function($event) {
-                            return _vm.$set(_vm.table, "isLoading", $event)
-                          },
-                          "update:is-loading": function($event) {
-                            return _vm.$set(_vm.table, "isLoading", $event)
-                          },
-                          "on-page-change": _vm.onPageChange,
-                          "on-per-page-change": _vm.onPerPageChange,
-                          "on-search": _vm.onSearch,
-                          "on-sort-change": _vm.onSortChange
-                        }
-                      },
-                      [_c("template", { slot: "loadingContent" }, [_c("div")])],
-                      2
-                    )
-                  ],
-                  1
-                )
-              ]
-            )
+                        [
+                          _c("template", { slot: "loadingContent" }, [
+                            _c("div")
+                          ])
+                        ],
+                        2
+                      )
+                    ],
+                    1
+                  )
+                ]
+              )
+            ])
           ])
-        ])
-      ])
+        ]
+      )
     ]),
     _vm._v(" "),
     _c(
