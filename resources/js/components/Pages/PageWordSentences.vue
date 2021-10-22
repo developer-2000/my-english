@@ -7,7 +7,7 @@
             <div class="card card-primary card-outline top_menu">
                 <div class="card-header">
                     <!-- start -->
-                    <button v-if="!speak.start" @click="initialSpeak" class="btn bg-gradient-success">
+                    <button v-if="!speak.start" @click="initialSpeak" :disabled="disabled_play" class="btn bg-gradient-success">
                         <i class="fas fa-play"></i>
                         Sound translation
                     </button>
@@ -222,6 +222,7 @@
     export default {
         data() {
             return {
+                disabled_play: true,
                 sentence_id: 0,
                 new_sentence: '',
                 translation_sentence: '',
@@ -296,7 +297,6 @@
                         type: '',
                     }],
                 },
-
             };
         },
         mixins: [
@@ -328,6 +328,7 @@
                     this.initialCheckbox();
                 }, 1000);
             },
+            // выбрать checkbox
             initialCheckbox() {
                 $('#checkbox').bind('click', (e) => {
                     if ($(e.target).prop('checked')) {
@@ -335,7 +336,10 @@
                     } else {
                         $('.check').prop('checked', false);
                     }
-                })
+                });
+                $(":checkbox").bind('change', (e) => {
+                    this.disabled_play = $('.check:checked').length ? false : true;
+                });
             },
             // --- предложения
             async loadSenteces() {
@@ -438,6 +442,7 @@
             $('.btn_sentence').unbind('click');
             $('#checkbox').unbind('click');
             $('#clear_search').unbind('click');
+            $(":checkbox").bind('change');
         },
         name: "PageWordSentences.vue"
     }

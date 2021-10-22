@@ -249,6 +249,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      disabled_play: true,
       sentence_id: 0,
       new_sentence: '',
       translation_sentence: '',
@@ -349,7 +350,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this.initialCheckbox();
       }, 1000);
     },
+    // выбрать checkbox
     initialCheckbox: function initialCheckbox() {
+      var _this2 = this;
+
       $('#checkbox').bind('click', function (e) {
         if ($(e.target).prop('checked')) {
           $('.check').prop('checked', true);
@@ -357,10 +361,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           $('.check').prop('checked', false);
         }
       });
+      $(":checkbox").bind('change', function (e) {
+        _this2.disabled_play = $('.check:checked').length ? false : true;
+      });
     },
     // --- предложения
     loadSenteces: function loadSenteces() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var response;
@@ -369,19 +376,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                _this2.isLoading = true;
+                _this3.isLoading = true;
                 _context.next = 4;
-                return _this2.$http.get("".concat(_this2.$http.apiUrl(), "sentence?search=").concat(_this2.serverParams.search, "&page=").concat(_this2.serverParams.page, "&perPage=").concat(_this2.serverParams.perPage, "&sortField=sentence&sortType=").concat(_this2.serverParams.sort[0].type));
+                return _this3.$http.get("".concat(_this3.$http.apiUrl(), "sentence?search=").concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=sentence&sortType=").concat(_this3.serverParams.sort[0].type));
 
               case 4:
                 response = _context.sent;
 
-                if (_this2.checkSuccess(response)) {
-                  _this2.table.totalRecords = response.data.data.sentences.total_count;
+                if (_this3.checkSuccess(response)) {
+                  _this3.table.totalRecords = response.data.data.sentences.total_count;
 
-                  _this2.makeObjectDataForTable(response.data.data.sentences.list);
+                  _this3.makeObjectDataForTable(response.data.data.sentences.list);
 
-                  _this2.table.origin_rows = response.data.data.sentences.list;
+                  _this3.table.origin_rows = response.data.data.sentences.list;
                 }
 
                 _context.next = 11;
@@ -393,7 +400,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(_context.t0);
 
               case 11:
-                _this2.isLoading = false;
+                _this3.isLoading = false;
 
               case 12:
               case "end":
@@ -404,7 +411,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     createSentence: function createSentence() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         var data, response;
@@ -414,19 +421,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.prev = 0;
                 data = {
-                  sentence: _this3.new_sentence,
-                  translation: _this3.translation_sentence
+                  sentence: _this4.new_sentence,
+                  translation: _this4.translation_sentence
                 };
                 $('#create_sentence').modal('hide');
                 $('.modal-backdrop.fade.show').remove();
                 _context2.next = 6;
-                return _this3.$http.post("".concat(_this3.$http.apiUrl(), "sentence"), data);
+                return _this4.$http.post("".concat(_this4.$http.apiUrl(), "sentence"), data);
 
               case 6:
                 response = _context2.sent;
 
-                if (_this3.checkSuccess(response)) {
-                  _this3.initialData();
+                if (_this4.checkSuccess(response)) {
+                  _this4.initialData();
                 }
 
                 _context2.next = 13;
@@ -446,7 +453,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     updateSentence: function updateSentence() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var data, response;
@@ -456,17 +463,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context3.prev = 0;
                 data = {
-                  sentence: _this4.new_sentence,
-                  translation: _this4.translation_sentence
+                  sentence: _this5.new_sentence,
+                  translation: _this5.translation_sentence
                 };
                 _context3.next = 4;
-                return _this4.$http.patch("".concat(_this4.$http.apiUrl(), "sentence/").concat(_this4.sentence_id), data);
+                return _this5.$http.patch("".concat(_this5.$http.apiUrl(), "sentence/").concat(_this5.sentence_id), data);
 
               case 4:
                 response = _context3.sent;
 
-                if (_this4.checkSuccess(response)) {
-                  _this4.initialData();
+                if (_this5.checkSuccess(response)) {
+                  _this5.initialData();
 
                   $('#update_sentence').modal('hide');
                   $('.modal-backdrop.fade.show').remove();
@@ -509,19 +516,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return row;
     },
     initialClickButSentenceUpdate: function initialClickButSentenceUpdate() {
-      var _this5 = this;
+      var _this6 = this;
 
       var a = setTimeout(function () {
         $('.btn_sentence').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var id = queryObj.attr("data-id");
 
-          var row = _this5.getSentenceCollection(id);
+          var row = _this6.getSentenceCollection(id);
 
-          _this5.setVariableDefault(row.id, row.sentence, row.translation);
+          _this6.setVariableDefault(row.id, row.sentence, row.translation);
 
           $('#update_sentence').modal('show');
-          _this5.help_dynamic = '';
+          _this6.help_dynamic = '';
         });
       }, 1000);
     },
@@ -531,11 +538,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this6 = this;
+    var _this7 = this;
 
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this6.help_dynamic = "";
+      _this7.help_dynamic = "";
     });
   },
   validations: {
@@ -552,6 +559,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     $('.btn_sentence').unbind('click');
     $('#checkbox').unbind('click');
     $('#clear_search').unbind('click');
+    $(":checkbox").bind('change');
   },
   name: "PageWordSentences.vue"
 });
@@ -11927,6 +11935,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn bg-gradient-success",
+                  attrs: { disabled: _vm.disabled_play },
                   on: { click: _vm.initialSpeak }
                 },
                 [
