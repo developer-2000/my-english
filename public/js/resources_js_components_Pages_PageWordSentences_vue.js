@@ -971,6 +971,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
             if (item_count === arr_count) {
               _this.speak.start = false;
+
+              _this.changeColorLineSound();
             }
           });
         });
@@ -1050,6 +1052,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.speak.pause = false;
       this.speak.start = false;
       this.speak.synthesis.cancel();
+      this.changeColorLineSound();
     },
     continueReadSound: function continueReadSound() {
       this.speak.pause = false;
@@ -1065,9 +1068,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var elHeight = $('#check_' + id).height();
         var parentHeight = parent.height();
         var offset = elTop - (parentHeight - elHeight) / 2;
+        this.changeColorLineSound($('#check_' + id));
         parent.animate({
           scrollTop: offset
         }, 700);
+      }
+    },
+    changeColorLineSound: function changeColorLineSound() {
+      var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      $('tr').css({
+        'outline': 'none',
+        'background': 'none'
+      });
+
+      if (obj) {
+        obj.parent().parent().parent().css({
+          'outline': '1px solid rgb(192, 249, 190)',
+          'background': '#ecffed'
+        });
       }
     }
   },

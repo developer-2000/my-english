@@ -87,6 +87,7 @@ export default {
                         item_count = data ? (item_count + 1) : item_count;
                         if (item_count === arr_count) {
                             this.speak.start = false;
+                            this.changeColorLineSound();
                         }
                     });
                 })
@@ -144,6 +145,7 @@ export default {
             this.speak.pause = false;
             this.speak.start = false;
             this.speak.synthesis.cancel();
+            this.changeColorLineSound();
         },
         continueReadSound() {
             this.speak.pause = false;
@@ -160,7 +162,14 @@ export default {
                 let parentHeight = parent.height();
                 let offset = elTop - ((parentHeight - elHeight) / 2);
 
+                this.changeColorLineSound($('#check_' + id));
                 parent.animate({scrollTop: offset}, 700);
+            }
+        },
+        changeColorLineSound(obj = false) {
+            $('tr').css({'outline':'none','background':'none'});
+            if(obj){
+                obj.parent().parent().parent().css({'outline':'1px solid rgb(192, 249, 190)','background':'#ecffed'});
             }
         },
     },
