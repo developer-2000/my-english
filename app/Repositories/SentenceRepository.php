@@ -3,7 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Sentence;
 use App\Models\Word;
-use App\Models\WordType;
+use Illuminate\Support\Facades\DB;
 
 class SentenceRepository extends CoreRepository
 {
@@ -26,6 +26,13 @@ class SentenceRepository extends CoreRepository
             if ($vars['sort_column'] == 'sentence') {
                 $query = $query
                     ->orderBy('sentence', $vars['sort_type']);
+            }
+            // сортировка checkbox по имеющейся связи
+            elseif ($vars['sort_column'] == 'sound') {
+                $query = $this->startConditions()
+                    ->leftJoin('sentence_sounds', 'sentences.id', '=', 'sentence_sounds.sentence_id')
+                    ->select('sentences.*', DB::raw('sentence_sounds.id as sound'))
+                    ->orderBy(DB::raw($vars['sort_column']), $vars['sort_type']);
             }
         }
 

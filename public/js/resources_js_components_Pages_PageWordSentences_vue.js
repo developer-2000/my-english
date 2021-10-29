@@ -235,6 +235,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 // validate
  // table
 
@@ -266,27 +271,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         origin_rows: [],
         // settings title
         columns: [{
-          tdClass: 'checkbox_td',
-          width: '3%',
-          sortable: false,
-          html: true,
-          field: function field(val) {
-            return "<input data-id=\"".concat(val.id, "\" class=\"general_checkbox\" type=\"checkbox\" id=\"general_checkbox_").concat(val.id, "\">");
-          }
-        }, {
-          tdClass: 'checkbox_td',
-          width: '3%',
-          sortable: false,
-          html: true,
-          field: function field(val) {
-            return "<input\n                                        ".concat(val.memorable_checkbox_sound == true ? 'checked' : '', "\n                                        data-id=\"").concat(val.id, "\" class=\"memorable_checkbox\" type=\"checkbox\" id=\"memorable_checkbox_").concat(val.id, "\">");
-          }
-        }, {
           tdClass: 'id_td',
           label: 'ID',
           field: 'id',
           width: '3%',
           sortable: false
+        }, {
+          tdClass: 'checkbox_td',
+          label: 'Sound',
+          width: '3%',
+          html: true,
+          field: function field(val) {
+            return "<input\n                                        ".concat(val.memorable_checkbox_sound == true ? 'checked' : '', "\n                                        data-id=\"").concat(val.id, "\" class=\"memorable_checkbox\" type=\"checkbox\" id=\"memorable_checkbox_").concat(val.id, "\">");
+          }
         }, {
           tdClass: 'text_td',
           label: 'Sentences',
@@ -351,102 +348,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     initialData: function initialData() {
       this.loadSenteces();
       this.initialClickButSentenceUpdate();
-      this.makeCheckboxTH();
+      this.initialCheckbox();
       this.makeButtonClearSearch();
     },
     // --- checkbox
-    makeCheckboxTH: function makeCheckboxTH() {
-      var _this = this;
-
-      var a = setTimeout(function () {
-        // установить главные checkboxes
-        $('#vgt-table th:eq(0) span').html('<input type="checkbox" id="checkbox_sound_all">'); // установить sound checkboxes
-
-        $("#vgt-table th:eq(1) span").html('' + '<div>' + '<input data-size="mini" id="memorable_sound_all" type="checkbox" data-toggle="toggle" data-on="Learn" data-off="Off">' + '<i id="sort_sound_th" class="fas fa-sort-up"></i>' + '</div>');
-
-        _this.initialCheckbox();
-      }, 1000);
-    },
     initialCheckbox: function initialCheckbox() {
-      // инициализация toggle button
-      $('#memorable_sound_all').bootstrapToggle(); // дизактивировать все toggle children checkbox
-
-      $('.memorable_checkbox').attr('disabled', 'disabled');
-      this.selectAllGeneralCheckbox(); // кнопка выборки всех общих checkbox
-
       this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
-
-      this.activationToggleButton(); // изменение статуса toggle кнопки
-
-      this.activationSortButtonTh(); // кнопка сортировки th
-    },
-    selectAllGeneralCheckbox: function selectAllGeneralCheckbox() {
-      $('#checkbox_sound_all').bind('click', function (e) {
-        if ($(e.target).prop('checked')) {
-          $('.general_checkbox').prop('checked', true);
-        } else {
-          $('.general_checkbox').prop('checked', false);
-        }
-      });
+      //     this.activationSortButtonTh();      // кнопка сортировки th
     },
     activationButtonSoundInMenu: function activationButtonSoundInMenu() {
+      var _this = this;
+
+      setTimeout(function () {
+        // состояние кнопки по умолчанию
+        _this.disabled_play = $('.memorable_checkbox:checked').length ? false : true; // изменнеие одного из checkbox
+
+        $(":checkbox").bind('change', function (e) {
+          _this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+
+          _this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
+        });
+      }, 1000);
+    },
+    bindCheckboxSound: function bindCheckboxSound(sentence_id, status) {
       var _this2 = this;
 
-      $(":checkbox").bind('change', function (e) {
-        _this2.disabled_play = $('.general_checkbox:checked').length ? false : true;
-      });
-    },
-    activationToggleButton: function activationToggleButton() {
-      $('#memorable_sound_all').change(function () {
-        if ($(this).prop('checked')) {
-          // активация toggle кнопки
-          $('.memorable_checkbox').removeAttr('disabled'); // показать кнопку сортировки
-
-          $('#sort_sound_th').css('display', 'block');
-        } else {
-          $('.memorable_checkbox').attr('disabled', 'disabled');
-          $('#sort_sound_th').css('display', 'none');
-        }
-
-        console.log('Toggle: ' + $(this).prop('checked'));
-      });
-    },
-    activationSortButtonTh: function activationSortButtonTh() {
-      $('#sort_sound_th').bind('click', function (e) {
-        var elem = $(e.target); // активация сортировки
-
-        if (elem.hasClass("sort-blue")) {
-          elem.removeClass("sort-blue");
-        } else {
-          elem.addClass("sort-blue");
-        }
-      });
-    },
-    // --- предложения
-    loadSenteces: function loadSenteces() {
-      var _this3 = this;
-
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var response;
+        var data, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                _this3.isLoading = true;
+                data = {
+                  sentence_id: sentence_id,
+                  status: status
+                };
                 _context.next = 4;
-                return _this3.$http.get("".concat(_this3.$http.apiUrl(), "sentence?search=").concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=sentence&sortType=").concat(_this3.serverParams.sort[0].type));
+                return _this2.$http.post("".concat(_this2.$http.apiUrl(), "sentence/bind-checkbox-sound"), data);
 
               case 4:
                 response = _context.sent;
 
-                if (_this3.checkSuccess(response)) {
-                  _this3.table.totalRecords = response.data.data.sentences.total_count;
-
-                  _this3.makeObjectDataForTable(response.data.data.sentences.list);
-
-                  _this3.table.origin_rows = response.data.data.sentences.list;
-                  console.log(_this3.table.rows); // console.log(response.data.data.sentences.list)
+                if (_this2.checkSuccess(response)) {
+                  _this2.initialData();
                 }
 
                 _context.next = 11;
@@ -458,9 +403,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(_context.t0);
 
               case 11:
-                _this3.isLoading = false;
-
-              case 12:
               case "end":
                 return _context.stop();
             }
@@ -468,30 +410,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, null, [[0, 8]]);
       }))();
     },
-    createSentence: function createSentence() {
-      var _this4 = this;
+    // --- предложения
+    loadSenteces: function loadSenteces() {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var data, response;
+        var field, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                data = {
-                  sentence: _this4.new_sentence,
-                  translation: _this4.translation_sentence
-                };
-                $('#create_sentence').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
+                _this3.isLoading = true;
+                field = _this3.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
+
+                if (typeof field !== "string" && field.name == "field") {
+                  field = 'sound';
+                }
+
                 _context2.next = 6;
-                return _this4.$http.post("".concat(_this4.$http.apiUrl(), "sentence"), data);
+                return _this3.$http.get("".concat(_this3.$http.apiUrl(), "sentence?\n                    search=").concat(_this3.serverParams.search, "&\n                    page=").concat(_this3.serverParams.page, "&\n                    perPage=").concat(_this3.serverParams.perPage, "&\n                    sortField=").concat(field, "&\n                    sortType=").concat(_this3.serverParams.sort[0].type));
 
               case 6:
                 response = _context2.sent;
 
-                if (_this4.checkSuccess(response)) {
-                  _this4.initialData();
+                if (_this3.checkSuccess(response)) {
+                  _this3.table.totalRecords = response.data.data.sentences.total_count;
+
+                  _this3.makeObjectDataForTable(response.data.data.sentences.list);
+
+                  _this3.table.origin_rows = response.data.data.sentences.list;
                 }
 
                 _context2.next = 13;
@@ -503,6 +451,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(_context2.t0);
 
               case 13:
+                _this3.isLoading = false;
+
+              case 14:
               case "end":
                 return _context2.stop();
             }
@@ -510,8 +461,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, null, [[0, 10]]);
       }))();
     },
-    updateSentence: function updateSentence() {
-      var _this5 = this;
+    createSentence: function createSentence() {
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var data, response;
@@ -521,14 +472,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context3.prev = 0;
                 data = {
+                  sentence: _this4.new_sentence,
+                  translation: _this4.translation_sentence
+                };
+                $('#create_sentence').modal('hide');
+                $('.modal-backdrop.fade.show').remove();
+                _context3.next = 6;
+                return _this4.$http.post("".concat(_this4.$http.apiUrl(), "sentence"), data);
+
+              case 6:
+                response = _context3.sent;
+
+                if (_this4.checkSuccess(response)) {
+                  _this4.initialData();
+                }
+
+                _context3.next = 13;
+                break;
+
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](0);
+                console.log(_context3.t0);
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 10]]);
+      }))();
+    },
+    updateSentence: function updateSentence() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var data, response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                data = {
                   sentence: _this5.new_sentence,
                   translation: _this5.translation_sentence
                 };
-                _context3.next = 4;
+                _context4.next = 4;
                 return _this5.$http.patch("".concat(_this5.$http.apiUrl(), "sentence/").concat(_this5.sentence_id), data);
 
               case 4:
-                response = _context3.sent;
+                response = _context4.sent;
 
                 if (_this5.checkSuccess(response)) {
                   _this5.initialData();
@@ -537,20 +530,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   $('.modal-backdrop.fade.show').remove();
                 }
 
-                _context3.next = 11;
+                _context4.next = 11;
                 break;
 
               case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
-                console.log(_context3.t0);
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
+                console.log(_context4.t0);
 
               case 11:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, null, [[0, 8]]);
+        }, _callee4, null, [[0, 8]]);
       }))();
     },
     setVariableDefault: function setVariableDefault() {
@@ -615,10 +608,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   beforeDestroy: function beforeDestroy() {
     $('.btn_sentence').unbind('click');
-    $('#checkbox_sound_all').unbind('click');
     $('#clear_search').unbind('click');
     $(":checkbox").unbind('change');
-    $('#sort_sound_th').unbind('click');
   },
   name: "PageWordSentences.vue"
 });
@@ -676,7 +667,6 @@ __webpack_require__.r(__webpack_exports__);
       this.table.rows = [];
       list.forEach(function (obj, index) {
         row = {
-          general_checkbox_sound: obj.id,
           memorable_checkbox_sound: obj.sound == null ? false : true,
           id: obj.id,
           sentence: obj.sentence.charAt(0).toUpperCase() + obj.sentence.slice(1),
@@ -999,7 +989,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     // сбор текста в выбранных checkbox eng и перевод
     // [ ['eng','ru'], [] ]
     setText: function setText() {
-      var checkboxes = document.getElementsByClassName('check');
+      var checkboxes = document.getElementsByClassName('memorable_checkbox');
       this.speak.arrText = [];
       this.speak.arrIdCollText = [];
       var id = 0; // все checkboxes
@@ -1138,12 +1128,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var parent = $('#content-wrapper'); // положение скроллинга
 
         var scrolling = parent.scrollTop();
-        var elTop = document.getElementById('check_' + id).getBoundingClientRect().top;
+        var elTop = document.getElementById('memorable_checkbox_' + id).getBoundingClientRect().top;
         elTop = scrolling == 0 ? elTop : elTop + scrolling;
-        var elHeight = $('#check_' + id).height();
+        var elHeight = $('#memorable_checkbox_' + id).height();
         var parentHeight = parent.height();
         var offset = elTop - (parentHeight - elHeight) / 2;
-        this.changeColorLineSound($('#check_' + id));
+        this.changeColorLineSound($('#memorable_checkbox_' + id));
         parent.animate({
           scrollTop: offset
         }, 700);

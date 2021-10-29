@@ -1,7 +1,6 @@
-
 export default {
     data() {
-        return { }
+        return {}
     },
     methods: {
         // заполнить обьект данных для таблица
@@ -9,9 +8,8 @@ export default {
             let row = '';
             this.table.rows = [];
 
-            list.forEach( (obj, index) => {
+            list.forEach((obj, index) => {
                 row = {
-                    general_checkbox_sound: obj.id,
                     memorable_checkbox_sound: (obj.sound == null) ? false : true,
                     id: obj.id,
                     sentence: obj.sentence.charAt(0).toUpperCase() + obj.sentence.slice(1),
@@ -24,8 +22,8 @@ export default {
         onSearch(search) {
             this.updateParams({search: search.searchTerm});
             this.initialData();
-            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display','block');
-            $('input.vgt-input.vgt-pull-left').css('margin-left','34px');
+            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'block');
+            $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
         },
         onPageChange(params) {
             this.updateParams({page: params.currentPage});
@@ -42,25 +40,26 @@ export default {
         updateParams(newProps) {
             this.serverParams = Object.assign({}, this.serverParams, newProps);
         },
-        makeButtonClearSearch(){
+        makeButtonClearSearch() {
             let a = setTimeout(() => {
                 $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
 
-                $('#clear_search').bind('click' , (e) => {
+                $('#clear_search').bind('click', (e) => {
                     // спрятать кнопку
-                    $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display','none');
+                    $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
                     this.serverParams.search = '';
                     this.initialData();
                     a = setTimeout(() => {
                         // сместить search и зачистить
-                        $('input.vgt-input.vgt-pull-left').css('margin-left','0px').val("");
+                        $('input.vgt-input.vgt-pull-left').css('margin-left', '0px').val("");
                     }, 500);
                 });
             }, 500);
         },
     },
-    props: [ ],
-    mounted() { }
+    props: [],
+    mounted() {
+    }
 }
 
 

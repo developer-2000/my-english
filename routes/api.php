@@ -21,6 +21,7 @@ Route::resource('sentence', SentenceController::class)->only([
     'index','store','update'
 ]);
 Route::get('sentence/search-word', [SentenceController::class, 'searchWord']);
+Route::post('sentence/bind-checkbox-sound', [SentenceController::class, 'bindCheckboxSound']);
 
 // 3
 Route::resource('type', TypeController::class)->only([

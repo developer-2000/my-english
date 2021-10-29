@@ -1093,7 +1093,6 @@ __webpack_require__.r(__webpack_exports__);
       this.table.rows = [];
       list.forEach(function (obj, index) {
         row = {
-          general_checkbox_sound: obj.id,
           memorable_checkbox_sound: obj.sound == null ? false : true,
           id: obj.id,
           sentence: obj.sentence.charAt(0).toUpperCase() + obj.sentence.slice(1),

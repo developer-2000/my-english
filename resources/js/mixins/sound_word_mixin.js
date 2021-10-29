@@ -38,7 +38,7 @@ export default {
         // сбор текста в выбранных checkbox eng и перевод
         // [ ['eng','ru'], [] ]
         setText() {
-            let checkboxes = document.getElementsByClassName('check');
+            let checkboxes = document.getElementsByClassName('memorable_checkbox');
             this.speak.arrText = [];
             this.speak.arrIdCollText = [];
             let id = 0;
@@ -156,20 +156,20 @@ export default {
                 let parent = $('#content-wrapper');
                 // положение скроллинга
                 let scrolling = parent.scrollTop();
-                let elTop = document.getElementById('check_' + id).getBoundingClientRect().top;
+                let elTop = document.getElementById('memorable_checkbox_' + id).getBoundingClientRect().top;
                 elTop = scrolling == 0 ? elTop : (elTop + scrolling);
-                let elHeight = $('#check_' + id).height();
+                let elHeight = $('#memorable_checkbox_' + id).height();
                 let parentHeight = parent.height();
                 let offset = elTop - ((parentHeight - elHeight) / 2);
 
-                this.changeColorLineSound($('#check_' + id));
+                this.changeColorLineSound($('#memorable_checkbox_' + id));
                 parent.animate({scrollTop: offset}, 700);
             }
         },
         changeColorLineSound(obj = false) {
-            $('tr').css({'outline':'none','background':'none'});
-            if(obj){
-                obj.parent().parent().parent().css({'outline':'1px solid rgb(192, 249, 190)','background':'#ecffed'});
+            $('tr').css({'outline': 'none', 'background': 'none'});
+            if (obj) {
+                obj.parent().parent().parent().css({'outline': '1px solid rgb(192, 249, 190)', 'background': '#ecffed'});
             }
         },
     },

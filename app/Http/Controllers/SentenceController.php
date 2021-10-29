@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Sentence\BindCheckboxSoundRequest;
 use App\Http\Requests\Word\CreateSentenceRequest;
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\SearchWordRequest;
@@ -10,6 +11,7 @@ use App\Http\Requests\Word\UpdateSentenceRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Sentence;
+use App\Models\SentenceSound;
 use App\Models\Word;
 use App\Repositories\SentenceRepository;
 use App\Repositories\WordRepository;
@@ -51,5 +53,19 @@ class SentenceController extends Controller
         $string = implode(" ", $coll->toArray());
 
         return new ApiResponse(compact('string'));
+    }
+
+    public function bindCheckboxSound(BindCheckboxSoundRequest $request) {
+        if($request['status']){
+            $data = SentenceSound::firstOrCreate([
+                'sentence_id' => $request['sentence_id']
+            ]);
+        }
+        else{
+            $data = SentenceSound::where('sentence_id', $request['sentence_id'])
+                ->delete();
+        }
+
+        return new ApiResponse([]);
     }
 }
