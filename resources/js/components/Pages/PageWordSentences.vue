@@ -205,6 +205,7 @@
 </template>
 
 <script>
+
     // validate
     import {required, minLength} from 'vuelidate/lib/validators'
     // table
@@ -218,10 +219,13 @@
     import helpSearchWord from "../details/HelpSearchWord";
     // sound_word
     import sound_word_mixin from "../../mixins/sound_word_mixin";
+    // bootstrap toggle
+    import BootstrapToggle from 'vue-bootstrap-toggle'
 
     export default {
         data() {
             return {
+                checked: true,
                 disabled_play: true,
                 sentence_id: 0,
                 new_sentence: '',
@@ -235,12 +239,23 @@
                     // settings title
                     columns: [
                         {
-                            tdClass: 'check_td',
+                            tdClass: 'checkbox_td',
                             width: '3%',
                             sortable: false,
                             html: true,
                             field: (val) => {
-                                return `<input data-id="${val.sound_all}" class="check" type="checkbox" id="check_${val.sound_all}">`;
+                                return `<input data-id="${val.id}" class="general_checkbox" type="checkbox" id="general_checkbox_${val.id}">`;
+                            }
+                        },
+                        {
+                            tdClass: 'checkbox_td',
+                            width: '3%',
+                            sortable: false,
+                            html: true,
+                            field: (val) => {
+                                return `<input
+                                            ${(val.memorable_checkbox_sound == true) ? 'checked' : ''}
+                                            data-id="${val.id}" class="memorable_checkbox" type="checkbox" id="memorable_checkbox_${val.id}">`;
                             }
                         },
                         {
@@ -254,7 +269,7 @@
                             tdClass: 'text_td',
                             label: 'Sentences',
                             field: 'sentence',
-                            width: '47%',
+                            width: '44%',
                         },
                         {
                             tdClass: 'text_td',
@@ -305,7 +320,11 @@
             help_search_word_mixin,
             sound_word_mixin
         ],
-        components: {VueGoodTable, helpSearchWord},
+        components: {
+            VueGoodTable,
+            helpSearchWord,
+            BootstrapToggle
+        },
         methods: {
             // --- validate
             touchNewSentence() {
@@ -324,21 +343,69 @@
             // --- checkbox
             makeCheckboxTH() {
                 let a = setTimeout(() => {
-                    $('#vgt-table th:first span').html('<input type="checkbox" id="checkbox">');
+                    // установить главные checkboxes
+                    $('#vgt-table th:eq(0) span').html('<input type="checkbox" id="checkbox_sound_all">');
+                    // установить sound checkboxes
+                    $("#vgt-table th:eq(1) span").html('' +
+                        '<div>' +
+                        '<input data-size="mini" id="memorable_sound_all" type="checkbox" data-toggle="toggle" data-on="Learn" data-off="Off">' +
+                        '<i id="sort_sound_th" class="fas fa-sort-up"></i>' +
+                        '</div>');
+
                     this.initialCheckbox();
                 }, 1000);
             },
-            // выбрать checkbox
             initialCheckbox() {
-                $('#checkbox').bind('click', (e) => {
+                // инициализация toggle button
+                $('#memorable_sound_all').bootstrapToggle();
+                // дизактивировать все toggle children checkbox
+                $('.memorable_checkbox').attr('disabled', 'disabled');
+
+                this.selectAllGeneralCheckbox();    // кнопка выборки всех общих checkbox
+                this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
+                this.activationToggleButton();      // изменение статуса toggle кнопки
+                this.activationSortButtonTh();      // кнопка сортировки th
+            },
+            selectAllGeneralCheckbox() {
+                $('#checkbox_sound_all').bind('click', (e) => {
                     if ($(e.target).prop('checked')) {
-                        $('.check').prop('checked', true);
+                        $('.general_checkbox').prop('checked', true);
                     } else {
-                        $('.check').prop('checked', false);
+                        $('.general_checkbox').prop('checked', false);
                     }
                 });
+            },
+            activationButtonSoundInMenu() {
                 $(":checkbox").bind('change', (e) => {
-                    this.disabled_play = $('.check:checked').length ? false : true;
+                    this.disabled_play = $('.general_checkbox:checked').length ? false : true;
+                });
+            },
+            activationToggleButton() {
+                $('#memorable_sound_all').change(function() {
+                    if($(this).prop('checked')){
+                        // активация toggle кнопки
+                        $('.memorable_checkbox').removeAttr('disabled');
+                        // показать кнопку сортировки
+                        $('#sort_sound_th').css('display','block');
+                    }
+                    else{
+                        $('.memorable_checkbox').attr('disabled', 'disabled');
+                        $('#sort_sound_th').css('display','none');
+                    }
+
+                    console.log('Toggle: ' + $(this).prop('checked'))
+                })
+            },
+            activationSortButtonTh() {
+                $('#sort_sound_th').bind('click', (e) => {
+                    let elem = $(e.target);
+                    // активация сортировки
+                    if (elem.hasClass("sort-blue") ) {
+                        elem.removeClass("sort-blue");
+                    }
+                    else{
+                        elem.addClass("sort-blue");
+                    }
                 });
             },
             // --- предложения
@@ -352,6 +419,9 @@
                         this.table.totalRecords = response.data.data.sentences.total_count;
                         this.makeObjectDataForTable(response.data.data.sentences.list);
                         this.table.origin_rows = response.data.data.sentences.list;
+
+                        console.log(this.table.rows)
+                        // console.log(response.data.data.sentences.list)
                     }
                 } catch (e) {
                     console.log(e);
@@ -440,9 +510,10 @@
         },
         beforeDestroy: function () {
             $('.btn_sentence').unbind('click');
-            $('#checkbox').unbind('click');
+            $('#checkbox_sound_all').unbind('click');
             $('#clear_search').unbind('click');
-            $(":checkbox").bind('change');
+            $(":checkbox").unbind('change');
+            $('#sort_sound_th').unbind('click');
         },
         name: "PageWordSentences.vue"
     }

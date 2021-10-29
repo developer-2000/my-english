@@ -5,13 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sentence extends Model{
+class SentenceSound extends Model {
     use HasFactory;
 
+    protected $table = 'sentence_sounds';
     protected $guarded = [];
-
-    public function sound() {
-        return $this->hasOne(SentenceSound::class, 'sentence_id', 'id');
-    }
 
 }

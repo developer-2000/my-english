@@ -11,7 +11,7 @@ class SentenceRepository extends CoreRepository
     public function getSentences($request)
     {
         $vars = $this->getVariablesForTables($request);
-        $query = $this->startConditions();
+        $query = $this->startConditions()->with('sound');
         $total_count = $query->get()->count();
 
         // search

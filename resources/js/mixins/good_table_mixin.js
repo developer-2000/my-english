@@ -9,16 +9,17 @@ export default {
             let row = '';
             this.table.rows = [];
 
-            for (let i = 0; i < list.length; i++) {
+            list.forEach( (obj, index) => {
                 row = {
-                    sound_all: list[i].id,
-                    id: list[i].id,
-                    sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
-                    translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
-                    but: list[i].id
+                    general_checkbox_sound: obj.id,
+                    memorable_checkbox_sound: (obj.sound == null) ? false : true,
+                    id: obj.id,
+                    sentence: obj.sentence.charAt(0).toUpperCase() + obj.sentence.slice(1),
+                    translation: obj.translation.charAt(0).toUpperCase() + obj.translation.slice(1),
+                    but: obj.id
                 };
                 this.table.rows.push(row);
-            }
+            });
         },
         onSearch(search) {
             this.updateParams({search: search.searchTerm});

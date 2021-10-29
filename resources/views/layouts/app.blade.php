@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
+
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </head>
@@ -54,6 +56,7 @@
 <script src="{{asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/js/adminlte.js')}}"></script>
+
 {{-- Compiller js--}}
 <script src="{{ asset('js/app.js') }}" defer></script>
 

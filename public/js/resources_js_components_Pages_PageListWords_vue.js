@@ -1087,19 +1087,22 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     // заполнить обьект данных для таблица
     makeObjectDataForTable: function makeObjectDataForTable(list) {
+      var _this = this;
+
       var row = '';
       this.table.rows = [];
-
-      for (var i = 0; i < list.length; i++) {
+      list.forEach(function (obj, index) {
         row = {
-          sound_all: list[i].id,
-          id: list[i].id,
-          sentence: list[i].sentence.charAt(0).toUpperCase() + list[i].sentence.slice(1),
-          translation: list[i].translation.charAt(0).toUpperCase() + list[i].translation.slice(1),
-          but: list[i].id
+          general_checkbox_sound: obj.id,
+          memorable_checkbox_sound: obj.sound == null ? false : true,
+          id: obj.id,
+          sentence: obj.sentence.charAt(0).toUpperCase() + obj.sentence.slice(1),
+          translation: obj.translation.charAt(0).toUpperCase() + obj.translation.slice(1),
+          but: obj.id
         };
-        this.table.rows.push(row);
-      }
+
+        _this.table.rows.push(row);
+      });
     },
     onSearch: function onSearch(search) {
       this.updateParams({
@@ -1133,16 +1136,16 @@ __webpack_require__.r(__webpack_exports__);
       this.serverParams = Object.assign({}, this.serverParams, newProps);
     },
     makeButtonClearSearch: function makeButtonClearSearch() {
-      var _this = this;
+      var _this2 = this;
 
       var a = setTimeout(function () {
         $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
         $('#clear_search').bind('click', function (e) {
           // спрятать кнопку
           $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
-          _this.serverParams.search = '';
+          _this2.serverParams.search = '';
 
-          _this.initialData();
+          _this2.initialData();
 
           a = setTimeout(function () {
             // сместить search и зачистить
