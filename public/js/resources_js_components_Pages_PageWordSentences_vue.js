@@ -963,7 +963,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         synthesis: window.speechSynthesis,
         arrText: [],
         arrIdCollText: [],
-        counter_index_sound: 0,
         pauseArrText: [],
         lang: [{
           lang: 'en-US',
@@ -977,10 +976,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   methods: {
     initialSpeak: function initialSpeak() {
-      this.speak.start = true; // остановить возможно предыдущий запущеный sound
+      this.voiceActingStatus({
+        name: 'start_true'
+      }); // остановить возможно предыдущий запущеный sound
 
       this.speak.synthesis.cancel();
-      this.speak.stop = true;
+      this.voiceActingStatus({
+        name: 'stop_true'
+      });
 
       if (this.setText()) {
         this.forSpeak();
@@ -1017,28 +1020,28 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       var item_count = 0;
       var arr_count = this.speak.arrText.length;
-      this.speak.counter_index_sound = 0;
       setTimeout(function () {
-        _this.speak.stop = false; // 1 прокрутка к тексту
+        _this.voiceActingStatus({
+          name: 'stop_false'
+        }); // 1 прокрутка к тексту
 
-        _this.scrollingScrolling(_this.speak.arrIdCollText[0]);
+
+        _this.scrollingToText(_this.speak.arrIdCollText[0]);
 
         _this.speak.arrText.forEach(function (arrRow, index) {
           // по очереди прочесть эти языки
           Promise.all(arrRow.map(_this.readSound)).then(function (data) {
-            // считаем сколько отработало индексов озвучки
-            _this.speak.counter_index_sound++; // 2 прокрутка к тексту
+            // количество отработаных индексов озвучки
+            item_count++; // прокрутка к тексту
 
-            _this.scrollingScrolling(_this.speak.arrIdCollText[_this.speak.counter_index_sound]); // 3 востановить кнопку озвучки
+            _this.scrollingToText(_this.speak.arrIdCollText[item_count]);
 
-
-            item_count = data ? item_count + 1 : item_count;
-
-            if (item_count === arr_count) {
-              _this.speak.start = false;
-
-              _this.changeColorLineSound();
-            }
+            _this.voiceActingStatus({
+              name: 'arr_count',
+              arr_count: arr_count,
+              data: data,
+              item_count: item_count
+            });
           });
         });
       }, 200);
@@ -1106,24 +1109,36 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     },
     pauseReadSound: function pauseReadSound() {
-      this.speak.stop = true;
-      this.speak.pause = true;
+      this.voiceActingStatus({
+        name: 'stop_true'
+      });
+      this.voiceActingStatus({
+        name: 'pause_true'
+      });
       this.speak.synthesis.cancel();
       this.speak.arrText = _toConsumableArray(this.speak.pauseArrText);
       this.speak.arrIdCollText = _toConsumableArray(this.speak.pauseIdCollText);
     },
     stopReadSound: function stopReadSound() {
-      this.speak.stop = false;
-      this.speak.pause = false;
-      this.speak.start = false;
+      this.voiceActingStatus({
+        name: 'stop_false'
+      });
+      this.voiceActingStatus({
+        name: 'pause_false'
+      });
+      this.voiceActingStatus({
+        name: 'start_false'
+      });
       this.speak.synthesis.cancel();
       this.changeColorLineSound();
     },
     continueReadSound: function continueReadSound() {
-      this.speak.pause = false;
+      this.voiceActingStatus({
+        name: 'pause_false'
+      });
       this.forSpeak();
     },
-    scrollingScrolling: function scrollingScrolling(id) {
+    scrollingToText: function scrollingToText(id) {
       if (id !== undefined) {
         var parent = $('#content-wrapper'); // положение скроллинга
 
@@ -1152,9 +1167,52 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           'background': '#ecffed'
         });
       }
+    },
+    voiceActingStatus: function voiceActingStatus(object) {
+      switch (object.name) {
+        // разрешить озвучивание текста
+        case 'stop_false':
+          this.speak.stop = false;
+          break;
+        // блокировать озвучивание текста
+
+        case 'stop_true':
+          this.speak.stop = true;
+          break;
+        // показать кнопку Sound translation
+
+        case 'start_false':
+          this.speak.start = false;
+          break;
+        // спрятать кнопку Sound translation
+
+        case 'start_true':
+          this.speak.start = true;
+          break;
+        // показать кнопку continue
+
+        case 'pause_true':
+          this.speak.pause = true;
+          break;
+        // спрятать кнопку continue
+
+        case 'pause_false':
+          this.speak.pause = false;
+          break;
+        // востановить кнопку озвучки
+
+        case 'arr_count':
+          if (object.item_count === object.arr_count) {
+            this.voiceActingStatus({
+              name: 'start_false'
+            });
+            this.changeColorLineSound();
+          }
+
+          break;
+      }
     }
-  },
-  mounted: function mounted() {}
+  }
 });
 
 /***/ }),

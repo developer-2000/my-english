@@ -10,7 +10,6 @@ export default {
                 synthesis: window.speechSynthesis,
                 arrText: [],
                 arrIdCollText: [],
-                counter_index_sound: 0,
                 pauseArrText: [],
                 lang: [
                     {
@@ -27,10 +26,10 @@ export default {
     },
     methods: {
         initialSpeak() {
-            this.speak.start = true;
+            this.voiceActingStatus({name:'start_true'});
             // остановить возможно предыдущий запущеный sound
             this.speak.synthesis.cancel();
-            this.speak.stop = true;
+            this.voiceActingStatus({name:'stop_true'});
             if (this.setText()) {
                 this.forSpeak();
             }
@@ -67,28 +66,20 @@ export default {
         forSpeak() {
             let item_count = 0;
             let arr_count = this.speak.arrText.length;
-            this.speak.counter_index_sound = 0;
 
             setTimeout(() => {
-                this.speak.stop = false;
+                this.voiceActingStatus({name:'stop_false'});
                 // 1 прокрутка к тексту
-                this.scrollingScrolling(this.speak.arrIdCollText[0]);
+                this.scrollingToText(this.speak.arrIdCollText[0]);
 
                 this.speak.arrText.forEach((arrRow, index) => {
                     // по очереди прочесть эти языки
                     Promise.all(arrRow.map(this.readSound)).then(data => {
-                        // считаем сколько отработало индексов озвучки
-                        this.speak.counter_index_sound++;
-
-                        // 2 прокрутка к тексту
-                        this.scrollingScrolling(this.speak.arrIdCollText[this.speak.counter_index_sound]);
-
-                        // 3 востановить кнопку озвучки
-                        item_count = data ? (item_count + 1) : item_count;
-                        if (item_count === arr_count) {
-                            this.speak.start = false;
-                            this.changeColorLineSound();
-                        }
+                        // количество отработаных индексов озвучки
+                        item_count++;
+                        // прокрутка к тексту
+                        this.scrollingToText(this.speak.arrIdCollText[item_count]);
+                        this.voiceActingStatus({name:'arr_count', arr_count:arr_count, data:data, item_count:item_count});
                     });
                 })
             }, 200);
@@ -134,24 +125,24 @@ export default {
             }
         },
         pauseReadSound() {
-            this.speak.stop = true;
-            this.speak.pause = true;
+            this.voiceActingStatus({name:'stop_true'});
+            this.voiceActingStatus({name:'pause_true'});
             this.speak.synthesis.cancel();
             this.speak.arrText = [...this.speak.pauseArrText];
             this.speak.arrIdCollText = [...this.speak.pauseIdCollText];
         },
         stopReadSound() {
-            this.speak.stop = false;
-            this.speak.pause = false;
-            this.speak.start = false;
+            this.voiceActingStatus({name:'stop_false'});
+            this.voiceActingStatus({name:'pause_false'});
+            this.voiceActingStatus({name:'start_false'});
             this.speak.synthesis.cancel();
             this.changeColorLineSound();
         },
         continueReadSound() {
-            this.speak.pause = false;
+            this.voiceActingStatus({name:'pause_false'});
             this.forSpeak();
         },
-        scrollingScrolling(id) {
+        scrollingToText(id) {
             if (id !== undefined) {
                 let parent = $('#content-wrapper');
                 // положение скроллинга
@@ -172,9 +163,42 @@ export default {
                 obj.parent().parent().parent().css({'outline': '1px solid rgb(192, 249, 190)', 'background': '#ecffed'});
             }
         },
+        voiceActingStatus(object) {
+            switch (object.name) {
+                // разрешить озвучивание текста
+                case 'stop_false':
+                    this.speak.stop = false;
+                    break;
+                // блокировать озвучивание текста
+                case 'stop_true':
+                    this.speak.stop = true;
+                    break;
+                // показать кнопку Sound translation
+                case 'start_false':
+                    this.speak.start = false;
+                    break;
+                // спрятать кнопку Sound translation
+                case 'start_true':
+                    this.speak.start = true;
+                    break;
+                // показать кнопку continue
+                case 'pause_true':
+                    this.speak.pause = true;
+                    break;
+                // спрятать кнопку continue
+                case 'pause_false':
+                    this.speak.pause = false;
+                    break;
+                // востановить кнопку озвучки
+                case 'arr_count':
+                    if (object.item_count === object.arr_count) {
+                        this.voiceActingStatus({name:'start_false'});
+                        this.changeColorLineSound();
+                    }
+                    break;
+            }
+        },
     },
-    mounted() {
 
-    },
 }
 
