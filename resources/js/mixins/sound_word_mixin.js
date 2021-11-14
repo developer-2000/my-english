@@ -3,9 +3,7 @@ export default {
         return {
             speak: {
                 stop: false,
-                // true обычная озвучка
                 start: false,
-                // true пауза
                 pause: false,
                 synthesis: window.speechSynthesis,
                 arrText: [],
@@ -75,11 +73,13 @@ export default {
                 this.speak.arrText.forEach((arrRow, index) => {
                     // по очереди прочесть эти языки
                     Promise.all(arrRow.map(this.readSound)).then(data => {
-                        // количество отработаных индексов озвучки
-                        item_count++;
-                        // прокрутка к тексту
-                        this.scrollingToText(this.speak.arrIdCollText[item_count]);
-                        this.voiceActingStatus({name:'arr_count', arr_count:arr_count, data:data, item_count:item_count});
+                        if(this.speak.start){
+                            // количество отработаных индексов озвучки
+                            item_count++;
+                            // прокрутка к тексту
+                            this.scrollingToText(this.speak.arrIdCollText[item_count]);
+                            this.voiceActingStatus({name:'arr_count', arr_count:arr_count, data:data, item_count:item_count});
+                        }
                     });
                 })
             }, 200);
@@ -199,6 +199,5 @@ export default {
             }
         },
     },
-
 }
 

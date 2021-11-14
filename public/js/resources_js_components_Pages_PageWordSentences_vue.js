@@ -245,7 +245,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
- // sweetalerts
+ // soft methods
 
  // help_search_word
 
@@ -258,7 +258,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      checked: true,
+      // checked: true,
       disabled_play: true,
       sentence_id: 0,
       new_sentence: '',
@@ -354,7 +354,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     // --- checkbox
     initialCheckbox: function initialCheckbox() {
       this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
-      //     this.activationSortButtonTh();      // кнопка сортировки th
     },
     activationButtonSoundInMenu: function activationButtonSoundInMenu() {
       var _this = this;
@@ -655,9 +654,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  data: function data() {
-    return {};
-  },
   methods: {
     // заполнить обьект данных для таблица
     makeObjectDataForTable: function makeObjectDataForTable(list) {
@@ -727,9 +723,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }, 500);
     }
-  },
-  props: [],
-  mounted: function mounted() {}
+  }
 });
 
 /***/ }),
@@ -861,6 +855,7 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {
+    // проверка backup данных axios
     checkSuccess: function checkSuccess(response) {
       var _response$data, _response$data2;
 
@@ -878,6 +873,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return false;
     },
+    // alert сообщение на странице
     message: function message() {
       var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       var icon = arguments.length > 1 ? arguments[1] : undefined;
@@ -893,6 +889,7 @@ __webpack_require__.r(__webpack_exports__);
         title: msg
       });
     },
+    // confirm сообщение на странице
     confirmMessage: function confirmMessage() {
       var _this = this;
 
@@ -956,9 +953,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     return {
       speak: {
         stop: false,
-        // true обычная озвучка
         start: false,
-        // true пауза
         pause: false,
         synthesis: window.speechSynthesis,
         arrText: [],
@@ -1031,17 +1026,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _this.speak.arrText.forEach(function (arrRow, index) {
           // по очереди прочесть эти языки
           Promise.all(arrRow.map(_this.readSound)).then(function (data) {
-            // количество отработаных индексов озвучки
-            item_count++; // прокрутка к тексту
+            if (_this.speak.start) {
+              // количество отработаных индексов озвучки
+              item_count++; // прокрутка к тексту
 
-            _this.scrollingToText(_this.speak.arrIdCollText[item_count]);
+              _this.scrollingToText(_this.speak.arrIdCollText[item_count]);
 
-            _this.voiceActingStatus({
-              name: 'arr_count',
-              arr_count: arr_count,
-              data: data,
-              item_count: item_count
-            });
+              _this.voiceActingStatus({
+                name: 'arr_count',
+                arr_count: arr_count,
+                data: data,
+                item_count: item_count
+              });
+            }
           });
         });
       }, 200);

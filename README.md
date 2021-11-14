@@ -13,7 +13,7 @@
 - [3 Ссылка на админ панель](https://adminlte.io/themes/v3/).
 - [4 Тултипы для подсказок](https://kabbouchi.github.io/vue-tippy/4.0/features/default.html).
 - [helper для него](https://atomiks.github.io/tippyjs/v6/html-content/).
-- [5 сообщения ](https://sweetalert2.github.io/#handling-buttons).
+- [5 modal alert ](https://sweetalert2.github.io/#handling-buttons).
 - [6 Таблица vue-good-table ](https://xaksis.github.io/vue-good-table/guide/).
 - [7 озвучка текста ](https://xhtml.ru/2021/javascript/javascript-text-to-speech-and-its-many-quirks/).
 

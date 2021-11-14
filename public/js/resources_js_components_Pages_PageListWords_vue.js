@@ -1081,9 +1081,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  data: function data() {
-    return {};
-  },
   methods: {
     // заполнить обьект данных для таблица
     makeObjectDataForTable: function makeObjectDataForTable(list) {
@@ -1153,9 +1150,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }, 500);
     }
-  },
-  props: [],
-  mounted: function mounted() {}
+  }
 });
 
 /***/ }),
@@ -1285,6 +1280,7 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {
+    // проверка backup данных axios
     checkSuccess: function checkSuccess(response) {
       var _response$data, _response$data2;
 
@@ -1302,6 +1298,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return false;
     },
+    // alert сообщение на странице
     message: function message() {
       var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       var icon = arguments.length > 1 ? arguments[1] : undefined;
@@ -1317,6 +1314,7 @@ __webpack_require__.r(__webpack_exports__);
         title: msg
       });
     },
+    // confirm сообщение на странице
     confirmMessage: function confirmMessage() {
       var _this = this;
 

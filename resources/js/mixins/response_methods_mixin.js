@@ -5,6 +5,7 @@ export default {
         return { }
     },
     methods: {
+        // проверка backup данных axios
         checkSuccess(response) {
             // json response
             if(response?.data?.success && response.data.success === true){
@@ -18,6 +19,7 @@ export default {
             }
             return false;
         },
+        // alert сообщение на странице
         message(msg = '', icon) {
             const Toast = this.$swal.mixin({
                 toast: true,
@@ -31,6 +33,7 @@ export default {
                 title: msg
             })
         },
+        // confirm сообщение на странице
         confirmMessage(msg = '', icon, id) {
             this.$swal({
                 title: '',

@@ -217,8 +217,8 @@
     import 'vue-good-table/dist/vue-good-table.css'
     import {VueGoodTable} from 'vue-good-table';
     import good_table_mixin from "../../mixins/good_table_mixin";
-    // sweetalerts
-    import response_methods_mixin from "../../mixins/response_methods_mixin";
+    // soft methods
+    import soft_methods_mixin from "../../mixins/response_methods_mixin";
     // help_search_word
     import help_search_word_mixin from "../../mixins/help_search_word_mixin";
     import helpSearchWord from "../details/HelpSearchWord";
@@ -230,7 +230,7 @@
     export default {
         data() {
             return {
-                checked: true,
+                // checked: true,
                 disabled_play: true,
                 sentence_id: 0,
                 new_sentence: '',
@@ -311,7 +311,7 @@
             };
         },
         mixins: [
-            response_methods_mixin,
+            soft_methods_mixin,
             good_table_mixin,
             help_search_word_mixin,
             sound_word_mixin
@@ -339,7 +339,6 @@
             // --- checkbox
             initialCheckbox() {
                 this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
-                //     this.activationSortButtonTh();      // кнопка сортировки th
             },
             activationButtonSoundInMenu() {
                 setTimeout(() => {

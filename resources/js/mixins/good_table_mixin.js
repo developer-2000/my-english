@@ -1,7 +1,4 @@
 export default {
-    data() {
-        return {}
-    },
     methods: {
         // заполнить обьект данных для таблица
         makeObjectDataForTable(list) {
@@ -57,9 +54,6 @@ export default {
             }, 500);
         },
     },
-    props: [],
-    mounted() {
-    }
 }
 
 
