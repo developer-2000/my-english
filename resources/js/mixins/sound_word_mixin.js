@@ -2,6 +2,8 @@ export default {
     data() {
         return {
             speak: {
+                repeat_bool: false,
+                count_repeat: 1,
                 stop: false,
                 start: false,
                 pause: false,
@@ -39,7 +41,7 @@ export default {
             this.speak.arrText = [];
             this.speak.arrIdCollText = [];
             let id = 0;
-
+            let arrBox = [];
             // все checkboxes
             for (let i = 0; i < checkboxes.length; i++) {
                 // он выбран
@@ -47,11 +49,23 @@ export default {
                     id = checkboxes[i].getAttribute('data-id');
 
                     for (let r = 0; r < this.table.rows.length; r++) {
+                        arrBox = [];
+
                         if (id == this.table.rows[r].id) {
-                            this.speak.arrText.push([
-                                this.table.rows[r].sentence,
-                                this.table.rows[r].translation
-                            ]);
+                            // без повторений
+                            if(!this.speak.repeat_bool){
+                                this.speak.arrText.push([
+                                    this.table.rows[r].sentence,
+                                    this.table.rows[r].translation
+                                ]);
+                            }
+                            else{
+                                arrBox.push(this.table.rows[r].translation);
+                                for (let s = 0; s < this.speak.count_repeat; s++) {
+                                    arrBox.push(this.table.rows[r].sentence);
+                                }
+                                this.speak.arrText.push(arrBox);
+                            }
                             this.speak.arrIdCollText.push(id);
                         }
                     }

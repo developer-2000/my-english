@@ -6,6 +6,17 @@
             <!-- верхнее меню -->
             <div class="card card-primary card-outline top_menu">
                 <div class="card-header">
+                    <div id="block_repeat" v-if="!speak.start">
+                        <div class="title_repeat">repeat</div>
+                        <div class="block_input_repeat">
+                            <input :checked="speak.repeat_bool" @change="speak.repeat_bool = !speak.repeat_bool"
+                                   class="checkbox_repeat" type="checkbox"
+                            >
+                            <input class="number_repeat" min="1" max="10" type="number"
+                                   v-if="speak.repeat_bool" v-model="speak.count_repeat"
+                            >
+                        </div>
+                    </div>
                     <!-- start -->
                     <button :disabled="disabled_play" @click="initialSpeak" class="btn bg-gradient-success"
                             v-if="!speak.start">
@@ -230,7 +241,6 @@
     export default {
         data() {
             return {
-                // checked: true,
                 disabled_play: true,
                 sentence_id: 0,
                 new_sentence: '',
@@ -342,10 +352,10 @@
             },
             activationButtonSoundInMenu() {
                 setTimeout(() => {
-                    // состояние кнопки по умолчанию
+                    // состояние кнопки sound по умолчанию
                     this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
-                    // изменнеие одного из checkbox
-                    $(":checkbox").bind('change', (e) => {
+                    // изменнеие одного из sound checkbox
+                    $(".memorable_checkbox").bind('change', (e) => {
                         this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
                         this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
                     });
@@ -475,12 +485,38 @@
         beforeDestroy: function () {
             $('.btn_sentence').unbind('click');
             $('#clear_search').unbind('click');
-            $(":checkbox").unbind('change');
+            $(".memorable_checkbox").unbind('change');
         },
         name: "PageWordSentences.vue"
     }
 </script>
 
 <style lang="scss" scoped>
-
+    #block_repeat{
+        margin-right: 15px;
+        text-align: center;
+        .title_repeat{
+            line-height: 15px;
+            margin-bottom: 3px;
+            font-size: 14px;
+            margin-top: -2px;
+        }
+        .block_input_repeat{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .checkbox_repeat{
+                height: 18px;
+                width: 18px;
+                cursor: pointer;
+            }
+            .number_repeat{
+                height: 18px;
+                font-size: 15px;
+                width: 50px;
+                margin-left: 5px;
+                padding-right: 0px;
+            }
+        }
+    }
 </style>
