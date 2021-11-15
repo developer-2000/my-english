@@ -212,6 +212,14 @@ export default {
                     break;
             }
         },
+        preloadLanguages() {
+            let object = new SpeechSynthesisUtterance('hello');
+            this.speak.synthesis.speak(object);
+            this.speak.synthesis.cancel();
+        },
+    },
+    mounted() {
+        this.preloadLanguages();
     },
 }
 

@@ -1235,7 +1235,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
           break;
       }
+    },
+    preloadLanguages: function preloadLanguages() {
+      var object = new SpeechSynthesisUtterance('hello');
+      this.speak.synthesis.speak(object);
+      this.speak.synthesis.cancel();
     }
+  },
+  mounted: function mounted() {
+    this.preloadLanguages();
   }
 });
 
