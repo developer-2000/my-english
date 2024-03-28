@@ -983,6 +983,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   methods: {
     initialSpeak: function initialSpeak() {
+      console.log(window.speechSynthesis.getVoices());
       this.voiceActingStatus({
         name: 'start_true'
       }); // остановить возможно предыдущий запущеный sound
@@ -1244,6 +1245,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   mounted: function mounted() {
     this.preloadLanguages();
+
+    window.speechSynthesis.onvoiceschanged = function () {
+      console.log(window.speechSynthesis.getVoices());
+    };
   }
 });
 
