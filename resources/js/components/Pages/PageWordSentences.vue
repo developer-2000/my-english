@@ -4,7 +4,7 @@
         <!-- body page -->
         <div class="wrapper">
             <!-- верхнее меню -->
-            <div class="card card-primary card-outline top_menu">
+            <div class="top_menu">
                 <div class="card-header">
                     <div id="block_repeat" v-if="!speak.start">
                         <div class="title_repeat">repeat</div>

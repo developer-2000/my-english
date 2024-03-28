@@ -21,21 +21,22 @@
 
 </head>
 <body>
+
+<header>
+    <a href="/" class="header-element header-main-link">English</a>
+</header>
+
 <div id="app">
-    <div class="tabbable tabs-left">
+    <div class="main-page">
         <!-- МЕНЮ LEFT -->
-        <ul class="nav nav-tabs" id="left_menu">
-            <!-- link index -->
-            <div class="link_index">
-                <a href="/" class="left_menu">English</a>
-            </div>
+        <ul id="left_menu">
             <li>
-                <router-link to="/page_list_words" class="left_menu">
+                <router-link to="/page_list_words" class="left_menu"  exact>
                     Список слов
                 </router-link>
             </li>
             <li>
-                <router-link to="/word_sentences" class="left_menu">
+                <router-link to="/page_word_sentences" class="left_menu"  exact>
                     Предложения слов
                 </router-link>
             </li>
@@ -76,15 +77,16 @@
     //         };
     //     }
     // }, 200);
+
     //  for reload page (скрытие страницы default)
-    (function() {
-        let url = window.location.href;
-        let arr = url.split('/');
-        // close html main page
-        if(arr.length >= 4 && arr[3] != ''){
-            $('#default_pane').css('display','none');
-        }
-    })();
+    // (function() {
+    //     let url = window.location.href;
+    //     let arr = url.split('/');
+    //     // close html main page
+    //     if(arr.length >= 4 && arr[3] != ''){
+    //         $('#default_pane').css('display','none');
+    //     }
+    // })();
 
 </script>
 

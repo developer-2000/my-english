@@ -3,7 +3,7 @@
         <!-- Wrapper -->
         <div class="wrapper">
             <!-- верхнее меню -->
-            <div class="card card-primary card-outline top_menu">
+            <div class="top_menu">
                 <div class="card-header">
                     <button class="btn btn-outline-success" id="coll1" @click="toggleCollapse(1)">
                         Create Type
@@ -158,8 +158,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.content-header -->
-
             </div>
 
         </div>
@@ -842,14 +840,6 @@ ${row.description == null ? '' : row.description.toLowerCase()}
 </script>
 
 <style lang="scss" scoped>
-    #page_list_worlds{
-        .content-header{
-            padding: 0px .5rem;
-            .container-fluid{
-                padding-top: 15px;
-            }
-        }
-    }
     #collapse1,
     #collapse2{
         .card{

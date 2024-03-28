@@ -12184,7 +12184,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "page_list_worlds" } }, [
     _c("div", { staticClass: "wrapper" }, [
-      _c("div", { staticClass: "card card-primary card-outline top_menu" }, [
+      _c("div", { staticClass: "top_menu" }, [
         _c("div", { staticClass: "card-header" }, [
           !_vm.speak.start
             ? _c("div", { attrs: { id: "block_repeat" } }, [

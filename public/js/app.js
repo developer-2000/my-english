@@ -2163,14 +2163,20 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var routes = [{
+  path: '/',
+  name: 'PAGE_INDEX',
+  component: function component() {
+    return __webpack_require__.e(/*! import() */ "resources_js_components_Pages_PageIndex_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/Pages/PageIndex.vue */ "./resources/js/components/Pages/PageIndex.vue"));
+  }
+}, {
   path: '/page_list_words',
-  name: 'page_list_words',
+  name: 'PAGE_LIST_WORDS',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_components_Pages_PageListWords_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/Pages/PageListWords.vue */ "./resources/js/components/Pages/PageListWords.vue"));
   }
 }, {
-  path: '/word_sentences',
-  name: 'word_sentences',
+  path: '/page_word_sentences',
+  name: 'PAGE_WORD_SENTENCES',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_components_Pages_PageWordSentences_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/Pages/PageWordSentences.vue */ "./resources/js/components/Pages/PageWordSentences.vue"));
   }
@@ -59979,7 +59985,7 @@ module.exports = JSON.parse('{"_from":"axios@^0.21.4","_id":"axios@0.21.4","_inB
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_components_Pages_PageListWords_vue":1,"resources_js_components_Pages_PageWordSentences_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_Pages_PageIndex_vue":1,"resources_js_components_Pages_PageListWords_vue":1,"resources_js_components_Pages_PageWordSentences_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

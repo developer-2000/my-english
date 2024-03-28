@@ -347,8 +347,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 // hover alert text
 
  // validate
@@ -1450,7 +1448,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#page_list_worlds .content-header[data-v-461a95d4] {\n  padding: 0px 0.5rem;\n}\n#page_list_worlds .content-header .container-fluid[data-v-461a95d4] {\n  padding-top: 15px;\n}\n#collapse1 .card[data-v-461a95d4],\n#collapse2 .card[data-v-461a95d4] {\n  margin: 0px -9px;\n  box-shadow: none;\n  border-left: 1px solid #d2d2d2;\n  border-radius: 0px;\n  border-bottom: 1px solid #d2d2d2;\n}\n#collapse1 .card .collapse_heder[data-v-461a95d4],\n#collapse2 .card .collapse_heder[data-v-461a95d4] {\n  margin: 0px 0px 15px;\n}\n#collapse1 .group_type[data-v-461a95d4],\n#collapse2 .group_type[data-v-461a95d4] {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-content: stretch;\n  align-items: flex-start;\n}\n#collapse1 .group_type .form-group[data-v-461a95d4],\n#collapse2 .group_type .form-group[data-v-461a95d4] {\n  width: 20%;\n  margin-right: 20px;\n}\n#collapse1 .group_type button[data-v-461a95d4],\n#collapse2 .group_type button[data-v-461a95d4] {\n  margin-top: 40px;\n}\n#collapse1 .group_type textarea[data-v-461a95d4],\n#collapse2 .group_type textarea[data-v-461a95d4] {\n  height: 86px;\n}\n#collapse_select[data-v-461a95d4],\n#collapse_select_old[data-v-461a95d4],\n#collapse_select_new[data-v-461a95d4] {\n  padding: 0px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#collapse1 .card[data-v-461a95d4],\n#collapse2 .card[data-v-461a95d4] {\n  margin: 0px -9px;\n  box-shadow: none;\n  border-left: 1px solid #d2d2d2;\n  border-radius: 0px;\n  border-bottom: 1px solid #d2d2d2;\n}\n#collapse1 .card .collapse_heder[data-v-461a95d4],\n#collapse2 .card .collapse_heder[data-v-461a95d4] {\n  margin: 0px 0px 15px;\n}\n#collapse1 .group_type[data-v-461a95d4],\n#collapse2 .group_type[data-v-461a95d4] {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-content: stretch;\n  align-items: flex-start;\n}\n#collapse1 .group_type .form-group[data-v-461a95d4],\n#collapse2 .group_type .form-group[data-v-461a95d4] {\n  width: 20%;\n  margin-right: 20px;\n}\n#collapse1 .group_type button[data-v-461a95d4],\n#collapse2 .group_type button[data-v-461a95d4] {\n  margin-top: 40px;\n}\n#collapse1 .group_type textarea[data-v-461a95d4],\n#collapse2 .group_type textarea[data-v-461a95d4] {\n  height: 86px;\n}\n#collapse_select[data-v-461a95d4],\n#collapse_select_old[data-v-461a95d4],\n#collapse_select_new[data-v-461a95d4] {\n  padding: 0px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -12286,7 +12284,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "page_list_worlds" } }, [
     _c("div", { staticClass: "wrapper" }, [
-      _c("div", { staticClass: "card card-primary card-outline top_menu" }, [
+      _c("div", { staticClass: "top_menu" }, [
         _c("div", { staticClass: "card-header" }, [
           _c(
             "button",
