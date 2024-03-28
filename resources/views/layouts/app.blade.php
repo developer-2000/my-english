@@ -61,35 +61,6 @@
 {{-- Compiller js--}}
 <script src="{{ asset('js/app.js') }}" defer></script>
 
-<script  type="text/javascript">
-
-    {{-- клик по ссылке --}}
-    // setTimeout(function knowClick() {
-    //     var elements = document.querySelectorAll("ul a");
-    //
-    //     for (var i = 0; i < elements.length; i++) {
-    //         elements[i].onclick = function(e){
-    //             let arr = e.target.href.split('/');
-    //             // close html main page
-    //             if(arr.length >= 4 && arr[3] !== ''){
-    //                 $('#default_pane').css('display','none');
-    //             }
-    //         };
-    //     }
-    // }, 200);
-
-    //  for reload page (скрытие страницы default)
-    // (function() {
-    //     let url = window.location.href;
-    //     let arr = url.split('/');
-    //     // close html main page
-    //     if(arr.length >= 4 && arr[3] != ''){
-    //         $('#default_pane').css('display','none');
-    //     }
-    // })();
-
-</script>
-
 @yield('js')
 </body>
 </html>
