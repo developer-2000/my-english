@@ -1,11 +1,14 @@
 <template>
-    <div id="page_list_worlds">
+    <div id="page_list_sentences">
 
         <!-- body page -->
         <div class="wrapper">
             <!-- верхнее меню -->
-            <div class="top_menu">
-                <div class="card-header">
+            <div class="top-menu">
+                <!-- заголовок окна-->
+                <h1>List sentences</h1>
+
+                <div class="box-button">
                     <div id="block_repeat" v-if="!speak.start">
                         <div class="title_repeat">repeat</div>
                         <div class="block_input_repeat">
@@ -44,47 +47,39 @@
                     </button>
                 </div>
             </div>
-            <!-- body -->
             <div class="content-wrapper" id="content-wrapper">
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <!-- заголовок окна-->
-                        <h1 class="m-0 text-dark">List sentences</h1>
-                        <!-- body окна-->
-                        <div class="card card-primary card-outline block_table">
-
-                            <!-- Table -->
-                            <div class="table_wrapper">
-                                <vue-good-table
-                                    :columns="table.columns"
-                                    :isLoading.sync="table.isLoading"
-                                    :mode="table.mode"
-                                    :pagination-options="table.optionsPaginate"
-                                    :rows="table.rows"
-                                    :search-options="{
-                                        enabled: true,
-                                        placeholder: 'Search word',
-                                    }"
-                                    :totalRows="table.totalRecords"
-                                    @on-page-change="onPageChange"
-                                    @on-per-page-change="onPerPageChange"
-                                    @on-search="onSearch"
-                                    @on-sort-change="onSortChange"
-                                    styleClass="vgt-table bordered sentence"
-                                >
-                                    <template slot="loadingContent">
-                                        <div></div>
-                                    </template>
-                                </vue-good-table>
-                            </div>
-
+                <div class="container-fluid">
+                    <!-- body окна-->
+                    <div class="card card-primary card-outline block_table">
+                        <!-- Table -->
+                        <div class="table_wrapper">
+                            <vue-good-table
+                                :columns="table.columns"
+                                :isLoading.sync="table.isLoading"
+                                :mode="table.mode"
+                                :pagination-options="table.optionsPaginate"
+                                :rows="table.rows"
+                                :search-options="{
+                                    enabled: true,
+                                    placeholder: 'Search word',
+                                }"
+                                :totalRows="table.totalRecords"
+                                @on-page-change="onPageChange"
+                                @on-per-page-change="onPerPageChange"
+                                @on-search="onSearch"
+                                @on-sort-change="onSortChange"
+                                styleClass="vgt-table bordered sentence"
+                                ref="goodTable"
+                            >
+                                <template slot="loadingContent">
+                                    <div></div>
+                                </template>
+                            </vue-good-table>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- / body -->
         </div>
-        <!-- / body page -->
 
         <!-- Modals -->
         <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade" id="create_sentence" role="dialog"
@@ -300,7 +295,7 @@
                     // settings paginate
                     optionsPaginate: {
                         enabled: true,
-                        perPageDropdown: [3, 50],
+                        perPageDropdown: [50, 100],
                         nextLabel: 'next',
                         prevLabel: 'prev',
                         perPage: 50,
@@ -385,12 +380,7 @@
                         field = 'sound';
                     }
 
-                    const response = await this.$http.get(`${this.$http.apiUrl()}sentence?
-                        search=${this.serverParams.search}&
-                        page=${this.serverParams.page}&
-                        perPage=${this.serverParams.perPage}&
-                        sortField=${field}&
-                        sortType=${this.serverParams.sort[0].type}`
+                    const response = await this.$http.get(`${this.$http.apiUrl()}sentence?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
                     );
                     if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;
@@ -492,8 +482,30 @@
 </script>
 
 <style lang="scss" scoped>
+
+#page_list_sentences{
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    .top-menu{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 7px;
+        .box-button{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            button{
+                i{
+                    margin-right: 7px;
+                }
+            }
+            & > button, & > div{
+                margin-right: 15px;
+            }
+        }
+    }
     #block_repeat{
-        margin-right: 15px;
         text-align: center;
         .title_repeat{
             line-height: 15px;
@@ -519,4 +531,6 @@
             }
         }
     }
+}
+
 </style>

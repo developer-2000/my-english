@@ -9,18 +9,13 @@
     width: calc(100% - 300px);
 }
 .wrapper{
-    .content-wrapper{
-        margin-left: 0!important;
-        min-height: auto!important;
-        max-height: calc(100vh - 120px);
-        overflow-y: auto;
-    }
+
 }
 .top_menu{
-    box-shadow: none;
-    border-radius: 0px;
-    min-height: 60px;
-    margin: 0px!important;
+    //box-shadow: none;
+    //border-radius: 0px;
+    //min-height: 60px;
+    //margin: 0px!important;
 
     .card-header{
         background-color: $grey-background;
@@ -171,9 +166,7 @@ table.sentence{
     }
 }
 .block_table{
-    margin-top: 12px;
-    margin-bottom: 0px!important;
-
+    margin-bottom: 0 !important;
 }
 .table_wrapper{
     .btn_block_column{

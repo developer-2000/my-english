@@ -10,38 +10,20 @@ use Illuminate\Database\Eloquent\Model;
 abstract class CoreRepository
 {
 
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|Model|mixed
-     */
-    protected function startConditions()
-    {
-        return clone $this->model;
-    }
-
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application|Model|mixed
-     */
     protected $model;
 
-    /**
-     * @return mixed
-     */
-    abstract protected function getModelClass();
-
-    /**
-     * CoreRepository constructor.
-     */
     public function __construct()
     {
         $this->model = app($this->getModelClass());
     }
 
-    /**
-     * data from admin request for table (Vue Good Table)
-     *
-     * @param array $data
-     * @return array
-     */
+    protected function startConditions()
+    {
+        return clone $this->model;
+    }
+
+    abstract protected function getModelClass();
+
     protected function getVariablesForTables(array $data)
     {
         $collected_data = collect($data);
@@ -52,9 +34,16 @@ abstract class CoreRepository
         $page = (int)$collected_data->get('page', 1);
         // кол-во на странице
         $limit = (int)$collected_data->get('perPage', 50);
-        // с какой строки выбирать
+        // показать все записи
+        if($limit < 0){
+            $page = 1;
+            $limit = 999999;
+        }
+
         $offset = $page * $limit - $limit;
         $search = $collected_data->get('search');
+        // Разбиваем строку по пробелам и удаляем пустые элементы
+        $search = array_filter(explode(' ', $search));
 
         return compact('limit', 'offset', 'search', 'sort_column', 'sort_type');
     }

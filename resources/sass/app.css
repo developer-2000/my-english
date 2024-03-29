@@ -3,18 +3,13 @@
   background-color: #f4f6f9;
   width: calc(100% - 300px);
 }
-.wrapper .content-wrapper {
-  margin-left: 0 !important;
-  min-height: auto !important;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-}
-.top_menu {
-  box-shadow: none;
-  border-radius: 0;
-  min-height: 60px;
-  margin: 0 !important;
-}
+
+/*.top_menu {*/
+/*  box-shadow: none;*/
+/*  border-radius: 0;*/
+/*  min-height: 60px;*/
+/*  margin: 0 !important;*/
+/*}*/
 .top_menu .card-header {
   background-color: #f4f6f9;
   border-bottom: 1px solid #d2d2d2;
@@ -143,8 +138,7 @@ table.sentence .but_td > span a {
   background-color: #f4f6f9 !important;
 }
 .block_table {
-  margin-top: 12px;
-  margin-bottom: 0px !important;
+  margin-bottom: 0 !important;
 }
 .vgt-global-search__input.vgt-pull-left span.sr-only {
   position: absolute !important;

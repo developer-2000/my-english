@@ -3,8 +3,11 @@
         <!-- Wrapper -->
         <div class="wrapper">
             <!-- верхнее меню -->
-            <div class="top_menu">
-                <div class="card-header">
+            <div class="top-menu">
+                <!-- заголовок окна-->
+                <h1>List Words</h1>
+
+                <div class="box-button">
                     <button class="btn btn-outline-success" id="coll1" @click="toggleCollapse(1)">
                         Create Type
                     </button>
@@ -18,144 +21,132 @@
             </div>
 
             <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <div class="content-header">
+                <!-- collapse create -->
+                <div class="collapse" id="collapse1" >
+                    <div class="card card-body">
+                        <div class="collapse_heder">Create Type</div>
 
-                    <!-- collapse create -->
-                    <div class="collapse" id="collapse1" >
-                        <div class="card card-body">
-                            <div class="collapse_heder">Create Type</div>
-
-                            <div class="group_type">
-                                <!-- new type -->
-                                <div class="form-group">
-                                    <label for="collapse_type" class="col-form-label">New type</label>
-                                    <input type="text" class="form-control" placeholder="Insert new type" id="collapse_type"
-                                           v-model="collapse_type"
-                                           @keyup="touchCollapse()"
-                                           required
-                                    >
-                                </div>
-                                <!-- select type word -->
-                                <div class="form-group">
-                                    <label for="collapse_select" class="col-form-label">Type color</label>
-                                    <select @change="touchCollapse()" id="collapse_select" v-model="collapse_select" class="custom-select" size="3">
-                                        <option disabled>Insert color for type</option>
-                                        <option v-for="(color, key) in allColor" :key="key"
-                                                :style="`background-color:${color}`"
-                                                :value="`${color}`">
-                                            {{color}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- Word description -->
-                                <div class="form-group">
-                                    <label for="collapse_description" class="col-form-label">Description type</label>
-                                    <textarea @keyup="touchCollapse()" v-model="collapse_description" class="form-control" id="collapse_description" placeholder="Insert description type"></textarea>
-                                </div>
-
-                                <button type="button" class="btn btn-primary"
-                                        :disabled="!collapse_but"
-                                        @click="createType"
-                                >Save</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- collapse update -->
-                    <div class="collapse" id="collapse2">
-                        <div class="card card-body">
-                            <div class="collapse_heder">Update Type</div>
-
-                            <div class="group_type">
-<!--{{this.allTypes}}-->
-                                <!-- select old -->
-                                <div class="form-group">
-                                    <label for="collapse_select_old" class="col-form-label">Old type</label>
-                                    <select @change="touchCollapseOld()" id="collapse_select_old" v-model="collapse_select_old" class="custom-select" size="3">
-                                        <option disabled>Select old type</option>
-                                        <option v-for="(color, key) in allTypes" :key="key"
-                                                :style="`background-color:${color.color}`"
-                                                :value="`${color.color}`"
-                                                @click="touchOldType(color.id)"
-                                        >
-                                            {{color.type}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- name type -->
-                                <div class="form-group">
-                                    <label for="collapse_type_new" class="col-form-label">Name type</label>
-                                    <input type="text" class="form-control" placeholder="Insert name type" id="collapse_type_new"
-                                           v-model="collapse_type"
-                                           @keyup="touchCollapseOld()"
-                                           required
-                                    >
-                                </div>
-                                <!-- select type word -->
-                                <div class="form-group">
-                                    <label for="collapse_select_new" class="col-form-label">Type color</label>
-                                    <select @change="touchCollapseOld()" id="collapse_select_new" v-model="collapse_select" class="custom-select" size="3">
-                                        <option disabled>Insert color for type</option>
-                                        <option v-for="(color, key) in allColor" :key="key"
-                                                :style="`background-color:${color}`"
-                                                :value="`${color}`">
-                                            {{color}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- Word description -->
-                                <div class="form-group">
-                                    <label for="collapse_description_old" class="col-form-label">Description type</label>
-                                    <textarea @keyup="touchCollapseOld()" v-model="collapse_description" class="form-control" id="collapse_description_old" placeholder="Insert description type"></textarea>
-                                </div>
-
-                                <button type="button" class="btn btn-primary"
-                                        :disabled="!collapse_but_old"
-                                        @click="updateType"
-                                >Update</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="container-fluid">
-                        <!-- заголовок окна-->
-                        <h1 class="m-0 text-dark">List Words</h1>
-
-                        <!-- body окна-->
-                        <div class="card card-primary card-outline block_table">
-
-<!--                            @on-row-click="onRowClick"-->
-<!--                            @on-column-filter="onColumnFilter"-->
-
-                            <!-- Table -->
-                            <div v-if="table.rows.length" class="table_wrapper">
-                                <vue-good-table
-                                    :isLoading.sync="table.isLoading"
-                                    :mode="table.mode"
-                                    :totalRows="table.totalRecords"
-                                    :rows="table.rows"
-                                    :columns="table.columns"
-                                    :pagination-options="table.optionsPaginate"
-                                    :search-options="{
-                                        enabled: true,
-                                        placeholder: 'Search word',
-                                    }"
-                                    styleClass="vgt-table bordered"
-                                    @on-search="onSearch"
-                                    @on-page-change="onPageChange"
-                                    @on-per-page-change="onPerPageChange"
-                                    @on-sort-change="onSortChange"
+                        <div class="group_type">
+                            <!-- new type -->
+                            <div class="form-group">
+                                <label for="collapse_type" class="col-form-label">New type</label>
+                                <input type="text" class="form-control" placeholder="Insert new type" id="collapse_type"
+                                       v-model="collapse_type"
+                                       @keyup="touchCollapse()"
+                                       required
                                 >
-                                    <template slot="loadingContent">
-                                        <div></div>
-                                    </template>
-                                </vue-good-table>
+                            </div>
+                            <!-- select type word -->
+                            <div class="form-group">
+                                <label for="collapse_select" class="col-form-label">Type color</label>
+                                <select @change="touchCollapse()" id="collapse_select" v-model="collapse_select" class="custom-select" size="3">
+                                    <option disabled>Insert color for type</option>
+                                    <option v-for="(color, key) in allColor" :key="key"
+                                            :style="`background-color:${color}`"
+                                            :value="`${color}`">
+                                        {{color}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Word description -->
+                            <div class="form-group">
+                                <label for="collapse_description" class="col-form-label">Description type</label>
+                                <textarea @keyup="touchCollapse()" v-model="collapse_description" class="form-control" id="collapse_description" placeholder="Insert description type"></textarea>
                             </div>
 
+                            <button type="button" class="btn btn-primary"
+                                    :disabled="!collapse_but"
+                                    @click="createType"
+                            >Save</button>
                         </div>
+
+                    </div>
+                </div>
+
+                <!-- collapse update -->
+                <div class="collapse" id="collapse2">
+                    <div class="card card-body">
+                        <div class="collapse_heder">Update Type</div>
+
+                        <div class="group_type">
+                            <!-- select old -->
+                            <div class="form-group">
+                                <label for="collapse_select_old" class="col-form-label">Old type</label>
+                                <select @change="touchCollapseOld()" id="collapse_select_old" v-model="collapse_select_old" class="custom-select" size="3">
+                                    <option disabled>Select old type</option>
+                                    <option v-for="(color, key) in allTypes" :key="key"
+                                            :style="`background-color:${color.color}`"
+                                            :value="`${color.color}`"
+                                            @click="touchOldType(color.id)"
+                                    >
+                                        {{color.type}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- name type -->
+                            <div class="form-group">
+                                <label for="collapse_type_new" class="col-form-label">Name type</label>
+                                <input type="text" class="form-control" placeholder="Insert name type" id="collapse_type_new"
+                                       v-model="collapse_type"
+                                       @keyup="touchCollapseOld()"
+                                       required
+                                >
+                            </div>
+                            <!-- select type word -->
+                            <div class="form-group">
+                                <label for="collapse_select_new" class="col-form-label">Type color</label>
+                                <select @change="touchCollapseOld()" id="collapse_select_new" v-model="collapse_select" class="custom-select" size="3">
+                                    <option disabled>Insert color for type</option>
+                                    <option v-for="(color, key) in allColor" :key="key"
+                                            :style="`background-color:${color}`"
+                                            :value="`${color}`">
+                                        {{color}}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Word description -->
+                            <div class="form-group">
+                                <label for="collapse_description_old" class="col-form-label">Description type</label>
+                                <textarea @keyup="touchCollapseOld()" v-model="collapse_description" class="form-control" id="collapse_description_old" placeholder="Insert description type"></textarea>
+                            </div>
+
+                            <button type="button" class="btn btn-primary"
+                                    :disabled="!collapse_but_old"
+                                    @click="updateType"
+                            >Update</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <!-- body окна-->
+                    <div class="card card-primary card-outline block_table">
+                        <!-- Table -->
+                        <div v-if="table.rows.length" class="table_wrapper">
+                            <vue-good-table
+                                :isLoading.sync="table.isLoading"
+                                :mode="table.mode"
+                                :totalRows="table.totalRecords"
+                                :rows="table.rows"
+                                :columns="table.columns"
+                                :pagination-options="table.optionsPaginate"
+                                :search-options="{
+                                    enabled: true,
+                                    placeholder: 'Search word',
+                                }"
+                                styleClass="vgt-table bordered"
+                                @on-search="onSearch"
+                                @on-page-change="onPageChange"
+                                @on-per-page-change="onPerPageChange"
+                                @on-sort-change="onSortChange"
+                            >
+                                <template slot="loadingContent">
+                                    <div></div>
+                                </template>
+                            </vue-good-table>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -443,7 +434,7 @@
                     // settings paginate
                     optionsPaginate: {
                         enabled: true,
-                        perPageDropdown: [3, 50],
+                        perPageDropdown: [50, 100],
                         nextLabel: 'next',
                         prevLabel: 'prev',
                         perPage: 50,
@@ -566,9 +557,7 @@
             async loadWordsAndTypes() {
                 try {
                     this.isLoading = true;
-                    const response = await this.$http.get(
-`${this.$http.apiUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
-                    );
+                    const response = await this.$http.get(`${this.$http.apiUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`);
 
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
@@ -840,16 +829,31 @@ ${row.description == null ? '' : row.description.toLowerCase()}
 </script>
 
 <style lang="scss" scoped>
+
+#page_list_worlds{
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    .top-menu{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 7px;
+        .box-button{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 340px;
+        }
+    }
     #collapse1,
     #collapse2{
         .card{
-            margin: 0px -9px;
             box-shadow: none;
-            border-left: 1px solid #d2d2d2;
-            border-radius: 0px;
-            border-bottom: 1px solid #d2d2d2;
+            margin: 0;
+            border: none;
+            padding: 10px;
             .collapse_heder{
-                margin: 0px 0px 15px;
+                margin: 0 0 15px;
             }
         }
         .group_type{
@@ -874,7 +878,8 @@ ${row.description == null ? '' : row.description.toLowerCase()}
     #collapse_select,
     #collapse_select_old,
     #collapse_select_new {
-        padding: 0px;
+        padding: 0;
     }
+}
 
 </style>

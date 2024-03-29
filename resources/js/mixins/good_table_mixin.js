@@ -45,11 +45,21 @@ export default {
                     // спрятать кнопку
                     $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
                     this.serverParams.search = '';
+                    // сместить search
+                    $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
+
+                    // Очищаем поле ввода поиска
+                    const searchInput = document.querySelector('.vgt-global-search__input input');
+                    if (searchInput) {
+                        // Создаем новое событие ввода
+                        const event = new Event('input', { bubbles: true });
+                        // Устанавливаем значение поля ввода в пустую строку
+                        searchInput.value = '';
+                        // Диспатчим событие ввода
+                        searchInput.dispatchEvent(event);
+                    }
+
                     this.initialData();
-                    a = setTimeout(() => {
-                        // сместить search и зачистить
-                        $('input.vgt-input.vgt-pull-left').css('margin-left', '0px').val("");
-                    }, 500);
                 });
             }, 500);
         },

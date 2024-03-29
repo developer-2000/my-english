@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Sentence;
+use App\Models\Test;
 use App\Models\Word;
 use Illuminate\Support\Facades\DB;
 
@@ -11,25 +12,27 @@ class SentenceRepository extends CoreRepository
     public function getSentences($request)
     {
         $vars = $this->getVariablesForTables($request);
-        $query = $this->startConditions()->with('sound');
-        $total_count = $query->get()->count();
+        $collection = $this->startConditions()->with('sound');
 
-        // search
-        if($vars['search'] != ''){
-            $query = $query->where('sentence', 'like', $vars['search'] . '%')
-                ->orWhere('sentence', 'like', '% ' . $vars['search'] . '%')
-                ->orWhere('sentence', 'like', '% ' . $vars['search']);
+        // search Найти все элементы в строке базы
+        if(!empty($vars['search'])){
+            $searchArray = $vars['search'];
+            foreach ($searchArray as $word) {
+                $collection = $collection->where('sentence', 'like', '% ' . $word . '%');
+            }
         }
+
+        $total_count = $collection->get()->count();
 
         // sort
         if ($vars['sort_column'] && $vars['sort_type']) {
             if ($vars['sort_column'] == 'sentence') {
-                $query = $query
+                $collection = $collection
                     ->orderBy('sentence', $vars['sort_type']);
             }
             // сортировка checkbox по имеющейся связи
             elseif ($vars['sort_column'] == 'sound') {
-                $query = $this->startConditions()
+                $collection = $this->startConditions()
                     ->leftJoin('sentence_sounds', 'sentences.id', '=', 'sentence_sounds.sentence_id')
                     ->select('sentences.*', DB::raw('sentence_sounds.id as sound'))
                     ->orderBy(DB::raw($vars['sort_column']), $vars['sort_type']);
@@ -37,7 +40,7 @@ class SentenceRepository extends CoreRepository
         }
 
         // paginate
-        $list = $query
+        $list = $collection
             ->skip($vars['offset'])->take($vars['limit'])
             ->orderBy('id', 'desc')
             ->get();
