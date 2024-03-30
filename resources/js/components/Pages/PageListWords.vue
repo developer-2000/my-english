@@ -146,7 +146,6 @@
                                 </template>
                             </vue-good-table>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -677,7 +676,6 @@
                     // выбрать колекцию слова
                     let row = this.getRowForWord($(event.target).text());
                     if (row == null) { return false; }
-
                     // 1 создать строку html
                     let html = `<div style="text-align: left;">
 <div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}
@@ -738,7 +736,7 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                     .css('border-color',type.color)
                     .text(string);
             },
-            setVariableDefault(word_id=0, word='', translation='', type_id=0, description=''){
+            setVariableDefault(word_id=0, word='', translation='', type_id=0, description='""'){
                 this.word_id = word_id;
                 this.new_word = word;
                 this.translation_word = translation;

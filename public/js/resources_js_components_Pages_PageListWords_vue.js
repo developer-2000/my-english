@@ -480,7 +480,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if (row == null) {
           return false;
         }
-
         // 1 создать строку html
         var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(row.type == null ? '' : 'color:' + row.type.color, ";\">\n").concat(row.type == null ? '' : row.type.type, " ").concat(row.type.description == null ? '' : ' - ' + row.type.description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
 
@@ -539,7 +538,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var word = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
       var translation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var type_id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      var description = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
+      var description = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '""';
       this.word_id = word_id;
       this.new_word = word;
       this.translation_word = translation;
@@ -1511,7 +1510,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   methods: {
-    // заполнить обьект данных для таблица
+    // заполнить обьект данных для таблицы
     makeObjectDataForTable: function makeObjectDataForTable(list) {
       var _this = this;
       var row = '';
@@ -1558,16 +1557,19 @@ __webpack_require__.r(__webpack_exports__);
     updateParams: function updateParams(newProps) {
       this.serverParams = Object.assign({}, this.serverParams, newProps);
     },
+    // клик по кнопки зачистки поля поиска
     makeButtonClearSearch: function makeButtonClearSearch() {
       var _this2 = this;
-      var a = setTimeout(function () {
+      setTimeout(function () {
         $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
         $('#clear_search').bind('click', function (e) {
-          // спрятать кнопку
-          $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+          setTimeout(function () {
+            // сместить search
+            $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
+            // спрятать кнопку
+            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+          }, 50);
           _this2.serverParams.search = '';
-          // сместить search
-          $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
 
           // Очищаем поле ввода поиска
           var searchInput = document.querySelector('.vgt-global-search__input input');

@@ -47,11 +47,10 @@
                     </button>
                 </div>
             </div>
+            <!-- Table -->
             <div class="content-wrapper" id="content-wrapper">
                 <div class="container-fluid">
-                    <!-- body окна-->
                     <div class="card card-primary card-outline block_table">
-                        <!-- Table -->
                         <div class="table_wrapper">
                             <vue-good-table
                                 :columns="table.columns"
@@ -69,7 +68,6 @@
                                 @on-search="onSearch"
                                 @on-sort-change="onSortChange"
                                 styleClass="vgt-table bordered sentence"
-                                ref="goodTable"
                             >
                                 <template slot="loadingContent">
                                     <div></div>

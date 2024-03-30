@@ -58,10 +58,11 @@ class SentenceRepository extends CoreRepository
             // 1 вставляю множественное если есть противоположное в базе
             if( !$this->updateToManyWord($word) && !$this->updateToOneWord($word) ){
                 if(is_null($this->checkMany($word))){
-                    $coll = \App\Models\Word::create(
-                        ['word' => $word],
-                        ['translation' => '']
-                    );
+                    Word::create([
+                        'word' => $word,
+                        'translation' => '',
+                        'description' => '""'
+                    ]);
                 }
             }
         }

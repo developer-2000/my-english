@@ -489,7 +489,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "table_wrapper"
   }, [_c("vue-good-table", {
-    ref: "goodTable",
     attrs: {
       columns: _vm.table.columns,
       isLoading: _vm.table.isLoading,
@@ -844,7 +843,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   methods: {
-    // заполнить обьект данных для таблица
+    // заполнить обьект данных для таблицы
     makeObjectDataForTable: function makeObjectDataForTable(list) {
       var _this = this;
       var row = '';
@@ -891,16 +890,19 @@ __webpack_require__.r(__webpack_exports__);
     updateParams: function updateParams(newProps) {
       this.serverParams = Object.assign({}, this.serverParams, newProps);
     },
+    // клик по кнопки зачистки поля поиска
     makeButtonClearSearch: function makeButtonClearSearch() {
       var _this2 = this;
-      var a = setTimeout(function () {
+      setTimeout(function () {
         $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
         $('#clear_search').bind('click', function (e) {
-          // спрятать кнопку
-          $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+          setTimeout(function () {
+            // сместить search
+            $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
+            // спрятать кнопку
+            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+          }, 50);
           _this2.serverParams.search = '';
-          // сместить search
-          $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
 
           // Очищаем поле ввода поиска
           var searchInput = document.querySelector('.vgt-global-search__input input');

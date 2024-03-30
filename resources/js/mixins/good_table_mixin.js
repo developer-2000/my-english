@@ -1,6 +1,6 @@
 export default {
     methods: {
-        // заполнить обьект данных для таблица
+        // заполнить обьект данных для таблицы
         makeObjectDataForTable(list) {
             let row = '';
             this.table.rows = [];
@@ -37,16 +37,21 @@ export default {
         updateParams(newProps) {
             this.serverParams = Object.assign({}, this.serverParams, newProps);
         },
+        // клик по кнопки зачистки поля поиска
         makeButtonClearSearch() {
-            let a = setTimeout(() => {
+           setTimeout(() => {
                 $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
 
                 $('#clear_search').bind('click', (e) => {
-                    // спрятать кнопку
-                    $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+
+                    setTimeout(()=>{
+                        // сместить search
+                        $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
+                        // спрятать кнопку
+                        $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+                    },50)
+
                     this.serverParams.search = '';
-                    // сместить search
-                    $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
 
                     // Очищаем поле ввода поиска
                     const searchInput = document.querySelector('.vgt-global-search__input input');
