@@ -15,6 +15,8 @@ Route::resource('word', WordController::class)->only([
     'index','store','update'
 ]);
 Route::post('word/delete-word', [WordController::class, 'deleteWord']);
+Route::post('word/delete-word', [WordController::class, 'deleteWord']);
+Route::post('word/add-type-another-word', [WordController::class, 'addTypeAnotherWord']);
 
 // 2
 Route::resource('sentence', SentenceController::class)->only([

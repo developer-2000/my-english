@@ -116,14 +116,22 @@ table.sentence{
 }
 .block_type{
     display: flex;
-    .form-group{
-        width: 45%;
-        margin-right: 5%;
+    .box-left-site{
+        width: 35%;
+        margin-right: 10px;
+        .box-input-add-type-word-from-table{
+            input{
+                margin: 0 0 10px 0;
+            }
+            button{
+                width: 100%;
+            }
+        }
     }
     .desc_type{
-        width: 50%;
-        border: 3px solid black;
-        padding: 10px;
+        width: calc(100% - (35% + 10px));
+        border: 2px solid black;
+        padding: 3px 8px 10px;
         color: #747474;
         font-size: 16px;
         border-radius: 7px;

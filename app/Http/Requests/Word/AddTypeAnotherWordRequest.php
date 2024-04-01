@@ -4,7 +4,7 @@ namespace App\Http\Requests\Word;
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
 
-class CreateWordRequest extends ApiFormRequest
+class AddTypeAnotherWordRequest extends ApiFormRequest
 {
 
     /**
@@ -24,11 +24,8 @@ class CreateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'word' => 'required|string|min:1|unique:words,word',
-            'translation' => 'required|string|min:1',
-            'description' => 'nullable|string',
-            'type_id' => 'required|integer',
-            'time_forms' => 'nullable',
+            'from_word_id' => 'required|integer|exists:words,id',
+            'to_word_text' => 'required|string|min:2',
         ];
     }
 

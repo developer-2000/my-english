@@ -35,7 +35,8 @@ class UpdateWordRequest extends ApiFormRequest
             'word' => 'required|string|min:1|unique:words,word,'.$this->id,
             'translation' => 'required|string|min:1',
             'description' => 'nullable|string',
-            'type' => 'nullable|integer|exists:word_types,id',
+            'type_id' => 'nullable|integer|exists:word_types,id',
+            'time_forms' => 'nullable',
         ];
     }
 

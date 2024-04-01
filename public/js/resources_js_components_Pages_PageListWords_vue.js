@@ -45,7 +45,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       new_word: '',
       translation_word: '',
       description: '',
-      select_type: 0,
+      select_type_id: 0,
       collapse_type: '',
       collapse_select: '',
       collapse_select_old: '',
@@ -134,7 +134,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }]
       },
       allTypes: [],
-      allColor: []
+      allColor: [],
+      objWordTimeForms: null,
+      objUpdateWord: null,
+      objWordFromTable: {
+        bool_click_button_word_from_table: false,
+        word: ''
+      }
     };
   },
   mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"]],
@@ -189,7 +195,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 word: _this.new_word,
                 translation: _this.translation_word,
                 description: _this.description,
-                type: _this.select_type
+                type_id: _this.select_type_id,
+                time_forms: _this.objWordTimeForms
               };
               _context.prev = 1;
               _context.next = 4;
@@ -225,10 +232,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               data = {
                 word: _this2.new_word,
                 translation: _this2.translation_word,
-                description: _this2.description
+                description: _this2.description,
+                time_forms: _this2.objWordTimeForms
               };
-              if (_this2.select_type !== 0) {
-                data.type = _this2.select_type;
+              if (_this2.select_type_id !== 0) {
+                data.type_id = _this2.select_type_id;
               }
               _context2.next = 5;
               return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.word_id), data);
@@ -285,6 +293,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3, null, [[1, 9]]);
       }))();
     },
+    // выборка слов и типов слов
     loadWordsAndTypes: function loadWordsAndTypes() {
       var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
@@ -394,6 +403,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee6, null, [[0, 9]]);
       }))();
     },
+    // добавить тип временная форма другому слову из таблицы
+    addTypeWordFromTable: function addTypeWordFromTable() {
+      var _this7 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+        var data, response;
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.prev = 0;
+              data = {
+                from_word_id: _this7.word_id,
+                to_word_text: _this7.objWordFromTable.word
+              };
+              _context7.next = 4;
+              return _this7.$http.post("".concat(_this7.$http.apiUrl(), "word/add-type-another-word"), data);
+            case 4:
+              response = _context7.sent;
+              if (_this7.checkSuccess(response)) {
+                _this7.initialData();
+                $('#update_word').modal('hide');
+                $('.modal-backdrop.fade.show').remove();
+                _this7.objWordFromTable.word = '';
+              }
+              _context7.next = 11;
+              break;
+            case 8:
+              _context7.prev = 8;
+              _context7.t0 = _context7["catch"](0);
+              console.log(_context7.t0);
+            case 11:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee7, null, [[0, 8]]);
+      }))();
+    },
     deleteColorFromArrColor: function deleteColorFromArrColor(arrColor) {
       var index = 0;
       this.allColor = arrColor;
@@ -444,7 +489,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this7 = this;
+      var _this8 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
@@ -456,7 +501,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
           // преобразовать слово в столбце
           else {
-            row = _this7.getRowForWord(prev.text());
+            row = _this8.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -471,17 +516,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       }, 500);
     },
+    // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this8 = this;
+      var _this9 = this;
       // навести на слово
       $('body').on('mouseover', '.trigger', function (event) {
         // выбрать колекцию слова
-        var row = _this8.getRowForWord($(event.target).text());
+        var row = _this9.getRowForWord($(event.target).text());
         if (row == null) {
           return false;
         }
+        var text_type = "";
+        var text_description = "";
+        var span_style = row.type == null ? '' : 'color:' + row.type.color;
+        if (row.type !== null) {
+          text_type = row.type.type;
+        }
+        if (row.time_forms === null && row.type.description !== undefined) {
+          text_description = ' - ' + row.type.description.text;
+        }
+        if (row.time_forms !== null) {
+          text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
+          text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
+          text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
+        }
+
         // 1 создать строку html
-        var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(row.type == null ? '' : 'color:' + row.type.color, ";\">\n").concat(row.type == null ? '' : row.type.type, " ").concat(row.type.description == null ? '' : ' - ' + row.type.description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
+        var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
 
         // 2 показ подсказки
         (0,vue_tippy__WEBPACK_IMPORTED_MODULE_1__.tippy)(event.target, {
@@ -491,25 +552,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       });
     },
+    // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this9 = this;
+      var _this10 = this;
+      // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id == _this9.select_type) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
+        for (var i = 0; i < _this10.allTypes.length; i++) {
+          if (_this10.allTypes[i].id === _this10.select_type_id) {
+            _this10.setStyleDataModal(_this10.allTypes[i]);
             break;
           }
         }
       });
+
+      // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id == _this9.select_type) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
+        for (var i = 0; i < _this10.allTypes.length; i++) {
+          if (_this10.allTypes[i].id == _this10.select_type_id) {
+            _this10.setStyleDataModal(_this10.allTypes[i]);
             break;
           }
         }
       });
     },
+    // Возвращает по слову обьект слова из базы
     getRowForWord: function getRowForWord(word) {
       var row = null;
       for (var i = 0; i < this.table.origin_rows.length; i++) {
@@ -528,10 +594,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
       return null;
     },
+    // отобразить значение типа слова в правой части select выбора
     setStyleDataModal: function setStyleDataModal(type) {
-      var string = type.description == null ? '' : " - ".concat(type.description);
-      string = type.type + '' + string;
-      $('.desc_type').css('border-color', type.color).text(string);
+      var string = '';
+      this.objWordTimeForms = null;
+      if (type.description == null) {
+        string = '';
+      } else {
+        if (type.description['text'] !== null) {
+          string = type.description['text'];
+        } else {
+          this.objWordTimeForms = type.description['object'];
+        }
+      }
+      $('.desc_type').css('border-color', type.color);
+      $('.desc_type .text').html(string);
     },
     setVariableDefault: function setVariableDefault() {
       var word_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -539,28 +616,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var translation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var type_id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
       var description = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '""';
+      var time_forms = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
       this.word_id = word_id;
       this.new_word = word;
       this.translation_word = translation;
-      this.select_type = type_id;
+      this.select_type_id = type_id;
       this.description = description;
+      this.objWordTimeForms = time_forms;
     },
+    // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this10 = this;
+      var _this11 = this;
       var a = setTimeout(function () {
+        // удалить
         $('.btn-danger').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this10.getRowForWord(word);
+          var row = _this11.getRowForWord(word);
           // confirm delete
-          _this10.confirmMessage('Really delete word ?', 'success', row.id);
+          _this11.confirmMessage('Really delete word ?', 'success', row.id);
         });
+        // редактировать
         $('.btn-warning').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this10.getRowForWord(word);
-          _this10.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description);
-          _this10.setStyleDataModal(row.type);
+          var row = _this11.getRowForWord(word);
+          _this11.objUpdateWord = row;
+          _this11.setStyleDataModal(row.type);
+          _this11.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description, row.time_forms);
           $('#update_word').modal('show');
         });
       }, 1000);
@@ -604,10 +687,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    var _this11 = this;
+    var _this12 = this;
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this11.help_dynamic = "";
+      _this12.help_dynamic = "";
+      _this12.objWordFromTable.bool_click_button_word_from_table = false;
+      _this12.objUpdateWord = null;
     });
     // $('#collapseExample1').collapse('hide');
     // $('#collapseExample2').collapse('hide');
@@ -1151,6 +1236,8 @@ var render = function render() {
   }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "block_type"
   }, [_c("div", {
+    staticClass: "box-left-site"
+  }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1161,8 +1248,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.select_type,
-      expression: "select_type"
+      value: _vm.select_type_id,
+      expression: "select_type_id"
     }],
     staticClass: "custom-select",
     attrs: {
@@ -1177,20 +1264,218 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.select_type = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+        _vm.select_type_id = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
       }
     }
   }, _vm._l(_vm.allTypes, function (type, key) {
     return _c("option", {
       key: key,
-      "class": type.id === 1 ? "disabled_select" : "",
       domProps: {
         value: type.id
       }
-    }, [_vm._v("\n                                        " + _vm._s(type.id === 1 ? "Choose word type" : type.type) + "\n                                    ")]);
-  }), 0)]), _vm._v(" "), _c("div", {
+    }, [_vm._v("\n                                            " + _vm._s(type.type) + "\n                                        ")]);
+  }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "desc_type"
+  }, [_c("div", {
+    staticClass: "text"
+  }), _vm._v(" "), _vm.objWordTimeForms !== null ? _c("div", {
+    staticClass: "box-time-forms"
+  }, [_c("div", {
+    staticClass: "box-past"
+  }, [_c("label", [_vm._v("Past time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.word,
+      expression: "objWordTimeForms.past.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.translation,
+      expression: "objWordTimeForms.past.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.accent,
+      expression: "objWordTimeForms.past.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "accent", $event.target.value);
+      }
+    }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "box-present"
+  }, [_c("label", [_vm._v("Present time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.word,
+      expression: "objWordTimeForms.present.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.translation,
+      expression: "objWordTimeForms.present.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.accent,
+      expression: "objWordTimeForms.present.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "accent", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "box-future"
+  }, [_c("label", [_vm._v("Future time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.word,
+      expression: "objWordTimeForms.future.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.translation,
+      expression: "objWordTimeForms.future.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.accent,
+      expression: "objWordTimeForms.future.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
+      }
+    }
+  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1239,7 +1524,7 @@ var render = function render() {
       id: "update_word",
       tabindex: "-1",
       role: "dialog",
-      "aria-labelledby": "create_word",
+      "aria-labelledby": "update_word",
       "aria-hidden": "true"
     }
   }, [_c("div", {
@@ -1343,6 +1628,8 @@ var render = function render() {
   }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "block_type"
   }, [_c("div", {
+    staticClass: "box-left-site"
+  }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1353,8 +1640,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.select_type,
-      expression: "select_type"
+      value: _vm.select_type_id,
+      expression: "select_type_id"
     }],
     staticClass: "custom-select",
     attrs: {
@@ -1369,20 +1656,259 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.select_type = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+        _vm.select_type_id = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
       }
     }
   }, _vm._l(_vm.allTypes, function (type, key) {
     return _c("option", {
       key: key,
-      "class": type.id === 1 ? "disabled_select" : "",
       domProps: {
         value: type.id
       }
-    }, [_vm._v("\n                                        " + _vm._s(type.id === 1 ? "Choose word type" : type.type) + "\n                                    ")]);
-  }), 0)]), _vm._v(" "), _c("div", {
+    }, [_vm._v("\n                                            " + _vm._s(type.type) + "\n                                        ")]);
+  }), 0)]), _vm._v(" "), _vm.objUpdateWord !== null && _vm.objUpdateWord.time_forms !== null && !_vm.objWordFromTable.bool_click_button_word_from_table ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        _vm.objWordFromTable.bool_click_button_word_from_table = true;
+      }
+    }
+  }, [_vm._v("Добавить этот тип слову из таблицы")]) : _vm._e(), _vm._v(" "), _vm.objWordFromTable.bool_click_button_word_from_table ? _c("div", {
+    staticClass: "box-input-add-type-word-from-table"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordFromTable.word,
+      expression: "objWordFromTable.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordFromTable.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordFromTable, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: _vm.addTypeWordFromTable
+    }
+  }, [_vm._v("Добавить")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "desc_type"
+  }, [_c("div", {
+    staticClass: "text"
+  }), _vm._v(" "), _vm.objWordTimeForms !== null ? _c("div", {
+    staticClass: "box-time-forms"
+  }, [_c("div", {
+    staticClass: "box-past"
+  }, [_c("label", [_vm._v("Past time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.word,
+      expression: "objWordTimeForms.past.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.translation,
+      expression: "objWordTimeForms.past.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.past.accent,
+      expression: "objWordTimeForms.past.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.past.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.past, "accent", $event.target.value);
+      }
+    }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "box-present"
+  }, [_c("label", [_vm._v("Present time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.word,
+      expression: "objWordTimeForms.present.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.translation,
+      expression: "objWordTimeForms.present.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.present.accent,
+      expression: "objWordTimeForms.present.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.present.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.present, "accent", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "box-future"
+  }, [_c("label", [_vm._v("Future time")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.word,
+      expression: "objWordTimeForms.future.word"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert word"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.word
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "word", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.translation,
+      expression: "objWordTimeForms.future.translation"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert translation"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.translation
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "translation", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objWordTimeForms.future.accent,
+      expression: "objWordTimeForms.future.accent"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert accent"
+    },
+    domProps: {
+      value: _vm.objWordTimeForms.future.accent
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
+      }
+    }
+  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1868,7 +2394,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  width: 340px;\n}\n#page_list_worlds #collapse1 .card[data-v-461a95d4],\n#page_list_worlds #collapse2 .card[data-v-461a95d4] {\n  box-shadow: none;\n  margin: 0;\n  border: none;\n  padding: 10px;\n}\n#page_list_worlds #collapse1 .card .collapse_heder[data-v-461a95d4],\n#page_list_worlds #collapse2 .card .collapse_heder[data-v-461a95d4] {\n  margin: 0 0 15px;\n}\n#page_list_worlds #collapse1 .group_type[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type[data-v-461a95d4] {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-content: stretch;\n  align-items: flex-start;\n}\n#page_list_worlds #collapse1 .group_type .form-group[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type .form-group[data-v-461a95d4] {\n  width: 20%;\n  margin-right: 20px;\n}\n#page_list_worlds #collapse1 .group_type button[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type button[data-v-461a95d4] {\n  margin-top: 40px;\n}\n#page_list_worlds #collapse1 .group_type textarea[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type textarea[data-v-461a95d4] {\n  height: 86px;\n}\n#page_list_worlds #collapse_select[data-v-461a95d4],\n#page_list_worlds #collapse_select_old[data-v-461a95d4],\n#page_list_worlds #collapse_select_new[data-v-461a95d4] {\n  padding: 0;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  width: 340px;\n}\n#page_list_worlds #collapse1 .card[data-v-461a95d4],\n#page_list_worlds #collapse2 .card[data-v-461a95d4] {\n  box-shadow: none;\n  margin: 0;\n  border: none;\n  padding: 10px;\n}\n#page_list_worlds #collapse1 .card .collapse_heder[data-v-461a95d4],\n#page_list_worlds #collapse2 .card .collapse_heder[data-v-461a95d4] {\n  margin: 0 0 15px;\n}\n#page_list_worlds #collapse1 .group_type[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type[data-v-461a95d4] {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-content: stretch;\n  align-items: flex-start;\n}\n#page_list_worlds #collapse1 .group_type .form-group[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type .form-group[data-v-461a95d4] {\n  width: 20%;\n  margin-right: 20px;\n}\n#page_list_worlds #collapse1 .group_type button[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type button[data-v-461a95d4] {\n  margin-top: 40px;\n}\n#page_list_worlds #collapse1 .group_type textarea[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type textarea[data-v-461a95d4] {\n  height: 86px;\n}\n#page_list_worlds #collapse_select[data-v-461a95d4],\n#page_list_worlds #collapse_select_old[data-v-461a95d4],\n#page_list_worlds #collapse_select_new[data-v-461a95d4] {\n  padding: 0;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

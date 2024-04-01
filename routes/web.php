@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\WordType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,18 @@ Route::group(['prefix'=>'technical'], function (){
 });
 
 Route::any('{all}', function(){
+
+//    $collection = WordType::where('id',30)->first();
+//    dd( $collection->description['object']['past'] );
+//    dd( $collection->description['text'] );
+
+//    $collection = WordType::where('id', '>=', 13)
+//        ->where('description->text', '!=', null)
+//        ->get();
+//
+//    dd( $collection );
+
+
     return view('index');
 })->where('all', '.*');
 

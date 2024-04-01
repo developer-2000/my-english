@@ -1,12 +1,13 @@
 <template>
     <div id="page_list_worlds">
-        <!-- Wrapper -->
+        <!-- Контент -->
         <div class="wrapper">
+
             <!-- верхнее меню -->
             <div class="top-menu">
                 <!-- заголовок окна-->
                 <h1>List Words</h1>
-
+                <!-- кнопки -->
                 <div class="box-button">
                     <button class="btn btn-outline-success" id="coll1" @click="toggleCollapse(1)">
                         Create Type
@@ -20,6 +21,7 @@
                 </div>
             </div>
 
+            <!-- collapse функционал и таблица слов -->
             <div class="content-wrapper">
                 <!-- collapse create -->
                 <div class="collapse" id="collapse1" >
@@ -62,7 +64,6 @@
 
                     </div>
                 </div>
-
                 <!-- collapse update -->
                 <div class="collapse" id="collapse2">
                     <div class="card card-body">
@@ -149,11 +150,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
-        <!-- / Wrapper -->
 
-        <!-- Modals -->
+        <!-- Modals создать слово -->
         <div class="modal fade" id="create_word" tabindex="-1" role="dialog" aria-labelledby="create_word" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -193,20 +192,66 @@
                                 <div class="invalid-feedback" v-if="(!$v.translation_word.minLength)">Number of characters {{ this.translation_word.length }} less needed</div>
                             </div>
 
-                            <!-- select type word -->
+                            <!-- типы значений слова -->
                             <div class="block_type">
-                                <div class="form-group">
-                                    <label for="select_type" class="col-form-label">Word type</label>
-                                    <select id="select_type" v-model="select_type" class="custom-select" size="3">
-                                        <option v-for="(type, key) in allTypes" :key="key"
-                                                :value="type.id"
-                                                :class="type.id === 1 ? 'disabled_select' : ''"
-                                        >
-                                            {{type.id === 1 ? 'Choose word type' : type.type}}
-                                        </option>
-                                    </select>
+                                <!-- select значений -->
+                                <div class="box-left-site">
+                                    <div class="form-group">
+                                        <label for="select_type" class="col-form-label">Word type</label>
+                                        <select id="select_type" v-model="select_type_id" class="custom-select" size="3">
+                                            <option v-for="(type, key) in allTypes" :key="key"
+                                                    :value="type.id"
+                                            >
+                                                {{type.type}}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="desc_type"></div>
+                                <!-- правый блок свойств -->
+                                <div class="desc_type">
+                                    <div class="text"></div>
+                                    <div class="box-time-forms" v-if="objWordTimeForms !== null">
+                                        <!-- прошедшее -->
+                                        <div class="box-past">
+                                            <label>Past time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.past.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.past.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.past.accent"
+                                            >
+                                        </div>
+                                        <!-- настоящее -->
+                                        <div class="box-present">
+                                            <label>Present time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.present.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.present.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.present.accent"
+                                            >
+                                        </div>
+                                        <!-- будущее -->
+                                        <div class="box-future">
+                                            <label>Future time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.future.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.future.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.future.accent"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Word description -->
@@ -228,8 +273,9 @@
                 </div>
             </div>
         </div>
-        <!-- 2 -->
-        <div class="modal fade" id="update_word" tabindex="-1" role="dialog" aria-labelledby="create_word" aria-hidden="true">
+
+        <!-- Modals обновить слово  -->
+        <div class="modal fade" id="update_word" tabindex="-1" role="dialog" aria-labelledby="update_word" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -270,18 +316,81 @@
 
                             <!-- select type word -->
                             <div class="block_type">
-                                <div class="form-group">
-                                    <label for="update_select_type" class="col-form-label">Word type</label>
-                                    <select id="update_select_type" v-model="select_type" class="custom-select" size="3">
-                                        <option v-for="(type, key) in allTypes" :key="key"
-                                                :value="type.id"
-                                                :class="type.id === 1 ? 'disabled_select' : ''"
+                                <!-- select значений -->
+                                <div class="box-left-site">
+                                    <div class="form-group">
+                                        <label for="update_select_type" class="col-form-label">Word type</label>
+                                        <select id="update_select_type" v-model="select_type_id" class="custom-select" size="3">
+                                            <option v-for="(type, key) in allTypes" :key="key"
+                                                    :value="type.id"
+                                            >
+                                                {{type.type}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- добавление этого типа слову из таблицы -->
+                                    <button type="button" class="btn btn-primary"
+                                            v-if="objUpdateWord !== null && objUpdateWord.time_forms !== null && !objWordFromTable.bool_click_button_word_from_table"
+                                            @click="objWordFromTable.bool_click_button_word_from_table = true"
+                                    >Добавить этот тип слову из таблицы</button>
+                                    <!-- блок ввода слова которому добавить этот тип -->
+                                    <div class="box-input-add-type-word-from-table"
+                                         v-if="objWordFromTable.bool_click_button_word_from_table"
+                                    >
+                                        <input type="text" class="form-control" placeholder="Insert word"
+                                               v-model="objWordFromTable.word"
                                         >
-                                            {{type.id === 1 ? 'Choose word type' : type.type}}
-                                        </option>
-                                    </select>
+                                        <button type="button" class="btn btn-primary"
+                                                @click="addTypeWordFromTable"
+                                        >Добавить</button>
+                                    </div>
                                 </div>
-                                <div class="desc_type"></div>
+
+                                <!-- правый блок свойств -->
+                                <div class="desc_type">
+                                    <div class="text"></div>
+                                    <div class="box-time-forms" v-if="objWordTimeForms !== null">
+                                        <!-- прошедшее -->
+                                        <div class="box-past">
+                                            <label>Past time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.past.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.past.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.past.accent"
+                                            >
+                                        </div>
+                                        <!-- настоящее -->
+                                        <div class="box-present">
+                                            <label>Present time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.present.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.present.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.present.accent"
+                                            >
+                                        </div>
+                                        <!-- будущее -->
+                                        <div class="box-future">
+                                            <label>Future time</label>
+                                            <input type="text" class="form-control" placeholder="Insert word"
+                                                   v-model="objWordTimeForms.future.word"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert translation"
+                                                   v-model="objWordTimeForms.future.translation"
+                                            >
+                                            <input type="text" class="form-control" placeholder="Insert accent"
+                                                   v-model="objWordTimeForms.future.accent"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Word description -->
@@ -331,7 +440,7 @@
                 new_word: '',
                 translation_word: '',
                 description: '',
-                select_type: 0,
+                select_type_id: 0,
                 collapse_type: '',
                 collapse_select: '',
                 collapse_select_old: '',
@@ -453,6 +562,12 @@
                 },
                 allTypes: [],
                 allColor: [],
+                objWordTimeForms: null,
+                objUpdateWord: null,
+                objWordFromTable: {
+                    bool_click_button_word_from_table: false,
+                    word: '',
+                },
             };
         },
         mixins: [
@@ -506,8 +621,10 @@
                     word: this.new_word,
                     translation: this.translation_word,
                     description: this.description,
-                    type: this.select_type,
+                    type_id: this.select_type_id,
+                    time_forms: this.objWordTimeForms,
                 };
+
                 try {
                     const response = await this.$http.post(`${this.$http.apiUrl()}word`, data);
                     if(this.checkSuccess(response)){
@@ -526,9 +643,10 @@
                         word: this.new_word,
                         translation: this.translation_word,
                         description: this.description,
+                        time_forms: this.objWordTimeForms,
                     };
-                    if(this.select_type !== 0){
-                        data.type = this.select_type;
+                    if(this.select_type_id !== 0){
+                        data.type_id = this.select_type_id;
                     }
                     const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.word_id}`, data);
                     if(this.checkSuccess(response)){
@@ -553,6 +671,7 @@
                     console.log(e);
                 }
             },
+            // выборка слов и типов слов
             async loadWordsAndTypes() {
                 try {
                     this.isLoading = true;
@@ -603,6 +722,24 @@
                         $('#collapse2').collapse('hide');
                         this.toggleCollapse(2);
                         this.initialData();
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            // добавить тип временная форма другому слову из таблицы
+            async addTypeWordFromTable() {
+                try {
+                    let data = {
+                        from_word_id: this.word_id,
+                        to_word_text: this.objWordFromTable.word,
+                    }
+                    const response = await this.$http.post(`${this.$http.apiUrl()}word/add-type-another-word`, data);
+                    if(this.checkSuccess(response)){
+                        this.initialData();
+                        $('#update_word').modal('hide');
+                        $('.modal-backdrop.fade.show').remove();
+                        this.objWordFromTable.word = ''
                     }
                 } catch (e) {
                     console.log(e);
@@ -670,17 +807,32 @@
                     });
                 }, 500);
             },
+            // навести на слово в таблице
             hoverWordShowTitle() {
                 // навести на слово
                 $('body').on('mouseover', '.trigger', (event) => {
                     // выбрать колекцию слова
                     let row = this.getRowForWord($(event.target).text());
                     if (row == null) { return false; }
+                    let text_type = ""
+                    let text_description = ""
+                    let span_style = row.type == null ? '' : 'color:'+row.type.color
+                    if(row.type !== null){
+                        text_type = row.type.type
+                    }
+                    if(row.time_forms === null && row.type.description !== undefined){
+                        text_description = ' - '+ row.type.description.text
+                    }
+                    if(row.time_forms !== null){
+                        text_description = ' - Прошлое: '+ row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.'
+                        text_description += ' Настоящее: '+ row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.'
+                        text_description += ' Будущее: '+ row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.'
+                    }
+
                     // 1 создать строку html
                     let html = `<div style="text-align: left;">
 <div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}
-<span style="${row.type == null ? '' : 'color:'+row.type.color};">
-${row.type == null ? '' : row.type.type} ${row.type.description == null ? '' : ' - '+row.type.description}</span>
+<span style="${span_style};">${text_type} ${text_description}</span>
 </div>
 ${row.description == null ? '' : row.description.toLowerCase()}
 </div>`;
@@ -693,24 +845,29 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                     });
                 });
             },
+            // события выборки значения в select типов слов
             showStyleDataOnSelectType(){
+                // в модалке создания слова
                 document.getElementById("select_type").addEventListener('change', () => {
                     for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id == this.select_type){
+                        if(this.allTypes[i].id === this.select_type_id){
                             this.setStyleDataModal(this.allTypes[i]);
                             break;
                         }
                     }
                 });
+
+                // в модалке обновления слова
                 document.getElementById("update_select_type").addEventListener('change', () => {
                     for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id == this.select_type){
+                        if(this.allTypes[i].id == this.select_type_id){
                             this.setStyleDataModal(this.allTypes[i]);
                             break;
                         }
                     }
                 });
             },
+            // Возвращает по слову обьект слова из базы
             getRowForWord(word){
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {
@@ -729,22 +886,37 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                 }
                 return null;
             },
+            // отобразить значение типа слова в правой части select выбора
             setStyleDataModal(type){
-                let string = type.description == null ? '' : ` - ${type.description}`;
-                string = type.type+''+string;
-                $('.desc_type')
-                    .css('border-color',type.color)
-                    .text(string);
+                let string = ''
+                this.objWordTimeForms = null
+
+                if(type.description == null){
+                    string = ''
+                }
+                else{
+                    if(type.description['text'] !== null){
+                        string = type.description['text']
+                    }
+                    else{
+                        this.objWordTimeForms = type.description['object']
+                    }
+                }
+                $('.desc_type').css('border-color',type.color);
+                $('.desc_type .text').html(string);
             },
-            setVariableDefault(word_id=0, word='', translation='', type_id=0, description='""'){
+            setVariableDefault(word_id=0, word='', translation='', type_id=0, description='""', time_forms=null){
                 this.word_id = word_id;
                 this.new_word = word;
                 this.translation_word = translation;
-                this.select_type = type_id;
+                this.select_type_id = type_id;
                 this.description = description;
+                this.objWordTimeForms = time_forms
             },
+            // события клика по кнопкам - удалить или редактировать слово
             initialClickButWordUpdate(){
                 let a = setTimeout(() => {
+                    // удалить
                     $('.btn-danger').bind('click', (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let word = queryObj.parent().prev(".trigger").text();
@@ -752,13 +924,14 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                         // confirm delete
                         this.confirmMessage('Really delete word ?', 'success', row.id)
                     });
-
+                    // редактировать
                     $('.btn-warning').bind('click', (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let word = queryObj.parent().prev(".trigger").text();
                         let row = this.getRowForWord(word);
-                        this.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description);
+                        this.objUpdateWord = row
                         this.setStyleDataModal(row.type);
+                        this.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description, row.time_forms);
                         $('#update_word').modal('show');
                     });
                 }, 1000);
@@ -804,6 +977,8 @@ ${row.description == null ? '' : row.description.toLowerCase()}
 
             $(".modal").on("hidden.bs.modal", () => {
                 this.help_dynamic = "";
+                this.objWordFromTable.bool_click_button_word_from_table = false
+                this.objUpdateWord = null
             })
             // $('#collapseExample1').collapse('hide');
             // $('#collapseExample2').collapse('hide');
@@ -827,6 +1002,21 @@ ${row.description == null ? '' : row.description.toLowerCase()}
 </script>
 
 <style lang="scss" scoped>
+
+.box-time-forms{
+    label{
+        padding: 3px 0;
+        margin: 0;
+    }
+    .box-past, .box-present, .box-future{
+        input{
+            margin-bottom: 5px;
+            &:last-child{
+                margin: 0;
+            }
+        }
+    }
+}
 
 #page_list_worlds{
     max-height: calc(100vh - 60px);

@@ -11,4 +11,7 @@ class WordType extends Model
 
     protected $guarded = [];
     public $timestamps = false;
+    protected $casts = [
+        'description' => 'json',
+    ];
 }

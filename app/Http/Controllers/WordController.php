@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Word\AddTypeAnotherWordRequest;
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Word;
+use App\Models\WordType;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -42,6 +44,17 @@ class WordController extends Controller
     public function deleteWord(DeleteWordRequest $request) {
         Word::where('id',$request->id)
             ->delete();
+
+        return new ApiResponse([]);
+    }
+
+    public function addTypeAnotherWord(AddTypeAnotherWordRequest $request) {
+        $collection_from_word = Word::where('id',$request->from_word_id)->first();
+        Word::where('word',$request->to_word_text)
+            ->update([
+                'type_id' => $collection_from_word->type_id,
+                'time_forms' => $collection_from_word->time_forms,
+            ]);
 
         return new ApiResponse([]);
     }

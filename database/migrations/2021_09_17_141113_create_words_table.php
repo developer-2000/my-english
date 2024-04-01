@@ -18,7 +18,7 @@ class CreateWordsTable extends Migration
             $table->string('word')->nullable()->default(null);
             $table->string('translation')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
-            $table->tinyInteger('type')->default(1)->comment('type word');
+            $table->tinyInteger('type')->default(0)->comment('type word');
             $table->timestamps();
         });
     }

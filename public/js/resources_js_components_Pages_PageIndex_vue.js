@@ -47,7 +47,12 @@ var staticRenderFns = [function () {
       href: "https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured",
       target: "_blank"
     }
-  }, [_vm._v("\n        БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2\n    ")])]);
+  }, [_vm._v("\n        БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2\n    ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka",
+      target: "_blank"
+    }
+  }, [_vm._v("\n        Не правильные глаголы во временах\n    ")])]);
 }];
 render._withStripped = true;
 
@@ -70,7 +75,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".index-page[data-v-7102e73d] {\n  padding: 15px 0 0 30px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".index-page[data-v-7102e73d] {\n  padding: 15px 0 0 30px;\n}\na[data-v-7102e73d] {\n  display: block;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
