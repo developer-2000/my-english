@@ -190,7 +190,7 @@ git branch
 git branch sham
 -------
 перейти в нужную ветку
-git checkout ryslan_dev
+git checkout shamin_dev
 --------
 Посмотерть все коментарии
 git log
