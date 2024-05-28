@@ -2,6 +2,7 @@
 - npm install
 - composer install
 - настроить в .env connect к базе и run - php artisan migrate --seed
+- В случае если вы создали домен отличный от english.my - замените 'http://english.my/api/' на свой домен в файле \resources\js\services\http_client.js
 - php artisan serve
 
 ## составные

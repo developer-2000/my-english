@@ -12,6 +12,6 @@ export default {
         return await axios.patch(url, data, {headers: headers})
     },
     apiUrl() {
-        return process.env.MIX_APP_API_URL;
+        return 'http://english.my/api/';
     },
 }

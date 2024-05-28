@@ -676,7 +676,6 @@
                 try {
                     this.isLoading = true;
                     const response = await this.$http.get(`${this.$http.apiUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`);
-
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
                         this.makeObjectDataForTable(response.data.data.list);
