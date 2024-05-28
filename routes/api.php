@@ -15,7 +15,6 @@ Route::resource('word', WordController::class)->only([
     'index','store','update'
 ]);
 
-Route::get('word/test', [WordController::class, 'test']);
 Route::post('word/delete-word', [WordController::class, 'deleteWord']);
 Route::post('word/delete-word', [WordController::class, 'deleteWord']);
 Route::post('word/add-type-another-word', [WordController::class, 'addTypeAnotherWord']);

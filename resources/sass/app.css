@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 .tab-content {
   background-color: #f4f6f9;
-  width: calc(100% - 300px);
+  width: calc(100% - 200px);
 }
 .top_menu .card-header {
   background-color: #f4f6f9;
@@ -10,7 +10,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  border-radius: 0px;
+  border-radius: 0;
 }
 .top_menu .card-header .btn {
   margin-right: 15px;

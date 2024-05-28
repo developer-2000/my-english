@@ -18,7 +18,7 @@ class SentenceRepository extends CoreRepository
         if(!empty($vars['search'])){
             $searchArray = $vars['search'];
             foreach ($searchArray as $word) {
-                $collection = $collection->where('sentence', 'like', '% ' . $word . '%');
+                $collection = $collection->where('sentence', 'like', '%' . $word . '%');
             }
         }
 

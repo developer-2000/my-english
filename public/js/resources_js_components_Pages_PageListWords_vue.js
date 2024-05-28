@@ -2052,6 +2052,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.table.rows.push(row);
       });
     },
+    // изменение input search
     onSearch: function onSearch(search) {
       this.updateParams({
         search: search.searchTerm

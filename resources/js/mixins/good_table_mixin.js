@@ -16,6 +16,7 @@ export default {
                 this.table.rows.push(row);
             });
         },
+        // изменение input search
         onSearch(search) {
             this.updateParams({search: search.searchTerm});
             this.initialData();
