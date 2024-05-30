@@ -8,7 +8,6 @@ use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Word;
-use App\Models\WordType;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

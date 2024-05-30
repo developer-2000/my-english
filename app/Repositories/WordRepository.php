@@ -16,8 +16,16 @@ class WordRepository extends CoreRepository
         // search
         if(!empty($vars['search'])){
             $searchArray = $vars['search'];
-            foreach ($searchArray as $word) {
-                $collection = $collection->Orwhere('word', 'like', $word . '%');
+
+            if (!empty($searchArray[0])) {
+                // word language
+                if($language = $this->getLanguage($searchArray[0])){
+                    // Select a column name depending on the language
+                    $column_name = $language === 'en' ? 'word' : 'translation';
+                    foreach ($searchArray as $word) {
+                        $collection = $collection->Orwhere($column_name, 'like', $word . '%');
+                    }
+                }
             }
         }
 
@@ -50,5 +58,16 @@ class WordRepository extends CoreRepository
     protected function getModelClass()
     {
         return Word::class;
+    }
+
+    private function getLanguage($string)
+    {
+        if (preg_match('/[a-zA-Z]/', $string)) {
+            return 'en';
+        }
+        elseif (preg_match('/[а-яА-ЯёЁ]/', $string)) {
+            return 'ru';
+        }
+        return false;
     }
 }
