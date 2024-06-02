@@ -167,12 +167,14 @@
                             <!-- new word -->
                             <div class="form-group">
                                 <label for="new_word" class="col-form-label">New word</label>
-                                <input type="text" class="form-control entry-field-help" placeholder="Insert new word" id="new_word"
-                                    v-model="new_word"
-                                    @blur="touchNewWord()"
-                                    @keyup="searchHelpWord"
-                                    :class="{'is-invalid': $v.new_word.$error}"
-                                    required
+                                <input type="text" class="form-control entry-field-help" placeholder="Insert new word"
+                                       id="new_word"
+                                       ref="new_word"
+                                       v-model="new_word"
+                                       @blur="touchNewWord()"
+                                       @keyup="searchHelpWord"
+                                       :class="{'is-invalid': $v.new_word.$error}"
+                                       required
                                 >
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_word.required">The field is empty!</div>
@@ -939,6 +941,9 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                 this.setVariableDefault();
                 this.setStyleDataModal({description:null, type:'', color:'black'});
                 $('#create_word').modal('show');
+                $('#create_word').on('shown.bs.modal', () => {
+                    this.$refs.new_word.focus();
+                });
             },
             toggleCollapse(num) {
                 let arr = ['collapse1', 'collapse2'];
