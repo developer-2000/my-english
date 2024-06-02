@@ -23,6 +23,9 @@ class WordRepository extends CoreRepository
                     // Select a column name depending on the language
                     $column_name = $language === 'en' ? 'word' : 'translation';
                     foreach ($searchArray as $word) {
+                        if($column_name == 'translation'){
+                            $word = '%' . $word;
+                        }
                         $collection = $collection->Orwhere($column_name, 'like', $word . '%');
                     }
                 }

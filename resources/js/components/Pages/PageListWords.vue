@@ -814,6 +814,7 @@
                 $('body').on('mouseover', '.trigger', (event) => {
                     // выбрать колекцию слова
                     let row = this.getRowForWord($(event.target).text());
+
                     if (row == null) { return false; }
                     let text_type = ""
                     let text_description = ""
@@ -838,12 +839,20 @@
 ${row.description == null ? '' : row.description.toLowerCase()}
 </div>`;
 
-                    // 2 показ подсказки
-                    tippy(event.target, {
-                        content: html,
-                        theme: 'light-border',
-                        allowHTML: true,
-                    });
+                    // Получить ссылку на экземпляр tippy
+                    let instance = $(event.target)[0]._tippy;
+                    // Если экземпляр tippy существует, обновить его содержимое
+                    if (instance) {
+                        instance.setContent(html);
+                    }
+                    else {
+                        // 2 показ подсказки
+                        tippy(event.target, {
+                            content: html,
+                            theme: 'light-border',
+                            allowHTML: true,
+                        });
+                    }
                 });
             },
             // события выборки значения в select типов слов
@@ -868,7 +877,7 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                     }
                 });
             },
-            // Возвращает по слову обьект слова из базы
+            // Возвращает по слову обьект слова
             getRowForWord(word){
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {

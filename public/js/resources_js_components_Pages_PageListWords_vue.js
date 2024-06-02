@@ -544,12 +544,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         // 1 создать строку html
         var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
 
-        // 2 показ подсказки
-        (0,vue_tippy__WEBPACK_IMPORTED_MODULE_1__.tippy)(event.target, {
-          content: html,
-          theme: 'light-border',
-          allowHTML: true
-        });
+        // Получить ссылку на экземпляр tippy
+        var instance = $(event.target)[0]._tippy;
+        // Если экземпляр tippy существует, обновить его содержимое
+        if (instance) {
+          instance.setContent(html);
+        } else {
+          // 2 показ подсказки
+          (0,vue_tippy__WEBPACK_IMPORTED_MODULE_1__.tippy)(event.target, {
+            content: html,
+            theme: 'light-border',
+            allowHTML: true
+          });
+        }
       });
     },
     // события выборки значения в select типов слов
@@ -575,7 +582,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }
       });
     },
-    // Возвращает по слову обьект слова из базы
+    // Возвращает по слову обьект слова
     getRowForWord: function getRowForWord(word) {
       var row = null;
       for (var i = 0; i < this.table.origin_rows.length; i++) {
