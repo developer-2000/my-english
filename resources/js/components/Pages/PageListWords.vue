@@ -9,12 +9,6 @@
                 <h1>List Words</h1>
                 <!-- кнопки -->
                 <div class="box-button">
-                    <button class="btn btn-outline-success" id="coll1" @click="toggleCollapse(1)">
-                        Create Type
-                    </button>
-                    <button class="btn btn-outline-success" id="coll2" @click="toggleCollapse(2)">
-                        Update Type
-                    </button>
                     <button class="btn bg-gradient-primary" @click="openModalCreateWord">
                         Add word
                     </button>
@@ -23,103 +17,6 @@
 
             <!-- collapse функционал и таблица слов -->
             <div class="content-wrapper">
-                <!-- collapse create -->
-                <div class="collapse" id="collapse1" >
-                    <div class="card card-body">
-                        <div class="collapse_heder">Create Type</div>
-
-                        <div class="group_type">
-                            <!-- new type -->
-                            <div class="form-group">
-                                <label for="collapse_type" class="col-form-label">New type</label>
-                                <input type="text" class="form-control" placeholder="Insert new type" id="collapse_type"
-                                       v-model="collapse_type"
-                                       @keyup="touchCollapse()"
-                                       required
-                                >
-                            </div>
-                            <!-- select type word -->
-                            <div class="form-group">
-                                <label for="collapse_select" class="col-form-label">Type color</label>
-                                <select @change="touchCollapse()" id="collapse_select" v-model="collapse_select" class="custom-select" size="3">
-                                    <option disabled>Insert color for type</option>
-                                    <option v-for="(color, key) in allColor" :key="key"
-                                            :style="`background-color:${color}`"
-                                            :value="`${color}`">
-                                        {{color}}
-                                    </option>
-                                </select>
-                            </div>
-                            <!-- Word description -->
-                            <div class="form-group">
-                                <label for="collapse_description" class="col-form-label">Description type</label>
-                                <textarea @keyup="touchCollapse()" v-model="collapse_description" class="form-control" id="collapse_description" placeholder="Insert description type"></textarea>
-                            </div>
-
-                            <button type="button" class="btn btn-primary"
-                                    :disabled="!collapse_but"
-                                    @click="createType"
-                            >Save</button>
-                        </div>
-
-                    </div>
-                </div>
-                <!-- collapse update -->
-                <div class="collapse" id="collapse2">
-                    <div class="card card-body">
-                        <div class="collapse_heder">Update Type</div>
-
-                        <div class="group_type">
-                            <!-- select old -->
-                            <div class="form-group">
-                                <label for="collapse_select_old" class="col-form-label">Old type</label>
-                                <select @change="touchCollapseOld()" id="collapse_select_old" v-model="collapse_select_old" class="custom-select" size="3">
-                                    <option disabled>Select old type</option>
-                                    <option v-for="(color, key) in allTypes" :key="key"
-                                            :style="`background-color:${color.color}`"
-                                            :value="`${color.color}`"
-                                            @click="touchOldType(color.id)"
-                                    >
-                                        {{color.type}}
-                                    </option>
-                                </select>
-                            </div>
-                            <!-- name type -->
-                            <div class="form-group">
-                                <label for="collapse_type_new" class="col-form-label">Name type</label>
-                                <input type="text" class="form-control" placeholder="Insert name type" id="collapse_type_new"
-                                       v-model="collapse_type"
-                                       @keyup="touchCollapseOld()"
-                                       required
-                                >
-                            </div>
-                            <!-- select type word -->
-                            <div class="form-group">
-                                <label for="collapse_select_new" class="col-form-label">Type color</label>
-                                <select @change="touchCollapseOld()" id="collapse_select_new" v-model="collapse_select" class="custom-select" size="3">
-                                    <option disabled>Insert color for type</option>
-                                    <option v-for="(color, key) in allColor" :key="key"
-                                            :style="`background-color:${color}`"
-                                            :value="`${color}`">
-                                        {{color}}
-                                    </option>
-                                </select>
-                            </div>
-                            <!-- Word description -->
-                            <div class="form-group">
-                                <label for="collapse_description_old" class="col-form-label">Description type</label>
-                                <textarea @keyup="touchCollapseOld()" v-model="collapse_description" class="form-control" id="collapse_description_old" placeholder="Insert description type"></textarea>
-                            </div>
-
-                            <button type="button" class="btn btn-primary"
-                                    :disabled="!collapse_but_old"
-                                    @click="updateType"
-                            >Update</button>
-                        </div>
-
-                    </div>
-                </div>
-
                 <div class="container-fluid">
                     <!-- body окна-->
                     <div class="card card-primary card-outline block_table">
@@ -460,12 +357,6 @@
                 url_image: '',
                 description: '',
                 select_type_id: 0,
-                collapse_type: '',
-                collapse_select: '',
-                collapse_select_old: '',
-                collapse_description: '',
-                collapse_but: false,
-                collapse_but_old: false,
                 table: {
                     // max rows in database
                     totalRecords: 0,
@@ -602,28 +493,6 @@
             touchTranslationWord() {
                 this.$v.translation_word.$touch();
             },
-            touchCollapse() {
-                this.collapse_but = ( this.collapse_type.length >= 3 && this.collapse_select != '' ) ? true : false;
-            },
-            touchCollapseOld() {
-                if(this.collapse_type.length >= 3 && this.collapse_select_old != ''){
-                    this.collapse_but_old = true;
-                }
-                else{
-                    this.collapse_but_old = false;
-                }
-            },
-            touchOldType(id) {
-                for(let i=0; i < this.allTypes.length; i++){
-                    if(this.allTypes[i].id == id){
-                        this.collapse_type = this.allTypes[i].type;
-                        this.collapse_description = this.allTypes[i].description;
-                        this.type_id = this.allTypes[i].id;
-                        this.collapse_but_old = true;
-                        break;
-                    }
-                }
-            },
             initialData() {
                 this.loadWordsAndTypes();
                 this.hoverWordShowTitle();
@@ -707,44 +576,6 @@
                     console.log(e);
                 }
                 this.isLoading = false;
-            },
-            async createType() {
-                try {
-                    let data = {
-                        type: this.collapse_type,
-                        color: this.collapse_select
-                    };
-                    if(this.collapse_description != ''){
-                        data.description = this.collapse_description;
-                    }
-                    const response = await this.$http.post(`${this.$http.apiUrl()}type`, data);
-                    if(this.checkSuccess(response)){
-                        $('#collapse1').collapse('hide');
-                        this.toggleCollapse(1);
-                        this.initialData();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            },
-            async updateType() {
-                try {
-                    let data = {
-                        type: this.collapse_type,
-                        color: this.collapse_select == '' ? this.getType(this.type_id).color : this.collapse_select,
-                    };
-                    if(this.collapse_description != '' && this.collapse_description != null){
-                        data.description = this.collapse_description;
-                    }
-                    const response = await this.$http.patch(`${this.$http.apiUrl()}type/${this.type_id}`, data);
-                    if(this.checkSuccess(response)){
-                        $('#collapse2').collapse('hide');
-                        this.toggleCollapse(2);
-                        this.initialData();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
             },
             // добавить тип временная форма другому слову из таблицы
             async addTypeWordFromTable() {
@@ -975,36 +806,6 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     this.$refs.new_word.focus();
                 });
             },
-            toggleCollapse(num) {
-                let arr = ['collapse1', 'collapse2'];
-
-                // закрыть другой и обратное действие выбранному
-                arr.forEach((element) => {
-                    if ('collapse' + num != element) {
-                        $('#' + element).collapse('hide');
-                        arr.splice(arr.indexOf(element), 1);
-                        return;
-                    }
-                });
-                $('#collapse' + num).collapse('toggle');
-
-                // изменить заливку кнопок
-                let num2 = num == 1 ? 2 : 1;
-                $('#coll' + num2).attr('class', 'btn btn-outline-success');
-
-                if ($('#coll' + num).hasClass("btn-outline-success")) {
-                    $('#coll' + num).attr('class', 'btn bg-gradient-success');
-                } else {
-                    $('#coll' + num).attr('class', 'btn btn-outline-success');
-                }
-
-                this.collapse_type = '';
-                this.collapse_select = '';
-                this.collapse_select_old = '';
-                this.collapse_description = '';
-                this.collapse_but = false;
-                this.collapse_but_old = false;
-            }
         },
         mounted() {
             this.initialData();
@@ -1062,43 +863,14 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 340px;
+            width: 110px;
         }
     }
-    #collapse1,
-    #collapse2{
-        .card{
-            box-shadow: none;
-            margin: 0;
-            border: none;
-            padding: 10px;
-            .collapse_heder{
-                margin: 0 0 15px;
-            }
+    .content-wrapper{
+        .container-fluid{
+            padding-right: 0;
         }
-        .group_type{
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            align-content: stretch;
-            align-items: flex-start;
-            .form-group{
-                width: 20%;
-                margin-right: 20px;
-            }
-            button{
-                margin-top: 40px;
-            }
-            textarea{
-                height: 86px;
-            }
-        }
-    }
-    #collapse_select,
-    #collapse_select_old,
-    #collapse_select_new {
-        padding: 0;
+        padding-right: 15.5px;
     }
 }
 

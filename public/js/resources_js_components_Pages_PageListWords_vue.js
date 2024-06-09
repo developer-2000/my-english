@@ -47,12 +47,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       url_image: '',
       description: '',
       select_type_id: 0,
-      collapse_type: '',
-      collapse_select: '',
-      collapse_select_old: '',
-      collapse_description: '',
-      collapse_but: false,
-      collapse_but_old: false,
       table: {
         // max rows in database
         totalRecords: 0,
@@ -155,27 +149,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     touchTranslationWord: function touchTranslationWord() {
       this.$v.translation_word.$touch();
-    },
-    touchCollapse: function touchCollapse() {
-      this.collapse_but = this.collapse_type.length >= 3 && this.collapse_select != '' ? true : false;
-    },
-    touchCollapseOld: function touchCollapseOld() {
-      if (this.collapse_type.length >= 3 && this.collapse_select_old != '') {
-        this.collapse_but_old = true;
-      } else {
-        this.collapse_but_old = false;
-      }
-    },
-    touchOldType: function touchOldType(id) {
-      for (var i = 0; i < this.allTypes.length; i++) {
-        if (this.allTypes[i].id == id) {
-          this.collapse_type = this.allTypes[i].type;
-          this.collapse_description = this.allTypes[i].description;
-          this.type_id = this.allTypes[i].id;
-          this.collapse_but_old = true;
-          break;
-        }
-      }
     },
     initialData: function initialData() {
       this.loadWordsAndTypes();
@@ -332,7 +305,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee4, null, [[0, 8]]);
       }))();
     },
-    createType: function createType() {
+    // добавить тип временная форма другому слову из таблицы
+    addTypeWordFromTable: function addTypeWordFromTable() {
       var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         var data, response;
@@ -341,105 +315,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               _context5.prev = 0;
               data = {
-                type: _this5.collapse_type,
-                color: _this5.collapse_select
+                from_word_id: _this5.word_id,
+                to_word_text: _this5.objWordFromTable.word
               };
-              if (_this5.collapse_description != '') {
-                data.description = _this5.collapse_description;
-              }
-              _context5.next = 5;
-              return _this5.$http.post("".concat(_this5.$http.apiUrl(), "type"), data);
-            case 5:
+              _context5.next = 4;
+              return _this5.$http.post("".concat(_this5.$http.apiUrl(), "word/add-type-another-word"), data);
+            case 4:
               response = _context5.sent;
               if (_this5.checkSuccess(response)) {
-                $('#collapse1').collapse('hide');
-                _this5.toggleCollapse(1);
                 _this5.initialData();
+                $('#update_word').modal('hide');
+                $('.modal-backdrop.fade.show').remove();
+                _this5.objWordFromTable.word = '';
               }
-              _context5.next = 12;
+              _context5.next = 11;
               break;
-            case 9:
-              _context5.prev = 9;
+            case 8:
+              _context5.prev = 8;
               _context5.t0 = _context5["catch"](0);
               console.log(_context5.t0);
-            case 12:
+            case 11:
             case "end":
               return _context5.stop();
           }
-        }, _callee5, null, [[0, 9]]);
-      }))();
-    },
-    updateType: function updateType() {
-      var _this6 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var data, response;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              data = {
-                type: _this6.collapse_type,
-                color: _this6.collapse_select == '' ? _this6.getType(_this6.type_id).color : _this6.collapse_select
-              };
-              if (_this6.collapse_description != '' && _this6.collapse_description != null) {
-                data.description = _this6.collapse_description;
-              }
-              _context6.next = 5;
-              return _this6.$http.patch("".concat(_this6.$http.apiUrl(), "type/").concat(_this6.type_id), data);
-            case 5:
-              response = _context6.sent;
-              if (_this6.checkSuccess(response)) {
-                $('#collapse2').collapse('hide');
-                _this6.toggleCollapse(2);
-                _this6.initialData();
-              }
-              _context6.next = 12;
-              break;
-            case 9:
-              _context6.prev = 9;
-              _context6.t0 = _context6["catch"](0);
-              console.log(_context6.t0);
-            case 12:
-            case "end":
-              return _context6.stop();
-          }
-        }, _callee6, null, [[0, 9]]);
-      }))();
-    },
-    // добавить тип временная форма другому слову из таблицы
-    addTypeWordFromTable: function addTypeWordFromTable() {
-      var _this7 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-        var data, response;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
-            case 0:
-              _context7.prev = 0;
-              data = {
-                from_word_id: _this7.word_id,
-                to_word_text: _this7.objWordFromTable.word
-              };
-              _context7.next = 4;
-              return _this7.$http.post("".concat(_this7.$http.apiUrl(), "word/add-type-another-word"), data);
-            case 4:
-              response = _context7.sent;
-              if (_this7.checkSuccess(response)) {
-                _this7.initialData();
-                $('#update_word').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
-                _this7.objWordFromTable.word = '';
-              }
-              _context7.next = 11;
-              break;
-            case 8:
-              _context7.prev = 8;
-              _context7.t0 = _context7["catch"](0);
-              console.log(_context7.t0);
-            case 11:
-            case "end":
-              return _context7.stop();
-          }
-        }, _callee7, null, [[0, 8]]);
+        }, _callee5, null, [[0, 8]]);
       }))();
     },
     deleteColorFromArrColor: function deleteColorFromArrColor(arrColor) {
@@ -492,7 +391,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this8 = this;
+      var _this6 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
@@ -504,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           // преобразовать слово в столбце
           else {
-            row = _this8.getRowForWord(prev.text());
+            row = _this6.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -521,11 +420,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this9 = this;
+      var _this7 = this;
       // навести на слово
       $('body').on('mouseover', '.trigger', function (event) {
         // выбрать колекцию слова
-        var row = _this9.getRowForWord($(event.target).text());
+        var row = _this7.getRowForWord($(event.target).text());
         if (row == null) {
           return false;
         }
@@ -564,12 +463,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this10 = this;
+      var _this8 = this;
       // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this10.allTypes.length; i++) {
-          if (_this10.allTypes[i].id === _this10.select_type_id) {
-            _this10.setStyleDataModal(_this10.allTypes[i]);
+        for (var i = 0; i < _this8.allTypes.length; i++) {
+          if (_this8.allTypes[i].id === _this8.select_type_id) {
+            _this8.setStyleDataModal(_this8.allTypes[i]);
             break;
           }
         }
@@ -577,9 +476,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this10.allTypes.length; i++) {
-          if (_this10.allTypes[i].id == _this10.select_type_id) {
-            _this10.setStyleDataModal(_this10.allTypes[i]);
+        for (var i = 0; i < _this8.allTypes.length; i++) {
+          if (_this8.allTypes[i].id == _this8.select_type_id) {
+            _this8.setStyleDataModal(_this8.allTypes[i]);
             break;
           }
         }
@@ -638,30 +537,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this11 = this;
+      var _this9 = this;
       var a = setTimeout(function () {
         // удалить
         $('.btn-danger').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this11.getRowForWord(word);
+          var row = _this9.getRowForWord(word);
           // confirm delete
-          _this11.confirmMessage('Really delete word ?', 'success', row.id);
+          _this9.confirmMessage('Really delete word ?', 'success', row.id);
         });
         // редактировать
         $('.btn-warning').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this11.getRowForWord(word);
-          _this11.objUpdateWord = row;
-          _this11.setStyleDataModal(row.type);
-          _this11.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
+          var row = _this9.getRowForWord(word);
+          _this9.objUpdateWord = row;
+          _this9.setStyleDataModal(row.type);
+          _this9.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
           $('#update_word').modal('show');
         });
       }, 1000);
     },
     openModalCreateWord: function openModalCreateWord() {
-      var _this12 = this;
+      var _this10 = this;
       this.setVariableDefault();
       this.setStyleDataModal({
         description: null,
@@ -670,45 +569,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       });
       $('#create_word').modal('show');
       $('#create_word').on('shown.bs.modal', function () {
-        _this12.$refs.new_word.focus();
+        _this10.$refs.new_word.focus();
       });
-    },
-    toggleCollapse: function toggleCollapse(num) {
-      var arr = ['collapse1', 'collapse2'];
-
-      // закрыть другой и обратное действие выбранному
-      arr.forEach(function (element) {
-        if ('collapse' + num != element) {
-          $('#' + element).collapse('hide');
-          arr.splice(arr.indexOf(element), 1);
-          return;
-        }
-      });
-      $('#collapse' + num).collapse('toggle');
-
-      // изменить заливку кнопок
-      var num2 = num == 1 ? 2 : 1;
-      $('#coll' + num2).attr('class', 'btn btn-outline-success');
-      if ($('#coll' + num).hasClass("btn-outline-success")) {
-        $('#coll' + num).attr('class', 'btn bg-gradient-success');
-      } else {
-        $('#coll' + num).attr('class', 'btn btn-outline-success');
-      }
-      this.collapse_type = '';
-      this.collapse_select = '';
-      this.collapse_select_old = '';
-      this.collapse_description = '';
-      this.collapse_but = false;
-      this.collapse_but_old = false;
     }
   },
   mounted: function mounted() {
-    var _this13 = this;
+    var _this11 = this;
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this13.help_dynamic = "";
-      _this13.objWordFromTable.bool_click_button_word_from_table = false;
-      _this13.objUpdateWord = null;
+      _this11.help_dynamic = "";
+      _this11.objWordFromTable.bool_click_button_word_from_table = false;
+      _this11.objUpdateWord = null;
     });
   },
   beforeDestroy: function beforeDestroy() {
@@ -775,26 +646,6 @@ var render = function render() {
   }, [_c("h1", [_vm._v("List Words")]), _vm._v(" "), _c("div", {
     staticClass: "box-button"
   }, [_c("button", {
-    staticClass: "btn btn-outline-success",
-    attrs: {
-      id: "coll1"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.toggleCollapse(1);
-      }
-    }
-  }, [_vm._v("\n                    Create Type\n                ")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-outline-success",
-    attrs: {
-      id: "coll2"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.toggleCollapse(2);
-      }
-    }
-  }, [_vm._v("\n                    Update Type\n                ")]), _vm._v(" "), _c("button", {
     staticClass: "btn bg-gradient-primary",
     on: {
       click: _vm.openModalCreateWord
@@ -802,311 +653,6 @@ var render = function render() {
   }, [_vm._v("\n                    Add word\n                ")])])]), _vm._v(" "), _c("div", {
     staticClass: "content-wrapper"
   }, [_c("div", {
-    staticClass: "collapse",
-    attrs: {
-      id: "collapse1"
-    }
-  }, [_c("div", {
-    staticClass: "card card-body"
-  }, [_c("div", {
-    staticClass: "collapse_heder"
-  }, [_vm._v("Create Type")]), _vm._v(" "), _c("div", {
-    staticClass: "group_type"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_type"
-    }
-  }, [_vm._v("New type")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_type,
-      expression: "collapse_type"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Insert new type",
-      id: "collapse_type",
-      required: ""
-    },
-    domProps: {
-      value: _vm.collapse_type
-    },
-    on: {
-      keyup: function keyup($event) {
-        return _vm.touchCollapse();
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.collapse_type = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_select"
-    }
-  }, [_vm._v("Type color")]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_select,
-      expression: "collapse_select"
-    }],
-    staticClass: "custom-select",
-    attrs: {
-      id: "collapse_select",
-      size: "3"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.collapse_select = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }, function ($event) {
-        return _vm.touchCollapse();
-      }]
-    }
-  }, [_c("option", {
-    attrs: {
-      disabled: ""
-    }
-  }, [_vm._v("Insert color for type")]), _vm._v(" "), _vm._l(_vm.allColor, function (color, key) {
-    return _c("option", {
-      key: key,
-      style: "background-color:".concat(color),
-      domProps: {
-        value: "".concat(color)
-      }
-    }, [_vm._v("\n                                    " + _vm._s(color) + "\n                                ")]);
-  })], 2)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_description"
-    }
-  }, [_vm._v("Description type")]), _vm._v(" "), _c("textarea", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_description,
-      expression: "collapse_description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      id: "collapse_description",
-      placeholder: "Insert description type"
-    },
-    domProps: {
-      value: _vm.collapse_description
-    },
-    on: {
-      keyup: function keyup($event) {
-        return _vm.touchCollapse();
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.collapse_description = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button",
-      disabled: !_vm.collapse_but
-    },
-    on: {
-      click: _vm.createType
-    }
-  }, [_vm._v("Save")])])])]), _vm._v(" "), _c("div", {
-    staticClass: "collapse",
-    attrs: {
-      id: "collapse2"
-    }
-  }, [_c("div", {
-    staticClass: "card card-body"
-  }, [_c("div", {
-    staticClass: "collapse_heder"
-  }, [_vm._v("Update Type")]), _vm._v(" "), _c("div", {
-    staticClass: "group_type"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_select_old"
-    }
-  }, [_vm._v("Old type")]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_select_old,
-      expression: "collapse_select_old"
-    }],
-    staticClass: "custom-select",
-    attrs: {
-      id: "collapse_select_old",
-      size: "3"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.collapse_select_old = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }, function ($event) {
-        return _vm.touchCollapseOld();
-      }]
-    }
-  }, [_c("option", {
-    attrs: {
-      disabled: ""
-    }
-  }, [_vm._v("Select old type")]), _vm._v(" "), _vm._l(_vm.allTypes, function (color, key) {
-    return _c("option", {
-      key: key,
-      style: "background-color:".concat(color.color),
-      domProps: {
-        value: "".concat(color.color)
-      },
-      on: {
-        click: function click($event) {
-          return _vm.touchOldType(color.id);
-        }
-      }
-    }, [_vm._v("\n                                    " + _vm._s(color.type) + "\n                                ")]);
-  })], 2)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_type_new"
-    }
-  }, [_vm._v("Name type")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_type,
-      expression: "collapse_type"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Insert name type",
-      id: "collapse_type_new",
-      required: ""
-    },
-    domProps: {
-      value: _vm.collapse_type
-    },
-    on: {
-      keyup: function keyup($event) {
-        return _vm.touchCollapseOld();
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.collapse_type = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_select_new"
-    }
-  }, [_vm._v("Type color")]), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_select,
-      expression: "collapse_select"
-    }],
-    staticClass: "custom-select",
-    attrs: {
-      id: "collapse_select_new",
-      size: "3"
-    },
-    on: {
-      change: [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.collapse_select = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }, function ($event) {
-        return _vm.touchCollapseOld();
-      }]
-    }
-  }, [_c("option", {
-    attrs: {
-      disabled: ""
-    }
-  }, [_vm._v("Insert color for type")]), _vm._v(" "), _vm._l(_vm.allColor, function (color, key) {
-    return _c("option", {
-      key: key,
-      style: "background-color:".concat(color),
-      domProps: {
-        value: "".concat(color)
-      }
-    }, [_vm._v("\n                                    " + _vm._s(color) + "\n                                ")]);
-  })], 2)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    staticClass: "col-form-label",
-    attrs: {
-      "for": "collapse_description_old"
-    }
-  }, [_vm._v("Description type")]), _vm._v(" "), _c("textarea", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.collapse_description,
-      expression: "collapse_description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      id: "collapse_description_old",
-      placeholder: "Insert description type"
-    },
-    domProps: {
-      value: _vm.collapse_description
-    },
-    on: {
-      keyup: function keyup($event) {
-        return _vm.touchCollapseOld();
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.collapse_description = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button",
-      disabled: !_vm.collapse_but_old
-    },
-    on: {
-      click: _vm.updateType
-    }
-  }, [_vm._v("Update")])])])]), _vm._v(" "), _c("div", {
     staticClass: "container-fluid"
   }, [_c("div", {
     staticClass: "card card-primary card-outline block_table"
@@ -2468,7 +2014,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  width: 340px;\n}\n#page_list_worlds #collapse1 .card[data-v-461a95d4],\n#page_list_worlds #collapse2 .card[data-v-461a95d4] {\n  box-shadow: none;\n  margin: 0;\n  border: none;\n  padding: 10px;\n}\n#page_list_worlds #collapse1 .card .collapse_heder[data-v-461a95d4],\n#page_list_worlds #collapse2 .card .collapse_heder[data-v-461a95d4] {\n  margin: 0 0 15px;\n}\n#page_list_worlds #collapse1 .group_type[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type[data-v-461a95d4] {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: flex-start;\n  align-content: stretch;\n  align-items: flex-start;\n}\n#page_list_worlds #collapse1 .group_type .form-group[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type .form-group[data-v-461a95d4] {\n  width: 20%;\n  margin-right: 20px;\n}\n#page_list_worlds #collapse1 .group_type button[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type button[data-v-461a95d4] {\n  margin-top: 40px;\n}\n#page_list_worlds #collapse1 .group_type textarea[data-v-461a95d4],\n#page_list_worlds #collapse2 .group_type textarea[data-v-461a95d4] {\n  height: 86px;\n}\n#page_list_worlds #collapse_select[data-v-461a95d4],\n#page_list_worlds #collapse_select_old[data-v-461a95d4],\n#page_list_worlds #collapse_select_new[data-v-461a95d4] {\n  padding: 0;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  width: 110px;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -42,7 +42,7 @@
                         Stop
                     </button>
 
-                    <button @click="openModalCreateSentence" class="btn bg-gradient-primary">
+                    <button @click="openModalCreateSentence" class="btn bg-gradient-primary create-sentence">
                         Add sentence
                     </button>
                 </div>
@@ -144,6 +144,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 2 -->
         <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade" id="update_sentence" role="dialog"
              tabindex="-1">
@@ -501,33 +502,42 @@
             & > button, & > div{
                 margin-right: 15px;
             }
+            #block_repeat{
+                text-align: center;
+                .title_repeat{
+                    line-height: 15px;
+                    margin-bottom: 3px;
+                    font-size: 14px;
+                    margin-top: -2px;
+                }
+                .block_input_repeat{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    .checkbox_repeat{
+                        height: 18px;
+                        width: 18px;
+                        cursor: pointer;
+                    }
+                    .number_repeat{
+                        height: 18px;
+                        font-size: 15px;
+                        width: 50px;
+                        margin-left: 5px;
+                        padding-right: 0px;
+                    }
+                }
+            }
+            .create-sentence{
+                margin-right: 10px;
+            }
         }
     }
-    #block_repeat{
-        text-align: center;
-        .title_repeat{
-            line-height: 15px;
-            margin-bottom: 3px;
-            font-size: 14px;
-            margin-top: -2px;
+    .content-wrapper{
+        .container-fluid{
+            padding-right: 0;
         }
-        .block_input_repeat{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .checkbox_repeat{
-                height: 18px;
-                width: 18px;
-                cursor: pointer;
-            }
-            .number_repeat{
-                height: 18px;
-                font-size: 15px;
-                width: 50px;
-                margin-left: 5px;
-                padding-right: 0px;
-            }
-        }
+        padding-right: 15.5px;
     }
 }
 
