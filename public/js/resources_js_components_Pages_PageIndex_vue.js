@@ -57,7 +57,12 @@ var staticRenderFns = [function () {
       href: "https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka",
       target: "_blank"
     }
-  }, [_vm._v("\n        Не правильные глаголы во временах\n    ")])]);
+  }, [_vm._v("\n        Не правильные глаголы во временах\n    ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "https://dictionary.langeek.co/en-RU",
+      target: "_blank"
+    }
+  }, [_vm._v("\n        LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.\n    ")])]);
 }];
 render._withStripped = true;
 
@@ -80,7 +85,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".index-page[data-v-7102e73d] {\n  padding: 15px 0 0 30px;\n}\na[data-v-7102e73d] {\n  display: block;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".index-page[data-v-7102e73d] {\n  counter-reset: link-counter;\n  list-style-type: none;\n  padding: 15px 0 0 30px;\n}\n.index-page a[data-v-7102e73d] {\n  display: block;\n  position: relative;\n  padding-left: 25px;\n  margin-bottom: 10px;\n  text-decoration: none;\n}\n.index-page a[data-v-7102e73d]::before {\n  counter-increment: link-counter;\n  content: counter(link-counter) \". \";\n  position: absolute;\n  left: 0;\n  top: 0;\n  font-weight: bold;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

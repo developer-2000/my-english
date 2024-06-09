@@ -9,6 +9,9 @@
         <a href="https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka" target="_blank">
             Не правильные глаголы во временах
         </a>
+        <a href="https://dictionary.langeek.co/en-RU" target="_blank">
+            LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.
+        </a>
     </div>
 </template>
 
@@ -27,11 +30,25 @@
 
 <style lang="scss" scoped>
 
-.index-page{
+.index-page {
+    counter-reset: link-counter;
+    list-style-type: none;
     padding: 15px 0 0 30px;
-}
-a{
-    display: block;
+    a {
+        display: block;
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        &::before {
+            counter-increment: link-counter;
+            content: counter(link-counter) ". ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+        }
+    }
 }
 
 </style>

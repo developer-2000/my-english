@@ -49,7 +49,6 @@
 
 <!-- >>> Section JS -->
 <!-- jQuery -->
-{{--<script src="{{asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>--}}
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
