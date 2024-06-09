@@ -2,23 +2,28 @@
 namespace App\Repositories;
 
 use App\Models\Sentence;
-use App\Models\Test;
 use App\Models\Word;
 use Illuminate\Support\Facades\DB;
 
 class SentenceRepository extends CoreRepository
 {
 
-    public function getSentences($request)
+    public function getSentences($request): array
     {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('sound');
 
         // search Найти все элементы в строке базы
-        if(!empty($vars['search'])){
-            $searchArray = $vars['search'];
-            foreach ($searchArray as $word) {
-                $collection = $collection->where('sentence', 'like', '%' . $word . '%');
+        $searchArray = $vars['search'] ?? [];
+
+        if (!empty($searchArray) && !empty($searchArray[0])) {
+            // word language
+            if($language = $this->getLanguage($searchArray[0])){
+                // Select a column name depending on the language
+                $column_name = $language === 'en' ? 'sentence' : 'translation';
+                foreach ($searchArray as $word) {
+                    $collection = $collection->where($column_name, 'like', '%' . $word . '%');
+                }
             }
         }
 
@@ -48,92 +53,23 @@ class SentenceRepository extends CoreRepository
         return compact('total_count', 'list');
     }
 
-    public function storeSentences($request)
+    public function storeSentences($request): void
     {
         $request['sentence'] = preg_replace('|[\s]+|s', ' ', $request['sentence']);
         $words = explode(" ", trim($request['sentence']));
 
         // добавить слова которых нет
         foreach ($words as $key => $word){
-            // 1 вставляю множественное если есть противоположное в базе
-            if( !$this->updateToManyWord($word) && !$this->updateToOneWord($word) ){
-                if(is_null($this->checkMany($word))){
-                    Word::create([
-                        'word' => $word,
-                        'translation' => '',
-                        'description' => '""'
-                    ]);
-                }
-            }
+            Word::firstOrCreate(
+                ['word' => $word],
+                ['translation' => '', 'description' => '""']
+            );
         }
         // добавить предложение
-        $sentence = Sentence::create($request);
-
-        return 1;
+        Sentence::create($request);
     }
 
-    // добавить к единственному 's
-    private function updateToManyWord($word){
-        $string = '';
-        $coll = null;
-
-        // найти в базе единственный род слова
-        if(strlen($word) >= 3){
-            if(substr($word, -2) == 'es'){
-                $string = substr($word, 0, -2);
-                $coll = \App\Models\Word::where( 'word', $string ) ->first();
-            }
-            if(is_null($coll) && substr($word, -1) == 's'){
-                $string = substr($word, 0, -1);
-                $coll = \App\Models\Word::where( 'word', $string ) ->first();
-            }
-        }
-
-        if(!is_null($coll)){
-            $coll = \App\Models\Word::where( 'id', $coll->id ) ->update([ 'word'=>($coll->word.'\'s') ]);
-            return true;
-        }
-
-        return false;
-    }
-    // добавить к множественному 's
-    private function updateToOneWord($word){
-        $coll = \App\Models\Word::where( 'word', $word.'s' ) ->first();
-        if(!is_null($coll)){
-            $coll = \App\Models\Word::where('id', $coll->id) ->update([
-                'word'=>($word.'\'s')
-            ]);
-            return true;
-        }
-
-        return false;
-    }
-    // проверка существования множественного
-    private function checkMany($word){
-        $string1 = '';
-        $string2 = '';
-
-        // mistakes ищу в базе mistake's
-        if(substr($word, -2) == 'es'){
-            $string1 = substr($word, 0, -2).'\'s';
-        }
-        if(substr($word, -1) == 's'){
-            $string2 = substr($word, 0, -1).'\'s';
-        }
-
-        return Word::where(['word' => $string1])
-            ->orWhere(['word' => $string2])
-            ->orWhere(['word' => $word.'\'s'])
-            ->orWhere(['word' => $word])
-            ->first();
-    }
-
-
-
-    /**
-     * @inheritDoc
-     */
-    protected function getModelClass()
+    protected function getModelClass(): string
     {
         return Sentence::class;
     }

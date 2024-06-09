@@ -1,23 +1,21 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\Test;
 use App\Models\Word;
 use App\Models\WordType;
 
 class WordRepository extends CoreRepository
 {
 
-    public function getWords($request)
+    public function getWords($request): array
     {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('type');
 
         // search
-        if(!empty($vars['search'])){
-            $searchArray = $vars['search'];
+        $searchArray = $vars['search'] ?? [];
 
-            if (!empty($searchArray[0])) {
+        if (!empty($searchArray) && !empty($searchArray[0])) {
                 // word language
                 if($language = $this->getLanguage($searchArray[0])){
                     // Select a column name depending on the language
@@ -29,7 +27,6 @@ class WordRepository extends CoreRepository
                         $collection = $collection->Orwhere($column_name, 'like', $word . '%');
                     }
                 }
-            }
         }
 
         $total_count = $collection->get()->count();
@@ -54,23 +51,8 @@ class WordRepository extends CoreRepository
         return compact('total_count', 'list', 'types', 'colors');
     }
 
-
-    /**
-     * @inheritDoc
-     */
-    protected function getModelClass()
+    protected function getModelClass(): string
     {
         return Word::class;
-    }
-
-    private function getLanguage($string)
-    {
-        if (preg_match('/[a-zA-Z]/', $string)) {
-            return 'en';
-        }
-        elseif (preg_match('/[а-яА-ЯёЁ]/', $string)) {
-            return 'ru';
-        }
-        return false;
     }
 }

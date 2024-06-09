@@ -48,4 +48,14 @@ abstract class CoreRepository
         return compact('limit', 'offset', 'search', 'sort_column', 'sort_type');
     }
 
+    protected function getLanguage($string)
+    {
+        if (preg_match('/[a-zA-Z]/', $string)) {
+            return 'en';
+        }
+        elseif (preg_match('/[а-яА-ЯёЁ]/', $string)) {
+            return 'ru';
+        }
+        return false;
+    }
 }

@@ -26,26 +26,30 @@ class SentenceController extends Controller
         $this->sentenceRepository = new SentenceRepository();
     }
 
-    public function index(SelectGetPaginateRequest $request) {
+    public function index(SelectGetPaginateRequest $request): ApiResponse
+    {
         $sentences = $this->sentenceRepository->getSentences($request->validated());
 
         return new ApiResponse(compact('sentences'));
     }
 
-    public function store(CreateSentenceRequest $request) {
-        $sentence = $this->sentenceRepository->storeSentences($request->validated());
+    public function store(CreateSentenceRequest $request): ApiResponse
+    {
+        $this->sentenceRepository->storeSentences($request->validated());
 
-        return new ApiResponse(compact('sentence'));
+        return new ApiResponse([]);
     }
 
-    public function update(UpdateSentenceRequest $request) {
+    public function update(UpdateSentenceRequest $request): ApiResponse
+    {
         $coll = Sentence::where('id',$request['id'])
             ->update(Arr::except($request->validated(),'id'));
 
         return new ApiResponse(compact('coll'));
     }
 
-    public function searchWord(SearchWordRequest $request) {
+    public function searchWord(SearchWordRequest $request): ApiResponse
+    {
         $coll = Word::where('word', 'like', $request['word'] . '%')
             ->get()
             ->pluck('word');
@@ -55,14 +59,15 @@ class SentenceController extends Controller
         return new ApiResponse(compact('string'));
     }
 
-    public function bindCheckboxSound(BindCheckboxSoundRequest $request) {
+    public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse
+    {
         if($request['status']){
-            $data = SentenceSound::firstOrCreate([
+            SentenceSound::firstOrCreate([
                 'sentence_id' => $request['sentence_id']
             ]);
         }
         else{
-            $data = SentenceSound::where('sentence_id', $request['sentence_id'])
+            SentenceSound::where('sentence_id', $request['sentence_id'])
                 ->delete();
         }
 

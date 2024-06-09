@@ -606,10 +606,7 @@
                 this.collapse_but = ( this.collapse_type.length >= 3 && this.collapse_select != '' ) ? true : false;
             },
             touchCollapseOld() {
-                if(
-                    this.collapse_type.length >= 3 &&
-                    this.collapse_select_old != ''
-                ){
+                if(this.collapse_type.length >= 3 && this.collapse_select_old != ''){
                     this.collapse_but_old = true;
                 }
                 else{
