@@ -194,6 +194,14 @@
                                 <div class="invalid-feedback" v-if="(!$v.translation_word.minLength)">Number of characters {{ this.translation_word.length }} less needed</div>
                             </div>
 
+                            <!-- url image from out source -->
+                            <div class="form-group">
+                                <label for="url_image" class="col-form-label">Url image</label>
+                                <input type="text" class="form-control" placeholder="Input url" id="url_image"
+                                       v-model="url_image"
+                                >
+                            </div>
+
                             <!-- типы значений слова -->
                             <div class="block_type">
                                 <!-- select значений -->
@@ -314,6 +322,14 @@
                                 >
                                 <div class="invalid-feedback" v-if="!$v.translation_word.required">The field is empty!</div>
                                 <div class="invalid-feedback" v-if="(!$v.translation_word.minLength)">Number of characters {{ this.translation_word.length }} less needed</div>
+                            </div>
+
+                            <!-- url image from out source -->
+                            <div class="form-group">
+                                <label for="update_url_image" class="col-form-label">Url image</label>
+                                <input type="text" class="form-control" placeholder="Input url" id="update_url_image"
+                                       v-model="url_image"
+                                >
                             </div>
 
                             <!-- select type word -->
@@ -441,6 +457,7 @@
                 type_id: 0,
                 new_word: '',
                 translation_word: '',
+                url_image: '',
                 description: '',
                 select_type_id: 0,
                 collapse_type: '',
@@ -622,6 +639,7 @@
                 let data = {
                     word: this.new_word,
                     translation: this.translation_word,
+                    url_image: this.url_image,
                     description: this.description,
                     type_id: this.select_type_id,
                     time_forms: this.objWordTimeForms,
@@ -644,12 +662,15 @@
                     let data = {
                         word: this.new_word,
                         translation: this.translation_word,
+                        url_image: this.url_image,
                         description: this.description,
                         time_forms: this.objWordTimeForms,
                     };
+
                     if(this.select_type_id !== 0){
                         data.type_id = this.select_type_id;
                     }
+
                     const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.word_id}`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
@@ -837,7 +858,9 @@
 <span style="${span_style};">${text_type} ${text_description}</span>
 </div>
 ${row.description == null ? '' : row.description.toLowerCase()}
-</div>`;
+</div>
+${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.url_image}" alt="Image">` : ''}
+`;
 
                     // Получить ссылку на экземпляр tippy
                     let instance = $(event.target)[0]._tippy;
@@ -915,10 +938,11 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                 $('.desc_type').css('border-color',type.color);
                 $('.desc_type .text').html(string);
             },
-            setVariableDefault(word_id=0, word='', translation='', type_id=0, description='""', time_forms=null){
+            setVariableDefault(word_id=0, word='', translation='', url_image='', type_id=0, description='""', time_forms=null){
                 this.word_id = word_id;
                 this.new_word = word;
                 this.translation_word = translation;
+                this.url_image = url_image;
                 this.select_type_id = type_id;
                 this.description = description;
                 this.objWordTimeForms = time_forms
@@ -941,7 +965,7 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                         let row = this.getRowForWord(word);
                         this.objUpdateWord = row
                         this.setStyleDataModal(row.type);
-                        this.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description, row.time_forms);
+                        this.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
                         $('#update_word').modal('show');
                     });
                 }, 1000);
@@ -993,8 +1017,6 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                 this.objWordFromTable.bool_click_button_word_from_table = false
                 this.objUpdateWord = null
             })
-            // $('#collapseExample1').collapse('hide');
-            // $('#collapseExample2').collapse('hide');
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');

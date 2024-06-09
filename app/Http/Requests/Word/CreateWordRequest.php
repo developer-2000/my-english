@@ -26,6 +26,7 @@ class CreateWordRequest extends ApiFormRequest
         return [
             'word' => 'required|string|min:1|unique:words,word',
             'translation' => 'required|string|min:1',
+            'url_image' => 'nullable|string',
             'description' => 'nullable|string',
             'type_id' => 'required|integer',
             'time_forms' => 'nullable',

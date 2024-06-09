@@ -44,6 +44,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       type_id: 0,
       new_word: '',
       translation_word: '',
+      url_image: '',
       description: '',
       select_type_id: 0,
       collapse_type: '',
@@ -194,6 +195,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               data = {
                 word: _this.new_word,
                 translation: _this.translation_word,
+                url_image: _this.url_image,
                 description: _this.description,
                 type_id: _this.select_type_id,
                 time_forms: _this.objWordTimeForms
@@ -232,6 +234,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               data = {
                 word: _this2.new_word,
                 translation: _this2.translation_word,
+                url_image: _this2.url_image,
                 description: _this2.description,
                 time_forms: _this2.objWordTimeForms
               };
@@ -542,7 +545,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }
 
         // 1 создать строку html
-        var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
+        var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
 
         // Получить ссылку на экземпляр tippy
         var instance = $(event.target)[0]._tippy;
@@ -621,12 +624,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var word_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var word = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
       var translation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      var type_id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      var description = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '""';
-      var time_forms = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
+      var url_image = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+      var type_id = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+      var description = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '""';
+      var time_forms = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
       this.word_id = word_id;
       this.new_word = word;
       this.translation_word = translation;
+      this.url_image = url_image;
       this.select_type_id = type_id;
       this.description = description;
       this.objWordTimeForms = time_forms;
@@ -650,7 +655,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           var row = _this11.getRowForWord(word);
           _this11.objUpdateWord = row;
           _this11.setStyleDataModal(row.type);
-          _this11.setVariableDefault(row.id, row.word, row.translation, row.type.id, row.description, row.time_forms);
+          _this11.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
           $('#update_word').modal('show');
         });
       }, 1000);
@@ -705,8 +710,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       _this13.objWordFromTable.bool_click_button_word_from_table = false;
       _this13.objUpdateWord = null;
     });
-    // $('#collapseExample1').collapse('hide');
-    // $('#collapseExample2').collapse('hide');
   },
   beforeDestroy: function beforeDestroy() {
     $('.btn-warning').unbind('click');
@@ -1246,6 +1249,35 @@ var render = function render() {
   }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
   }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    staticClass: "col-form-label",
+    attrs: {
+      "for": "url_image"
+    }
+  }, [_vm._v("Url image")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.url_image,
+      expression: "url_image"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Input url",
+      id: "url_image"
+    },
+    domProps: {
+      value: _vm.url_image
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.url_image = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "block_type"
   }, [_c("div", {
     staticClass: "box-left-site"
@@ -1638,6 +1670,35 @@ var render = function render() {
   }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
   }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    staticClass: "col-form-label",
+    attrs: {
+      "for": "update_url_image"
+    }
+  }, [_vm._v("Url image")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.url_image,
+      expression: "url_image"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Input url",
+      id: "update_url_image"
+    },
+    domProps: {
+      value: _vm.url_image
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.url_image = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "block_type"
   }, [_c("div", {
     staticClass: "box-left-site"

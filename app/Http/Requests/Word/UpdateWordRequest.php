@@ -34,6 +34,7 @@ class UpdateWordRequest extends ApiFormRequest
             'id' => 'required|integer|exists:words,id',
             'word' => 'required|string|min:1|unique:words,word,'.$this->id,
             'translation' => 'required|string|min:1',
+            'url_image' => 'nullable|string',
             'description' => 'nullable|string',
             'type_id' => 'nullable|integer|exists:word_types,id',
             'time_forms' => 'nullable',
