@@ -21,33 +21,47 @@ class WordController extends Controller
         $this->wordRepository = new WordRepository();
     }
 
-    public function index(SelectGetPaginateRequest $request) {
+    public function index(SelectGetPaginateRequest $request): ApiResponse
+    {
         $words = $this->wordRepository->getWords($request->validated());
 
         return new ApiResponse($words);
     }
 
-    public function store(CreateWordRequest $request) {
+    public function store(CreateWordRequest $request): ApiResponse
+    {
         $coll = Word::create($request->validated());
 
         return new ApiResponse(compact('coll'));
     }
 
-    public function update(UpdateWordRequest $request) {
-        $coll = Word::where('id',$request['id'])
-            ->update(Arr::except($request->validated(),'id'));
+    public function update(UpdateWordRequest $request): ApiResponse
+    {
+        // Получение экземпляра модели
+        $coll = Word::findOrFail($request['id']);
+
+        // Временное отключение обновления 'updated_at'
+        $coll->timestamps = false;
+
+        // Обновление данных, за исключением столбца 'id'
+        $coll->fill($request->validated())->save();
+
+        // Включение обновления 'updated_at'
+        $coll->timestamps = true;
 
         return new ApiResponse(compact('coll'));
     }
 
-    public function deleteWord(DeleteWordRequest $request) {
+    public function deleteWord(DeleteWordRequest $request): ApiResponse
+    {
         Word::where('id',$request->id)
             ->delete();
 
         return new ApiResponse([]);
     }
 
-    public function addTypeAnotherWord(AddTypeAnotherWordRequest $request) {
+    public function addTypeAnotherWord(AddTypeAnotherWordRequest $request): ApiResponse
+    {
         $collection_from_word = Word::where('id',$request->from_word_id)->first();
         Word::where('word',$request->to_word_text)
             ->update([

@@ -46,6 +46,10 @@ a{
     text-decoration: none;
     outline: none;
 }
+svg{
+    width: 20px;
+    height: 20px;
+}
 .main-page {
     display: flex;
     justify-content: flex-start;

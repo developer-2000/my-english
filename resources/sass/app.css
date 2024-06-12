@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito");
+
 .tab-content {
   background-color: #f4f6f9;
   width: calc(100% - 200px);
@@ -36,8 +37,7 @@ table.sentence .but_td > span a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px;
-  line-height: 42px;
+  padding: 0;
 }
 .vgt-table .check_td span,
 .vgt-table th:first-child span {
@@ -60,13 +60,13 @@ table.sentence .but_td > span a {
 }
 .vgt-table .trigger,
 .vgt-table .sentence,
-.vgt-table .translation {
+.vgt-table .translation{
   display: flex;
   justify-content: space-between;
   padding: 2px 10px;
   line-height: 38px;
 }
-.vgt-table .trigger:hover {
+.vgt-table .trigger:hover{
   background: #f2f1f1;
   font-weight: 700;
 }
@@ -99,7 +99,7 @@ table.sentence .but_td > span a {
   display: block;
 }
 .btn {
-  min-width: 100px;
+    min-width: 100px;
 }
 .btn-warning {
   background-color: #ffebae;

@@ -40,6 +40,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      obj_learn_word: null,
+      // изучаемое слово
+      last_updated_at: null,
+      // дата изменения изучаемого слова
+      learn_words: false,
+      // bool открытия модалки изучения слов
       word_id: 0,
       type_id: 0,
       new_word: '',
@@ -66,7 +72,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           sortable: false,
           html: true,
           field: function field(val) {
-            return '' + '<div class="trigger">' + val.word1 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
+            return '' + '<div class="trigger">' + val.word1 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
           }
         }, {
           tdClass: 'text_td',
@@ -75,7 +81,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           sortable: false,
           html: true,
           field: function field(val) {
-            return '' + '<div class="trigger">' + val.word2 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
+            return '' + '<div class="trigger">' + val.word2 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
           }
         }, {
           tdClass: 'text_td',
@@ -84,7 +90,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           sortable: false,
           html: true,
           field: function field(val) {
-            return '' + '<div class="trigger">' + val.word3 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
+            return '' + '<div class="trigger">' + val.word3 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
           }
         }, {
           tdClass: 'text_td',
@@ -93,7 +99,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           sortable: false,
           html: true,
           field: function field(val) {
-            return '' + '<div class="trigger">' + val.word4 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
+            return '' + '<div class="trigger">' + val.word4 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
           }
         }, {
           tdClass: 'text_td',
@@ -102,7 +108,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           sortable: false,
           html: true,
           field: function field(val) {
-            return '' + '<div class="trigger">' + val.word5 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
+            return '' + '<div class="trigger">' + val.word5 + '</div>' + '<div class="btn_block_column">' + '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' + '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' + '</div>';
           }
         }],
         // array objects rows
@@ -144,20 +150,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   methods: {
-    touchNewWord: function touchNewWord() {
-      this.$v.new_word.$touch();
-    },
-    touchTranslationWord: function touchTranslationWord() {
-      this.$v.translation_word.$touch();
-    },
-    initialData: function initialData() {
-      this.loadWordsAndTypes();
-      this.hoverWordShowTitle();
-      this.showStyleDataOnSelectType();
-      this.updateColumnTable();
-      this.initialClickButWordUpdate();
-      this.makeButtonClearSearch();
-    },
     createWord: function createWord() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -341,6 +333,77 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee5, null, [[0, 8]]);
       }))();
     },
+    // загрузка изучаемого слова
+    loadLearnWord: function loadLearnWord() {
+      var _arguments = arguments,
+        _this6 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var action, data, response;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              action = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : null;
+              _context6.prev = 1;
+              _this6.last_updated_at = _this6.obj_learn_word !== null ? _this6.obj_learn_word.updated_at : null;
+              data = {
+                last_updated_at: _this6.last_updated_at,
+                last_word_id: _this6.obj_learn_word !== null ? _this6.obj_learn_word.id : null,
+                action_with_word: action
+              };
+              _context6.next = 6;
+              return _this6.$http.post("".concat(_this6.$http.apiUrl(), "learn/get-word"), data);
+            case 6:
+              response = _context6.sent;
+              if (_this6.checkSuccess(response)) {
+                _this6.obj_learn_word = response.data.data;
+                _this6.initialData();
+              }
+              _context6.next = 13;
+              break;
+            case 10:
+              _context6.prev = 10;
+              _context6.t0 = _context6["catch"](1);
+              console.log(_context6.t0);
+            case 13:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, null, [[1, 10]]);
+      }))();
+    },
+    // открываем модалку изучения слов
+    openLearnModal: function openLearnModal() {
+      var _this7 = this;
+      this.learn_words = true;
+      var element = $('#learn_word');
+      element.modal('show');
+      // инициализация hover на изучаемое слово
+      $('body').on('mouseover', '.learn-word-trigger', function (event) {
+        _this7.outputHelperAlert(event, 1);
+      });
+      // загрузить из DB изучаемое слово
+      this.loadLearnWord();
+      // событие закрытия модалки
+      element.on('hidden.bs.modal', function () {
+        _this7.learn_words = false;
+        _this7.obj_learn_word = null;
+        _this7.last_updated_at = null;
+      });
+    },
+    touchNewWord: function touchNewWord() {
+      this.$v.new_word.$touch();
+    },
+    touchTranslationWord: function touchTranslationWord() {
+      this.$v.translation_word.$touch();
+    },
+    initialData: function initialData() {
+      this.loadWordsAndTypes();
+      this.hoverWordShowTitle();
+      this.showStyleDataOnSelectType();
+      this.updateColumnTable();
+      this.initialClickButWordUpdate();
+      this.makeButtonClearSearch();
+    },
     deleteColorFromArrColor: function deleteColorFromArrColor(arrColor) {
       var index = 0;
       this.allColor = arrColor;
@@ -391,7 +454,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this6 = this;
+      var _this8 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
@@ -403,7 +466,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           // преобразовать слово в столбце
           else {
-            row = _this6.getRowForWord(prev.text());
+            row = _this8.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -420,55 +483,59 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this7 = this;
-      // навести на слово
+      var _this9 = this;
       $('body').on('mouseover', '.trigger', function (event) {
-        // выбрать колекцию слова
-        var row = _this7.getRowForWord($(event.target).text());
-        if (row == null) {
-          return false;
-        }
-        var text_type = "";
-        var text_description = "";
-        var span_style = row.type == null ? '' : 'color:' + row.type.color;
-        if (row.type !== null) {
-          text_type = row.type.type;
-        }
-        if (row.time_forms === null && row.type.description !== undefined) {
-          text_description = ' - ' + row.type.description.text;
-        }
-        if (row.time_forms !== null) {
-          text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
-          text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
-          text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
-        }
-
-        // 1 создать строку html
-        var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
-
-        // Получить ссылку на экземпляр tippy
-        var instance = $(event.target)[0]._tippy;
-        // Если экземпляр tippy существует, обновить его содержимое
-        if (instance) {
-          instance.setContent(html);
-        } else {
-          // 2 показ подсказки
-          (0,vue_tippy__WEBPACK_IMPORTED_MODULE_1__.tippy)(event.target, {
-            content: html,
-            theme: 'light-border',
-            allowHTML: true
-          });
-        }
+        _this9.outputHelperAlert(event, 0);
       });
+    },
+    // вывод подсказки при наведении
+    outputHelperAlert: function outputHelperAlert(event, index) {
+      var arr = ["table", "learn"];
+      // выбрать колекцию слова
+      var row = this.getRowForWord($(event.target).text());
+      if (row == null) {
+        return false;
+      }
+      var text_type = row.type !== null ? row.type.type : "";
+      var text_description = row.time_forms === null && row.type.description !== undefined ? ' - ' + row.type.description.text : "";
+      if (row.time_forms !== null) {
+        text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
+        text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
+        text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
+      }
+      var span_style = row.type == null ? '' : 'color:' + row.type.color;
+      var html = "";
+      // строка html для таблицы
+      if (arr[index] === "table") {
+        html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
+      }
+      // строка html изучения слов
+      else {
+        html = "\n<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>");
+      }
+
+      // Получить ссылку на экземпляр tippy
+      var instance = $(event.target)[0]._tippy;
+      // Если экземпляр tippy существует, обновить его содержимое
+      if (instance) {
+        instance.setContent(html);
+      } else {
+        // 2 показ подсказки
+        (0,vue_tippy__WEBPACK_IMPORTED_MODULE_1__.tippy)(event.target, {
+          content: html,
+          theme: 'light-border',
+          allowHTML: true
+        });
+      }
     },
     // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this8 = this;
+      var _this10 = this;
       // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this8.allTypes.length; i++) {
-          if (_this8.allTypes[i].id === _this8.select_type_id) {
-            _this8.setStyleDataModal(_this8.allTypes[i]);
+        for (var i = 0; i < _this10.allTypes.length; i++) {
+          if (_this10.allTypes[i].id === _this10.select_type_id) {
+            _this10.setStyleDataModal(_this10.allTypes[i]);
             break;
           }
         }
@@ -476,9 +543,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this8.allTypes.length; i++) {
-          if (_this8.allTypes[i].id == _this8.select_type_id) {
-            _this8.setStyleDataModal(_this8.allTypes[i]);
+        for (var i = 0; i < _this10.allTypes.length; i++) {
+          if (_this10.allTypes[i].id == _this10.select_type_id) {
+            _this10.setStyleDataModal(_this10.allTypes[i]);
             break;
           }
         }
@@ -537,30 +604,34 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this9 = this;
+      var _this11 = this;
       var a = setTimeout(function () {
         // удалить
-        $('.btn-danger').bind('click', function (e) {
+        $('.btn-danger.delete').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this9.getRowForWord(word);
+          var row = _this11.getRowForWord(word);
           // confirm delete
-          _this9.confirmMessage('Really delete word ?', 'success', row.id);
+          _this11.confirmMessage('Really delete word ?', 'success', row.id);
         });
         // редактировать
-        $('.btn-warning').bind('click', function (e) {
+        $('.btn-warning.edit').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this9.getRowForWord(word);
-          _this9.objUpdateWord = row;
-          _this9.setStyleDataModal(row.type);
-          _this9.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
-          $('#update_word').modal('show');
+          // открытие модалки редактирования
+          _this11.preparingDataOpenUpdateWordModal(word);
+        });
+        // клик по изучаемому слову в модалке
+        $('.learn-word-trigger').bind('click', function (e) {
+          // Закрываем модальное окно изучения
+          $('#learn_word').modal('hide');
+          // открытие модалки редактирования
+          _this11.preparingDataOpenUpdateWordModal(e.target.textContent);
         });
       }, 1000);
     },
     openModalCreateWord: function openModalCreateWord() {
-      var _this10 = this;
+      var _this12 = this;
       this.setVariableDefault();
       this.setStyleDataModal({
         description: null,
@@ -569,17 +640,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       });
       $('#create_word').modal('show');
       $('#create_word').on('shown.bs.modal', function () {
-        _this10.$refs.new_word.focus();
+        _this12.$refs.new_word.focus();
       });
+    },
+    // подготовка данных для редактирования слова и открытие модалки редактирования
+    preparingDataOpenUpdateWordModal: function preparingDataOpenUpdateWordModal(word) {
+      // Выбрать обьект слова по слову
+      var row = this.getRowForWord(word);
+      this.objUpdateWord = row;
+      this.setStyleDataModal(row.type);
+      this.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
+      $('#update_word').modal('show');
     }
   },
   mounted: function mounted() {
-    var _this11 = this;
+    var _this13 = this;
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this11.help_dynamic = "";
-      _this11.objWordFromTable.bool_click_button_word_from_table = false;
-      _this11.objUpdateWord = null;
+      _this13.help_dynamic = "";
+      _this13.objWordFromTable.bool_click_button_word_from_table = false;
+      _this13.objUpdateWord = null;
     });
   },
   beforeDestroy: function beforeDestroy() {
@@ -645,7 +725,19 @@ var render = function render() {
     staticClass: "top-menu"
   }, [_c("h1", [_vm._v("List Words")]), _vm._v(" "), _c("div", {
     staticClass: "box-button"
-  }, [_c("button", {
+  }, [!_vm.learn_words ? _c("button", {
+    staticClass: "btn bg-gradient-success",
+    on: {
+      click: _vm.openLearnModal
+    }
+  }, [_vm._v("\n                    Learn words\n                ")]) : _vm._e(), _vm._v(" "), _vm.learn_words ? _c("button", {
+    staticClass: "btn bg-gradient-warning",
+    on: {
+      click: function click($event) {
+        _vm.learn_words = false;
+      }
+    }
+  }, [_vm._v("\n                    Stop learn\n                ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn bg-gradient-primary",
     on: {
       click: _vm.openModalCreateWord
@@ -1570,7 +1662,86 @@ var render = function render() {
     on: {
       click: _vm.updateWord
     }
-  }, [_vm._v("Update")])])])])])])])]);
+  }, [_vm._v("Update")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "learn_word",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "learn_word_label",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog custom-modal",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "modal-body"
+  }, [_vm.obj_learn_word !== null ? [_c("div", {
+    staticClass: "box-word"
+  }, [_c("div", {
+    staticClass: "learn-word-trigger",
+    domProps: {
+      textContent: _vm._s(_vm.obj_learn_word.word)
+    }
+  }), _vm._v(" "), _c("a", {
+    staticClass: "btn btn-success",
+    attrs: {
+      role: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.loadLearnWord("up");
+      }
+    }
+  }, [_c("svg", {
+    attrs: {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 384 512"
+    }
+  }, [_c("path", {
+    attrs: {
+      d: "M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+    }
+  })]), _vm._v("\n                                не знаю\n                            ")]), _vm._v(" "), _c("a", {
+    staticClass: "btn btn-warning",
+    attrs: {
+      role: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.loadLearnWord("down");
+      }
+    }
+  }, [_c("svg", {
+    attrs: {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 384 512"
+    }
+  }, [_c("path", {
+    attrs: {
+      d: "M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+    }
+  })]), _vm._v("\n                                знаю\n                            ")])]), _vm._v(" "), _vm.obj_learn_word.sentences.length > 0 || _vm.obj_learn_word.url_image !== null ? _c("div", {
+    staticClass: "box-helper"
+  }, [_vm.obj_learn_word.url_image !== null ? _c("img", {
+    attrs: {
+      src: _vm.obj_learn_word.url_image,
+      alt: "Image"
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.obj_learn_word.sentences.length > 0 ? _c("div", {
+    staticClass: "box-sentences"
+  }, _vm._l(_vm.obj_learn_word.sentences, function (sentence, key) {
+    return _c("div", {
+      key: key,
+      staticClass: "sentence"
+    }, [_vm._v(_vm._s(sentence.sentence))]);
+  }), 0) : _vm._e()]) : _vm._e()] : [_c("div", {
+    staticClass: "no-word"
+  }, [_vm._v("\n                            There are no words in the database to study\n                        ")])]], 2)])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -1599,6 +1770,25 @@ var staticRenderFns = [function () {
   }, [_c("h5", {
     staticClass: "modal-title"
   }, [_vm._v("Update word")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title"
+  }, [_vm._v("Learn words")]), _vm._v(" "), _c("button", {
     staticClass: "close",
     attrs: {
       type: "button",
@@ -1680,12 +1870,14 @@ __webpack_require__.r(__webpack_exports__);
       $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'block');
       $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
     },
+    // шаги в пагинации
     onPageChange: function onPageChange(params) {
       this.updateParams({
         page: params.currentPage
       });
       this.initialData();
     },
+    // по сколько показывать на странице
     onPerPageChange: function onPerPageChange(params) {
       this.updateParams({
         page: 0,
@@ -1849,18 +2041,15 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     // проверка backup данных axios
     checkSuccess: function checkSuccess(response) {
-      var _response$data, _response$data2;
       // json response
-      if (response !== null && response !== void 0 && (_response$data = response.data) !== null && _response$data !== void 0 && _response$data.success && response.data.success === true) {
+      if (response.data.error === null) {
         return true;
       }
       // not correct validate laravel
-      else if (response !== null && response !== void 0 && (_response$data2 = response.data) !== null && _response$data2 !== void 0 && _response$data2.status && response.data.status === 'error') {
-        var _response$data3;
-        if ((response === null || response === void 0 || (_response$data3 = response.data) === null || _response$data3 === void 0 ? void 0 : _response$data3.code) === 422) {
-          this.message(response.data.message, 'error');
-        }
-      }
+      // else if(response?.data?.status && response.data.status === 'error'){
+      // else{
+      //     this.message(response.data.message, 'error');
+      // }
       return false;
     },
     // alert сообщение на странице
@@ -2014,7 +2203,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  width: 110px;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#learn_word .custom-modal[data-v-461a95d4] {\n  width: 50%;\n  max-width: 3000px !important;\n}\n#learn_word .box-word[data-v-461a95d4] {\n  display: flex;\n}\n#learn_word .box-word .learn-word-trigger[data-v-461a95d4] {\n  flex: 1 1 auto;\n  display: flex;\n  justify-content: space-between;\n  padding: 2px 10px;\n  line-height: 38px;\n}\n#learn_word .box-word .learn-word-trigger[data-v-461a95d4]:hover {\n  background: #f2f1f1;\n  font-weight: 700;\n}\n#learn_word .box-word a[data-v-461a95d4] {\n  font-size: 16px;\n}\n#learn_word .box-word a svg[data-v-461a95d4] {\n  height: 16px;\n  margin-right: 5px;\n}\n#learn_word .box-word .btn-success[data-v-461a95d4] {\n  margin: 0 10px;\n}\n#learn_word .box-word .btn-success svg[data-v-461a95d4] {\n  fill: white;\n}\n#learn_word .box-helper[data-v-461a95d4] {\n  display: flex;\n  margin-top: 15px;\n}\n#learn_word .box-helper img[data-v-461a95d4] {\n  width: auto;\n  height: 100px;\n  margin-right: 15px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -868,12 +868,14 @@ __webpack_require__.r(__webpack_exports__);
       $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'block');
       $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
     },
+    // шаги в пагинации
     onPageChange: function onPageChange(params) {
       this.updateParams({
         page: params.currentPage
       });
       this.initialData();
     },
+    // по сколько показывать на странице
     onPerPageChange: function onPerPageChange(params) {
       this.updateParams({
         page: 0,
@@ -1039,18 +1041,15 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     // проверка backup данных axios
     checkSuccess: function checkSuccess(response) {
-      var _response$data, _response$data2;
       // json response
-      if (response !== null && response !== void 0 && (_response$data = response.data) !== null && _response$data !== void 0 && _response$data.success && response.data.success === true) {
+      if (response.data.error === null) {
         return true;
       }
       // not correct validate laravel
-      else if (response !== null && response !== void 0 && (_response$data2 = response.data) !== null && _response$data2 !== void 0 && _response$data2.status && response.data.status === 'error') {
-        var _response$data3;
-        if ((response === null || response === void 0 || (_response$data3 = response.data) === null || _response$data3 === void 0 ? void 0 : _response$data3.code) === 422) {
-          this.message(response.data.message, 'error');
-        }
-      }
+      // else if(response?.data?.status && response.data.status === 'error'){
+      // else{
+      //     this.message(response.data.message, 'error');
+      // }
       return false;
     },
     // alert сообщение на странице

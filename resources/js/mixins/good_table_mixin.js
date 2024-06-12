@@ -23,10 +23,12 @@ export default {
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'block');
             $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
         },
+        // шаги в пагинации
         onPageChange(params) {
             this.updateParams({page: params.currentPage});
             this.initialData();
         },
+        // по сколько показывать на странице
         onPerPageChange(params) {
             this.updateParams({page: 0, perPage: params.currentPerPage});
             this.initialData();

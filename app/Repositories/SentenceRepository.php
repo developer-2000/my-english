@@ -60,8 +60,11 @@ class SentenceRepository extends CoreRepository
 
         // добавить слова которых нет
         foreach ($words as $key => $word){
+            // Удаляем пробелы и точки из слова
+            $cleanedWord = str_replace([' ', '.'], '', $word);
+
             Word::firstOrCreate(
-                ['word' => $word],
+                ['word' => $cleanedWord],
                 ['translation' => '', 'description' => '""']
             );
         }

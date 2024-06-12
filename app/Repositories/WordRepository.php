@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Test;
 use App\Models\Word;
 use App\Models\WordType;
 
@@ -14,7 +15,6 @@ class WordRepository extends CoreRepository
 
         // search
         $searchArray = $vars['search'] ?? [];
-
         if (!empty($searchArray) && !empty($searchArray[0])) {
                 // word language
                 if($language = $this->getLanguage($searchArray[0])){
@@ -28,7 +28,6 @@ class WordRepository extends CoreRepository
                     }
                 }
         }
-
         $total_count = $collection->get()->count();
 
         // sort
@@ -39,10 +38,17 @@ class WordRepository extends CoreRepository
             }
         }
 
+        // выбрать минимальное время в базе
+        $minUpdatedAt = $collection->min('updated_at');
+        // Начинает отбор с указанной строки в базе
+        if ($minUpdatedAt) {
+            $collection = $collection->where('updated_at', '>=', $minUpdatedAt);
+        }
+
         // paginate
         $list = $collection
             ->skip($vars['offset'])->take($vars['limit'])
-            ->orderBy('id', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         $types = WordType::get();

@@ -15,10 +15,9 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
-
+{{--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">--}}
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
 </head>
 <body>
 
@@ -49,11 +48,11 @@
 
 <!-- >>> Section JS -->
 <!-- jQuery -->
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Bootstrap 4 -->
-<script src="{{asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/js/adminlte.js')}}"></script>
 

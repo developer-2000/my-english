@@ -60,10 +60,8 @@ table.sentence{
         & > span {
             display: flex;
             justify-content: space-between;
-            //flex-direction: column;
             align-items: center;
-            padding: 0px;
-            line-height: 42px;
+            padding: 0;
         }
     }
     .checkbox_td span{
@@ -181,6 +179,15 @@ table.sentence{
         display: flex;
         .btn-danger{
             margin-right: 10px;
+        }
+    }
+    .box-learn-button{
+        flex-flow: column nowrap;
+        a{
+            margin-bottom: 7px;
+            &:last-child{
+                margin: 0;
+            }
         }
     }
 }

@@ -8,15 +8,14 @@ export default {
         // проверка backup данных axios
         checkSuccess(response) {
             // json response
-            if(response?.data?.success && response.data.success === true){
+            if(response.data.error === null){
                 return true;
             }
             // not correct validate laravel
-            else if(response?.data?.status && response.data.status === 'error'){
-                if(response?.data?.code === 422){
-                    this.message(response.data.message, 'error');
-                }
-            }
+            // else if(response?.data?.status && response.data.status === 'error'){
+            // else{
+            //     this.message(response.data.message, 'error');
+            // }
             return false;
         },
         // alert сообщение на странице
