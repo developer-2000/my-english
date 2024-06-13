@@ -8,17 +8,17 @@
                 <h1>List Words</h1>
                 <!-- кнопки -->
                 <div class="box-button">
-                    <!-- learn words  -->
+                    <!-- learn words -->
                     <button class="btn bg-gradient-success"
-                            @click="openLearnModal"
-                            v-if="!learn_words"
+                            @click="openLearnModal()"
+                            v-if="!bool_learn_words"
                     >
                         Learn words
                     </button>
-                    <!-- stop learn  -->
+                    <!-- stop learn -->
                     <button class="btn bg-gradient-warning"
-                            @click="learn_words = false"
-                            v-if="learn_words"
+                            v-if="bool_learn_words"
+                            @click="bool_learn_words = false"
                     >
                         Stop learn
                     </button>
@@ -341,56 +341,12 @@
             </div>
         </div>
 
-        <!-- Modals учить слова  -->
-        <div class="modal fade" id="learn_word" tabindex="-1" role="dialog" aria-labelledby="learn_word_label" aria-hidden="true">
-            <div class="modal-dialog custom-modal" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Learn words</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <template v-if="obj_learn_word !== null">
-                            <div class="box-word">
-                                <!-- Изучаемое слово -->
-                                <div class="learn-word-trigger" v-text="obj_learn_word.word"></div>
-                                <!-- Не знаю -->
-                                <a class="btn btn-success" role="button"
-                                   @click="loadLearnWord('up')"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-                                    не знаю
-                                </a>
-                                <!-- Знаю -->
-                                <a class="btn btn-warning" role="button"
-                                   @click="loadLearnWord('down')"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                                    знаю
-                                </a>
-                            </div>
-                            <div class="box-helper" v-if="obj_learn_word.sentences.length > 0 || obj_learn_word.url_image !== null">
-                                <!-- изображение слова -->
-                                <img v-if="obj_learn_word.url_image !== null" :src="obj_learn_word.url_image" alt="Image">
-                                <!-- предложения -->
-                                <div class="box-sentences" v-if="obj_learn_word.sentences.length > 0">
-                                    <div class="sentence"
-                                         v-for="(sentence, key) in obj_learn_word.sentences" :key="key"
-                                    >{{sentence.sentence}}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="no-word">
-                                There are no words in the database to study
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Modals изучения слов  -->
+        <ModalLearnWord
+            ref="modalLearnWord"
+            @callInitialData="initialData"
+            @callPreparingDataOpenUpdateWordModal="preparingDataOpenUpdateWordModal"
+        ></ModalLearnWord>
 
     </div>
 </template>
@@ -408,15 +364,14 @@
     import good_table_mixin from "../../mixins/good_table_mixin";
     import response_methods_mixin from "../../mixins/response_methods_mixin";
     import help_search_word_mixin from "../../mixins/help_search_word_mixin";
-
     import helpSearchWord from "../details/HelpSearchWord";
+    // components
+    import ModalLearnWord from "../details/ModalLearnWord";
 
     export default {
         data() {
             return {
-                obj_learn_word: null, // изучаемое слово
-                last_updated_at: null, // дата изменения изучаемого слова
-                learn_words: false, // bool открытия модалки изучения слов
+                bool_learn_words: false, // bool открытия модалки изучения слов
                 word_id: 0,
                 type_id: 0,
                 new_word: '',
@@ -552,7 +507,8 @@
             good_table_mixin,
             help_search_word_mixin
         ],
-        components: { VueGoodTable, helpSearchWord },
+        components: { VueGoodTable, helpSearchWord, ModalLearnWord },
+        props: ['openParentModal_1'],
         methods: {
             async createWord() {
                 let data = {
@@ -647,41 +603,15 @@
                     console.log(e);
                 }
             },
-            // загрузка изучаемого слова
-            async loadLearnWord(action = null) {
-                try {
-                    this.last_updated_at = this.obj_learn_word !== null ? this.obj_learn_word.updated_at : null
-                    let data = {
-                        last_updated_at: this.last_updated_at,
-                        last_word_id: this.obj_learn_word !== null ? this.obj_learn_word.id : null,
-                        action_with_word: action,
-                    }
-                    const response = await this.$http.post(`${this.$http.apiUrl()}learn/get-word`, data);
-                    if(this.checkSuccess(response)){
-                        this.obj_learn_word = response.data.data
-                        this.initialData();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            },
-            // открываем модалку изучения слов
+            // Открыть модалку изучения слова
             openLearnModal() {
-                this.learn_words = true;
-                const element = $('#learn_word')
-                element.modal('show');
-                // инициализация hover на изучаемое слово
-                $('body').on('mouseover', '.learn-word-trigger', (event) => {
-                    this.outputHelperAlert(event, 1)
-                });
-                // загрузить из DB изучаемое слово
-                this.loadLearnWord()
+                // Вызов openLearnModal у дочернего компонента через референцию
+                this.$refs.modalLearnWord.openLearnModal();
+                this.bool_learn_words = true;
                 // событие закрытия модалки
-                element.on('hidden.bs.modal', () => {
-                    this.learn_words = false;
-                    this.obj_learn_word = null
-                    this.last_updated_at = null
-                });
+                $('#learn_word').on('hidden.bs.modal', () => {
+                    this.bool_learn_words = false;
+                })
             },
             touchNewWord() {
                 this.$v.new_word.$touch();
@@ -762,12 +692,11 @@
             // навести на слово в таблице
             hoverWordShowTitle() {
                 $('body').on('mouseover', '.trigger', (event) => {
-                    this.outputHelperAlert(event, 0)
+                    this.outputHelperAlertInTable(event)
                 });
             },
-            // вывод подсказки при наведении
-            outputHelperAlert(event, index){
-                const arr = ["table","learn"]
+            // вывод подсказки при наведении на слово в таблице
+            outputHelperAlertInTable(event){
                 // выбрать колекцию слова
                 let row = this.getRowForWord($(event.target).text());
                 if (row == null) { return false; }
@@ -783,10 +712,8 @@
                 }
                 let span_style = row.type == null ? '' : 'color:'+row.type.color
 
-                let html = ""
                 // строка html для таблицы
-                if(arr[index] === "table"){
-                    html = `<div style="text-align: left;">
+                let html = `<div style="text-align: left;">
 <div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}
 <span style="${span_style};">${text_type} ${text_description}</span>
 </div>
@@ -794,15 +721,6 @@ ${row.description == null ? '' : row.description.toLowerCase()}
 </div>
 ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.url_image}" alt="Image">` : ''}
 `;
-                }
-                // строка html изучения слов
-                else{
-                    html = `
-<div style="text-align: left;">
-<div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}</div>
-${row.description == null ? '' : row.description.toLowerCase()}
-</div>`;
-                }
 
                 // Получить ссылку на экземпляр tippy
                 let instance = $(event.target)[0]._tippy;
@@ -906,13 +824,6 @@ ${row.description == null ? '' : row.description.toLowerCase()}
                         // открытие модалки редактирования
                         this.preparingDataOpenUpdateWordModal(word)
                     });
-                    // клик по изучаемому слову в модалке
-                    $('.learn-word-trigger').bind('click', (e) => {
-                        // Закрываем модальное окно изучения
-                        $('#learn_word').modal('hide');
-                        // открытие модалки редактирования
-                        this.preparingDataOpenUpdateWordModal(e.target.textContent)
-                    });
                 }, 1000);
             },
             openModalCreateWord(){
@@ -1001,49 +912,6 @@ ${row.description == null ? '' : row.description.toLowerCase()}
             padding-right: 0;
         }
         padding-right: 15.5px;
-    }
-}
-
-#learn_word{
-    .custom-modal{
-        width: 50%;
-        max-width:3000px!important;
-    }
-    .box-word{
-        display: flex;
-        .learn-word-trigger{
-            flex: 1 1 auto;
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 10px;
-            line-height: 38px;
-            &:hover{
-                background: #f2f1f1;
-                font-weight: 700;
-            }
-        }
-        a{
-            font-size: 16px;
-            svg{
-                height: 16px;
-                margin-right: 5px;
-            }
-        }
-        .btn-success{
-            margin: 0 10px;
-            svg{
-                fill: white;
-            }
-        }
-    }
-    .box-helper{
-        display: flex;
-        margin-top: 15px;
-        img{
-            width: auto;
-            height: 100px;
-            margin-right: 15px;
-        }
     }
 }
 
