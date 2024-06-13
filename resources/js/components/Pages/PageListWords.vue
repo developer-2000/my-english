@@ -256,22 +256,6 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <!-- добавление этого типа слову из таблицы -->
-                                    <button type="button" class="btn btn-primary"
-                                            v-if="objUpdateWord !== null && objUpdateWord.time_forms !== null && !objWordFromTable.bool_click_button_word_from_table"
-                                            @click="objWordFromTable.bool_click_button_word_from_table = true"
-                                    >Добавить этот тип слову из таблицы</button>
-                                    <!-- блок ввода слова которому добавить этот тип -->
-                                    <div class="box-input-add-type-word-from-table"
-                                         v-if="objWordFromTable.bool_click_button_word_from_table"
-                                    >
-                                        <input type="text" class="form-control" placeholder="Insert word"
-                                               v-model="objWordFromTable.word"
-                                        >
-                                        <button type="button" class="btn btn-primary"
-                                                @click="addTypeWordFromTable"
-                                        >Добавить</button>
-                                    </div>
                                 </div>
 
                                 <!-- правый блок свойств -->
@@ -327,6 +311,15 @@
                                 <textarea v-model="description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
                             </div>
 
+                            <!-- предложения этого слова -->
+                            <div class="box-sentences">
+                                <div v-for="(sentence, key) in arrSentences" :key="key">
+                                    {{sentence.sentence}}
+                                </div>
+                            </div>
+
+                            <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+
                             <!-- button save -->
                             <div class="button_footer">
                                 <button type="button" class="btn btn-primary"
@@ -345,7 +338,7 @@
         <ModalLearnWord
             ref="modalLearnWord"
             @callInitialData="initialData"
-            @callPreparingDataOpenUpdateWordModal="preparingDataOpenUpdateWordModal"
+            @callOpenUpdateWordModal="openUpdateWordModal"
         ></ModalLearnWord>
 
     </div>
@@ -500,6 +493,7 @@
                     bool_click_button_word_from_table: false,
                     word: '',
                 },
+                arrSentences: [],
             };
         },
         mixins: [
@@ -568,7 +562,7 @@
                     console.log(e);
                 }
             },
-            // выборка слов и типов слов
+            // выборка слов и типов слов с пагинацией
             async loadWordsAndTypes() {
                 try {
                     this.isLoading = true;
@@ -585,33 +579,18 @@
                 }
                 this.isLoading = false;
             },
-            // добавить тип временная форма другому слову из таблицы
-            async addTypeWordFromTable() {
+            // выбрать все предложения с этим словом
+            async searchSentences(word) {
+                let data = { word: word };
+
                 try {
-                    let data = {
-                        from_word_id: this.word_id,
-                        to_word_text: this.objWordFromTable.word,
-                    }
-                    const response = await this.$http.post(`${this.$http.apiUrl()}word/add-type-another-word`, data);
+                    const response = await this.$http.post(`${this.$http.apiUrl()}sentence/search-sentences`, data);
                     if(this.checkSuccess(response)){
-                        this.initialData();
-                        $('#update_word').modal('hide');
-                        $('.modal-backdrop.fade.show').remove();
-                        this.objWordFromTable.word = ''
+                        this.arrSentences = response.data.data.sentences
                     }
                 } catch (e) {
                     console.log(e);
                 }
-            },
-            // Открыть модалку изучения слова
-            openLearnModal() {
-                // Вызов openLearnModal у дочернего компонента через референцию
-                this.$refs.modalLearnWord.openLearnModal();
-                this.bool_learn_words = true;
-                // событие закрытия модалки
-                $('#learn_word').on('hidden.bs.modal', () => {
-                    this.bool_learn_words = false;
-                })
             },
             touchNewWord() {
                 this.$v.new_word.$touch();
@@ -797,15 +776,6 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 $('.desc_type').css('border-color',type.color);
                 $('.desc_type .text').html(string);
             },
-            setVariableDefault(word_id=0, word='', translation='', url_image='', type_id=0, description='""', time_forms=null){
-                this.word_id = word_id;
-                this.new_word = word;
-                this.translation_word = translation;
-                this.url_image = url_image;
-                this.select_type_id = type_id;
-                this.description = description;
-                this.objWordTimeForms = time_forms
-            },
             // события клика по кнопкам - удалить или редактировать слово
             initialClickButWordUpdate(){
                 let a = setTimeout(() => {
@@ -822,10 +792,11 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let word = queryObj.parent().prev(".trigger").text();
                         // открытие модалки редактирования
-                        this.preparingDataOpenUpdateWordModal(word)
+                        this.openUpdateWordModal(word)
                     });
                 }, 1000);
             },
+            // Открыть модалку создания
             openModalCreateWord(){
                 this.setVariableDefault();
                 this.setStyleDataModal({description:null, type:'', color:'black'});
@@ -834,15 +805,38 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     this.$refs.new_word.focus();
                 });
             },
-            // подготовка данных для редактирования слова и открытие модалки редактирования
-            preparingDataOpenUpdateWordModal(word){
+            // Открыть модалку редактирования
+            openUpdateWordModal(word){
                 // Выбрать обьект слова по слову
                 let row = this.getRowForWord(word);
                 this.objUpdateWord = row
                 this.setStyleDataModal(row.type);
-                this.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
+                this.setVariableDefault(row);
+
+                this.searchSentences(word)
+
                 $('#update_word').modal('show');
-            }
+            },
+            // Открыть модалку изучения слова
+            openLearnModal() {
+                // Вызов openLearnModal у дочернего компонента через референцию
+                this.$refs.modalLearnWord.openLearnModal();
+                this.bool_learn_words = true;
+                // событие закрытия модалки
+                $('#learn_word').on('hidden.bs.modal', () => {
+                    this.bool_learn_words = false;
+                })
+            },
+            // заполнение переменных для модалок создания и редактирования слова
+            setVariableDefault(obj = {id: 0, word: '', translation: '', url_image: '', type: {id: 0}, description: '""', time_forms: null}){
+                this.word_id = obj.id || 0;
+                this.new_word = obj.word || '';
+                this.translation_word = obj.translation || '';
+                this.url_image = obj.url_image || '';
+                this.select_type_id = obj.type.id || 0;
+                this.description = obj.description || '""';
+                this.objWordTimeForms = obj.time_forms || null;
+            },
         },
         mounted() {
             this.initialData();
@@ -912,6 +906,18 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             padding-right: 0;
         }
         padding-right: 15.5px;
+    }
+}
+
+#update_word{
+    .modal-body{
+        .box-sentences{
+            div{
+                color: #747474;
+                font-weight: 700;
+                font-size: 13px;
+            }
+        }
     }
 }
 

@@ -179,7 +179,7 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         goToEditing(word){
             $('#learn_word').modal('hide');
             setTimeout(()=>{
-                this.$emit('callPreparingDataOpenUpdateWordModal', word);
+                this.$emit('callOpenUpdateWordModal', word);
             },500)
         }
     },

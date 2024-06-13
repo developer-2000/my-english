@@ -326,35 +326,6 @@
             BootstrapToggle
         },
         methods: {
-            // --- validate
-            touchNewSentence() {
-                this.$v.new_sentence.$touch();
-            },
-            touchTranslationSentence() {
-                this.$v.translation_sentence.$touch();
-            },
-            // set all
-            initialData() {
-                this.loadSenteces();
-                this.initialClickButSentenceUpdate();
-                this.initialCheckbox();
-                this.makeButtonClearSearch();
-            },
-            // --- checkbox
-            initialCheckbox() {
-                this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
-            },
-            activationButtonSoundInMenu() {
-                setTimeout(() => {
-                    // состояние кнопки sound по умолчанию
-                    this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
-                    // изменнеие одного из sound checkbox
-                    $(".memorable_checkbox").bind('change', (e) => {
-                        this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
-                        this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
-                    });
-                }, 1000);
-            },
             async bindCheckboxSound(sentence_id, status) {
                 try {
                     let data = {
@@ -422,6 +393,35 @@
                 } catch (e) {
                     console.log(e);
                 }
+            },
+            // --- validate
+            touchNewSentence() {
+                this.$v.new_sentence.$touch();
+            },
+            touchTranslationSentence() {
+                this.$v.translation_sentence.$touch();
+            },
+            // set all
+            initialData() {
+                this.loadSenteces();
+                this.initialClickButSentenceUpdate();
+                this.initialCheckbox();
+                this.makeButtonClearSearch();
+            },
+            // --- checkbox
+            initialCheckbox() {
+                this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
+            },
+            activationButtonSoundInMenu() {
+                setTimeout(() => {
+                    // состояние кнопки sound по умолчанию
+                    this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+                    // изменнеие одного из sound checkbox
+                    $(".memorable_checkbox").bind('change', (e) => {
+                        this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+                        this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
+                    });
+                }, 1000);
             },
             setVariableDefault(sentence_id = 0, sentence = '', translation = '') {
                 this.sentence_id = sentence_id;

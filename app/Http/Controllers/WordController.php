@@ -60,15 +60,4 @@ class WordController extends Controller
         return new ApiResponse([]);
     }
 
-    public function addTypeAnotherWord(AddTypeAnotherWordRequest $request): ApiResponse
-    {
-        $collection_from_word = Word::where('id',$request->from_word_id)->first();
-        Word::where('word',$request->to_word_text)
-            ->update([
-                'type_id' => $collection_from_word->type_id,
-                'time_forms' => $collection_from_word->time_forms,
-            ]);
-
-        return new ApiResponse([]);
-    }
 }

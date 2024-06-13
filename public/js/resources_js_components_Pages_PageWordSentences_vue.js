@@ -121,6 +121,144 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     BootstrapToggle: (vue_bootstrap_toggle__WEBPACK_IMPORTED_MODULE_6___default())
   },
   methods: {
+    bindCheckboxSound: function bindCheckboxSound(sentence_id, status) {
+      var _this = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var data, response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              data = {
+                sentence_id: sentence_id,
+                status: status
+              };
+              _context.next = 4;
+              return _this.$http.post("".concat(_this.$http.apiUrl(), "sentence/bind-checkbox-sound"), data);
+            case 4:
+              response = _context.sent;
+              if (_this.checkSuccess(response)) {
+                _this.initialData();
+              }
+              _context.next = 11;
+              break;
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](0);
+              console.log(_context.t0);
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 8]]);
+      }))();
+    },
+    // --- предложения
+    loadSenteces: function loadSenteces() {
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var field, response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _this2.isLoading = true;
+              field = _this2.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
+              if (typeof field !== "string" && field.name == "field") {
+                field = 'sound';
+              }
+              _context2.next = 6;
+              return _this2.$http.get("".concat(_this2.$http.apiUrl(), "sentence?search=").concat(_this2.serverParams.search, "&page=").concat(_this2.serverParams.page, "&perPage=").concat(_this2.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this2.serverParams.sort[0].type));
+            case 6:
+              response = _context2.sent;
+              if (_this2.checkSuccess(response)) {
+                _this2.table.totalRecords = response.data.data.sentences.total_count;
+                _this2.makeObjectDataForTable(response.data.data.sentences.list);
+                _this2.table.origin_rows = response.data.data.sentences.list;
+              }
+              _context2.next = 13;
+              break;
+            case 10:
+              _context2.prev = 10;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
+            case 13:
+              _this2.isLoading = false;
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[0, 10]]);
+      }))();
+    },
+    createSentence: function createSentence() {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var data, response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              data = {
+                sentence: _this3.new_sentence,
+                translation: _this3.translation_sentence
+              };
+              $('#create_sentence').modal('hide');
+              $('.modal-backdrop.fade.show').remove();
+              _context3.next = 6;
+              return _this3.$http.post("".concat(_this3.$http.apiUrl(), "sentence"), data);
+            case 6:
+              response = _context3.sent;
+              if (_this3.checkSuccess(response)) {
+                _this3.initialData();
+              }
+              _context3.next = 13;
+              break;
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
+            case 13:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[0, 10]]);
+      }))();
+    },
+    updateSentence: function updateSentence() {
+      var _this4 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var data, response;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              data = {
+                sentence: _this4.new_sentence,
+                translation: _this4.translation_sentence
+              };
+              _context4.next = 4;
+              return _this4.$http.patch("".concat(_this4.$http.apiUrl(), "sentence/").concat(_this4.sentence_id), data);
+            case 4:
+              response = _context4.sent;
+              if (_this4.checkSuccess(response)) {
+                _this4.initialData();
+                $('#update_sentence').modal('hide');
+                $('.modal-backdrop.fade.show').remove();
+              }
+              _context4.next = 11;
+              break;
+            case 8:
+              _context4.prev = 8;
+              _context4.t0 = _context4["catch"](0);
+              console.log(_context4.t0);
+            case 11:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, null, [[0, 8]]);
+      }))();
+    },
     // --- validate
     touchNewSentence: function touchNewSentence() {
       this.$v.new_sentence.$touch();
@@ -140,154 +278,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
     },
     activationButtonSoundInMenu: function activationButtonSoundInMenu() {
-      var _this = this;
+      var _this5 = this;
       setTimeout(function () {
         // состояние кнопки sound по умолчанию
-        _this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+        _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
         // изменнеие одного из sound checkbox
         $(".memorable_checkbox").bind('change', function (e) {
-          _this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
-          _this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
+          _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+          _this5.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
         });
       }, 1000);
-    },
-    bindCheckboxSound: function bindCheckboxSound(sentence_id, status) {
-      var _this2 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var data, response;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
-            case 0:
-              _context.prev = 0;
-              data = {
-                sentence_id: sentence_id,
-                status: status
-              };
-              _context.next = 4;
-              return _this2.$http.post("".concat(_this2.$http.apiUrl(), "sentence/bind-checkbox-sound"), data);
-            case 4:
-              response = _context.sent;
-              if (_this2.checkSuccess(response)) {
-                _this2.initialData();
-              }
-              _context.next = 11;
-              break;
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
-            case 11:
-            case "end":
-              return _context.stop();
-          }
-        }, _callee, null, [[0, 8]]);
-      }))();
-    },
-    // --- предложения
-    loadSenteces: function loadSenteces() {
-      var _this3 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var field, response;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _this3.isLoading = true;
-              field = _this3.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
-              if (typeof field !== "string" && field.name == "field") {
-                field = 'sound';
-              }
-              _context2.next = 6;
-              return _this3.$http.get("".concat(_this3.$http.apiUrl(), "sentence?search=").concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this3.serverParams.sort[0].type));
-            case 6:
-              response = _context2.sent;
-              if (_this3.checkSuccess(response)) {
-                _this3.table.totalRecords = response.data.data.sentences.total_count;
-                _this3.makeObjectDataForTable(response.data.data.sentences.list);
-                _this3.table.origin_rows = response.data.data.sentences.list;
-              }
-              _context2.next = 13;
-              break;
-            case 10:
-              _context2.prev = 10;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
-            case 13:
-              _this3.isLoading = false;
-            case 14:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2, null, [[0, 10]]);
-      }))();
-    },
-    createSentence: function createSentence() {
-      var _this4 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var data, response;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              data = {
-                sentence: _this4.new_sentence,
-                translation: _this4.translation_sentence
-              };
-              $('#create_sentence').modal('hide');
-              $('.modal-backdrop.fade.show').remove();
-              _context3.next = 6;
-              return _this4.$http.post("".concat(_this4.$http.apiUrl(), "sentence"), data);
-            case 6:
-              response = _context3.sent;
-              if (_this4.checkSuccess(response)) {
-                _this4.initialData();
-              }
-              _context3.next = 13;
-              break;
-            case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3["catch"](0);
-              console.log(_context3.t0);
-            case 13:
-            case "end":
-              return _context3.stop();
-          }
-        }, _callee3, null, [[0, 10]]);
-      }))();
-    },
-    updateSentence: function updateSentence() {
-      var _this5 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var data, response;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              data = {
-                sentence: _this5.new_sentence,
-                translation: _this5.translation_sentence
-              };
-              _context4.next = 4;
-              return _this5.$http.patch("".concat(_this5.$http.apiUrl(), "sentence/").concat(_this5.sentence_id), data);
-            case 4:
-              response = _context4.sent;
-              if (_this5.checkSuccess(response)) {
-                _this5.initialData();
-                $('#update_sentence').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
-              }
-              _context4.next = 11;
-              break;
-            case 8:
-              _context4.prev = 8;
-              _context4.t0 = _context4["catch"](0);
-              console.log(_context4.t0);
-            case 11:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4, null, [[0, 8]]);
-      }))();
     },
     setVariableDefault: function setVariableDefault() {
       var sentence_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;

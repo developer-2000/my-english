@@ -140,7 +140,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       objWordFromTable: {
         bool_click_button_word_from_table: false,
         word: ''
-      }
+      },
+      arrSentences: []
     };
   },
   mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"]],
@@ -262,7 +263,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee3, null, [[1, 9]]);
       }))();
     },
-    // выборка слов и типов слов
+    // выборка слов и типов слов с пагинацией
     loadWordsAndTypes: function loadWordsAndTypes() {
       var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
@@ -298,52 +299,37 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee4, null, [[0, 8]]);
       }))();
     },
-    // добавить тип временная форма другому слову из таблицы
-    addTypeWordFromTable: function addTypeWordFromTable() {
+    // выбрать все предложения с этим словом
+    searchSentences: function searchSentences(word) {
       var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.prev = 0;
               data = {
-                from_word_id: _this5.word_id,
-                to_word_text: _this5.objWordFromTable.word
+                word: word
               };
+              _context5.prev = 1;
               _context5.next = 4;
-              return _this5.$http.post("".concat(_this5.$http.apiUrl(), "word/add-type-another-word"), data);
+              return _this5.$http.post("".concat(_this5.$http.apiUrl(), "sentence/search-sentences"), data);
             case 4:
               response = _context5.sent;
               if (_this5.checkSuccess(response)) {
-                _this5.initialData();
-                $('#update_word').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
-                _this5.objWordFromTable.word = '';
+                _this5.arrSentences = response.data.data.sentences;
               }
               _context5.next = 11;
               break;
             case 8:
               _context5.prev = 8;
-              _context5.t0 = _context5["catch"](0);
+              _context5.t0 = _context5["catch"](1);
               console.log(_context5.t0);
             case 11:
             case "end":
               return _context5.stop();
           }
-        }, _callee5, null, [[0, 8]]);
+        }, _callee5, null, [[1, 8]]);
       }))();
-    },
-    // Открыть модалку изучения слова
-    openLearnModal: function openLearnModal() {
-      var _this6 = this;
-      // Вызов openLearnModal у дочернего компонента через референцию
-      this.$refs.modalLearnWord.openLearnModal();
-      this.bool_learn_words = true;
-      // событие закрытия модалки
-      $('#learn_word').on('hidden.bs.modal', function () {
-        _this6.bool_learn_words = false;
-      });
     },
     touchNewWord: function touchNewWord() {
       this.$v.new_word.$touch();
@@ -409,7 +395,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this7 = this;
+      var _this6 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
@@ -421,7 +407,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           // преобразовать слово в столбце
           else {
-            row = _this7.getRowForWord(prev.text());
+            row = _this6.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -438,9 +424,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this8 = this;
+      var _this7 = this;
       $('body').on('mouseover', '.trigger', function (event) {
-        _this8.outputHelperAlertInTable(event);
+        _this7.outputHelperAlertInTable(event);
       });
     },
     // вывод подсказки при наведении на слово в таблице
@@ -478,12 +464,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this9 = this;
+      var _this8 = this;
       // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id === _this9.select_type_id) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
+        for (var i = 0; i < _this8.allTypes.length; i++) {
+          if (_this8.allTypes[i].id === _this8.select_type_id) {
+            _this8.setStyleDataModal(_this8.allTypes[i]);
             break;
           }
         }
@@ -491,9 +477,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id == _this9.select_type_id) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
+        for (var i = 0; i < _this8.allTypes.length; i++) {
+          if (_this8.allTypes[i].id == _this8.select_type_id) {
+            _this8.setStyleDataModal(_this8.allTypes[i]);
             break;
           }
         }
@@ -534,45 +520,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       $('.desc_type').css('border-color', type.color);
       $('.desc_type .text').html(string);
     },
-    setVariableDefault: function setVariableDefault() {
-      var word_id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var word = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-      var translation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      var url_image = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
-      var type_id = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
-      var description = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '""';
-      var time_forms = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
-      this.word_id = word_id;
-      this.new_word = word;
-      this.translation_word = translation;
-      this.url_image = url_image;
-      this.select_type_id = type_id;
-      this.description = description;
-      this.objWordTimeForms = time_forms;
-    },
     // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this10 = this;
+      var _this9 = this;
       var a = setTimeout(function () {
         // удалить
         $('.btn-danger.delete').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this10.getRowForWord(word);
+          var row = _this9.getRowForWord(word);
           // confirm delete
-          _this10.confirmMessage('Really delete word ?', 'success', row.id);
+          _this9.confirmMessage('Really delete word ?', 'success', row.id);
         });
         // редактировать
         $('.btn-warning.edit').bind('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var word = queryObj.parent().prev(".trigger").text();
           // открытие модалки редактирования
-          _this10.preparingDataOpenUpdateWordModal(word);
+          _this9.openUpdateWordModal(word);
         });
       }, 1000);
     },
+    // Открыть модалку создания
     openModalCreateWord: function openModalCreateWord() {
-      var _this11 = this;
+      var _this10 = this;
       this.setVariableDefault();
       this.setStyleDataModal({
         description: null,
@@ -581,17 +552,50 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       });
       $('#create_word').modal('show');
       $('#create_word').on('shown.bs.modal', function () {
-        _this11.$refs.new_word.focus();
+        _this10.$refs.new_word.focus();
       });
     },
-    // подготовка данных для редактирования слова и открытие модалки редактирования
-    preparingDataOpenUpdateWordModal: function preparingDataOpenUpdateWordModal(word) {
+    // Открыть модалку редактирования
+    openUpdateWordModal: function openUpdateWordModal(word) {
       // Выбрать обьект слова по слову
       var row = this.getRowForWord(word);
       this.objUpdateWord = row;
       this.setStyleDataModal(row.type);
-      this.setVariableDefault(row.id, row.word, row.translation, row.url_image, row.type.id, row.description, row.time_forms);
+      this.setVariableDefault(row);
+      this.searchSentences(word);
       $('#update_word').modal('show');
+    },
+    // Открыть модалку изучения слова
+    openLearnModal: function openLearnModal() {
+      var _this11 = this;
+      // Вызов openLearnModal у дочернего компонента через референцию
+      this.$refs.modalLearnWord.openLearnModal();
+      this.bool_learn_words = true;
+      // событие закрытия модалки
+      $('#learn_word').on('hidden.bs.modal', function () {
+        _this11.bool_learn_words = false;
+      });
+    },
+    // заполнение переменных для модалок создания и редактирования слова
+    setVariableDefault: function setVariableDefault() {
+      var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+        id: 0,
+        word: '',
+        translation: '',
+        url_image: '',
+        type: {
+          id: 0
+        },
+        description: '""',
+        time_forms: null
+      };
+      this.word_id = obj.id || 0;
+      this.new_word = obj.word || '';
+      this.translation_word = obj.translation || '';
+      this.url_image = obj.url_image || '';
+      this.select_type_id = obj.type.id || 0;
+      this.description = obj.description || '""';
+      this.objWordTimeForms = obj.time_forms || null;
     }
   },
   mounted: function mounted() {
@@ -780,7 +784,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var _this3 = this;
       $('#learn_word').modal('hide');
       setTimeout(function () {
-        _this3.$emit('callPreparingDataOpenUpdateWordModal', word);
+        _this3.$emit('callOpenUpdateWordModal', word);
       }, 500);
     }
   },
@@ -1468,48 +1472,7 @@ var render = function render() {
         value: type.id
       }
     }, [_vm._v("\n                                            " + _vm._s(type.type) + "\n                                        ")]);
-  }), 0)]), _vm._v(" "), _vm.objUpdateWord !== null && _vm.objUpdateWord.time_forms !== null && !_vm.objWordFromTable.bool_click_button_word_from_table ? _c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        _vm.objWordFromTable.bool_click_button_word_from_table = true;
-      }
-    }
-  }, [_vm._v("Добавить этот тип слову из таблицы")]) : _vm._e(), _vm._v(" "), _vm.objWordFromTable.bool_click_button_word_from_table ? _c("div", {
-    staticClass: "box-input-add-type-word-from-table"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.objWordFromTable.word,
-      expression: "objWordFromTable.word"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Insert word"
-    },
-    domProps: {
-      value: _vm.objWordFromTable.word
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.objWordFromTable, "word", $event.target.value);
-      }
-    }
-  }), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: _vm.addTypeWordFromTable
-    }
-  }, [_vm._v("Добавить")])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "desc_type"
   }, [_c("div", {
     staticClass: "text"
@@ -1739,6 +1702,19 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "box-sentences"
+  }, _vm._l(_vm.arrSentences, function (sentence, key) {
+    return _c("div", {
+      key: key
+    }, [_vm._v("\n                                " + _vm._s(sentence.sentence) + "\n                            ")]);
+  }), 0), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "checkbox",
+      "data-toggle": "toggle",
+      "data-on": "Enabled",
+      "data-off": "Disabled"
+    }
+  }), _vm._v(" "), _c("div", {
     staticClass: "button_footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -1757,7 +1733,7 @@ var render = function render() {
     ref: "modalLearnWord",
     on: {
       callInitialData: _vm.initialData,
-      callPreparingDataOpenUpdateWordModal: _vm.preparingDataOpenUpdateWordModal
+      callOpenUpdateWordModal: _vm.openUpdateWordModal
     }
   })], 1);
 };
@@ -2339,7 +2315,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#update_word .modal-body .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

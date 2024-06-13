@@ -59,6 +59,14 @@ class SentenceController extends Controller
         return new ApiResponse(compact('string'));
     }
 
+    public function searchSentences(SearchWordRequest $request): ApiResponse
+    {
+        $sentences = Sentence::where('sentence', 'like', '%' . $request['word'] . '%')
+            ->get();
+
+        return new ApiResponse(compact('sentences'));
+    }
+
     public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse
     {
         if($request['status']){

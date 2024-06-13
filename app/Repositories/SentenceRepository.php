@@ -61,7 +61,13 @@ class SentenceRepository extends CoreRepository
         // добавить слова которых нет
         foreach ($words as $key => $word){
             // Удаляем пробелы и точки из слова
-            $cleanedWord = str_replace([' ', '.'], '', $word);
+            $cleanedWord = str_replace([' ', '.', '?', '!', ',', ':'], '', $word);
+
+            // Проверяем наличие слова в массиве запрещенных слов
+            $forbiddenWords = ['are', 'is', 'a', 'an'];
+            if (in_array($cleanedWord, $forbiddenWords)) {
+                continue;
+            }
 
             Word::firstOrCreate(
                 ['word' => $cleanedWord],
