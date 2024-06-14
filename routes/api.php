@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\WordController;
 use \App\Http\Controllers\SentenceController;
 use \App\Http\Controllers\LearnWordsController;
+use \App\Http\Controllers\GeneratingSentencesAiController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -24,5 +25,8 @@ Route::get('sentence/search-word', [SentenceController::class, 'searchWord']);
 Route::post('sentence/search-sentences', [SentenceController::class, 'searchSentences']);
 Route::post('sentence/bind-checkbox-sound', [SentenceController::class, 'bindCheckboxSound']);
 
-// 2
+// 3
 Route::post('learn/get-word', [LearnWordsController::class, 'getLearnWord']);
+
+// 3
+Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence']);

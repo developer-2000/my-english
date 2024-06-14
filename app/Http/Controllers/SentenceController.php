@@ -26,6 +26,11 @@ class SentenceController extends Controller
         $this->sentenceRepository = new SentenceRepository();
     }
 
+    /**
+     * Общая выборка предложений с указаной сортировкой в пагинации
+     * @param SelectGetPaginateRequest $request
+     * @return ApiResponse
+     */
     public function index(SelectGetPaginateRequest $request): ApiResponse
     {
         $sentences = $this->sentenceRepository->getSentences($request->validated());
@@ -33,6 +38,11 @@ class SentenceController extends Controller
         return new ApiResponse(compact('sentences'));
     }
 
+    /**
+     * Записывает новое предложение и слова из предложения с переводом
+     * @param CreateSentenceRequest $request
+     * @return ApiResponse
+     */
     public function store(CreateSentenceRequest $request): ApiResponse
     {
         $this->sentenceRepository->storeSentences($request->validated());
@@ -40,6 +50,11 @@ class SentenceController extends Controller
         return new ApiResponse([]);
     }
 
+    /**
+     * Обновляет предложение и его перевод
+     * @param UpdateSentenceRequest $request
+     * @return ApiResponse
+     */
     public function update(UpdateSentenceRequest $request): ApiResponse
     {
         $coll = Sentence::where('id',$request['id'])
@@ -48,6 +63,11 @@ class SentenceController extends Controller
         return new ApiResponse(compact('coll'));
     }
 
+    /**
+     * Выдает все слова в которых участвует указанный набор символов
+     * @param SearchWordRequest $request
+     * @return ApiResponse
+     */
     public function searchWord(SearchWordRequest $request): ApiResponse
     {
         $coll = Word::where('word', 'like', $request['word'] . '%')
@@ -59,6 +79,11 @@ class SentenceController extends Controller
         return new ApiResponse(compact('string'));
     }
 
+    /**
+     * Выдает все предложения в которых участвует указанное слово
+     * @param SearchWordRequest $request
+     * @return ApiResponse
+     */
     public function searchSentences(SearchWordRequest $request): ApiResponse
     {
         $sentences = Sentence::where('sentence', 'like', '%' . $request['word'] . '%')

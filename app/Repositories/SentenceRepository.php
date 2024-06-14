@@ -13,9 +13,8 @@ class SentenceRepository extends CoreRepository
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('sound');
 
-        // search Найти все элементы в строке базы
+        // 1 Найти все предложения в которых есть все указанные слова
         $searchArray = $vars['search'] ?? [];
-
         if (!empty($searchArray) && !empty($searchArray[0])) {
             // word language
             if($language = $this->getLanguage($searchArray[0])){
@@ -27,15 +26,17 @@ class SentenceRepository extends CoreRepository
             }
         }
 
+        // 2 количество выбранных обьектов
         $total_count = $collection->get()->count();
 
-        // sort
+        // 3 Сортируем если указана сортировка
         if ($vars['sort_column'] && $vars['sort_type']) {
+            // по предложению
             if ($vars['sort_column'] == 'sentence') {
                 $collection = $collection
                     ->orderBy('sentence', $vars['sort_type']);
             }
-            // сортировка checkbox по имеющейся связи
+            // по чекбоксам озвучки предложений
             elseif ($vars['sort_column'] == 'sound') {
                 $collection = $this->startConditions()
                     ->leftJoin('sentence_sounds', 'sentences.id', '=', 'sentence_sounds.sentence_id')
@@ -44,7 +45,7 @@ class SentenceRepository extends CoreRepository
             }
         }
 
-        // paginate
+        // 4 Выбрать в пагинации
         $list = $collection
             ->skip($vars['offset'])->take($vars['limit'])
             ->orderBy('id', 'desc')

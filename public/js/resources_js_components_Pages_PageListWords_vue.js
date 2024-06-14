@@ -1,4 +1,3 @@
-"use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_components_Pages_PageListWords_vue"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Pages/PageListWords.vue?vue&type=script&lang=js":
@@ -7,20 +6,26 @@
   \*************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var tippy_js_themes_light_border_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tippy.js/themes/light-border.css */ "./node_modules/tippy.js/themes/light-border.css");
 /* harmony import */ var vue_tippy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-tippy */ "./node_modules/vue-tippy/dist/vue-tippy.esm.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-good-table/dist/vue-good-table.css */ "./node_modules/vue-good-table/dist/vue-good-table.css");
-/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
+/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
 /* harmony import */ var _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../mixins/good_table_mixin */ "./resources/js/mixins/good_table_mixin.js");
 /* harmony import */ var _mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../mixins/response_methods_mixin */ "./resources/js/mixins/response_methods_mixin.js");
 /* harmony import */ var _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../mixins/help_search_word_mixin */ "./resources/js/mixins/help_search_word_mixin.js");
 /* harmony import */ var _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../details/HelpSearchWord */ "./resources/js/components/details/HelpSearchWord.vue");
 /* harmony import */ var _details_ModalLearnWord__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../details/ModalLearnWord */ "./resources/js/components/details/ModalLearnWord.vue");
+/* harmony import */ var bootstrap_toggle_js_bootstrap_toggle_min_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! bootstrap-toggle/js/bootstrap-toggle.min.js */ "./node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js");
+/* harmony import */ var bootstrap_toggle_js_bootstrap_toggle_min_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(bootstrap_toggle_js_bootstrap_toggle_min_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var bootstrap_toggle_css_bootstrap_toggle_min_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! bootstrap-toggle/css/bootstrap-toggle.min.css */ "./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_10__);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -40,9 +45,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 // components
 
+
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      status_toggle: false,
       bool_learn_words: false,
       // bool открытия модалки изучения слов
       word_id: 0,
@@ -146,7 +155,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"]],
   components: {
-    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_8__.VueGoodTable,
+    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_11__.VueGoodTable,
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_6__["default"],
     ModalLearnWord: _details_ModalLearnWord__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
@@ -174,8 +183,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.initialData();
-                $('#create_word').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
+                jquery__WEBPACK_IMPORTED_MODULE_10___default()('#create_word').modal('hide');
+                jquery__WEBPACK_IMPORTED_MODULE_10___default()('.modal-backdrop.fade.show').remove();
               }
               _context.next = 11;
               break;
@@ -214,8 +223,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               response = _context2.sent;
               if (_this2.checkSuccess(response)) {
                 _this2.initialData();
-                $('#update_word').modal('hide');
-                $('.modal-backdrop.fade.show').remove();
+                jquery__WEBPACK_IMPORTED_MODULE_10___default()('#update_word').modal('hide');
+                jquery__WEBPACK_IMPORTED_MODULE_10___default()('.modal-backdrop.fade.show').remove();
               }
               _context2.next = 12;
               break;
@@ -331,6 +340,46 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee5, null, [[1, 8]]);
       }))();
     },
+    loadGenerateSentences: function loadGenerateSentences() {
+      var _this6 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var data, response;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              data = {
+                arr_words: Array.isArray(_this6.new_word) ? _this6.new_word : [_this6.new_word]
+              }; // let data = {
+              //     arr_words: this.new_word,
+              // };
+              // // Если строка создаем массив с этим элементом, продублировав его 5 раз
+              // if (typeof this.new_word === 'string') {
+              //     data = {
+              //         arr_words: Array(5).fill(this.new_word),
+              //     };
+              // }
+              console.log(data);
+              _context6.prev = 2;
+              _context6.next = 5;
+              return _this6.$http.post("".concat(_this6.$http.apiUrl(), "ai/generate-sentences"), data);
+            case 5:
+              response = _context6.sent;
+              if (_this6.checkSuccess(response)) {
+                console.log(response.data.data.sentences);
+              }
+              _context6.next = 12;
+              break;
+            case 9:
+              _context6.prev = 9;
+              _context6.t0 = _context6["catch"](2);
+              console.log(_context6.t0);
+            case 12:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, null, [[2, 9]]);
+      }))();
+    },
     touchNewWord: function touchNewWord() {
       this.$v.new_word.$touch();
     },
@@ -395,19 +444,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this6 = this;
+      var _this7 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
         document.querySelectorAll("#vgt-table .btn_block_column").forEach(function (tag) {
-          prev = $(tag).prev();
+          prev = jquery__WEBPACK_IMPORTED_MODULE_10___default()(tag).prev();
           // нет слова в столбце
           if (prev.text() == '') {
-            $(tag).parent().css('display', 'none');
+            jquery__WEBPACK_IMPORTED_MODULE_10___default()(tag).parent().css('display', 'none');
           }
           // преобразовать слово в столбце
           else {
-            row = _this6.getRowForWord(prev.text());
+            row = _this7.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -417,22 +466,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 'font-weight': 'bold'
               });
             }
-            $(tag).parent().css('display', 'flex');
+            jquery__WEBPACK_IMPORTED_MODULE_10___default()(tag).parent().css('display', 'flex');
           }
         });
       }, 500);
     },
     // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this7 = this;
-      $('body').on('mouseover', '.trigger', function (event) {
-        _this7.outputHelperAlertInTable(event);
+      var _this8 = this;
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('body').on('mouseover', '.trigger', function (event) {
+        _this8.outputHelperAlertInTable(event);
       });
     },
     // вывод подсказки при наведении на слово в таблице
     outputHelperAlertInTable: function outputHelperAlertInTable(event) {
       // выбрать колекцию слова
-      var row = this.getRowForWord($(event.target).text());
+      var row = this.getRowForWord(jquery__WEBPACK_IMPORTED_MODULE_10___default()(event.target).text());
       if (row == null) {
         return false;
       }
@@ -449,7 +498,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
 
       // Получить ссылку на экземпляр tippy
-      var instance = $(event.target)[0]._tippy;
+      var instance = jquery__WEBPACK_IMPORTED_MODULE_10___default()(event.target)[0]._tippy;
       // Если экземпляр tippy существует, обновить его содержимое
       if (instance) {
         instance.setContent(html);
@@ -464,12 +513,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this8 = this;
+      var _this9 = this;
       // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this8.allTypes.length; i++) {
-          if (_this8.allTypes[i].id === _this8.select_type_id) {
-            _this8.setStyleDataModal(_this8.allTypes[i]);
+        for (var i = 0; i < _this9.allTypes.length; i++) {
+          if (_this9.allTypes[i].id === _this9.select_type_id) {
+            _this9.setStyleDataModal(_this9.allTypes[i]);
             break;
           }
         }
@@ -477,9 +526,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this8.allTypes.length; i++) {
-          if (_this8.allTypes[i].id == _this8.select_type_id) {
-            _this8.setStyleDataModal(_this8.allTypes[i]);
+        for (var i = 0; i < _this9.allTypes.length; i++) {
+          if (_this9.allTypes[i].id == _this9.select_type_id) {
+            _this9.setStyleDataModal(_this9.allTypes[i]);
             break;
           }
         }
@@ -517,42 +566,42 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           this.objWordTimeForms = type.description['object'];
         }
       }
-      $('.desc_type').css('border-color', type.color);
-      $('.desc_type .text').html(string);
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('.desc_type').css('border-color', type.color);
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('.desc_type .text').html(string);
     },
     // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this9 = this;
+      var _this10 = this;
       var a = setTimeout(function () {
         // удалить
-        $('.btn-danger.delete').bind('click', function (e) {
-          var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
+        jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-danger.delete').bind('click', function (e) {
+          var queryObj = jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target).prop("tagName") !== "A" ? jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target).parent() : jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this9.getRowForWord(word);
+          var row = _this10.getRowForWord(word);
           // confirm delete
-          _this9.confirmMessage('Really delete word ?', 'success', row.id);
+          _this10.confirmMessage('Really delete word ?', 'success', row.id);
         });
         // редактировать
-        $('.btn-warning.edit').bind('click', function (e) {
-          var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
+        jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-warning.edit').bind('click', function (e) {
+          var queryObj = jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target).prop("tagName") !== "A" ? jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target).parent() : jquery__WEBPACK_IMPORTED_MODULE_10___default()(e.target);
           var word = queryObj.parent().prev(".trigger").text();
           // открытие модалки редактирования
-          _this9.openUpdateWordModal(word);
+          _this10.openUpdateWordModal(word);
         });
       }, 1000);
     },
     // Открыть модалку создания
     openModalCreateWord: function openModalCreateWord() {
-      var _this10 = this;
+      var _this11 = this;
       this.setVariableDefault();
       this.setStyleDataModal({
         description: null,
         type: '',
         color: 'black'
       });
-      $('#create_word').modal('show');
-      $('#create_word').on('shown.bs.modal', function () {
-        _this10.$refs.new_word.focus();
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('#create_word').modal('show');
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('#create_word').on('shown.bs.modal', function () {
+        _this11.$refs.new_word.focus();
       });
     },
     // Открыть модалку редактирования
@@ -563,17 +612,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.setStyleDataModal(row.type);
       this.setVariableDefault(row);
       this.searchSentences(word);
-      $('#update_word').modal('show');
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('#update_word').modal('show');
     },
     // Открыть модалку изучения слова
     openLearnModal: function openLearnModal() {
-      var _this11 = this;
+      var _this12 = this;
       // Вызов openLearnModal у дочернего компонента через референцию
       this.$refs.modalLearnWord.openLearnModal();
       this.bool_learn_words = true;
       // событие закрытия модалки
-      $('#learn_word').on('hidden.bs.modal', function () {
-        _this11.bool_learn_words = false;
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()('#learn_word').on('hidden.bs.modal', function () {
+        _this12.bool_learn_words = false;
       });
     },
     // заполнение переменных для модалок создания и редактирования слова
@@ -596,29 +645,72 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.select_type_id = obj.type.id || 0;
       this.description = obj.description || '""';
       this.objWordTimeForms = obj.time_forms || null;
+    },
+    // инициализация toggle
+    initialiseToggle: function initialiseToggle() {
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).bootstrapToggle();
+      // Устанавливаем стили после инициализации
+      this.setToggleStyles();
+      // Добавляем обработчик событий для вывода значения в консоль
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).change(this.logToggleState);
+    },
+    // задает CSS кнопке переключателю toggle
+    setToggleStyles: function setToggleStyles() {
+      var toggleElement = this.$refs.toggle;
+      var parentDiv = toggleElement.closest('.toggle');
+      if (parentDiv) {
+        parentDiv.style.minWidth = '101px';
+        parentDiv.style.minHeight = '50px';
+        var handle = parentDiv.querySelector('.toggle-handle');
+        if (handle) {
+          handle.style.minWidth = '19px';
+          handle.style.border = '1px solid #ccc';
+          handle.style.padding = '0';
+        }
+        handle = parentDiv.querySelector('.toggle-off');
+        if (handle) {
+          handle.style.paddingLeft = '5px';
+          handle.style.paddingLeft = '20px';
+          handle.style.lineHeight = '18px';
+        }
+        handle = parentDiv.querySelector('.toggle-on');
+        if (handle) {
+          handle.style.paddingRight = '21px';
+          handle.style.lineHeight = '18px';
+        }
+      }
+    },
+    // при изменении toggle
+    logToggleState: function logToggleState(event) {
+      this.status_toggle = jquery__WEBPACK_IMPORTED_MODULE_10___default()(event.target).prop('checked');
     }
   },
   mounted: function mounted() {
-    var _this12 = this;
+    var _this13 = this;
     this.initialData();
-    $(".modal").on("hidden.bs.modal", function () {
-      _this12.help_dynamic = "";
-      _this12.objWordFromTable.bool_click_button_word_from_table = false;
-      _this12.objUpdateWord = null;
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()(".modal").on("hidden.bs.modal", function () {
+      _this13.help_dynamic = "";
+      _this13.objWordFromTable.bool_click_button_word_from_table = false;
+      _this13.objUpdateWord = null;
     });
+    this.initialiseToggle();
+    this.status_toggle = jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).prop('checked');
   },
   beforeDestroy: function beforeDestroy() {
-    $('.btn-warning').unbind('click');
-    $('.btn-danger').unbind('click');
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-warning').unbind('click');
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-danger').unbind('click');
+
+    // Удаляем инициализацию перед уничтожением компонента
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).bootstrapToggle('destroy');
   },
   validations: {
     new_word: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_9__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_9__.minLength)(1)
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
+      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(1)
     },
     translation_word: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_9__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_9__.minLength)(1)
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
+      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(1)
     }
   },
   name: "PageListWords.vue"
@@ -632,6 +724,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   \****************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -652,6 +745,7 @@ __webpack_require__.r(__webpack_exports__);
   \****************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -800,6 +894,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   \************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* binding */ render),
@@ -1280,7 +1375,9 @@ var render = function render() {
         _vm.description = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("div", {
     staticClass: "button_footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -1295,7 +1392,7 @@ var render = function render() {
     on: {
       click: _vm.createWord
     }
-  }, [_vm._v("Save")])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Save")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
       id: "update_word",
@@ -1702,21 +1799,28 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "box-content-sentences"
+  }, [_c("div", {
     staticClass: "box-sentences"
   }, _vm._l(_vm.arrSentences, function (sentence, key) {
     return _c("div", {
       key: key
-    }, [_vm._v("\n                                " + _vm._s(sentence.sentence) + "\n                            ")]);
+    }, [_vm._v("\n                                    " + _vm._s(sentence.sentence) + "\n                                ")]);
   }), 0), _vm._v(" "), _c("input", {
+    ref: "toggle",
+    staticClass: "toggle-input",
     attrs: {
       type: "checkbox",
       "data-toggle": "toggle",
-      "data-on": "Enabled",
-      "data-off": "Disabled"
+      "data-on": "Add Sentences",
+      "data-off": "No Sentences",
+      checked: ""
     }
-  }), _vm._v(" "), _c("div", {
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("div", {
     staticClass: "button_footer"
-  }, [_c("button", {
+  }, [!_vm.status_toggle ? _c("button", {
     staticClass: "btn btn-primary",
     "class": {
       un_active: _vm.$v.$invalid,
@@ -1729,7 +1833,22 @@ var render = function render() {
     on: {
       click: _vm.updateWord
     }
-  }, [_vm._v("Update")])])])])])])]), _vm._v(" "), _c("ModalLearnWord", {
+  }, [_vm._v("Update")]) : _c("button", {
+    staticClass: "btn btn-success",
+    "class": {
+      un_active: _vm.$v.$invalid,
+      active2: !_vm.$v.$invalid
+    },
+    attrs: {
+      type: "button",
+      disabled: _vm.$v.$invalid
+    },
+    on: {
+      click: function click($event) {
+        return _vm.loadGenerateSentences();
+      }
+    }
+  }, [_vm._v("Next")])])])])])]), _vm._v(" "), _c("ModalLearnWord", {
     ref: "modalLearnWord",
     on: {
       callInitialData: _vm.initialData,
@@ -1787,6 +1906,7 @@ render._withStripped = true;
   \***************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* binding */ render),
@@ -1814,6 +1934,7 @@ render._withStripped = true;
   \***************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* binding */ render),
@@ -1951,6 +2072,7 @@ render._withStripped = true;
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2048,6 +2170,7 @@ __webpack_require__.r(__webpack_exports__);
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2140,6 +2263,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2207,12 +2331,55 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js ***!
+  \******************************************************************/
+/***/ (() => {
+
+/*! ========================================================================
+ * Bootstrap Toggle: bootstrap-toggle.js v2.2.0
+ * http://www.bootstraptoggle.com
+ * ========================================================================
+ * Copyright 2014 Min Hur, The New York Times Company
+ * Licensed under MIT
+ * ======================================================================== */
++function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.toggle"),f="object"==typeof b&&b;e||d.data("bs.toggle",e=new c(this,f)),"string"==typeof b&&e[b]&&e[b]()})}var c=function(b,c){this.$element=a(b),this.options=a.extend({},this.defaults(),c),this.render()};c.VERSION="2.2.0",c.DEFAULTS={on:"On",off:"Off",onstyle:"primary",offstyle:"default",size:"normal",style:"",width:null,height:null},c.prototype.defaults=function(){return{on:this.$element.attr("data-on")||c.DEFAULTS.on,off:this.$element.attr("data-off")||c.DEFAULTS.off,onstyle:this.$element.attr("data-onstyle")||c.DEFAULTS.onstyle,offstyle:this.$element.attr("data-offstyle")||c.DEFAULTS.offstyle,size:this.$element.attr("data-size")||c.DEFAULTS.size,style:this.$element.attr("data-style")||c.DEFAULTS.style,width:this.$element.attr("data-width")||c.DEFAULTS.width,height:this.$element.attr("data-height")||c.DEFAULTS.height}},c.prototype.render=function(){this._onstyle="btn-"+this.options.onstyle,this._offstyle="btn-"+this.options.offstyle;var b="large"===this.options.size?"btn-lg":"small"===this.options.size?"btn-sm":"mini"===this.options.size?"btn-xs":"",c=a('<label class="btn">').html(this.options.on).addClass(this._onstyle+" "+b),d=a('<label class="btn">').html(this.options.off).addClass(this._offstyle+" "+b+" active"),e=a('<span class="toggle-handle btn btn-default">').addClass(b),f=a('<div class="toggle-group">').append(c,d,e),g=a('<div class="toggle btn" data-toggle="toggle">').addClass(this.$element.prop("checked")?this._onstyle:this._offstyle+" off").addClass(b).addClass(this.options.style);this.$element.wrap(g),a.extend(this,{$toggle:this.$element.parent(),$toggleOn:c,$toggleOff:d,$toggleGroup:f}),this.$toggle.append(f);var h=this.options.width||Math.max(c.outerWidth(),d.outerWidth())+e.outerWidth()/2,i=this.options.height||Math.max(c.outerHeight(),d.outerHeight());c.addClass("toggle-on"),d.addClass("toggle-off"),this.$toggle.css({width:h,height:i}),this.options.height&&(c.css("line-height",c.height()+"px"),d.css("line-height",d.height()+"px")),this.update(!0),this.trigger(!0)},c.prototype.toggle=function(){this.$element.prop("checked")?this.off():this.on()},c.prototype.on=function(a){return this.$element.prop("disabled")?!1:(this.$toggle.removeClass(this._offstyle+" off").addClass(this._onstyle),this.$element.prop("checked",!0),void(a||this.trigger()))},c.prototype.off=function(a){return this.$element.prop("disabled")?!1:(this.$toggle.removeClass(this._onstyle).addClass(this._offstyle+" off"),this.$element.prop("checked",!1),void(a||this.trigger()))},c.prototype.enable=function(){this.$toggle.removeAttr("disabled"),this.$element.prop("disabled",!1)},c.prototype.disable=function(){this.$toggle.attr("disabled","disabled"),this.$element.prop("disabled",!0)},c.prototype.update=function(a){this.$element.prop("disabled")?this.disable():this.enable(),this.$element.prop("checked")?this.on(a):this.off(a)},c.prototype.trigger=function(b){this.$element.off("change.bs.toggle"),b||this.$element.change(),this.$element.on("change.bs.toggle",a.proxy(function(){this.update()},this))},c.prototype.destroy=function(){this.$element.off("change.bs.toggle"),this.$toggleGroup.remove(),this.$element.removeData("bs.toggle"),this.$element.unwrap()};var d=a.fn.bootstrapToggle;a.fn.bootstrapToggle=b,a.fn.bootstrapToggle.Constructor=c,a.fn.toggle.noConflict=function(){return a.fn.bootstrapToggle=d,this},a(function(){a("input[type=checkbox][data-toggle^=toggle]").bootstrapToggle()}),a(document).on("click.bs.toggle","div[data-toggle^=toggle]",function(b){var c=a(this).find("input[type=checkbox]");c.bootstrapToggle("toggle"),b.preventDefault()})}(jQuery);
+//# sourceMappingURL=bootstrap-toggle.min.js.map
+
+/***/ }),
+
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "/*! ========================================================================\n * Bootstrap Toggle: bootstrap-toggle.css v2.2.0\n * http://www.bootstraptoggle.com\n * ========================================================================\n * Copyright 2014 Min Hur, The New York Times Company\n * Licensed under MIT\n * ======================================================================== */\n.checkbox label .toggle,.checkbox-inline .toggle{margin-left:-20px;margin-right:5px}\n.toggle{position:relative;overflow:hidden}\n.toggle input[type=checkbox]{display:none}\n.toggle-group{position:absolute;width:200%;top:0;bottom:0;left:0;transition:left .35s;-webkit-transition:left .35s;-moz-user-select:none;-webkit-user-select:none}\n.toggle.off .toggle-group{left:-100%}\n.toggle-on{position:absolute;top:0;bottom:0;left:0;right:50%;margin:0;border:0;border-radius:0}\n.toggle-off{position:absolute;top:0;bottom:0;left:50%;right:0;margin:0;border:0;border-radius:0}\n.toggle-handle{position:relative;margin:0 auto;padding-top:0;padding-bottom:0;height:100%;width:0;border-width:0 1px}\n.toggle.btn{min-width:59px;min-height:34px}\n.toggle-on.btn{padding-right:24px}\n.toggle-off.btn{padding-left:24px}\n.toggle.btn-lg{min-width:79px;min-height:45px}\n.toggle-on.btn-lg{padding-right:31px}\n.toggle-off.btn-lg{padding-left:31px}\n.toggle-handle.btn-lg{width:40px}\n.toggle.btn-sm{min-width:50px;min-height:30px}\n.toggle-on.btn-sm{padding-right:20px}\n.toggle-off.btn-sm{padding-left:20px}\n.toggle.btn-xs{min-width:35px;min-height:22px}\n.toggle-on.btn-xs{padding-right:12px}\n.toggle-off.btn-xs{padding-left:12px}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
   \**********************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2236,6 +2403,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".swal2-popup.swal2-toast{box-sizing:bo
   \******************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2259,6 +2427,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".tippy-tooltip.light-border-theme{back
   \************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2282,6 +2451,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n\n\n\n\n.vgt-table.striped tbody tr:
   \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2305,6 +2475,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n.help_search_words[data-v-6a7b12ea]{
   \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2315,7 +2486,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n.box-time-forms .box-past input[data-v-461a95d4], .box-time-forms .box-present input[data-v-461a95d4], .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n.box-time-forms .box-past input[data-v-461a95d4]:last-child, .box-time-forms .box-present input[data-v-461a95d4]:last-child, .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#update_word .modal-body .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2328,6 +2499,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".box-time-forms label[data-v-461a95d4]
   \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2351,6 +2523,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "#learn_word .custom-modal[data-v-41306
   \******************************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /*
@@ -2420,12 +2593,43 @@ module.exports = function (cssWithMappingToString) {
 
 /***/ }),
 
+/***/ "./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css":
+/*!********************************************************************!*\
+  !*** ./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_bootstrap_toggle_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./bootstrap-toggle.min.css */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_bootstrap_toggle_min_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_bootstrap_toggle_min_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!***********************************************************!*\
   !*** ./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
   \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2455,6 +2659,7 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2484,6 +2689,7 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
   \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2513,6 +2719,7 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
   \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2542,6 +2749,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
   \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2571,6 +2779,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
   \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2600,6 +2809,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
   \****************************************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 var isOldIE = function isOldIE() {
@@ -2878,6 +3088,7 @@ module.exports = function (list, options) {
   \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   VueGoodTable: () => (/* binding */ __vue_component__$6),
@@ -13137,6 +13348,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13177,6 +13389,7 @@ component.options.__file = "resources/js/components/Pages/PageListWords.vue"
   \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13217,6 +13430,7 @@ component.options.__file = "resources/js/components/details/HelpSearchWord.vue"
   \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13257,6 +13471,7 @@ component.options.__file = "resources/js/components/details/ModalLearnWord.vue"
   \*********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13272,6 +13487,7 @@ __webpack_require__.r(__webpack_exports__);
   \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13287,6 +13503,7 @@ __webpack_require__.r(__webpack_exports__);
   \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13302,6 +13519,7 @@ __webpack_require__.r(__webpack_exports__);
   \***************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PageListWords_vue_vue_type_template_id_461a95d4_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render),
@@ -13318,6 +13536,7 @@ __webpack_require__.r(__webpack_exports__);
   \******************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HelpSearchWord_vue_vue_type_template_id_6a7b12ea_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render),
@@ -13334,6 +13553,7 @@ __webpack_require__.r(__webpack_exports__);
   \******************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalLearnWord_vue_vue_type_template_id_413063d9_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render),
@@ -13350,6 +13570,7 @@ __webpack_require__.r(__webpack_exports__);
   \********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_HelpSearchWord_vue_vue_type_style_index_0_id_6a7b12ea_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./HelpSearchWord.vue?vue&type=style&index=0&id=6a7b12ea&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/details/HelpSearchWord.vue?vue&type=style&index=0&id=6a7b12ea&scoped=true&lang=css");
 
@@ -13362,6 +13583,7 @@ __webpack_require__.r(__webpack_exports__);
   \******************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_PageListWords_vue_vue_type_style_index_0_id_461a95d4_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PageListWords.vue?vue&type=style&index=0&id=461a95d4&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Pages/PageListWords.vue?vue&type=style&index=0&id=461a95d4&lang=scss&scoped=true");
 
@@ -13374,6 +13596,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalLearnWord_vue_vue_type_style_index_0_id_413063d9_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ModalLearnWord.vue?vue&type=style&index=0&id=413063d9&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/details/ModalLearnWord.vue?vue&type=style&index=0&id=413063d9&lang=scss&scoped=true");
 
@@ -13386,6 +13609,7 @@ __webpack_require__.r(__webpack_exports__);
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ normalizeComponent)
@@ -13496,6 +13720,7 @@ function normalizeComponent(
   \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13517,6 +13742,7 @@ exports["default"] = _default;
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13538,6 +13764,7 @@ exports["default"] = _default;
   \******************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13577,6 +13804,7 @@ exports["default"] = _default;
   \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13606,6 +13834,7 @@ exports["default"] = _default;
   \*********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13689,6 +13918,7 @@ exports.regex = regex;
   \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13710,6 +13940,7 @@ exports["default"] = _default;
   \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13733,6 +13964,7 @@ exports["default"] = _default;
   \********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -13928,6 +14160,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -13949,6 +14182,7 @@ exports["default"] = _default;
   \************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14000,6 +14234,7 @@ var nibbleValid = function nibbleValid(nibble) {
   \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14041,6 +14276,7 @@ var hexValid = function hexValid(hex) {
   \************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14069,6 +14305,7 @@ exports["default"] = _default;
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14097,6 +14334,7 @@ exports["default"] = _default;
   \************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14125,6 +14363,7 @@ exports["default"] = _default;
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14153,6 +14392,7 @@ exports["default"] = _default;
   \******************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14180,6 +14420,7 @@ exports["default"] = _default;
   \**********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14201,6 +14442,7 @@ exports["default"] = _default;
   \*****************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14240,6 +14482,7 @@ exports["default"] = _default;
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14269,6 +14512,7 @@ exports["default"] = _default;
   \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14297,6 +14541,7 @@ exports["default"] = _default;
   \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14325,6 +14570,7 @@ exports["default"] = _default;
   \*********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14353,6 +14599,7 @@ exports["default"] = _default;
   \******************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -14376,6 +14623,7 @@ exports["default"] = _default;
   \**************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 /* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
@@ -14395,6 +14643,7 @@ exports["default"] = _default;
   \*********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({

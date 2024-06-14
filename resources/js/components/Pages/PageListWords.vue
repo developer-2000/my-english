@@ -179,16 +179,18 @@
                                 <label for="word_description" class="col-form-label">Word description</label>
                                 <textarea v-model="description" class="form-control" id="word_description" placeholder="Insert description word"></textarea>
                             </div>
-
-                            <!-- button save -->
-                            <div class="button_footer">
-                                <button type="button" class="btn btn-primary"
-                                        :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
-                                        @click="createWord"
-                                >Save</button>
-                            </div>
                         </form>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <!-- button save -->
+                        <div class="button_footer">
+                            <button type="button" class="btn btn-primary"
+                                    :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                    :disabled="$v.$invalid"
+                                    @click="createWord"
+                            >Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,12 +200,14 @@
         <div class="modal fade" id="update_word" tabindex="-1" role="dialog" aria-labelledby="update_word" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
+                    <!-- header -->
                     <div class="modal-header">
                         <h5 class="modal-title">Update word</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <!-- body -->
                     <div class="modal-body">
                         <form action="#">
                             <!-- word -->
@@ -311,24 +315,47 @@
                                 <textarea v-model="description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
                             </div>
 
-                            <!-- предложения этого слова -->
-                            <div class="box-sentences">
-                                <div v-for="(sentence, key) in arrSentences" :key="key">
-                                    {{sentence.sentence}}
+                            <!-- Предложения -->
+                            <div class="box-content-sentences">
+                                <!-- предложения этого слова -->
+                                <div class="box-sentences">
+                                    <div v-for="(sentence, key) in arrSentences" :key="key">
+                                        {{sentence.sentence}}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
-
-                            <!-- button save -->
-                            <div class="button_footer">
-                                <button type="button" class="btn btn-primary"
-                                        :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
-                                        @click="updateWord"
-                                >Update</button>
+                                <!-- переключатель добавления предложений -->
+                                <input
+                                    type="checkbox"
+                                    ref="toggle"
+                                    data-toggle="toggle"
+                                    data-on="Add Sentences"
+                                    data-off="No Sentences"
+                                    class="toggle-input"
+                                    checked
+                                />
                             </div>
                         </form>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <!-- button save -->
+                        <div class="button_footer">
+                            <!-- save -->
+                            <button type="button" class="btn btn-primary"
+                                    :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                    :disabled="$v.$invalid"
+                                    @click="updateWord"
+                                    v-if="!status_toggle"
+                            >Update</button>
+                            <!-- next to generate sentences-->
+                            <button type="button" class="btn btn-success"
+                                    :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                    :disabled="$v.$invalid"
+                                    @click="loadGenerateSentences()"
+                                    v-else
+                            >Next</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -361,9 +388,14 @@
     // components
     import ModalLearnWord from "../details/ModalLearnWord";
 
+    import 'bootstrap-toggle/js/bootstrap-toggle.min.js';
+    import 'bootstrap-toggle/css/bootstrap-toggle.min.css';
+    import $ from 'jquery';
+
     export default {
         data() {
             return {
+                status_toggle: false,
                 bool_learn_words: false, // bool открытия модалки изучения слов
                 word_id: 0,
                 type_id: 0,
@@ -587,6 +619,33 @@
                     const response = await this.$http.post(`${this.$http.apiUrl()}sentence/search-sentences`, data);
                     if(this.checkSuccess(response)){
                         this.arrSentences = response.data.data.sentences
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            async loadGenerateSentences(){
+
+                let data = {
+                    arr_words: Array.isArray(this.new_word) ? this.new_word : [this.new_word],
+                };
+
+                // let data = {
+                //     arr_words: this.new_word,
+                // };
+                // // Если строка создаем массив с этим элементом, продублировав его 5 раз
+                // if (typeof this.new_word === 'string') {
+                //     data = {
+                //         arr_words: Array(5).fill(this.new_word),
+                //     };
+                // }
+
+console.log(data)
+
+                try {
+                    const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
+                    if(this.checkSuccess(response)){
+                        console.log(response.data.data.sentences)
                     }
                 } catch (e) {
                     console.log(e);
@@ -837,6 +896,47 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.description = obj.description || '""';
                 this.objWordTimeForms = obj.time_forms || null;
             },
+            // инициализация toggle
+            initialiseToggle() {
+                $(this.$refs.toggle).bootstrapToggle();
+                // Устанавливаем стили после инициализации
+                this.setToggleStyles();
+                // Добавляем обработчик событий для вывода значения в консоль
+                $(this.$refs.toggle).change(this.logToggleState);
+            },
+            // задает CSS кнопке переключателю toggle
+            setToggleStyles() {
+                const toggleElement = this.$refs.toggle;
+                const parentDiv = toggleElement.closest('.toggle');
+                if (parentDiv) {
+                    parentDiv.style.minWidth = '101px';
+                    parentDiv.style.minHeight = '50px';
+
+                    let handle = parentDiv.querySelector('.toggle-handle');
+                    if (handle) {
+                        handle.style.minWidth = '19px';
+                        handle.style.border = '1px solid #ccc';
+                        handle.style.padding = '0';
+                    }
+
+                    handle = parentDiv.querySelector('.toggle-off');
+                    if (handle) {
+                        handle.style.paddingLeft = '5px';
+                        handle.style.paddingLeft = '20px';
+                        handle.style.lineHeight = '18px';
+                    }
+
+                    handle = parentDiv.querySelector('.toggle-on');
+                    if (handle) {
+                        handle.style.paddingRight = '21px';
+                        handle.style.lineHeight = '18px';
+                    }
+                }
+            },
+            // при изменении toggle
+            logToggleState(event) {
+                this.status_toggle = $(event.target).prop('checked');
+            },
         },
         mounted() {
             this.initialData();
@@ -845,10 +945,15 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.objWordFromTable.bool_click_button_word_from_table = false
                 this.objUpdateWord = null
             })
+            this.initialiseToggle()
+            this.status_toggle = $(this.$refs.toggle).prop('checked');
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');
             $('.btn-danger').unbind('click');
+
+            // Удаляем инициализацию перед уничтожением компонента
+            $(this.$refs.toggle).bootstrapToggle('destroy');
         },
         validations: {
             new_word: {
@@ -866,56 +971,61 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 
 <style lang="scss" scoped>
 
-.box-time-forms{
-    label{
-        padding: 3px 0;
-        margin: 0;
-    }
-    .box-past, .box-present, .box-future{
-        input{
-            margin-bottom: 5px;
-            &:last-child{
-                margin: 0;
-            }
-        }
-    }
-}
-
 #page_list_worlds{
     max-height: calc(100vh - 60px);
     overflow-y: auto;
-    .top-menu{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px 10px 7px;
-        .box-button{
+    .wrapper{
+        .top-menu{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            button{
-                margin-right: 15px;
-                &:last-child{
-                    margin-right: 0;
+            padding: 10px 15px 10px 7px;
+            .box-button{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                button{
+                    margin-right: 15px;
+                    &:last-child{
+                        margin-right: 0;
+                    }
                 }
             }
         }
-    }
-    .content-wrapper{
-        .container-fluid{
-            padding-right: 0;
+        .content-wrapper{
+            .container-fluid{
+                padding-right: 0;
+            }
+            padding-right: 15.5px;
         }
-        padding-right: 15.5px;
     }
-}
-
-#update_word{
-    .modal-body{
-        .box-sentences{
-            div{
-                color: #747474;
-                font-weight: 700;
-                font-size: 13px;
+    .modal{
+        .modal-body{
+            .box-time-forms{
+                label{
+                    padding: 3px 0;
+                    margin: 0;
+                }
+                .box-past, .box-present, .box-future{
+                    input{
+                        margin-bottom: 5px;
+                        &:last-child{
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            .box-content-sentences{
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                .box-sentences{
+                    div{
+                        color: #747474;
+                        font-weight: 700;
+                        font-size: 13px;
+                    }
+                }
             }
         }
     }
