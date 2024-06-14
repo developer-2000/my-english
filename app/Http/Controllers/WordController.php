@@ -7,6 +7,7 @@ use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Sentence;
 use App\Models\Word;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
@@ -35,19 +36,15 @@ class WordController extends Controller
         return new ApiResponse(compact('coll'));
     }
 
+    /**
+     * Обновляет слово и добавляет новые предложения если они сгенерированы
+     * @param UpdateWordRequest $request
+     * @return ApiResponse
+     * @throws \Exception
+     */
     public function update(UpdateWordRequest $request): ApiResponse
     {
-        // Получение экземпляра модели
-        $coll = Word::findOrFail($request['id']);
-
-        // Временное отключение обновления 'updated_at'
-        $coll->timestamps = false;
-
-        // Обновление данных, за исключением столбца 'id'
-        $coll->fill($request->validated())->save();
-
-        // Включение обновления 'updated_at'
-        $coll->timestamps = true;
+        $coll = $this->wordRepository->updateWord($request);
 
         return new ApiResponse(compact('coll'));
     }

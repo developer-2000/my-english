@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\AIStudio\GenerateSentencesRequest;
 use App\Http\Responses\ApiResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class GeneratingSentencesAiController extends Controller
 {
@@ -27,31 +26,19 @@ class GeneratingSentencesAiController extends Controller
         foreach ($words as $word) {
             $response = $this->getSentencesAIStudio($word);
             $individualSentences = $this->processResponse($response);
-            // Проверяем, что предложение не содержит ошибки
+
             foreach ($individualSentences as $sentence) {
                 if (strpos($sentence, 'Error') === false && strpos($sentence, 'Failed') === false) {
-                    $sentences[] = $sentence;
+                    // Переводим предложение на русский язык
+                    $translatedSentence = $this->translateToRussian($sentence);
+                    // Добавляем в массив результатов
+                    $sentences[] = [
+                        'original' => $sentence,
+                        'translated' => $translatedSentence,
+                    ];
                 }
             }
         }
-
-//        foreach ($words as $word) {
-//            $response = $this->getSentencesAIStudio($word);
-//            $individualSentences = $this->processResponse($response);
-//
-//            foreach ($individualSentences as $sentence) {
-//                if (strpos($sentence, 'Error') === false && strpos($sentence, 'Failed') === false) {
-//                    // Переводим предложение на русский язык
-//                    $translatedSentence = $this->translateToRussian($sentence);
-//
-//                    // Добавляем в массив результатов
-//                    $sentences[] = [
-//                        'original' => $sentence,
-//                        'translated' => $translatedSentence,
-//                    ];
-//                }
-//            }
-//        }
 
         return new ApiResponse(compact('sentences'));
     }
@@ -117,20 +104,20 @@ class GeneratingSentencesAiController extends Controller
         return $cleanedSentences;
     }
 
-//    /**
-//     * Переводит текст на русский язык
-//     * @param string $text
-//     * @return string
-//     */
-//    private function translateToRussian(string $text): string
-//    {
-//        // Инициализируем объект для перевода
-//        $translator = new GoogleTranslate();
-//        // Устанавливаем исходный и целевой языки
-//        $translator->setSource('en'); // Исходный язык - английский
-//        $translator->setTarget('ru'); // Целевой язык - русский
-//
-//        // Переводим текст
-//        return $translator->translate($text);
-//    }
+    /**
+     * Переводит текст на русский язык
+     * @param string $text
+     * @return string
+     */
+    private function translateToRussian(string $text): string
+    {
+        // Инициализируем объект для перевода
+        $translator = new GoogleTranslate();
+        // Устанавливаем исходный и целевой языки
+        $translator->setSource('en'); // Исходный язык - английский
+        $translator->setTarget('ru'); // Целевой язык - русский
+
+        // Переводим текст
+        return $translator->translate($text);
+    }
 }

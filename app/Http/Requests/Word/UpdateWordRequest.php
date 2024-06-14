@@ -38,6 +38,7 @@ class UpdateWordRequest extends ApiFormRequest
             'description' => 'nullable|string',
             'type_id' => 'nullable|integer|exists:word_types,id',
             'time_forms' => 'nullable',
+            'arr_new_sentences' => 'nullable|array',
         ];
     }
 

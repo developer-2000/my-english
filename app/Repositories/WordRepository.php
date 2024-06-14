@@ -1,13 +1,14 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\Test;
+use App\Http\Requests\Word\UpdateWordRequest;
 use App\Models\Word;
+use App\Models\Sentence;
+use Illuminate\Support\Facades\DB;
 use App\Models\WordType;
 
 class WordRepository extends CoreRepository
 {
-
     public function getWords($request): array
     {
         $vars = $this->getVariablesForTables($request);
@@ -55,6 +56,55 @@ class WordRepository extends CoreRepository
         $colors = config('programm.type.color');
 
         return compact('total_count', 'list', 'types', 'colors');
+    }
+
+    public function updateWord(UpdateWordRequest $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Обновляем слово
+            $word = $this->updateWordData($request);
+
+            // Вставляем новые предложения
+            $this->insertSentences($request->arr_new_sentences);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return $word;
+    }
+
+    protected function updateWordData(UpdateWordRequest $request)
+    {
+        $word = Word::findOrFail($request->id);
+
+        $data = $request->except('arr_new_sentences');
+
+        $word->timestamps = false;
+        $word->fill($data)->save();
+        $word->timestamps = true;
+
+        return $word;
+    }
+
+    protected function insertSentences(array $sentences)
+    {
+        $dataToInsert = [];
+
+        foreach ($sentences as $obj) {
+            $dataToInsert[] = [
+                'sentence' => $obj['original'],
+                'translation' => $obj['translated'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        Sentence::insert($dataToInsert);
     }
 
     protected function getModelClass(): string

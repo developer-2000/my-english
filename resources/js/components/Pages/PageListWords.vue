@@ -202,14 +202,39 @@
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">Update word</h5>
+                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Update word</h5>
+                        <h5 class="modal-title" v-else>Loading generate sentences</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
-                        <form action="#">
+                        <!-- Чекбоксы сгенерированных предложений -->
+                        <div class="box-view-generate-sentences"
+                            :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }"
+                        >
+                            <!-- Индикатор загрузки предложений -->
+                            <div class="dots-loader"
+                                 v-if="!objGenerateSentences.boolLoadingIndicator"
+                            >
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                            <!-- Сгенерированные предложения -->
+                            <div class="box-new-sentence"
+                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
+                            >
+                                <input type="checkbox" class="form-check-input" :value="obj" v-model="objGenerateSentences.selectedSentences">
+                                <div class="box-sentence">
+                                    <div class="original-sentence" v-text="obj.original"></div>
+                                    <div class="translation-sentence" v-text="obj.translated"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Поля создаваемого слова -->
+                        <form action="#" v-show="!objGenerateSentences.boolAddSentences">
                             <!-- word -->
                             <div class="form-group">
                                 <label for="old_word" class="col-form-label">Update word</label>
@@ -332,7 +357,6 @@
                                     data-on="Add Sentences"
                                     data-off="No Sentences"
                                     class="toggle-input"
-                                    checked
                                 />
                             </div>
                         </form>
@@ -346,14 +370,14 @@
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="updateWord"
-                                    v-if="!status_toggle"
+                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
                             >Update</button>
                             <!-- next to generate sentences-->
                             <button type="button" class="btn btn-success"
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="loadGenerateSentences()"
-                                    v-else
+                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
                             >Next</button>
                         </div>
                     </div>
@@ -395,7 +419,13 @@
     export default {
         data() {
             return {
-                status_toggle: false,
+                objGenerateSentences: {
+                    status_toggle: false,         // Статус on/off кнопки добавления предложений к слову
+                    boolAddSentences: false,      // Статус нажатой кнопки Next для генерации предложений
+                    boolLoadingIndicator: false,  // Статус индикатора загрузки предложений в клиент
+                    arrGenerateSentences: [],     // Сгенерированные предложения
+                    selectedSentences: []         // Выбранные чекбоксы предложений
+                },
                 bool_learn_words: false, // bool открытия модалки изучения слов
                 word_id: 0,
                 type_id: 0,
@@ -534,7 +564,6 @@
             help_search_word_mixin
         ],
         components: { VueGoodTable, helpSearchWord, ModalLearnWord },
-        props: ['openParentModal_1'],
         methods: {
             async createWord() {
                 let data = {
@@ -565,6 +594,7 @@
                         url_image: this.url_image,
                         description: this.description,
                         time_forms: this.objWordTimeForms,
+                        arr_new_sentences: this.objGenerateSentences.selectedSentences,
                     };
 
                     if(this.select_type_id !== 0){
@@ -625,31 +655,41 @@
                 }
             },
             async loadGenerateSentences(){
+                this.objGenerateSentences.boolAddSentences = true
+                this.objGenerateSentences.boolLoadingIndicator = false
 
                 let data = {
                     arr_words: Array.isArray(this.new_word) ? this.new_word : [this.new_word],
                 };
 
-                // let data = {
-                //     arr_words: this.new_word,
-                // };
-                // // Если строка создаем массив с этим элементом, продублировав его 5 раз
-                // if (typeof this.new_word === 'string') {
-                //     data = {
-                //         arr_words: Array(5).fill(this.new_word),
-                //     };
+                this.objGenerateSentences.arrGenerateSentences = [
+                    { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
+                    { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
+                    { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
+                    { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
+                    { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
+                ];
+
+                // try {
+                //     const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
+                //     if(this.checkSuccess(response)){
+                //         console.log(response.data.data.sentences)
+                //         this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
+                //
+                //         // Выводим массив объектов в цикле
+                //         this.objGenerateSentences.arrGenerateSentences.forEach((sentence, index) => {
+                //             console.log(`Sentence ${index + 1}:`);
+                //             console.log(`Original: ${sentence.original}`);
+                //             console.log(`Translated: ${sentence.translated}`);
+                //             console.log('---');
+                //         });
+                //
+                //     }
+                // } catch (e) {
+                //     console.log(e);
                 // }
 
-console.log(data)
-
-                try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
-                    if(this.checkSuccess(response)){
-                        console.log(response.data.data.sentences)
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
+                this.objGenerateSentences.boolLoadingIndicator = true
             },
             touchNewWord() {
                 this.$v.new_word.$touch();
@@ -664,6 +704,7 @@ console.log(data)
                 this.updateColumnTable();
                 this.initialClickButWordUpdate();
                 this.makeButtonClearSearch();
+                this.closeAllModals()
             },
             deleteColorFromArrColor(arrColor) {
                 let index = 0;
@@ -876,6 +917,15 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 
                 $('#update_word').modal('show');
             },
+            // Закрыть любую модалку
+            closeAllModals(){
+                $(".modal").on("hidden.bs.modal", () => {
+                    this.help_dynamic = "";
+                    this.objWordFromTable.bool_click_button_word_from_table = false
+                    this.objUpdateWord = null
+                    this.clearGenerateSentences()
+                })
+            },
             // Открыть модалку изучения слова
             openLearnModal() {
                 // Вызов openLearnModal у дочернего компонента через референцию
@@ -935,18 +985,30 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // при изменении toggle
             logToggleState(event) {
-                this.status_toggle = $(event.target).prop('checked');
+                this.objGenerateSentences.status_toggle = $(event.target).prop('checked');
+            },
+            clearGenerateSentences() {
+                this.objGenerateSentences.status_toggle = false
+                this.objGenerateSentences.boolAddSentences = false
+                this.objGenerateSentences.boolLoadingIndicator = false
+                this.objGenerateSentences.selectedSentences = []
+                // Снятие checked состояния после инициализации
+                $(this.$refs.toggle).prop('checked', false).change();
             },
         },
         mounted() {
             this.initialData();
-            $(".modal").on("hidden.bs.modal", () => {
-                this.help_dynamic = "";
-                this.objWordFromTable.bool_click_button_word_from_table = false
-                this.objUpdateWord = null
-            })
             this.initialiseToggle()
-            this.status_toggle = $(this.$refs.toggle).prop('checked');
+
+            // todo убрать
+            this.objGenerateSentences.arrGenerateSentences = [
+                { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
+                { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
+                { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
+                { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
+                { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
+            ];
+
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');
@@ -1001,6 +1063,8 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
     }
     .modal{
         .modal-body{
+            overflow: hidden;
+            padding: 1rem 0;
             .box-time-forms{
                 label{
                     padding: 3px 0;
@@ -1019,6 +1083,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
+                margin-bottom: 1rem;
                 .box-sentences{
                     div{
                         color: #747474;
@@ -1026,6 +1091,84 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         font-size: 13px;
                     }
                 }
+            }
+        }
+    }
+    #update_word{
+        .modal-body{
+            .box-view-generate-sentences{
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */
+                backdrop-filter: blur(10px); /* Размытие фона */
+                position: absolute;
+                left: 100%;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                transition: left 0.3s ease-in-out;
+                .dots-loader {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 80px;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    .dot {
+                        width: 20px;
+                        height: 20px;
+                        background-color: #3498db;
+                        border-radius: 50%;
+                        animation: bounce 1.5s infinite ease-in-out;
+                        &:nth-child(2) { animation-delay: -0.5s; }
+                        &:nth-child(3) { animation-delay: -1s; }
+                        @keyframes bounce {
+                            0%, 100% { transform: scale(0); }
+                            50% { transform: scale(1); }
+                        }
+                    }
+                }
+                .box-new-sentence{
+                    display: flex;
+                    align-items: center;
+                    padding: 6px 15px;
+                    border-bottom: 1px solid #e9ecef;
+                    &:last-child{
+                        border: none;
+                    }
+                    .form-check-input{
+                        padding: 0;
+                        position: static;
+                        cursor: pointer;
+                        margin: 0 15px 0 0;
+                        min-width: 16px;
+                        min-height: 16px;
+                    }
+                    .box-sentence{
+                        div{
+                            line-height: 23px;
+                            &:first-child{
+                                margin-bottom: 3px;
+                            }
+                        }
+                        .original-sentence{
+                            font-weight: 700;
+                            font-size: 17px;
+                        }
+                        .translation-sentence{
+                            color: #525252;
+                        }
+                    }
+                }
+            }
+            .visible-generate-sentences{
+                left: 0;
+                position: relative;
+            }
+            form{
+                padding: 0 1rem;
             }
         }
     }
