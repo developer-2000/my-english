@@ -63,26 +63,57 @@
         </div>
 
         <!-- Modals создать слово -->
-        <div class="modal fade" id="create_word" tabindex="-1" role="dialog" aria-labelledby="create_word" aria-hidden="true">
+        <div class="modal fade" id="create_word" tabindex="-1" role="dialog"
+             aria-labelledby="create_word" aria-hidden="true"
+        >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
+                    <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">Create new word</h5>
+                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Create new word</h5>
+                        <h5 class="modal-title" v-else>Loading generate sentences</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <!-- body -->
                     <div class="modal-body">
-                        <form action="#">
+                        <!-- Чекбоксы сгенерированных предложений -->
+                        <div class="box-view-generate-sentences"
+                             :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }"
+                        >
+                            <!-- Индикатор загрузки предложений -->
+                            <div class="dots-loader"
+                                 v-if="!objGenerateSentences.boolLoadingIndicator"
+                            >
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                            <!-- Сгенерированные предложения -->
+                            <div class="box-new-sentence"
+                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
+                            >
+                                <input type="checkbox" class="form-check-input" :value="obj" v-model="objGenerateSentences.selectedSentences">
+                                <div class="box-sentence">
+                                    <div class="original-sentence" v-text="obj.original"></div>
+                                    <div class="translation-sentence" v-text="obj.translated"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Поля создаваемого слова -->
+                        <form action="#" v-show="!objGenerateSentences.boolAddSentences">
                             <!-- new word -->
                             <div class="form-group">
                                 <label for="new_word" class="col-form-label">New word</label>
-                                <input type="text" class="form-control entry-field-help" placeholder="Insert new word"
+                                <input type="text"
+                                       class="form-control entry-field-help"
+                                       placeholder="Insert new word"
                                        id="new_word"
                                        ref="new_word"
                                        v-model="new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord"
+                                       @keyup="searchHelpWord(new_word)"
                                        :class="{'is-invalid': $v.new_word.$error}"
                                        required
                                 >
@@ -177,7 +208,24 @@
                             <!-- Word description -->
                             <div class="form-group">
                                 <label for="word_description" class="col-form-label">Word description</label>
-                                <textarea v-model="description" class="form-control" id="word_description" placeholder="Insert description word"></textarea>
+                                <textarea class="form-control"
+                                          id="word_description"
+                                          placeholder="Insert description word"
+                                          v-model="description"
+                                ></textarea>
+                            </div>
+
+                            <!-- Предложения -->
+                            <div class="box-content-sentences">
+                                <!-- переключатель добавления предложений -->
+                                <input
+                                    type="checkbox"
+                                    ref="toggle1"
+                                    data-toggle="toggle"
+                                    data-on="Add Sentences"
+                                    data-off="No Sentences"
+                                    class="toggle-input"
+                                />
                             </div>
                         </form>
                     </div>
@@ -185,11 +233,20 @@
                     <div class="modal-footer">
                         <!-- button save -->
                         <div class="button_footer">
+                            <!-- save -->
                             <button type="button" class="btn btn-primary"
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="createWord"
-                            >Save</button>
+                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
+                            >Create</button>
+                            <!-- next to generate sentences-->
+                            <button type="button" class="btn btn-success"
+                                    :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                    :disabled="$v.$invalid"
+                                    @click="loadGenerateSentences()"
+                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
+                            >Next</button>
                         </div>
                     </div>
                 </div>
@@ -197,7 +254,9 @@
         </div>
 
         <!-- Modals обновить слово  -->
-        <div class="modal fade" id="update_word" tabindex="-1" role="dialog" aria-labelledby="update_word" aria-hidden="true">
+        <div class="modal fade" id="update_word" tabindex="-1" role="dialog"
+             aria-labelledby="update_word" aria-hidden="true"
+        >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
@@ -241,7 +300,7 @@
                                 <input type="text" class="form-control entry-field-help" placeholder="Insert word" id="old_word"
                                        v-model="new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord"
+                                       @keyup="searchHelpWord(new_word)"
                                        :class="{'is-invalid': $v.new_word.$error}"
                                        required
                                 >
@@ -352,7 +411,7 @@
                                 <!-- переключатель добавления предложений -->
                                 <input
                                     type="checkbox"
-                                    ref="toggle"
+                                    ref="toggle2"
                                     data-toggle="toggle"
                                     data-on="Add Sentences"
                                     data-off="No Sentences"
@@ -573,6 +632,7 @@
                     description: this.description,
                     type_id: this.select_type_id,
                     time_forms: this.objWordTimeForms,
+                    arr_new_sentences: this.objGenerateSentences.selectedSentences,
                 };
 
                 try {
@@ -657,39 +717,19 @@
             async loadGenerateSentences(){
                 this.objGenerateSentences.boolAddSentences = true
                 this.objGenerateSentences.boolLoadingIndicator = false
-
                 let data = {
                     arr_words: Array.isArray(this.new_word) ? this.new_word : [this.new_word],
                 };
 
-                this.objGenerateSentences.arrGenerateSentences = [
-                    { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
-                    { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
-                    { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
-                    { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
-                    { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
-                ];
-
-                // try {
-                //     const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
-                //     if(this.checkSuccess(response)){
-                //         console.log(response.data.data.sentences)
-                //         this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
-                //
-                //         // Выводим массив объектов в цикле
-                //         this.objGenerateSentences.arrGenerateSentences.forEach((sentence, index) => {
-                //             console.log(`Sentence ${index + 1}:`);
-                //             console.log(`Original: ${sentence.original}`);
-                //             console.log(`Translated: ${sentence.translated}`);
-                //             console.log('---');
-                //         });
-                //
-                //     }
-                // } catch (e) {
-                //     console.log(e);
-                // }
-
-                this.objGenerateSentences.boolLoadingIndicator = true
+                try {
+                    const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
+                    if(this.checkSuccess(response)){
+                        this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
+                        this.objGenerateSentences.boolLoadingIndicator = true
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             },
             touchNewWord() {
                 this.$v.new_word.$touch();
@@ -912,9 +952,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.objUpdateWord = row
                 this.setStyleDataModal(row.type);
                 this.setVariableDefault(row);
-
                 this.searchSentences(word)
-
                 $('#update_word').modal('show');
             },
             // Закрыть любую модалку
@@ -948,15 +986,21 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // инициализация toggle
             initialiseToggle() {
-                $(this.$refs.toggle).bootstrapToggle();
+                // Инициализация toggle
+                $(this.$refs.toggle1).bootstrapToggle();
                 // Устанавливаем стили после инициализации
-                this.setToggleStyles();
+                this.setToggleStyles(this.$refs.toggle1);
                 // Добавляем обработчик событий для вывода значения в консоль
-                $(this.$refs.toggle).change(this.logToggleState);
+                $(this.$refs.toggle1).change(this.logToggleState);
+                // Инициализация toggle
+                $(this.$refs.toggle2).bootstrapToggle();
+                // Устанавливаем стили после инициализации
+                this.setToggleStyles(this.$refs.toggle2);
+                // Добавляем обработчик событий для вывода значения в консоль
+                $(this.$refs.toggle2).change(this.logToggleState);
             },
             // задает CSS кнопке переключателю toggle
-            setToggleStyles() {
-                const toggleElement = this.$refs.toggle;
+            setToggleStyles(toggleElement) {
                 const parentDiv = toggleElement.closest('.toggle');
                 if (parentDiv) {
                     parentDiv.style.minWidth = '101px';
@@ -972,7 +1016,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     handle = parentDiv.querySelector('.toggle-off');
                     if (handle) {
                         handle.style.paddingLeft = '5px';
-                        handle.style.paddingLeft = '20px';
+                        handle.style.paddingRight = '0';
                         handle.style.lineHeight = '18px';
                     }
 
@@ -992,8 +1036,10 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.objGenerateSentences.boolAddSentences = false
                 this.objGenerateSentences.boolLoadingIndicator = false
                 this.objGenerateSentences.selectedSentences = []
+                this.objGenerateSentences.arrGenerateSentences = []
                 // Снятие checked состояния после инициализации
-                $(this.$refs.toggle).prop('checked', false).change();
+                $(this.$refs.toggle1).prop('checked', false).change();
+                $(this.$refs.toggle2).prop('checked', false).change();
             },
         },
         mounted() {
@@ -1001,21 +1047,21 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             this.initialiseToggle()
 
             // todo убрать
-            this.objGenerateSentences.arrGenerateSentences = [
-                { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
-                { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
-                { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
-                { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
-                { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
-            ];
-
+            // this.objGenerateSentences.arrGenerateSentences = [
+            //     { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
+            //     { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
+            //     { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
+            //     { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
+            //     { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
+            // ];
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');
             $('.btn-danger').unbind('click');
 
             // Удаляем инициализацию перед уничтожением компонента
-            $(this.$refs.toggle).bootstrapToggle('destroy');
+            $(this.$refs.toggle1).bootstrapToggle('destroy');
+            $(this.$refs.toggle2).bootstrapToggle('destroy');
         },
         validations: {
             new_word: {
@@ -1092,10 +1138,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     }
                 }
             }
-        }
-    }
-    #update_word{
-        .modal-body{
+
             .box-view-generate-sentences{
                 width: 100%;
                 height: 100%;
@@ -1169,6 +1212,13 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             }
             form{
                 padding: 0 1rem;
+            }
+        }
+    }
+    #create_word{
+        .modal-body{
+            .box-content-sentences{
+                justify-content: flex-end;
             }
         }
     }

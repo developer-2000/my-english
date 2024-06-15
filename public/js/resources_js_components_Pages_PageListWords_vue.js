@@ -183,7 +183,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 url_image: _this.url_image,
                 description: _this.description,
                 type_id: _this.select_type_id,
-                time_forms: _this.objWordTimeForms
+                time_forms: _this.objWordTimeForms,
+                arr_new_sentences: _this.objGenerateSentences.selectedSentences
               };
               _context.prev = 1;
               _context.next = 4;
@@ -353,7 +354,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     loadGenerateSentences: function loadGenerateSentences() {
       var _this6 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var data;
+        var data, response;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -362,48 +363,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               data = {
                 arr_words: Array.isArray(_this6.new_word) ? _this6.new_word : [_this6.new_word]
               };
-              _this6.objGenerateSentences.arrGenerateSentences = [{
-                original: "The happy couple married on the beach.",
-                translated: "Счастливая пара поженилась на пляже."
-              }, {
-                original: "The prince married a beautiful princess.",
-                translated: "Принц женился на прекрасной принцессе."
-              }, {
-                original: "They married in secret, away from prying eyes.",
-                translated: "Они поженились тайно, вдали от посторонних глаз."
-              }, {
-                original: "The lonely man married his cat, but no one else knew.",
-                translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал."
-              }, {
-                original: "The wizard married his broomstick, and everyone thought it was strange.",
-                translated: "Волшебник женился на своей метле, и всем показалось это странным."
-              }];
-
-              // try {
-              //     const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
-              //     if(this.checkSuccess(response)){
-              //         console.log(response.data.data.sentences)
-              //         this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
-              //
-              //         // Выводим массив объектов в цикле
-              //         this.objGenerateSentences.arrGenerateSentences.forEach((sentence, index) => {
-              //             console.log(`Sentence ${index + 1}:`);
-              //             console.log(`Original: ${sentence.original}`);
-              //             console.log(`Translated: ${sentence.translated}`);
-              //             console.log('---');
-              //         });
-              //
-              //     }
-              // } catch (e) {
-              //     console.log(e);
-              // }
-
-              _this6.objGenerateSentences.boolLoadingIndicator = true;
-            case 5:
+              _context6.prev = 3;
+              _context6.next = 6;
+              return _this6.$http.post("".concat(_this6.$http.apiUrl(), "ai/generate-sentences"), data);
+            case 6:
+              response = _context6.sent;
+              if (_this6.checkSuccess(response)) {
+                _this6.objGenerateSentences.arrGenerateSentences = response.data.data.sentences;
+                _this6.objGenerateSentences.boolLoadingIndicator = true;
+              }
+              _context6.next = 13;
+              break;
+            case 10:
+              _context6.prev = 10;
+              _context6.t0 = _context6["catch"](3);
+              console.log(_context6.t0);
+            case 13:
             case "end":
               return _context6.stop();
           }
-        }, _callee6);
+        }, _callee6, null, [[3, 10]]);
       }))();
     },
     touchNewWord: function touchNewWord() {
@@ -685,15 +664,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // инициализация toggle
     initialiseToggle: function initialiseToggle() {
-      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).bootstrapToggle();
+      // Инициализация toggle
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle1).bootstrapToggle();
       // Устанавливаем стили после инициализации
-      this.setToggleStyles();
+      this.setToggleStyles(this.$refs.toggle1);
       // Добавляем обработчик событий для вывода значения в консоль
-      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).change(this.logToggleState);
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle1).change(this.logToggleState);
+      // Инициализация toggle
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle2).bootstrapToggle();
+      // Устанавливаем стили после инициализации
+      this.setToggleStyles(this.$refs.toggle2);
+      // Добавляем обработчик событий для вывода значения в консоль
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle2).change(this.logToggleState);
     },
     // задает CSS кнопке переключателю toggle
-    setToggleStyles: function setToggleStyles() {
-      var toggleElement = this.$refs.toggle;
+    setToggleStyles: function setToggleStyles(toggleElement) {
       var parentDiv = toggleElement.closest('.toggle');
       if (parentDiv) {
         parentDiv.style.minWidth = '101px';
@@ -707,7 +692,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         handle = parentDiv.querySelector('.toggle-off');
         if (handle) {
           handle.style.paddingLeft = '5px';
-          handle.style.paddingLeft = '20px';
+          handle.style.paddingRight = '0';
           handle.style.lineHeight = '18px';
         }
         handle = parentDiv.querySelector('.toggle-on');
@@ -726,8 +711,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.objGenerateSentences.boolAddSentences = false;
       this.objGenerateSentences.boolLoadingIndicator = false;
       this.objGenerateSentences.selectedSentences = [];
+      this.objGenerateSentences.arrGenerateSentences = [];
       // Снятие checked состояния после инициализации
-      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).prop('checked', false).change();
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle1).prop('checked', false).change();
+      jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle2).prop('checked', false).change();
     }
   },
   mounted: function mounted() {
@@ -735,29 +722,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     this.initialiseToggle();
 
     // todo убрать
-    this.objGenerateSentences.arrGenerateSentences = [{
-      original: "The happy couple married on the beach.",
-      translated: "Счастливая пара поженилась на пляже."
-    }, {
-      original: "The prince married a beautiful princess.",
-      translated: "Принц женился на прекрасной принцессе."
-    }, {
-      original: "They married in secret, away from prying eyes.",
-      translated: "Они поженились тайно, вдали от посторонних глаз."
-    }, {
-      original: "The lonely man married his cat, but no one else knew.",
-      translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал."
-    }, {
-      original: "The wizard married his broomstick, and everyone thought it was strange.",
-      translated: "Волшебник женился на своей метле, и всем показалось это странным."
-    }];
+    // this.objGenerateSentences.arrGenerateSentences = [
+    //     { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
+    //     { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
+    //     { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
+    //     { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
+    //     { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
+    // ];
   },
   beforeDestroy: function beforeDestroy() {
     jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-warning').unbind('click');
     jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-danger').unbind('click');
 
     // Удаляем инициализацию перед уничтожением компонента
-    jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle).bootstrapToggle('destroy');
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle1).bootstrapToggle('destroy');
+    jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle2).bootstrapToggle('destroy');
   },
   validations: {
     new_word: {
@@ -808,10 +787,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/response_methods_mixin */ "./resources/js/mixins/response_methods_mixin.js");
 /* harmony import */ var vue_tippy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-tippy */ "./node_modules/vue-tippy/dist/vue-tippy.esm.js");
+/* harmony import */ var _HelpSearchWord__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HelpSearchWord */ "./resources/js/components/details/HelpSearchWord.vue");
+/* harmony import */ var _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../mixins/help_search_word_mixin */ "./resources/js/mixins/help_search_word_mixin.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_4__);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -826,10 +812,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       objLearnWord: null,
       // изучаемое слово
       objOldLearnWord: null,
-      last_updated_at: null // дата изменения изучаемого слова
+      last_updated_at: null,
+      // дата изменения изучаемого слова
+      write_word: ""
     };
   },
-  mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  components: {
+    helpSearchWord: _HelpSearchWord__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  mixins: [_mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
   methods: {
     // загрузка изучаемого слова
     loadLearnWord: function loadLearnWord() {
@@ -841,43 +832,45 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           while (1) switch (_context.prev = _context.next) {
             case 0:
               action = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : null;
-              _context.prev = 1;
+              _this.clearWritingVariables();
+              _context.prev = 2;
               data = {
                 last_updated_at: _this.last_updated_at,
                 last_word_id: _this.objLearnWord !== null ? _this.objLearnWord.id : null,
                 action_with_word: action
               };
-              _context.next = 5;
+              _context.next = 6;
               return _this.$http.post("".concat(_this.$http.apiUrl(), "learn/get-word"), data);
-            case 5:
+            case 6:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.objLearnWord = response.data.data;
+                // копия обьекта
                 _this.objOldLearnWord = JSON.parse(JSON.stringify(_this.objLearnWord));
                 _this.last_updated_at = _this.objLearnWord.updated_at;
                 _this.switchViewWord();
                 // Вызываем событие для вызова метода родителя
                 _this.$emit('callInitialData');
               }
-              _context.next = 12;
+              _context.next = 13;
               break;
-            case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](1);
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](2);
               console.log(_context.t0);
-            case 12:
+            case 13:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 9]]);
+        }, _callee, null, [[2, 10]]);
       }))();
     },
     // открываем модалку изучения слов
     openLearnModal: function openLearnModal() {
       var _this2 = this;
-      $('#learn_word').modal('show');
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()('#learn_word').modal('show');
       // инициализация hover на изучаемое слово
-      $('body').on('mouseover', '.learn-word-trigger', function (event) {
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()('body').on('mouseover', '.learn-word-trigger', function (event) {
         _this2.outputHelperAlertInLearn(event);
       });
       // если до этого не открывалось слово
@@ -916,7 +909,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(this.objLearnWord.translation == null ? '' : this.objLearnWord.translation.toLowerCase(), "</div>\n").concat(this.objLearnWord.description == null ? '' : this.objLearnWord.description.toLowerCase(), "\n</div>");
 
       // Получить ссылку на экземпляр tippy
-      var instance = $(event.target)[0]._tippy;
+      var instance = jquery__WEBPACK_IMPORTED_MODULE_4___default()(event.target)[0]._tippy;
       // Если экземпляр tippy существует, обновить его содержимое
       if (instance) {
         instance.setContent(html);
@@ -932,10 +925,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     // закрыть модалку изучения и открыть модалку редактирования
     goToEditing: function goToEditing(word) {
       var _this3 = this;
-      $('#learn_word').modal('hide');
+      this.clearWritingVariables();
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()('#learn_word').modal('hide');
       setTimeout(function () {
         _this3.$emit('callOpenUpdateWordModal', word);
       }, 500);
+    },
+    // Закрыть модалку
+    closeAllModals: function closeAllModals() {
+      var _this4 = this;
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()(".modal").on("hidden.bs.modal", function () {
+        _this4.clearWritingVariables();
+      });
+    },
+    clearWritingVariables: function clearWritingVariables() {
+      this.help_dynamic = "";
+      this.write_word = "";
     }
   },
   mounted: function mounted() {},
@@ -1040,9 +1045,84 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-content"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "modal-header"
+  }, [!_vm.objGenerateSentences.boolAddSentences ? _c("h5", {
+    staticClass: "modal-title"
+  }, [_vm._v("Create new word")]) : _c("h5", {
+    staticClass: "modal-title"
+  }, [_vm._v("Loading generate sentences")]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
-  }, [_c("form", {
+  }, [_c("div", {
+    staticClass: "box-view-generate-sentences",
+    "class": {
+      "visible-generate-sentences": _vm.objGenerateSentences.boolAddSentences
+    }
+  }, [!_vm.objGenerateSentences.boolLoadingIndicator ? _c("div", {
+    staticClass: "dots-loader"
+  }, [_c("div", {
+    staticClass: "dot"
+  }), _vm._v(" "), _c("div", {
+    staticClass: "dot"
+  }), _vm._v(" "), _c("div", {
+    staticClass: "dot"
+  })]) : _vm._e(), _vm._v(" "), _vm._l(_vm.objGenerateSentences.arrGenerateSentences, function (obj, key) {
+    return _c("div", {
+      key: key,
+      staticClass: "box-new-sentence"
+    }, [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.objGenerateSentences.selectedSentences,
+        expression: "objGenerateSentences.selectedSentences"
+      }],
+      staticClass: "form-check-input",
+      attrs: {
+        type: "checkbox"
+      },
+      domProps: {
+        value: obj,
+        checked: Array.isArray(_vm.objGenerateSentences.selectedSentences) ? _vm._i(_vm.objGenerateSentences.selectedSentences, obj) > -1 : _vm.objGenerateSentences.selectedSentences
+      },
+      on: {
+        change: function change($event) {
+          var $$a = _vm.objGenerateSentences.selectedSentences,
+            $$el = $event.target,
+            $$c = $$el.checked ? true : false;
+          if (Array.isArray($$a)) {
+            var $$v = obj,
+              $$i = _vm._i($$a, $$v);
+            if ($$el.checked) {
+              $$i < 0 && _vm.$set(_vm.objGenerateSentences, "selectedSentences", $$a.concat([$$v]));
+            } else {
+              $$i > -1 && _vm.$set(_vm.objGenerateSentences, "selectedSentences", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.$set(_vm.objGenerateSentences, "selectedSentences", $$c);
+          }
+        }
+      }
+    }), _vm._v(" "), _c("div", {
+      staticClass: "box-sentence"
+    }, [_c("div", {
+      staticClass: "original-sentence",
+      domProps: {
+        textContent: _vm._s(obj.original)
+      }
+    }), _vm._v(" "), _c("div", {
+      staticClass: "translation-sentence",
+      domProps: {
+        textContent: _vm._s(obj.translated)
+      }
+    })])]);
+  })], 2), _vm._v(" "), _c("form", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: !_vm.objGenerateSentences.boolAddSentences,
+      expression: "!objGenerateSentences.boolAddSentences"
+    }],
     attrs: {
       action: "#"
     }
@@ -1078,7 +1158,9 @@ var render = function render() {
       blur: function blur($event) {
         return _vm.touchNewWord();
       },
-      keyup: _vm.searchHelpWord,
+      keyup: function keyup($event) {
+        return _vm.searchHelpWord(_vm.new_word);
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.new_word = $event.target.value;
@@ -1431,11 +1513,22 @@ var render = function render() {
         _vm.description = $event.target.value;
       }
     }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "box-content-sentences"
+  }, [_c("input", {
+    ref: "toggle1",
+    staticClass: "toggle-input",
+    attrs: {
+      type: "checkbox",
+      "data-toggle": "toggle",
+      "data-on": "Add Sentences",
+      "data-off": "No Sentences"
+    }
   })])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
     staticClass: "button_footer"
-  }, [_c("button", {
+  }, [!_vm.objGenerateSentences.status_toggle || _vm.objGenerateSentences.boolAddSentences ? _c("button", {
     staticClass: "btn btn-primary",
     "class": {
       un_active: _vm.$v.$invalid,
@@ -1448,7 +1541,22 @@ var render = function render() {
     on: {
       click: _vm.createWord
     }
-  }, [_vm._v("Save")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Create")]) : _vm._e(), _vm._v(" "), _vm.objGenerateSentences.status_toggle && !_vm.objGenerateSentences.boolAddSentences ? _c("button", {
+    staticClass: "btn btn-success",
+    "class": {
+      un_active: _vm.$v.$invalid,
+      active2: !_vm.$v.$invalid
+    },
+    attrs: {
+      type: "button",
+      disabled: _vm.$v.$invalid
+    },
+    on: {
+      click: function click($event) {
+        return _vm.loadGenerateSentences();
+      }
+    }
+  }, [_vm._v("Next")]) : _vm._e()])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
       id: "update_word",
@@ -1576,7 +1684,9 @@ var render = function render() {
       blur: function blur($event) {
         return _vm.touchNewWord();
       },
-      keyup: _vm.searchHelpWord,
+      keyup: function keyup($event) {
+        return _vm.searchHelpWord(_vm.new_word);
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.new_word = $event.target.value;
@@ -1938,7 +2048,7 @@ var render = function render() {
       key: key
     }, [_vm._v("\n                                    " + _vm._s(sentence.sentence) + "\n                                ")]);
   }), 0), _vm._v(" "), _c("input", {
-    ref: "toggle",
+    ref: "toggle2",
     staticClass: "toggle-input",
     attrs: {
       type: "checkbox",
@@ -1989,11 +2099,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-header"
-  }, [_c("h5", {
-    staticClass: "modal-title"
-  }, [_vm._v("Create new word")]), _vm._v(" "), _c("button", {
+  return _c("button", {
     staticClass: "close",
     attrs: {
       type: "button",
@@ -2004,7 +2110,7 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]);
+  }, [_vm._v("×")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -2165,9 +2271,65 @@ var render = function render() {
   }, _vm._l(_vm.objLearnWord.sentences, function (sentence, key) {
     return _c("div", {
       key: key,
-      staticClass: "sentence"
-    }, [_vm._v(_vm._s(sentence.sentence))]);
-  }), 0) : _vm._e()]) : _vm._e()] : [_c("div", {
+      staticClass: "sentence",
+      domProps: {
+        textContent: _vm._s(_vm.objLanguage.languageIndex === 0 ? sentence.sentence : sentence.translation)
+      }
+    });
+  }), 0) : _vm._e()]) : _vm._e(), _vm._v(" "), _c("div", {
+    staticClass: "form-group write-word"
+  }, [_c("div", {
+    staticClass: "box-writing"
+  }, [_c("label", {
+    staticClass: "col-form-label",
+    attrs: {
+      "for": "write_word"
+    }
+  }, [_vm._v("Correct spelling of the word")]), _vm._v(" "), _c("textarea", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.write_word,
+      expression: "write_word"
+    }],
+    staticClass: "form-control entry-field-help",
+    attrs: {
+      placeholder: "Insert new word",
+      id: "write_word"
+    },
+    domProps: {
+      value: _vm.write_word
+    },
+    on: {
+      keyup: function keyup($event) {
+        return _vm.searchHelpWord(_vm.write_word);
+      },
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.write_word = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _c("help-search-word", {
+    attrs: {
+      "help-dynamic": _vm.help_dynamic
+    }
+  })], 1), _vm._v(" "), _c("svg", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.objOldLearnWord.word === _vm.write_word,
+      expression: "objOldLearnWord.word === write_word"
+    }],
+    staticClass: "svg-like",
+    attrs: {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 512 512"
+    }
+  }, [_c("path", {
+    attrs: {
+      d: "M323.8 34.8c-38.2-10.9-78.1 11.2-89 49.4l-5.7 20c-3.7 13-10.4 25-19.5 35l-51.3 56.4c-8.9 9.8-8.2 25 1.6 33.9s25 8.2 33.9-1.6l51.3-56.4c14.1-15.5 24.4-34 30.1-54.1l5.7-20c3.6-12.7 16.9-20.1 29.7-16.5s20.1 16.9 16.5 29.7l-5.7 20c-5.7 19.9-14.7 38.7-26.6 55.5c-5.2 7.3-5.8 16.9-1.7 24.9s12.3 13 21.3 13L448 224c8.8 0 16 7.2 16 16c0 6.8-4.3 12.7-10.4 15c-7.4 2.8-13 9-14.9 16.7s.1 15.8 5.3 21.7c2.5 2.8 4 6.5 4 10.6c0 7.8-5.6 14.3-13 15.7c-8.2 1.6-15.1 7.3-18 15.2s-1.6 16.7 3.6 23.3c2.1 2.7 3.4 6.1 3.4 9.9c0 6.7-4.2 12.6-10.2 14.9c-11.5 4.5-17.7 16.9-14.4 28.8c.4 1.3 .6 2.8 .6 4.3c0 8.8-7.2 16-16 16H286.5c-12.6 0-25-3.7-35.5-10.7l-61.7-41.1c-11-7.4-25.9-4.4-33.3 6.7s-4.4 25.9 6.7 33.3l61.7 41.1c18.4 12.3 40 18.8 62.1 18.8H384c34.7 0 62.9-27.6 64-62c14.6-11.7 24-29.7 24-50c0-4.5-.5-8.8-1.3-13c15.4-11.7 25.3-30.2 25.3-51c0-6.5-1-12.8-2.8-18.7C504.8 273.7 512 257.7 512 240c0-35.3-28.6-64-64-64l-92.3 0c4.7-10.4 8.7-21.2 11.8-32.2l5.7-20c10.9-38.2-11.2-78.1-49.4-89zM32 192c-17.7 0-32 14.3-32 32V448c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32H32z"
+    }
+  })])])] : [_c("div", {
     staticClass: "no-word"
   }, [_vm._v("\n                        There are no words in the database to study\n                    ")])]], 2)])])]);
 };
@@ -2346,8 +2508,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     // логика выборки вводного слова
-    searchHelpWord: function searchHelpWord(e) {
-      var string = $('.entry-field-help').val();
+    searchHelpWord: function searchHelpWord(word) {
+      var string = word;
       var last_word = string.split(" ").pop();
       if (last_word.trim() !== '') {
         // найти в базе подходящие слова
@@ -2612,7 +2774,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n  margin-bottom: 1rem;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds #update_word .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds #update_word .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds #update_word .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n  margin-bottom: 1rem;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2636,7 +2798,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#learn_word .custom-modal[data-v-413063d9] {\n  width: 50%;\n  max-width: 3000px !important;\n}\n#learn_word .custom-modal .modal-header[data-v-413063d9] {\n  display: flex;\n  justify-content: space-between;\n}\n#learn_word .custom-modal .modal-header .box-right[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9] {\n  margin-right: 50px;\n  color: #0800ff;\n  padding: 0 5px;\n  cursor: pointer;\n  transition: background 0.3s ease-in-out;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9]:hover {\n  background: #e7e7e7;\n}\n#learn_word .custom-modal .modal-body .box-word[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9] {\n  flex: 1 1 auto;\n  display: flex;\n  justify-content: space-between;\n  padding: 2px 10px;\n  line-height: 38px;\n  cursor: pointer;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9]:hover {\n  background: #f2f1f1;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word a[data-v-413063d9] {\n  font-size: 16px;\n}\n#learn_word .custom-modal .modal-body .box-word a svg[data-v-413063d9] {\n  height: 16px;\n  margin-right: 5px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success[data-v-413063d9] {\n  margin: 0 10px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success svg[data-v-413063d9] {\n  fill: white;\n}\n#learn_word .custom-modal .modal-body .box-helper[data-v-413063d9] {\n  display: flex;\n  margin-top: 15px;\n}\n#learn_word .custom-modal .modal-body .box-helper img[data-v-413063d9] {\n  width: auto;\n  height: 100px;\n  margin-right: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#learn_word .custom-modal[data-v-413063d9] {\n  width: 50%;\n  max-width: 3000px !important;\n}\n#learn_word .custom-modal .modal-header[data-v-413063d9] {\n  display: flex;\n  justify-content: space-between;\n}\n#learn_word .custom-modal .modal-header .box-right[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9] {\n  margin-right: 50px;\n  color: #0800ff;\n  padding: 0 5px;\n  cursor: pointer;\n  transition: background 0.3s ease-in-out;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9]:hover {\n  background: #e7e7e7;\n}\n#learn_word .custom-modal .modal-body .box-word[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9] {\n  flex: 1 1 auto;\n  display: flex;\n  justify-content: space-between;\n  padding: 2px 10px;\n  line-height: 38px;\n  cursor: pointer;\n  font-size: 29px;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9]:hover {\n  background: #f2f1f1;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word a[data-v-413063d9] {\n  font-size: 16px;\n}\n#learn_word .custom-modal .modal-body .box-word a svg[data-v-413063d9] {\n  height: 16px;\n  margin-right: 5px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success[data-v-413063d9] {\n  margin: 0 10px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success svg[data-v-413063d9] {\n  fill: white;\n}\n#learn_word .custom-modal .modal-body .box-helper[data-v-413063d9] {\n  display: flex;\n  margin-top: 15px;\n}\n#learn_word .custom-modal .modal-body .box-helper img[data-v-413063d9] {\n  width: auto;\n  height: 100px;\n  margin-right: 15px;\n}\n#learn_word .modal-body .write-word[data-v-413063d9] {\n  display: flex;\n  align-items: center;\n}\n#learn_word .modal-body .write-word .svg-like[data-v-413063d9] {\n  fill: #339c03;\n  width: 40px;\n  height: 40px;\n}\n#learn_word .modal-body .write-word .box-writing[data-v-413063d9] {\n  width: 80%;\n  margin-right: 60px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

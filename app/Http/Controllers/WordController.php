@@ -29,9 +29,15 @@ class WordController extends Controller
         return new ApiResponse($words);
     }
 
+    /**
+     * Создает новое слово и добавляет предложения если они сгенерированы
+     * @param CreateWordRequest $request
+     * @return ApiResponse
+     * @throws \Exception
+     */
     public function store(CreateWordRequest $request): ApiResponse
     {
-        $coll = Word::create($request->validated());
+        $coll = $this->wordRepository->createWord($request);
 
         return new ApiResponse(compact('coll'));
     }

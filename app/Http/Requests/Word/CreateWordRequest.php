@@ -30,7 +30,7 @@ class CreateWordRequest extends ApiFormRequest
             'description' => 'nullable|string',
             'type_id' => 'required|integer',
             'time_forms' => 'nullable',
+            'arr_new_sentences' => 'nullable|array',
         ];
     }
-
 }

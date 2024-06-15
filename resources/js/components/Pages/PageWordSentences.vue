@@ -96,7 +96,7 @@
                             <div class="form-group">
                                 <label class="col-form-label" for="new_sentence">New sentence</label>
                                 <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
-                                          @keyup="searchHelpWord"
+                                          @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
                                           id="new_sentence"
                                           placeholder="Insert new sentence"
@@ -162,7 +162,7 @@
                             <div class="form-group">
                                 <label class="col-form-label" for="old_sentence">Sentence</label>
                                 <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
-                                          @keyup="searchHelpWord"
+                                          @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
                                           id="old_sentence"
                                           placeholder="Insert new sentence"

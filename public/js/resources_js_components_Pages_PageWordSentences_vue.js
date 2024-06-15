@@ -568,7 +568,9 @@ var render = function render() {
       blur: function blur($event) {
         return _vm.touchNewSentence();
       },
-      keyup: _vm.searchHelpWord,
+      keyup: function keyup($event) {
+        return _vm.searchHelpWord(_vm.new_sentence);
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.new_sentence = $event.target.value;
@@ -688,7 +690,9 @@ var render = function render() {
       blur: function blur($event) {
         return _vm.touchNewSentence();
       },
-      keyup: _vm.searchHelpWord,
+      keyup: function keyup($event) {
+        return _vm.searchHelpWord(_vm.new_sentence);
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.new_sentence = $event.target.value;
@@ -984,8 +988,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     // логика выборки вводного слова
-    searchHelpWord: function searchHelpWord(e) {
-      var string = $('.entry-field-help').val();
+    searchHelpWord: function searchHelpWord(word) {
+      var string = word;
       var last_word = string.split(" ").pop();
       if (last_word.trim() !== '') {
         // найти в базе подходящие слова

@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Models\Word;
 use App\Models\Sentence;
@@ -58,6 +59,29 @@ class WordRepository extends CoreRepository
         return compact('total_count', 'list', 'types', 'colors');
     }
 
+    public function createWord(CreateWordRequest $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Создаем слово с помощью метода create
+            $wordData = $request->except('arr_new_sentences');
+            $word = Word::create($wordData);
+
+            // Вставляем новые предложения
+            if (!empty($request->arr_new_sentences)) {
+                $this->insertSentences($request->arr_new_sentences);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return $word;
+    }
+
     public function updateWord(UpdateWordRequest $request)
     {
         DB::beginTransaction();
@@ -67,7 +91,9 @@ class WordRepository extends CoreRepository
             $word = $this->updateWordData($request);
 
             // Вставляем новые предложения
-            $this->insertSentences($request->arr_new_sentences);
+            if (!empty($request->arr_new_sentences)) {
+                $this->insertSentences($request->arr_new_sentences);
+            }
 
             DB::commit();
         } catch (\Exception $e) {

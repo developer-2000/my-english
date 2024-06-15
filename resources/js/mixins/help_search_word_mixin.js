@@ -23,8 +23,8 @@ export default {
             this.isLoading = false;
         },
         // логика выборки вводного слова
-        searchHelpWord(e){
-            let string = $('.entry-field-help').val();
+        searchHelpWord(word){
+            let string = word
             let last_word = string.split(" ").pop();
             if (last_word.trim() !== '') {
                 // найти в базе подходящие слова
