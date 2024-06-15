@@ -18,8 +18,16 @@ window.Vue.prototype.$http = http_client;
 import VueSweetalert2 from 'vue-sweetalert2';
 window.Vue.use(VueSweetalert2);
 
+// Добавляем Vuex
+import Vuex from 'vuex';
+window.Vue.use(Vuex);
+
+// Импортируем наш store
+import store from './store';
+
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    store, // подключаем Vuex хранилище к приложению
 });
 

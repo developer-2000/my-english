@@ -171,6 +171,7 @@ export default {
         // переключение языков
         switchLanguage(){
             this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0
+            localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
             this.switchViewWord()
         },
         // отобразить с какого на какой язык перевод
@@ -221,6 +222,10 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         },
     },
     mounted() {
+        let languageIndex = localStorage.getItem('languageIndex');
+        if(languageIndex !== null){
+            this.objLanguage.languageIndex = parseInt(languageIndex)
+        }
     },
     name: "ModalLearnWord"
 }

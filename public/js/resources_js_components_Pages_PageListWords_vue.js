@@ -720,15 +720,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   mounted: function mounted() {
     this.initialData();
     this.initialiseToggle();
-
-    // todo убрать
-    // this.objGenerateSentences.arrGenerateSentences = [
-    //     { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
-    //     { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
-    //     { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
-    //     { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
-    //     { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
-    // ];
   },
   beforeDestroy: function beforeDestroy() {
     jquery__WEBPACK_IMPORTED_MODULE_10___default()('.btn-warning').unbind('click');
@@ -898,6 +889,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     // переключение языков
     switchLanguage: function switchLanguage() {
       this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0;
+      localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
       this.switchViewWord();
     },
     // отобразить с какого на какой язык перевод
@@ -943,7 +935,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.write_word = "";
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    var languageIndex = localStorage.getItem('languageIndex');
+    if (languageIndex !== null) {
+      this.objLanguage.languageIndex = parseInt(languageIndex);
+    }
+  },
   name: "ModalLearnWord"
 });
 

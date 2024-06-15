@@ -1045,15 +1045,6 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
         mounted() {
             this.initialData();
             this.initialiseToggle()
-
-            // todo убрать
-            // this.objGenerateSentences.arrGenerateSentences = [
-            //     { original: "The happy couple married on the beach.", translated: "Счастливая пара поженилась на пляже." },
-            //     { original: "The prince married a beautiful princess.", translated: "Принц женился на прекрасной принцессе." },
-            //     { original: "They married in secret, away from prying eyes.", translated: "Они поженились тайно, вдали от посторонних глаз." },
-            //     { original: "The lonely man married his cat, but no one else knew.", translated: "Одинокий мужчина женился на своей кошке, но больше никто об этом не знал." },
-            //     { original: "The wizard married his broomstick, and everyone thought it was strange.", translated: "Волшебник женился на своей метле, и всем показалось это странным." }
-            // ];
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');
