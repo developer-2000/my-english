@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AIStudio\GenerateSentencesRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Test;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class GeneratingSentencesAiController extends Controller
 
         foreach ($words as $word) {
             $response = $this->getSentencesAIStudio($word);
-            $individualSentences = $this->processResponse($response);
+            $individualSentences = $this->processResponse($response, $word);
 
             foreach ($individualSentences as $sentence) {
                 if (strpos($sentence, 'Error') === false && strpos($sentence, 'Failed') === false) {
@@ -83,25 +84,33 @@ class GeneratingSentencesAiController extends Controller
 
     /**
      * Обрабатывает ответ API и извлекает предложения
-     * @param $response
+     * @param string $response
+     * @param string $word
      * @return array
      */
-    private function processResponse(string $response): array
+    private function processResponse(string $response, string $word): array
     {
-        // Разделяем предложения по разделителю "|"
-        $sentencesArray = explode('|', $response);
+        $sentencesArray = explode('.', $response);
 
-        // Очищаем каждое предложение от лишних символов и цифр
-        $cleanedSentences = [];
-        foreach ($sentencesArray as $sentence) {
-            // Удаляем цифры и лишние пробелы в начале и конце
-            $cleanedSentence = trim(preg_replace('/\d+\.\s*/', '', $sentence));
-            if (!empty($cleanedSentence)) {
-                $cleanedSentences[] = $cleanedSentence;
+        // Фильтруем массив, оставляем только предложения, содержащие ключевое слово
+        $filteredSentences = array_filter($sentencesArray, function($sentence) use ($word) {
+            return stripos($sentence, $word) !== false;
+        });
+
+        // Удаляем символы '|'
+        $filteredSentences = array_map(function($sentence) {
+            return str_replace('|', '', $sentence);
+        }, $filteredSentences);
+
+        // Удаляем лишние пробелы (больше 1) и пробелы в начале и конце строки
+        // Добавляем точку в конце предложения, если её нет
+        return array_map(function($sentence) {
+            $cleanedSentence = preg_replace('/\s{2,}/', ' ', trim($sentence));
+            if (substr($cleanedSentence, -1) !== '.') {
+                $cleanedSentence .= '.';
             }
-        }
-
-        return $cleanedSentences;
+            return $cleanedSentence;
+        }, $filteredSentences);
     }
 
     /**
