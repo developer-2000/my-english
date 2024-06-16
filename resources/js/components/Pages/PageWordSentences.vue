@@ -341,7 +341,7 @@
                 }
             },
             // --- предложения
-            async loadSenteces() {
+            async loadSentences() {
                 try {
                     this.isLoading = true;
                     let field = this.serverParams.sort[0].field;
@@ -403,7 +403,7 @@
             },
             // set all
             initialData() {
-                this.loadSenteces();
+                this.loadSentences();
                 this.initialClickButSentenceUpdate();
                 this.initialCheckbox();
                 this.makeButtonClearSearch();
@@ -416,8 +416,10 @@
                 setTimeout(() => {
                     // состояние кнопки sound по умолчанию
                     this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+                    // Сначала отвязываем предыдущие обработчики
+                    $(".memorable_checkbox").off('change');
                     // изменнеие одного из sound checkbox
-                    $(".memorable_checkbox").bind('change', (e) => {
+                    $(".memorable_checkbox").on('change', (e) => {
                         this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
                         this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
                     });
@@ -439,8 +441,10 @@
                 return row;
             },
             initialClickButSentenceUpdate() {
-                let a = setTimeout(() => {
-                    $('.btn_sentence').bind('click', (e) => {
+                // открываем редактирование предложения
+                setTimeout(() => {
+                    $('.btn_sentence').off('click');
+                    $('.btn_sentence').on('click', (e) => {
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let id = queryObj.attr("data-id");
                         let row = this.getSentenceCollection(id);
@@ -472,7 +476,7 @@
             },
         },
         beforeDestroy: function () {
-            $('.btn_sentence').unbind('click');
+            $('.btn_sentence').off('click');
             $('#clear_search').unbind('click');
             $(".memorable_checkbox").unbind('change');
         },

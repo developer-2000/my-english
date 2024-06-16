@@ -154,7 +154,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     // --- предложения
-    loadSenteces: function loadSenteces() {
+    loadSentences: function loadSentences() {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var field, response;
@@ -268,7 +268,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     // set all
     initialData: function initialData() {
-      this.loadSenteces();
+      this.loadSentences();
       this.initialClickButSentenceUpdate();
       this.initialCheckbox();
       this.makeButtonClearSearch();
@@ -282,8 +282,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       setTimeout(function () {
         // состояние кнопки sound по умолчанию
         _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+        // Сначала отвязываем предыдущие обработчики
+        $(".memorable_checkbox").off('change');
         // изменнеие одного из sound checkbox
-        $(".memorable_checkbox").bind('change', function (e) {
+        $(".memorable_checkbox").on('change', function (e) {
           _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
           _this5.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
         });
@@ -309,8 +311,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     initialClickButSentenceUpdate: function initialClickButSentenceUpdate() {
       var _this6 = this;
-      var a = setTimeout(function () {
-        $('.btn_sentence').bind('click', function (e) {
+      // открываем редактирование предложения
+      setTimeout(function () {
+        $('.btn_sentence').off('click');
+        $('.btn_sentence').on('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var id = queryObj.attr("data-id");
           var row = _this6.getSentenceCollection(id);
@@ -343,7 +347,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
   },
   beforeDestroy: function beforeDestroy() {
-    $('.btn_sentence').unbind('click');
+    $('.btn_sentence').off('click');
     $('#clear_search').unbind('click');
     $(".memorable_checkbox").unbind('change');
   },

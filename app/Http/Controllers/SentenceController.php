@@ -12,6 +12,7 @@ use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Sentence;
 use App\Models\SentenceSound;
+use App\Models\Test;
 use App\Models\Word;
 use App\Repositories\SentenceRepository;
 use App\Repositories\WordRepository;
@@ -33,6 +34,7 @@ class SentenceController extends Controller
      */
     public function index(SelectGetPaginateRequest $request): ApiResponse
     {
+        Test::create(["json"=>1]);
         $sentences = $this->sentenceRepository->getSentences($request->validated());
 
         return new ApiResponse(compact('sentences'));
