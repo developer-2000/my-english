@@ -68,9 +68,11 @@ class WordRepository extends CoreRepository
             $wordData = $request->except('arr_new_sentences');
             $word = Word::create($wordData);
 
-            // Вставляем новые предложения
             if (!empty($request->arr_new_sentences)) {
+                // Вставляем новые предложения
                 $this->insertSentences($request->arr_new_sentences);
+                // Вставляем новые слова
+                $this->insertNewWords($request->arr_new_sentences);
             }
 
             DB::commit();
@@ -90,9 +92,11 @@ class WordRepository extends CoreRepository
             // Обновляем слово
             $word = $this->updateWordData($request);
 
-            // Вставляем новые предложения
             if (!empty($request->arr_new_sentences)) {
+                // Вставляем новые предложения
                 $this->insertSentences($request->arr_new_sentences);
+                // Вставляем новые слова
+                $this->insertNewWords($request->arr_new_sentences);
             }
 
             DB::commit();
@@ -131,6 +135,23 @@ class WordRepository extends CoreRepository
         }
 
         Sentence::insert($dataToInsert);
+    }
+
+    /**
+     * Вставляем новые предложения
+     * @param $request
+     * @return void
+     */
+    protected function insertNewWords($arrSentences): void
+    {
+        foreach ($arrSentences as $obj) {
+            // Удаляем лишние пробелы из предложения
+            $sentence = preg_replace('|[\s]+|s', ' ', $obj['original']);
+            // Разбиваем предложение на массив слов
+            $words = explode(" ", trim($sentence));
+            // добавить слова которых нет
+            Word::processWords($words);
+        }
     }
 
     protected function getModelClass(): string

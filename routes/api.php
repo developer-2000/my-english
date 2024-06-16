@@ -28,5 +28,5 @@ Route::post('sentence/bind-checkbox-sound', [SentenceController::class, 'bindChe
 // 3
 Route::post('learn/get-word', [LearnWordsController::class, 'getLearnWord']);
 
-// 3
+// 4
 Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence']);

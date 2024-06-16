@@ -20,4 +20,24 @@ class Word extends Model {
             $type->id = 0;
         });
     }
+
+    public static function processWords(array $words): void
+    {
+//        $forbiddenWords = ['are', 'is', 'a', 'an'];
+
+        foreach ($words as $word) {
+            // Удаляем пробелы и точки из слова
+            $cleanedWord = str_replace([' ', '.', '?', '!', ',', ':'], '', $word);
+
+            // Проверяем наличие слова в массиве запрещенных слов
+//            if (in_array($cleanedWord, $forbiddenWords)) {
+//                continue;
+//            }
+
+            self::firstOrCreate(
+                ['word' => $cleanedWord],
+                ['translation' => '', 'description' => '""']
+            );
+        }
+    }
 }

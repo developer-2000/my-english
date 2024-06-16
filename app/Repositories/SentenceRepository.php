@@ -56,25 +56,13 @@ class SentenceRepository extends CoreRepository
 
     public function storeSentences($request): void
     {
-        $request['sentence'] = preg_replace('|[\s]+|s', ' ', $request['sentence']);
-        $words = explode(" ", trim($request['sentence']));
+        // Удаляем лишние пробелы из предложения
+        $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);
+        // Разбиваем предложение на массив слов
+        $words = explode(" ", trim($sentence));
 
         // добавить слова которых нет
-        foreach ($words as $key => $word){
-            // Удаляем пробелы и точки из слова
-            $cleanedWord = str_replace([' ', '.', '?', '!', ',', ':'], '', $word);
-
-            // Проверяем наличие слова в массиве запрещенных слов
-            $forbiddenWords = ['are', 'is', 'a', 'an'];
-            if (in_array($cleanedWord, $forbiddenWords)) {
-                continue;
-            }
-
-            Word::firstOrCreate(
-                ['word' => $cleanedWord],
-                ['translation' => '', 'description' => '""']
-            );
-        }
+        Word::processWords($words);
         // добавить предложение
         Sentence::create($request);
     }
