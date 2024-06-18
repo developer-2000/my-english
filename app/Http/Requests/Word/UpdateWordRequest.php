@@ -36,7 +36,7 @@ class UpdateWordRequest extends ApiFormRequest
             'translation' => 'required|string|min:1',
             'url_image' => 'nullable|string',
             'description' => 'nullable|string',
-            'type_id' => 'nullable|integer|exists:word_types,id',
+            'type_id' => 'nullable|integer',
             'time_forms' => 'nullable',
             'arr_new_sentences' => 'nullable|array',
         ];

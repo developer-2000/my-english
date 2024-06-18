@@ -14,16 +14,24 @@ class TypeSeeder extends Seeder {
         $object = new \stdClass();
         $object->text = 'отвечает на вопросы что делать? что сделать?';
         $object->object = null;
+        $arrData = [];
 
-        WordType::create(
-            ['type'=>'глагол','color'=>'#007bff','description'=>$object]
-        );
+        // 1
+        $arrData[] = [
+            'type' => 'глагол',
+            'color' => '#007bff',
+            'description' => json_encode($object),
+        ];
 
+        // 2
         $object->text = 'действие, состояние, свойство, качество';
-        WordType::create(
-            ['type'=>'подлежащее','color'=>'#28a745','description'=>$object],
-        );
+        $arrData[] = [
+            'type' => 'подлежащее',
+            'color' => '#28a745',
+            'description' => json_encode($object),
+        ];
 
+        // 3
         $object->text = 'Имеют единственное и множественное число с приставкой “s” в конце. <br/>
 Они используются с (the) или (a, an) артиклями - "a book" или "the car". <br/>
 "the" когда речь идет о объекте, который известен или упоминается ранее - "She bought the book". <br/>
@@ -33,19 +41,35 @@ class TypeSeeder extends Seeder {
 "a" ставится перед согласной буквой "I need a new computer." <br/>
 "an" ставится перед гласной "an interesting movie"
 ';
-        WordType::create(
-            ['type'=>'существительное','color'=>'#cc9a03','description'=>$object],
-        );
-
-        $object->text = null;
-        $object->object = [
-            "past"=>["word"=>null, "translation"=>null, "accent"=>null],
-            "present"=>["word"=>null, "translation"=>null, "accent"=>null],
-            "future"=>["word"=>null, "translation"=>null, "accent"=>null]
+        $arrData[] = [
+            'type' => 'существительное',
+            'color' => '#cc9a03',
+            'description' => json_encode($object),
         ];
 
-        WordType::create(
-            ['type'=>'формы времени','color'=>'#dc3545','description'=>$object]
-        );
+        // 4
+        $object->text = null;
+        $object->object = [
+            "past" => ["word" => null, "translation" => null, "accent" => null],
+            "present" => ["word" => null, "translation" => null, "accent" => null],
+            "future" => ["word" => null, "translation" => null, "accent" => null]
+        ];
+        $arrData[] = [
+            'type' => 'формы времени',
+            'color' => '#dc3545',
+            'description' => json_encode($object),
+        ];
+
+        // 5
+        $object->text = 'Целые и дробные цифры';
+        $object->object = ["number" => null];
+        $arrData[] = [
+            'type' => 'числительные',
+            'color' => '#000000',
+            'description' => json_encode($object),
+        ];
+
+        WordType::insert($arrData);
     }
 }
+

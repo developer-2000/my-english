@@ -155,6 +155,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       allTypes: [],
       allColor: [],
       objWordTimeForms: null,
+      objNumber: null,
       objUpdateWord: null,
       objWordFromTable: {
         bool_click_button_word_from_table: false,
@@ -170,84 +171,79 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     ModalLearnWord: _details_ModalLearnWord__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   methods: {
+    insertDataForPostWord: function insertDataForPostWord() {
+      return {
+        word: this.new_word,
+        translation: this.translation_word,
+        url_image: this.url_image,
+        description: this.description,
+        arr_new_sentences: this.objGenerateSentences.selectedSentences,
+        type_id: this.select_type_id,
+        // id типа из таблицы word_types
+        // типы слова формы времени или числительные
+        // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
+        // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
+        time_forms: this.objWordTimeForms ? this.objWordTimeForms : this.objNumber ? this.objNumber : null
+      };
+    },
     createWord: function createWord() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var data, response;
+        var response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              data = {
-                word: _this.new_word,
-                translation: _this.translation_word,
-                url_image: _this.url_image,
-                description: _this.description,
-                type_id: _this.select_type_id,
-                time_forms: _this.objWordTimeForms,
-                arr_new_sentences: _this.objGenerateSentences.selectedSentences
-              };
-              _context.prev = 1;
-              _context.next = 4;
-              return _this.$http.post("".concat(_this.$http.apiUrl(), "word"), data);
-            case 4:
+              _context.prev = 0;
+              _context.next = 3;
+              return _this.$http.post("".concat(_this.$http.apiUrl(), "word"), _this.insertDataForPostWord());
+            case 3:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_10___default()('#create_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_10___default()('.modal-backdrop.fade.show').remove();
               }
-              _context.next = 11;
+              _context.next = 10;
               break;
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](1);
+            case 7:
+              _context.prev = 7;
+              _context.t0 = _context["catch"](0);
               console.log(_context.t0);
-            case 11:
+            case 10:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 8]]);
+        }, _callee, null, [[0, 7]]);
       }))();
     },
     updateWord: function updateWord() {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var data, response;
+        var response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              data = {
-                word: _this2.new_word,
-                translation: _this2.translation_word,
-                url_image: _this2.url_image,
-                description: _this2.description,
-                time_forms: _this2.objWordTimeForms,
-                arr_new_sentences: _this2.objGenerateSentences.selectedSentences
-              };
-              if (_this2.select_type_id !== 0) {
-                data.type_id = _this2.select_type_id;
-              }
-              _context2.next = 5;
-              return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.word_id), data);
-            case 5:
+              _context2.next = 3;
+              return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.word_id), _this2.insertDataForPostWord());
+            case 3:
               response = _context2.sent;
               if (_this2.checkSuccess(response)) {
                 _this2.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_10___default()('#update_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_10___default()('.modal-backdrop.fade.show').remove();
               }
-              _context2.next = 12;
+              _context2.next = 10;
               break;
-            case 9:
-              _context2.prev = 9;
+            case 7:
+              _context2.prev = 7;
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
-            case 12:
+            case 10:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 9]]);
+        }, _callee2, null, [[0, 7]]);
       }))();
     },
     deleteWord: function deleteWord(word_id) {
@@ -493,10 +489,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
       var text_type = row.type !== null ? row.type.type : "";
       var text_description = row.time_forms === null && row.type.description !== undefined ? ' - ' + row.type.description.text : "";
+      // типы слова формы времени или числительные
       if (row.time_forms !== null) {
-        text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
-        text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
-        text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
+        if (row.time_forms.past !== undefined) {
+          text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
+          text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
+          text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
+        } else if (row.time_forms.number !== undefined) {
+          text_description = ' - ' + row.time_forms.number;
+        }
       }
       var span_style = row.type == null ? '' : 'color:' + row.type.color;
 
@@ -563,13 +564,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     setStyleDataModal: function setStyleDataModal(type) {
       var string = '';
       this.objWordTimeForms = null;
+      this.objNumber = null;
       if (type.description == null) {
         string = '';
       } else {
-        if (type.description['text'] !== null) {
+        if (type.description['object'] === null) {
           string = type.description['text'];
-        } else {
-          this.objWordTimeForms = type.description['object'];
+        } else if (type.description['object'] !== null) {
+          // формы времени
+          if (type.description['object']['past'] !== undefined) {
+            this.objWordTimeForms = type.description['object'];
+          }
+          // числительные
+          else if (type.description['object']['number'] !== undefined) {
+            this.objNumber = type.description['object'];
+          }
         }
       }
       jquery__WEBPACK_IMPORTED_MODULE_10___default()('.desc_type').css('border-color', type.color);
@@ -660,7 +669,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.url_image = obj.url_image || '';
       this.select_type_id = obj.type.id || 0;
       this.description = obj.description || '""';
-      this.objWordTimeForms = obj.time_forms || null;
+
+      // типы слова формы времени или числительные
+      if (obj.time_forms !== null) {
+        if (obj.time_forms.past !== undefined) {
+          this.objWordTimeForms = obj.time_forms || null;
+        } else if (obj.time_forms.number !== undefined) {
+          this.objNumber = obj.time_forms || null;
+        }
+      } else {
+        this.objWordTimeForms = null;
+        this.objNumber = null;
+      }
     },
     // инициализация toggle
     initialiseToggle: function initialiseToggle() {
@@ -1482,7 +1502,28 @@ var render = function render() {
         _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
       }
     }
-  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objNumber.number,
+      expression: "objNumber.number"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert number"
+    },
+    domProps: {
+      value: _vm.objNumber.number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objNumber, "number", $event.target.value);
+      }
+    }
+  })]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -2008,7 +2049,28 @@ var render = function render() {
         _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
       }
     }
-  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.objNumber.number,
+      expression: "objNumber.number"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Insert number"
+    },
+    domProps: {
+      value: _vm.objNumber.number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.objNumber, "number", $event.target.value);
+      }
+    }
+  })]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",

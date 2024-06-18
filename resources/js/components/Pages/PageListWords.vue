@@ -103,6 +103,7 @@
                         </div>
                         <!-- Поля создаваемого слова -->
                         <form action="#" v-show="!objGenerateSentences.boolAddSentences">
+
                             <!-- new word -->
                             <div class="form-group">
                                 <label for="new_word" class="col-form-label">New word</label>
@@ -160,6 +161,7 @@
                                 </div>
                                 <!-- правый блок свойств -->
                                 <div class="desc_type">
+
                                     <div class="text"></div>
                                     <div class="box-time-forms" v-if="objWordTimeForms !== null">
                                         <!-- прошедшее -->
@@ -201,6 +203,13 @@
                                                    v-model="objWordTimeForms.future.accent"
                                             >
                                         </div>
+                                    </div>
+
+                                    <div v-if="objNumber !== null">
+                                        <label>ввести цыфрой</label>
+                                        <input type="text" class="form-control" placeholder="Insert number"
+                                               v-model="objNumber.number"
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -348,6 +357,7 @@
 
                                 <!-- правый блок свойств -->
                                 <div class="desc_type">
+
                                     <div class="text"></div>
                                     <div class="box-time-forms" v-if="objWordTimeForms !== null">
                                         <!-- прошедшее -->
@@ -390,6 +400,13 @@
                                             >
                                         </div>
                                     </div>
+                                    <div v-if="objNumber !== null">
+                                        <label>ввести цыфрой</label>
+                                        <input type="text" class="form-control" placeholder="Insert number"
+                                               v-model="objNumber.number"
+                                        >
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -609,6 +626,7 @@
                 allTypes: [],
                 allColor: [],
                 objWordTimeForms: null,
+                objNumber: null,
                 objUpdateWord: null,
                 objWordFromTable: {
                     bool_click_button_word_from_table: false,
@@ -624,19 +642,24 @@
         ],
         components: { VueGoodTable, helpSearchWord, ModalLearnWord },
         methods: {
-            async createWord() {
-                let data = {
+            insertDataForPostWord(){
+                return {
                     word: this.new_word,
                     translation: this.translation_word,
                     url_image: this.url_image,
                     description: this.description,
-                    type_id: this.select_type_id,
-                    time_forms: this.objWordTimeForms,
                     arr_new_sentences: this.objGenerateSentences.selectedSentences,
-                };
-
+                    type_id: this.select_type_id, // id типа из таблицы word_types
+                    // типы слова формы времени или числительные
+                    // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
+                    // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
+                    time_forms: this.objWordTimeForms ? this.objWordTimeForms :
+                        this.objNumber ? this.objNumber : null,
+                }
+            },
+            async createWord() {
                 try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}word`, data);
+                    const response = await this.$http.post(`${this.$http.apiUrl()}word`, this.insertDataForPostWord());
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#create_word').modal('hide');
@@ -648,20 +671,7 @@
             },
             async updateWord() {
                 try {
-                    let data = {
-                        word: this.new_word,
-                        translation: this.translation_word,
-                        url_image: this.url_image,
-                        description: this.description,
-                        time_forms: this.objWordTimeForms,
-                        arr_new_sentences: this.objGenerateSentences.selectedSentences,
-                    };
-
-                    if(this.select_type_id !== 0){
-                        data.type_id = this.select_type_id;
-                    }
-
-                    const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.word_id}`, data);
+                    const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.word_id}`, this.insertDataForPostWord());
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#update_word').modal('hide');
@@ -824,10 +834,16 @@
                 let text_description = (row.time_forms === null && row.type.description !== undefined) ?
                     ' - '+ row.type.description.text :
                     ""
+                // типы слова формы времени или числительные
                 if(row.time_forms !== null){
-                    text_description = ' - Прошлое: '+ row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.'
-                    text_description += ' Настоящее: '+ row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.'
-                    text_description += ' Будущее: '+ row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.'
+                    if(row.time_forms.past !== undefined){
+                        text_description = ' - Прошлое: '+ row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.'
+                        text_description += ' Настоящее: '+ row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.'
+                        text_description += ' Будущее: '+ row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.'
+                    }
+                    else if(row.time_forms.number !== undefined){
+                        text_description = ' - '+ row.time_forms.number
+                    }
                 }
                 let span_style = row.type == null ? '' : 'color:'+row.type.color
 
@@ -901,16 +917,24 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             setStyleDataModal(type){
                 let string = ''
                 this.objWordTimeForms = null
+                this.objNumber = null
 
                 if(type.description == null){
                     string = ''
                 }
                 else{
-                    if(type.description['text'] !== null){
+                    if(type.description['object'] === null){
                         string = type.description['text']
                     }
-                    else{
-                        this.objWordTimeForms = type.description['object']
+                    else if(type.description['object'] !== null){
+                        // формы времени
+                        if(type.description['object']['past'] !== undefined){
+                            this.objWordTimeForms = type.description['object']
+                        }
+                        // числительные
+                        else if(type.description['object']['number'] !== undefined){
+                            this.objNumber = type.description['object']
+                        }
                     }
                 }
                 $('.desc_type').css('border-color',type.color);
@@ -982,7 +1006,20 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.url_image = obj.url_image || '';
                 this.select_type_id = obj.type.id || 0;
                 this.description = obj.description || '""';
-                this.objWordTimeForms = obj.time_forms || null;
+
+                // типы слова формы времени или числительные
+                if(obj.time_forms !== null){
+                    if(obj.time_forms.past !== undefined){
+                        this.objWordTimeForms = obj.time_forms || null;
+                    }
+                    else if(obj.time_forms.number !== undefined){
+                        this.objNumber = obj.time_forms || null;
+                    }
+                }
+                else{
+                    this.objWordTimeForms = null;
+                    this.objNumber = null;
+                }
             },
             // инициализация toggle
             initialiseToggle() {

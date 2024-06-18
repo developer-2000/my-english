@@ -110,13 +110,13 @@ MIDDLEWARE
 
 SEEDER
 после создания новой seed в консоле, при ошибке - composer dumpautoload
-        // создать сидер
+        // 1 создать сидер
         php artisan make:seeder UserSeeder
-        // выполнить сидер
+        // 2 выполнить сидер
         php artisan db:seed
-        // запуск конкретного seed
+        // 3 запуск конкретного seed
         php artisan db:seed --class=UsersTableSeeder
-        // создать файл фабрики
+        // 4 создать файл фабрики
         php artisan make:factory PostFactory
 
 Вызов

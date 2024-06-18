@@ -14,7 +14,6 @@ Route::group(['prefix'=>'technical'], function (){
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         return "<h1>all_clear</h1>";
     });
-
 });
 
 Route::any('{all}', function(){
