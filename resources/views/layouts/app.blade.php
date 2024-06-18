@@ -30,12 +30,12 @@
         <!-- МЕНЮ LEFT -->
         <ul id="left_menu">
             <li>
-                <router-link to="/page_list_words" class="left_menu"  exact>
+                <router-link to="/page-list-words" class="left_menu"  exact>
                     Список слов
                 </router-link>
             </li>
             <li>
-                <router-link to="/page_word_sentences" class="left_menu"  exact>
+                <router-link to="/page-word-sentences" class="left_menu"  exact>
                     Предложения слов
                 </router-link>
             </li>

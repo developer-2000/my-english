@@ -9,12 +9,12 @@ const routes = [
         component: () => import('../components/Pages/PageIndex.vue')
     },
     {
-        path: '/page_list_words',
+        path: '/page-list-words',
         name: 'PAGE_LIST_WORDS',
         component: () => import('../components/Pages/PageListWords.vue')
     },
     {
-        path: '/page_word_sentences',
+        path: '/page-word-sentences',
         name: 'PAGE_WORD_SENTENCES',
         component: () => import('../components/Pages/PageWordSentences.vue')
     },
