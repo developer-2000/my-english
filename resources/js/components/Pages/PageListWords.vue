@@ -112,35 +112,35 @@
                                        placeholder="Insert new word"
                                        id="new_word"
                                        ref="new_word"
-                                       v-model="new_word"
+                                       v-model="arrInputsModal.new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord(new_word)"
-                                       :class="{'is-invalid': $v.new_word.$error}"
+                                       @keyup="searchHelpWord(arrInputsModal.new_word)"
+                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
                                        required
                                 >
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.new_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_word.minLength)">Number of characters {{ this.new_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">The field is empty!</div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">Number of characters {{ this.arrInputsModal.new_word.length }} less needed</div>
                             </div>
 
                             <!-- translation word -->
                             <div class="form-group">
                                 <label for="translation_word" class="col-form-label">Translation</label>
                                 <input type="text" class="form-control" placeholder="Insert translation a word" id="translation_word"
-                                       v-model="translation_word"
+                                       v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
-                                       :class="{'is-invalid': $v.translation_word.$error}"
+                                       :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
                                        required
                                 >
-                                <div class="invalid-feedback" v-if="!$v.translation_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_word.minLength)">Number of characters {{ this.translation_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">The field is empty!</div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">Number of characters {{ this.arrInputsModal.translation_word.length }} less needed</div>
                             </div>
 
                             <!-- url image from out source -->
                             <div class="form-group">
                                 <label for="url_image" class="col-form-label">Url image</label>
                                 <input type="text" class="form-control" placeholder="Input url" id="url_image"
-                                       v-model="url_image"
+                                       v-model="arrInputsModal.url_image"
                                 >
                             </div>
 
@@ -150,7 +150,7 @@
                                 <div class="box-left-site">
                                     <div class="form-group">
                                         <label for="select_type" class="col-form-label">Word type</label>
-                                        <select id="select_type" v-model="select_type_id" class="custom-select" size="3">
+                                        <select id="select_type" v-model="arrInputsModal.select_type_id" class="custom-select" size="3">
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
                                             >
@@ -163,52 +163,52 @@
                                 <div class="desc_type">
 
                                     <div class="text"></div>
-                                    <div class="box-time-forms" v-if="objWordTimeForms !== null">
+                                    <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
                                         <!-- прошедшее -->
                                         <div class="box-past">
                                             <label>Past time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.past.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.past.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.past.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.accent"
                                             >
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
                                             <label>Present time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.present.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.present.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.present.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.accent"
                                             >
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
                                             <label>Future time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.future.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.future.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.future.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.accent"
                                             >
                                         </div>
                                     </div>
 
-                                    <div v-if="objNumber !== null">
+                                    <div v-if="arrInputsModal.objNumber !== null">
                                         <label>ввести цыфрой</label>
                                         <input type="text" class="form-control" placeholder="Insert number"
-                                               v-model="objNumber.number"
+                                               v-model="arrInputsModal.objNumber.number"
                                         >
                                     </div>
                                 </div>
@@ -220,7 +220,7 @@
                                 <textarea class="form-control"
                                           id="word_description"
                                           placeholder="Insert description word"
-                                          v-model="description"
+                                          v-model="arrInputsModal.description"
                                 ></textarea>
                             </div>
 
@@ -307,35 +307,35 @@
                             <div class="form-group">
                                 <label for="old_word" class="col-form-label">Update word</label>
                                 <input type="text" class="form-control entry-field-help" placeholder="Insert word" id="old_word"
-                                       v-model="new_word"
+                                       v-model="arrInputsModal.new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord(new_word)"
-                                       :class="{'is-invalid': $v.new_word.$error}"
+                                       @keyup="searchHelpWord(arrInputsModal.new_word)"
+                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
                                        required
                                 >
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.new_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_word.minLength)">Number of characters {{ this.new_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">The field is empty!</div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">Number of characters {{ this.arrInputsModal.new_word.length }} less needed</div>
                             </div>
 
                             <!-- translation word -->
                             <div class="form-group">
                                 <label for="update_translation" class="col-form-label">Translation</label>
                                 <input type="text" class="form-control" placeholder="Insert translation" id="update_translation"
-                                       v-model="translation_word"
+                                       v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
-                                       :class="{'is-invalid': $v.translation_word.$error}"
+                                       :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
                                        required
                                 >
-                                <div class="invalid-feedback" v-if="!$v.translation_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_word.minLength)">Number of characters {{ this.translation_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">The field is empty!</div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">Number of characters {{ this.arrInputsModal.translation_word.length }} less needed</div>
                             </div>
 
                             <!-- url image from out source -->
                             <div class="form-group">
                                 <label for="update_url_image" class="col-form-label">Url image</label>
                                 <input type="text" class="form-control" placeholder="Input url" id="update_url_image"
-                                       v-model="url_image"
+                                       v-model="arrInputsModal.url_image"
                                 >
                             </div>
 
@@ -345,7 +345,7 @@
                                 <div class="box-left-site">
                                     <div class="form-group">
                                         <label for="update_select_type" class="col-form-label">Word type</label>
-                                        <select id="update_select_type" v-model="select_type_id" class="custom-select" size="3">
+                                        <select id="update_select_type" v-model="arrInputsModal.select_type_id" class="custom-select" size="3">
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
                                             >
@@ -359,51 +359,51 @@
                                 <div class="desc_type">
 
                                     <div class="text"></div>
-                                    <div class="box-time-forms" v-if="objWordTimeForms !== null">
+                                    <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
                                         <!-- прошедшее -->
                                         <div class="box-past">
                                             <label>Past time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.past.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.past.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.past.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.past.accent"
                                             >
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
                                             <label>Present time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.present.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.present.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.present.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.present.accent"
                                             >
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
                                             <label>Future time</label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="objWordTimeForms.future.word"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.word"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="objWordTimeForms.future.translation"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.translation"
                                             >
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="objWordTimeForms.future.accent"
+                                                   v-model="arrInputsModal.objWordTimeForms.future.accent"
                                             >
                                         </div>
                                     </div>
-                                    <div v-if="objNumber !== null">
+                                    <div v-if="arrInputsModal.objNumber !== null">
                                         <label>ввести цыфрой</label>
                                         <input type="text" class="form-control" placeholder="Insert number"
-                                               v-model="objNumber.number"
+                                               v-model="arrInputsModal.objNumber.number"
                                         >
                                     </div>
 
@@ -413,7 +413,7 @@
                             <!-- Word description -->
                             <div class="form-group">
                                 <label for="update_word_description" class="col-form-label">Word description</label>
-                                <textarea v-model="description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
+                                <textarea v-model="arrInputsModal.description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
                             </div>
 
                             <!-- Предложения -->
@@ -503,13 +503,7 @@
                     selectedSentences: []         // Выбранные чекбоксы предложений
                 },
                 bool_learn_words: false, // bool открытия модалки изучения слов
-                word_id: 0,
                 type_id: 0,
-                new_word: '',
-                translation_word: '',
-                url_image: '',
-                description: '',
-                select_type_id: 0,
                 table: {
                     // max rows in database
                     totalRecords: 0,
@@ -625,14 +619,22 @@
                 },
                 allTypes: [],
                 allColor: [],
-                objWordTimeForms: null,
-                objNumber: null,
                 objUpdateWord: null,
                 objWordFromTable: {
                     bool_click_button_word_from_table: false,
                     word: '',
                 },
                 arrSentences: [],
+                arrInputsModal: {
+                    word_id: 0,
+                    new_word: '',
+                    translation_word: '',
+                    url_image: '',
+                    select_type_id: 0,
+                    description: '',
+                    objWordTimeForms: null,
+                    objNumber: null,
+                },
             };
         },
         mixins: [
@@ -644,17 +646,17 @@
         methods: {
             insertDataForPostWord(){
                 return {
-                    word: this.new_word,
-                    translation: this.translation_word,
-                    url_image: this.url_image,
-                    description: this.description,
+                    word: this.arrInputsModal.new_word,
+                    translation: this.arrInputsModal.translation_word,
+                    url_image: this.arrInputsModal.url_image,
+                    description: this.arrInputsModal.description,
                     arr_new_sentences: this.objGenerateSentences.selectedSentences,
-                    type_id: this.select_type_id, // id типа из таблицы word_types
+                    type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
                     // типы слова формы времени или числительные
                     // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
                     // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
-                    time_forms: this.objWordTimeForms ? this.objWordTimeForms :
-                        this.objNumber ? this.objNumber : null,
+                    time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms :
+                        this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null,
                 }
             },
             async createWord() {
@@ -671,7 +673,7 @@
             },
             async updateWord() {
                 try {
-                    const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.word_id}`, this.insertDataForPostWord());
+                    const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.arrInputsModal.word_id}`, this.insertDataForPostWord());
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#update_word').modal('hide');
@@ -728,7 +730,7 @@
                 this.objGenerateSentences.boolAddSentences = true
                 this.objGenerateSentences.boolLoadingIndicator = false
                 let data = {
-                    arr_words: Array.isArray(this.new_word) ? this.new_word : [this.new_word],
+                    arr_words: Array.isArray(this.arrInputsModal.new_word) ? this.arrInputsModal.new_word : [this.arrInputsModal.new_word],
                 };
 
                 try {
@@ -742,10 +744,10 @@
                 }
             },
             touchNewWord() {
-                this.$v.new_word.$touch();
+                this.$v.arrInputsModal.new_word.$touch();
             },
             touchTranslationWord() {
-                this.$v.translation_word.$touch();
+                this.$v.arrInputsModal.translation_word.$touch();
             },
             initialData() {
                 this.loadWordsAndTypes();
@@ -877,7 +879,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // в модалке создания слова
                 document.getElementById("select_type").addEventListener('change', () => {
                     for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id === this.select_type_id){
+                        if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
                             this.setStyleDataModal(this.allTypes[i]);
                             break;
                         }
@@ -887,7 +889,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // в модалке обновления слова
                 document.getElementById("update_select_type").addEventListener('change', () => {
                     for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id == this.select_type_id){
+                        if(this.allTypes[i].id == this.arrInputsModal.select_type_id){
                             this.setStyleDataModal(this.allTypes[i]);
                             break;
                         }
@@ -916,8 +918,8 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // отобразить значение типа слова в правой части select выбора
             setStyleDataModal(type){
                 let string = ''
-                this.objWordTimeForms = null
-                this.objNumber = null
+                this.arrInputsModal.objWordTimeForms = null
+                this.arrInputsModal.objNumber = null
 
                 if(type.description == null){
                     string = ''
@@ -929,11 +931,11 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     else if(type.description['object'] !== null){
                         // формы времени
                         if(type.description['object']['past'] !== undefined){
-                            this.objWordTimeForms = type.description['object']
+                            this.arrInputsModal.objWordTimeForms = type.description['object']
                         }
                         // числительные
                         else if(type.description['object']['number'] !== undefined){
-                            this.objNumber = type.description['object']
+                            this.arrInputsModal.objNumber = type.description['object']
                         }
                     }
                 }
@@ -1000,25 +1002,25 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // заполнение переменных для модалок создания и редактирования слова
             setVariableDefault(obj = {id: 0, word: '', translation: '', url_image: '', type: {id: 0}, description: '""', time_forms: null}){
-                this.word_id = obj.id || 0;
-                this.new_word = obj.word || '';
-                this.translation_word = obj.translation || '';
-                this.url_image = obj.url_image || '';
-                this.select_type_id = obj.type.id || 0;
-                this.description = obj.description || '""';
+                this.arrInputsModal.word_id = obj.id || 0;
+                this.arrInputsModal.new_word = obj.word || '';
+                this.arrInputsModal.translation_word = obj.translation || '';
+                this.arrInputsModal.url_image = obj.url_image || '';
+                this.arrInputsModal.select_type_id = obj.type.id || 0;
+                this.arrInputsModal.description = obj.description || '""';
 
                 // типы слова формы времени или числительные
                 if(obj.time_forms !== null){
                     if(obj.time_forms.past !== undefined){
-                        this.objWordTimeForms = obj.time_forms || null;
+                        this.arrInputsModal.objWordTimeForms = obj.time_forms || null;
                     }
                     else if(obj.time_forms.number !== undefined){
-                        this.objNumber = obj.time_forms || null;
+                        this.arrInputsModal.objNumber = obj.time_forms || null;
                     }
                 }
                 else{
-                    this.objWordTimeForms = null;
-                    this.objNumber = null;
+                    this.arrInputsModal.objWordTimeForms = null;
+                    this.arrInputsModal.objNumber = null;
                 }
             },
             // инициализация toggle
@@ -1092,13 +1094,15 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             $(this.$refs.toggle2).bootstrapToggle('destroy');
         },
         validations: {
-            new_word: {
-                required,
-                minLength: minLength(1),
-            },
-            translation_word: {
-                required,
-                minLength: minLength(1),
+            arrInputsModal: {
+                new_word: {
+                    required,
+                    minLength: minLength(3)
+                },
+                translation_word: {
+                    required,
+                    minLength: minLength(1),
+                },
             },
         },
         name: "PageListWords.vue"

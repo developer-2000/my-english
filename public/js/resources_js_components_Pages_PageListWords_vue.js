@@ -64,13 +64,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       },
       bool_learn_words: false,
       // bool открытия модалки изучения слов
-      word_id: 0,
       type_id: 0,
-      new_word: '',
-      translation_word: '',
-      url_image: '',
-      description: '',
-      select_type_id: 0,
       table: {
         // max rows in database
         totalRecords: 0,
@@ -154,14 +148,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       },
       allTypes: [],
       allColor: [],
-      objWordTimeForms: null,
-      objNumber: null,
       objUpdateWord: null,
       objWordFromTable: {
         bool_click_button_word_from_table: false,
         word: ''
       },
-      arrSentences: []
+      arrSentences: [],
+      arrInputsModal: {
+        word_id: 0,
+        new_word: '',
+        translation_word: '',
+        url_image: '',
+        select_type_id: 0,
+        description: '',
+        objWordTimeForms: null,
+        objNumber: null
+      }
     };
   },
   mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"]],
@@ -173,17 +175,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   methods: {
     insertDataForPostWord: function insertDataForPostWord() {
       return {
-        word: this.new_word,
-        translation: this.translation_word,
-        url_image: this.url_image,
-        description: this.description,
+        word: this.arrInputsModal.new_word,
+        translation: this.arrInputsModal.translation_word,
+        url_image: this.arrInputsModal.url_image,
+        description: this.arrInputsModal.description,
         arr_new_sentences: this.objGenerateSentences.selectedSentences,
-        type_id: this.select_type_id,
+        type_id: this.arrInputsModal.select_type_id,
         // id типа из таблицы word_types
         // типы слова формы времени или числительные
         // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
         // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
-        time_forms: this.objWordTimeForms ? this.objWordTimeForms : this.objNumber ? this.objNumber : null
+        time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms : this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null
       };
     },
     createWord: function createWord() {
@@ -225,7 +227,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.word_id), _this2.insertDataForPostWord());
+              return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.arrInputsModal.word_id), _this2.insertDataForPostWord());
             case 3:
               response = _context2.sent;
               if (_this2.checkSuccess(response)) {
@@ -357,7 +359,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this6.objGenerateSentences.boolAddSentences = true;
               _this6.objGenerateSentences.boolLoadingIndicator = false;
               data = {
-                arr_words: Array.isArray(_this6.new_word) ? _this6.new_word : [_this6.new_word]
+                arr_words: Array.isArray(_this6.arrInputsModal.new_word) ? _this6.arrInputsModal.new_word : [_this6.arrInputsModal.new_word]
               };
               _context6.prev = 3;
               _context6.next = 6;
@@ -382,10 +384,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     touchNewWord: function touchNewWord() {
-      this.$v.new_word.$touch();
+      this.$v.arrInputsModal.new_word.$touch();
     },
     touchTranslationWord: function touchTranslationWord() {
-      this.$v.translation_word.$touch();
+      this.$v.arrInputsModal.translation_word.$touch();
     },
     initialData: function initialData() {
       this.loadWordsAndTypes();
@@ -524,7 +526,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // в модалке создания слова
       document.getElementById("select_type").addEventListener('change', function () {
         for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id === _this9.select_type_id) {
+          if (_this9.allTypes[i].id === _this9.arrInputsModal.select_type_id) {
             _this9.setStyleDataModal(_this9.allTypes[i]);
             break;
           }
@@ -534,7 +536,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // в модалке обновления слова
       document.getElementById("update_select_type").addEventListener('change', function () {
         for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id == _this9.select_type_id) {
+          if (_this9.allTypes[i].id == _this9.arrInputsModal.select_type_id) {
             _this9.setStyleDataModal(_this9.allTypes[i]);
             break;
           }
@@ -563,8 +565,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     // отобразить значение типа слова в правой части select выбора
     setStyleDataModal: function setStyleDataModal(type) {
       var string = '';
-      this.objWordTimeForms = null;
-      this.objNumber = null;
+      this.arrInputsModal.objWordTimeForms = null;
+      this.arrInputsModal.objNumber = null;
       if (type.description == null) {
         string = '';
       } else {
@@ -573,11 +575,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         } else if (type.description['object'] !== null) {
           // формы времени
           if (type.description['object']['past'] !== undefined) {
-            this.objWordTimeForms = type.description['object'];
+            this.arrInputsModal.objWordTimeForms = type.description['object'];
           }
           // числительные
           else if (type.description['object']['number'] !== undefined) {
-            this.objNumber = type.description['object'];
+            this.arrInputsModal.objNumber = type.description['object'];
           }
         }
       }
@@ -663,23 +665,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         description: '""',
         time_forms: null
       };
-      this.word_id = obj.id || 0;
-      this.new_word = obj.word || '';
-      this.translation_word = obj.translation || '';
-      this.url_image = obj.url_image || '';
-      this.select_type_id = obj.type.id || 0;
-      this.description = obj.description || '""';
+      this.arrInputsModal.word_id = obj.id || 0;
+      this.arrInputsModal.new_word = obj.word || '';
+      this.arrInputsModal.translation_word = obj.translation || '';
+      this.arrInputsModal.url_image = obj.url_image || '';
+      this.arrInputsModal.select_type_id = obj.type.id || 0;
+      this.arrInputsModal.description = obj.description || '""';
 
       // типы слова формы времени или числительные
       if (obj.time_forms !== null) {
         if (obj.time_forms.past !== undefined) {
-          this.objWordTimeForms = obj.time_forms || null;
+          this.arrInputsModal.objWordTimeForms = obj.time_forms || null;
         } else if (obj.time_forms.number !== undefined) {
-          this.objNumber = obj.time_forms || null;
+          this.arrInputsModal.objNumber = obj.time_forms || null;
         }
       } else {
-        this.objWordTimeForms = null;
-        this.objNumber = null;
+        this.arrInputsModal.objWordTimeForms = null;
+        this.arrInputsModal.objNumber = null;
       }
     },
     // инициализация toggle
@@ -750,13 +752,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     jquery__WEBPACK_IMPORTED_MODULE_10___default()(this.$refs.toggle2).bootstrapToggle('destroy');
   },
   validations: {
-    new_word: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(1)
-    },
-    translation_word: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
-      minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(1)
+    arrInputsModal: {
+      new_word: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
+        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(3)
+      },
+      translation_word: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.required,
+        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_12__.minLength)(1)
+      }
     }
   },
   name: "PageListWords.vue"
@@ -1154,13 +1158,13 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.new_word,
-      expression: "new_word"
+      value: _vm.arrInputsModal.new_word,
+      expression: "arrInputsModal.new_word"
     }],
     ref: "new_word",
     staticClass: "form-control entry-field-help",
     "class": {
-      "is-invalid": _vm.$v.new_word.$error
+      "is-invalid": _vm.$v.arrInputsModal.new_word.$error
     },
     attrs: {
       type: "text",
@@ -1169,29 +1173,29 @@ var render = function render() {
       required: ""
     },
     domProps: {
-      value: _vm.new_word
+      value: _vm.arrInputsModal.new_word
     },
     on: {
       blur: function blur($event) {
         return _vm.touchNewWord();
       },
       keyup: function keyup($event) {
-        return _vm.searchHelpWord(_vm.new_word);
+        return _vm.searchHelpWord(_vm.arrInputsModal.new_word);
       },
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.new_word = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "new_word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("help-search-word", {
     attrs: {
       "help-dynamic": _vm.help_dynamic
     }
-  }), _vm._v(" "), !_vm.$v.new_word.required ? _c("div", {
+  }), _vm._v(" "), !_vm.$v.arrInputsModal.new_word.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_word.minLength ? _c("div", {
+  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.arrInputsModal.new_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("Number of characters " + _vm._s(this.new_word.length) + " less needed")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("Number of characters " + _vm._s(this.arrInputsModal.new_word.length) + " less needed")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1202,12 +1206,12 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.translation_word,
-      expression: "translation_word"
+      value: _vm.arrInputsModal.translation_word,
+      expression: "arrInputsModal.translation_word"
     }],
     staticClass: "form-control",
     "class": {
-      "is-invalid": _vm.$v.translation_word.$error
+      "is-invalid": _vm.$v.arrInputsModal.translation_word.$error
     },
     attrs: {
       type: "text",
@@ -1216,7 +1220,7 @@ var render = function render() {
       required: ""
     },
     domProps: {
-      value: _vm.translation_word
+      value: _vm.arrInputsModal.translation_word
     },
     on: {
       blur: function blur($event) {
@@ -1224,14 +1228,14 @@ var render = function render() {
       },
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.translation_word = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "translation_word", $event.target.value);
       }
     }
-  }), _vm._v(" "), !_vm.$v.translation_word.required ? _c("div", {
+  }), _vm._v(" "), !_vm.$v.arrInputsModal.translation_word.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_word.minLength ? _c("div", {
+  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.arrInputsModal.translation_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Number of characters " + _vm._s(this.arrInputsModal.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1242,8 +1246,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.url_image,
-      expression: "url_image"
+      value: _vm.arrInputsModal.url_image,
+      expression: "arrInputsModal.url_image"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1252,12 +1256,12 @@ var render = function render() {
       id: "url_image"
     },
     domProps: {
-      value: _vm.url_image
+      value: _vm.arrInputsModal.url_image
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.url_image = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "url_image", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1275,8 +1279,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.select_type_id,
-      expression: "select_type_id"
+      value: _vm.arrInputsModal.select_type_id,
+      expression: "arrInputsModal.select_type_id"
     }],
     staticClass: "custom-select",
     attrs: {
@@ -1291,7 +1295,7 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.select_type_id = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+        _vm.$set(_vm.arrInputsModal, "select_type_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
   }, _vm._l(_vm.allTypes, function (type, key) {
@@ -1305,7 +1309,7 @@ var render = function render() {
     staticClass: "desc_type"
   }, [_c("div", {
     staticClass: "text"
-  }), _vm._v(" "), _vm.objWordTimeForms !== null ? _c("div", {
+  }), _vm._v(" "), _vm.arrInputsModal.objWordTimeForms !== null ? _c("div", {
     staticClass: "box-time-forms"
   }, [_c("div", {
     staticClass: "box-past"
@@ -1313,8 +1317,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.word,
-      expression: "objWordTimeForms.past.word"
+      value: _vm.arrInputsModal.objWordTimeForms.past.word,
+      expression: "arrInputsModal.objWordTimeForms.past.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1322,20 +1326,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.word
+      value: _vm.arrInputsModal.objWordTimeForms.past.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.translation,
-      expression: "objWordTimeForms.past.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.past.translation,
+      expression: "arrInputsModal.objWordTimeForms.past.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1343,20 +1347,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.translation
+      value: _vm.arrInputsModal.objWordTimeForms.past.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.accent,
-      expression: "objWordTimeForms.past.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.past.accent,
+      expression: "arrInputsModal.objWordTimeForms.past.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1364,12 +1368,12 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.accent
+      value: _vm.arrInputsModal.objWordTimeForms.past.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "accent", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1378,8 +1382,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.word,
-      expression: "objWordTimeForms.present.word"
+      value: _vm.arrInputsModal.objWordTimeForms.present.word,
+      expression: "arrInputsModal.objWordTimeForms.present.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1387,20 +1391,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.word
+      value: _vm.arrInputsModal.objWordTimeForms.present.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.translation,
-      expression: "objWordTimeForms.present.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.present.translation,
+      expression: "arrInputsModal.objWordTimeForms.present.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1408,20 +1412,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.translation
+      value: _vm.arrInputsModal.objWordTimeForms.present.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.accent,
-      expression: "objWordTimeForms.present.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.present.accent,
+      expression: "arrInputsModal.objWordTimeForms.present.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1429,12 +1433,12 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.accent
+      value: _vm.arrInputsModal.objWordTimeForms.present.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "accent", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1443,8 +1447,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.word,
-      expression: "objWordTimeForms.future.word"
+      value: _vm.arrInputsModal.objWordTimeForms.future.word,
+      expression: "arrInputsModal.objWordTimeForms.future.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1452,20 +1456,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.word
+      value: _vm.arrInputsModal.objWordTimeForms.future.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.translation,
-      expression: "objWordTimeForms.future.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.future.translation,
+      expression: "arrInputsModal.objWordTimeForms.future.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1473,20 +1477,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.translation
+      value: _vm.arrInputsModal.objWordTimeForms.future.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.accent,
-      expression: "objWordTimeForms.future.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.future.accent,
+      expression: "arrInputsModal.objWordTimeForms.future.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1494,20 +1498,20 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.accent
+      value: _vm.arrInputsModal.objWordTimeForms.future.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "accent", $event.target.value);
       }
     }
-  })])]) : _vm._e(), _vm._v(" "), _vm.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.arrInputsModal.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objNumber.number,
-      expression: "objNumber.number"
+      value: _vm.arrInputsModal.objNumber.number,
+      expression: "arrInputsModal.objNumber.number"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1515,12 +1519,12 @@ var render = function render() {
       placeholder: "Insert number"
     },
     domProps: {
-      value: _vm.objNumber.number
+      value: _vm.arrInputsModal.objNumber.number
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objNumber, "number", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objNumber, "number", $event.target.value);
       }
     }
   })]) : _vm._e()])]), _vm._v(" "), _c("div", {
@@ -1534,8 +1538,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.description,
-      expression: "description"
+      value: _vm.arrInputsModal.description,
+      expression: "arrInputsModal.description"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1543,12 +1547,12 @@ var render = function render() {
       placeholder: "Insert description word"
     },
     domProps: {
-      value: _vm.description
+      value: _vm.arrInputsModal.description
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.description = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "description", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1702,12 +1706,12 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.new_word,
-      expression: "new_word"
+      value: _vm.arrInputsModal.new_word,
+      expression: "arrInputsModal.new_word"
     }],
     staticClass: "form-control entry-field-help",
     "class": {
-      "is-invalid": _vm.$v.new_word.$error
+      "is-invalid": _vm.$v.arrInputsModal.new_word.$error
     },
     attrs: {
       type: "text",
@@ -1716,29 +1720,29 @@ var render = function render() {
       required: ""
     },
     domProps: {
-      value: _vm.new_word
+      value: _vm.arrInputsModal.new_word
     },
     on: {
       blur: function blur($event) {
         return _vm.touchNewWord();
       },
       keyup: function keyup($event) {
-        return _vm.searchHelpWord(_vm.new_word);
+        return _vm.searchHelpWord(_vm.arrInputsModal.new_word);
       },
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.new_word = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "new_word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("help-search-word", {
     attrs: {
       "help-dynamic": _vm.help_dynamic
     }
-  }), _vm._v(" "), !_vm.$v.new_word.required ? _c("div", {
+  }), _vm._v(" "), !_vm.$v.arrInputsModal.new_word.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_word.minLength ? _c("div", {
+  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.arrInputsModal.new_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("Number of characters " + _vm._s(this.new_word.length) + " less needed")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("Number of characters " + _vm._s(this.arrInputsModal.new_word.length) + " less needed")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1749,12 +1753,12 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.translation_word,
-      expression: "translation_word"
+      value: _vm.arrInputsModal.translation_word,
+      expression: "arrInputsModal.translation_word"
     }],
     staticClass: "form-control",
     "class": {
-      "is-invalid": _vm.$v.translation_word.$error
+      "is-invalid": _vm.$v.arrInputsModal.translation_word.$error
     },
     attrs: {
       type: "text",
@@ -1763,7 +1767,7 @@ var render = function render() {
       required: ""
     },
     domProps: {
-      value: _vm.translation_word
+      value: _vm.arrInputsModal.translation_word
     },
     on: {
       blur: function blur($event) {
@@ -1771,14 +1775,14 @@ var render = function render() {
       },
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.translation_word = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "translation_word", $event.target.value);
       }
     }
-  }), _vm._v(" "), !_vm.$v.translation_word.required ? _c("div", {
+  }), _vm._v(" "), !_vm.$v.arrInputsModal.translation_word.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_word.minLength ? _c("div", {
+  }, [_vm._v("The field is empty!")]) : _vm._e(), _vm._v(" "), !_vm.$v.arrInputsModal.translation_word.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("Number of characters " + _vm._s(this.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Number of characters " + _vm._s(this.arrInputsModal.translation_word.length) + " less needed")]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
@@ -1789,8 +1793,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.url_image,
-      expression: "url_image"
+      value: _vm.arrInputsModal.url_image,
+      expression: "arrInputsModal.url_image"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1799,12 +1803,12 @@ var render = function render() {
       id: "update_url_image"
     },
     domProps: {
-      value: _vm.url_image
+      value: _vm.arrInputsModal.url_image
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.url_image = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "url_image", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1822,8 +1826,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.select_type_id,
-      expression: "select_type_id"
+      value: _vm.arrInputsModal.select_type_id,
+      expression: "arrInputsModal.select_type_id"
     }],
     staticClass: "custom-select",
     attrs: {
@@ -1838,7 +1842,7 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.select_type_id = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+        _vm.$set(_vm.arrInputsModal, "select_type_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
   }, _vm._l(_vm.allTypes, function (type, key) {
@@ -1852,7 +1856,7 @@ var render = function render() {
     staticClass: "desc_type"
   }, [_c("div", {
     staticClass: "text"
-  }), _vm._v(" "), _vm.objWordTimeForms !== null ? _c("div", {
+  }), _vm._v(" "), _vm.arrInputsModal.objWordTimeForms !== null ? _c("div", {
     staticClass: "box-time-forms"
   }, [_c("div", {
     staticClass: "box-past"
@@ -1860,8 +1864,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.word,
-      expression: "objWordTimeForms.past.word"
+      value: _vm.arrInputsModal.objWordTimeForms.past.word,
+      expression: "arrInputsModal.objWordTimeForms.past.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1869,20 +1873,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.word
+      value: _vm.arrInputsModal.objWordTimeForms.past.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.translation,
-      expression: "objWordTimeForms.past.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.past.translation,
+      expression: "arrInputsModal.objWordTimeForms.past.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1890,20 +1894,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.translation
+      value: _vm.arrInputsModal.objWordTimeForms.past.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.past.accent,
-      expression: "objWordTimeForms.past.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.past.accent,
+      expression: "arrInputsModal.objWordTimeForms.past.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1911,12 +1915,12 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.past.accent
+      value: _vm.arrInputsModal.objWordTimeForms.past.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.past, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.past, "accent", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1925,8 +1929,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.word,
-      expression: "objWordTimeForms.present.word"
+      value: _vm.arrInputsModal.objWordTimeForms.present.word,
+      expression: "arrInputsModal.objWordTimeForms.present.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1934,20 +1938,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.word
+      value: _vm.arrInputsModal.objWordTimeForms.present.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.translation,
-      expression: "objWordTimeForms.present.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.present.translation,
+      expression: "arrInputsModal.objWordTimeForms.present.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1955,20 +1959,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.translation
+      value: _vm.arrInputsModal.objWordTimeForms.present.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.present.accent,
-      expression: "objWordTimeForms.present.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.present.accent,
+      expression: "arrInputsModal.objWordTimeForms.present.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1976,12 +1980,12 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.present.accent
+      value: _vm.arrInputsModal.objWordTimeForms.present.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.present, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.present, "accent", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -1990,8 +1994,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.word,
-      expression: "objWordTimeForms.future.word"
+      value: _vm.arrInputsModal.objWordTimeForms.future.word,
+      expression: "arrInputsModal.objWordTimeForms.future.word"
     }],
     staticClass: "form-control",
     attrs: {
@@ -1999,20 +2003,20 @@ var render = function render() {
       placeholder: "Insert word"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.word
+      value: _vm.arrInputsModal.objWordTimeForms.future.word
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "word", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "word", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.translation,
-      expression: "objWordTimeForms.future.translation"
+      value: _vm.arrInputsModal.objWordTimeForms.future.translation,
+      expression: "arrInputsModal.objWordTimeForms.future.translation"
     }],
     staticClass: "form-control",
     attrs: {
@@ -2020,20 +2024,20 @@ var render = function render() {
       placeholder: "Insert translation"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.translation
+      value: _vm.arrInputsModal.objWordTimeForms.future.translation
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "translation", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "translation", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objWordTimeForms.future.accent,
-      expression: "objWordTimeForms.future.accent"
+      value: _vm.arrInputsModal.objWordTimeForms.future.accent,
+      expression: "arrInputsModal.objWordTimeForms.future.accent"
     }],
     staticClass: "form-control",
     attrs: {
@@ -2041,20 +2045,20 @@ var render = function render() {
       placeholder: "Insert accent"
     },
     domProps: {
-      value: _vm.objWordTimeForms.future.accent
+      value: _vm.arrInputsModal.objWordTimeForms.future.accent
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objWordTimeForms.future, "accent", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objWordTimeForms.future, "accent", $event.target.value);
       }
     }
-  })])]) : _vm._e(), _vm._v(" "), _vm.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.arrInputsModal.objNumber !== null ? _c("div", [_c("label", [_vm._v("ввести цыфрой")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.objNumber.number,
-      expression: "objNumber.number"
+      value: _vm.arrInputsModal.objNumber.number,
+      expression: "arrInputsModal.objNumber.number"
     }],
     staticClass: "form-control",
     attrs: {
@@ -2062,12 +2066,12 @@ var render = function render() {
       placeholder: "Insert number"
     },
     domProps: {
-      value: _vm.objNumber.number
+      value: _vm.arrInputsModal.objNumber.number
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.objNumber, "number", $event.target.value);
+        _vm.$set(_vm.arrInputsModal.objNumber, "number", $event.target.value);
       }
     }
   })]) : _vm._e()])]), _vm._v(" "), _c("div", {
@@ -2081,8 +2085,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.description,
-      expression: "description"
+      value: _vm.arrInputsModal.description,
+      expression: "arrInputsModal.description"
     }],
     staticClass: "form-control",
     attrs: {
@@ -2090,12 +2094,12 @@ var render = function render() {
       placeholder: "Insert description word"
     },
     domProps: {
-      value: _vm.description
+      value: _vm.arrInputsModal.description
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.description = $event.target.value;
+        _vm.$set(_vm.arrInputsModal, "description", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("div", {
