@@ -1,3 +1,7 @@
+## авторизация админа
+- email: admin@admin.admin
+- pass: admin
+
 ## run project
 - npm install
 - composer install

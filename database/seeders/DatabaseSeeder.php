@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use \Database\Seeders\TypeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(\Database\Seeders\TypeSeeder::class);
+        $this->call([
+            TypeSeeder::class,
+            RolesTableSeeder::class,
+        ]);
     }
 }

@@ -16,30 +16,7 @@
 </head>
 <body>
 <div id="app">
-{{--    @guest--}}
-{{--        <auth-modal></auth-modal>--}}
-{{--    --}}{{-- top menu --}}
-{{--    @else--}}
-        <header>
-            <a href="/" class="header-element header-main-link">English</a>
-        </header>
-
-        <div class="main-page">
-            <ul id="left_menu">
-                <li>
-                    <router-link to="/page-list-words" class="left_menu"  exact>
-                        Список слов
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/page-word-sentences" class="left_menu"  exact>
-                        Предложения слов
-                    </router-link>
-                </li>
-            </ul>
-            @yield('content')
-        </div>
-{{--    @endguest--}}
+    @yield('content')
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
