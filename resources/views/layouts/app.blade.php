@@ -16,35 +16,46 @@
 </head>
 <body>
 <div id="app">
-{{--    @guest--}}
-{{--        <auth-modal></auth-modal>--}}
-{{--    --}}{{-- top menu --}}
-{{--    @else--}}
-        <header>
-            <a href="/" class="header-element header-main-link">English</a>
-        </header>
-
-        <div class="main-page">
-            <ul id="left_menu">
-                <li>
-                    <router-link to="/page-list-words" class="left_menu"  exact>
-                        Список слов
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/page-word-sentences" class="left_menu"  exact>
-                        Предложения слов
-                    </router-link>
-                </li>
-            </ul>
-            @yield('content')
+    <header class="d-flex justify-content-between align-items-center p-3">
+        <a href="/" class="header-element header-main-link">English</a>
+        <!-- Выпадающее меню справа -->
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ Auth::user()->name ?? 'Menu' }}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">{{ __('Profile') }}</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="GET" class="d-none">
+                        @csrf
+                    </form>
+            </div>
         </div>
-{{--    @endguest--}}
+    </header>
+
+    <div class="main-page">
+        <ul id="left_menu">
+            <li>
+                <router-link to="/page-list-words" class="left_menu" exact>
+                    Список слов
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/page-word-sentences" class="left_menu" exact>
+                    Предложения слов
+                </router-link>
+            </li>
+        </ul>
+        @yield('content')
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="{{asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{{--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>--}}
 <script src="{{asset('adminlte/js/adminlte.js')}}"></script>
 <script src="{{ asset('js/app.js') }}" defer></script>
 

@@ -43,9 +43,14 @@ Route::get('/', function () {
 })->name('index');
 
 // Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
-//Route::group(['middleware' => ['auth', 'role:user']], function () {
-//
-//});
+Route::group(['middleware' => ['auth', 'role:user']], function () {
+    Route::get('/page-list-words', function () {
+        return view('index');
+    });
+    Route::get('/page-word-sentences', function () {
+        return view('index');
+    });
+});
 
 // Любой другой маршрут перенаправляется ,
 Route::any('{all}', function () {
