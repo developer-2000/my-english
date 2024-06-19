@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Artisan;
 use \Illuminate\Support\Facades\Auth;
 use \App\Http\Controllers\AuthController;
+use \App\Http\Middleware\BackupDatabase;
+
 
 // технический роут /technical/artisan/clear_all
 Route::group(['prefix'=>'technical'], function (){
@@ -46,10 +48,10 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::get('/page-list-words', function () {
         return view('index');
-    });
+    })->middleware(BackupDatabase::class);
     Route::get('/page-word-sentences', function () {
         return view('index');
-    });
+    })->middleware(BackupDatabase::class);
 });
 
 // Любой другой маршрут перенаправляется ,
@@ -63,5 +65,4 @@ Route::any('{all}', function () {
         return redirect()->route('login');
     }
 })->where('all', '.*');
-
 

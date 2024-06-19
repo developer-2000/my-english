@@ -8,7 +8,10 @@
 - APP_URL=http://свой домен
 - в консоле запустить выполнение очередей - php artisan queue:work
 
-## run project
+## Проект создает бекапы базы данных MySql с пакетом spatie/laravel-backup. Пакет работает с такими базами - MySql, PostgreSQL, SQLite, MongoDB.
+- Файл middleware - корень\app\Http\Middleware\BackupDatabase.php
+
+## запуск проекта
 - npm install
 - composer install
 - настроить в .env connect к базе и run - php artisan migrate --seed
