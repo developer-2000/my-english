@@ -1,6 +1,10 @@
-## авторизация админа
+## по умолчанию в seeder авторизация админа
 - email: admin@admin.admin
 - pass: admin
+
+## Для начала регистраций новых пользователей авторизуйтесь на [mailtrap.io](https://mailtrap.io) и замените на свои в файле .env
+- MAIL_USERNAME=*******
+- MAIL_PASSWORD=*******
 
 ## run project
 - npm install

@@ -20,6 +20,7 @@ class AdminUserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@admin.admin',
             'password' => Hash::make('admin'),
+            'email_verified_at' => now(),
         ]);
 
         // Присваиваем пользователю роль 'admin'

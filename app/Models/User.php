@@ -31,7 +31,10 @@ class User extends Authenticatable
     // присвоение роли или ролей
     public function assignRole($role)
     {
-        return $this->roles()->sync($role);
+        if (is_string($role)) {
+            $role = Role::where('name', $role)->firstOrFail()->id;
+        }
+        return $this->roles()->syncWithoutDetaching($role);
     }
 
     // проверка существования по названию
