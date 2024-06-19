@@ -1,10 +1,12 @@
-## по умолчанию в seeder авторизация админа
+## по умолчанию в seeder создает админа
 - email: admin@admin.admin
 - pass: admin
 
-## Для начала регистраций новых пользователей авторизуйтесь на [mailtrap.io](https://mailtrap.io) и замените на свои в файле .env
+## Для начала регистраций новых пользователей и просмотра своей почты авторизуйтесь на [mailtrap.io](https://mailtrap.io) и замените на свои данные в файле .env
 - MAIL_USERNAME=*******
 - MAIL_PASSWORD=*******
+- APP_URL=http://свой домен
+- в консоле запустить выполнение очередей - php artisan queue:work
 
 ## run project
 - npm install

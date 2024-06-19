@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Jobs\SendVerificationEmail;
 use App\Models\User;
-use App\Notifications\VerifyEmailQueued;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\URL;
-//use App\Notifications\VerifyEmailNotification;
 
 class AuthController extends Controller
 {
@@ -49,17 +46,8 @@ class AuthController extends Controller
         // Назначение роли пользователя
         $user->assignRole('user');
 
-        // Отправка письма с приветствием
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify', // имя маршрута
-            now()->addMinutes(60), // время действия ссылки
-            ['id' => $user->id, 'hash' => sha1($user->email)] // параметры маршрута
-        );
-
-//        Notification::route('mail', $user->email)->notify(new VerifyEmailQueued($verificationUrl));
-
-        // Отправка уведомления без очереди
-        Notification::sendNow($user, new VerifyEmailQueued($verificationUrl));
+        // Постановка задачи в очередь
+        SendVerificationEmail::dispatch($user);
 
         // Редирект на страницу входа с сообщением об успешной регистрации
         return redirect('/login')
