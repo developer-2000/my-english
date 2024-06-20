@@ -1,4 +1,7 @@
 require('./bootstrap');
+import 'bootstrap';
+import '@popperjs/core';
+
 window.Vue = require('vue').default;
 
 import VueRouter from 'vue-router'

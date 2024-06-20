@@ -9,20 +9,20 @@
                 <!-- кнопки -->
                 <div class="box-button">
                     <!-- learn words -->
-                    <button class="btn bg-gradient-success"
+                    <button class="btn btn-success"
                             @click="openLearnModal()"
                             v-if="!bool_learn_words"
                     >
                         Learn words
                     </button>
                     <!-- stop learn -->
-                    <button class="btn bg-gradient-warning"
+                    <button class="btn btn-warning"
                             v-if="bool_learn_words"
                             @click="bool_learn_words = false"
                     >
                         Stop learn
                     </button>
-                    <button class="btn bg-gradient-primary" @click="openModalCreateWord">
+                    <button class="btn btn-primary" @click="openModalCreateWord">
                         Add word
                     </button>
                 </div>
@@ -72,9 +72,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Create new word</h5>
                         <h5 class="modal-title" v-else>Loading generate sentences</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -144,13 +142,27 @@
                                 >
                             </div>
 
+                            <!-- Word description -->
+                            <div class="form-group">
+                                <label for="word_description" class="col-form-label">Word description</label>
+                                <textarea class="form-control"
+                                          id="word_description"
+                                          placeholder="Insert description word"
+                                          v-model="arrInputsModal.description"
+                                ></textarea>
+                            </div>
+
                             <!-- типы значений слова -->
                             <div class="block_type">
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
                                         <label for="select_type" class="col-form-label">Word type</label>
-                                        <select id="select_type" v-model="arrInputsModal.select_type_id" class="custom-select" size="3">
+                                        <select id="select_type"
+                                                v-model="arrInputsModal.select_type_id"
+                                                class="custom-select"
+                                                size="3"
+                                        >
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
                                             >
@@ -214,27 +226,13 @@
                                 </div>
                             </div>
 
-                            <!-- Word description -->
-                            <div class="form-group">
-                                <label for="word_description" class="col-form-label">Word description</label>
-                                <textarea class="form-control"
-                                          id="word_description"
-                                          placeholder="Insert description word"
-                                          v-model="arrInputsModal.description"
-                                ></textarea>
-                            </div>
-
                             <!-- Предложения -->
                             <div class="box-content-sentences">
                                 <!-- переключатель добавления предложений -->
-                                <input
-                                    type="checkbox"
-                                    ref="toggle1"
-                                    data-toggle="toggle"
-                                    data-on="Add Sentences"
-                                    data-off="No Sentences"
-                                    class="toggle-input"
-                                />
+                                <div class="form-check form-switch">
+                                    <input ref="toggle1" class="form-check-input" type="checkbox" id="toggle1">
+                                    <label class="form-check-label" for="toggle1">No Sentence</label>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -272,9 +270,8 @@
                     <div class="modal-header">
                         <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Update word</h5>
                         <h5 class="modal-title" v-else>Loading generate sentences</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -339,13 +336,23 @@
                                 >
                             </div>
 
+                            <!-- Word description -->
+                            <div class="form-group">
+                                <label for="update_word_description" class="col-form-label">Word description</label>
+                                <textarea v-model="arrInputsModal.description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
+                            </div>
+
                             <!-- select type word -->
                             <div class="block_type">
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
                                         <label for="update_select_type" class="col-form-label">Word type</label>
-                                        <select id="update_select_type" v-model="arrInputsModal.select_type_id" class="custom-select" size="3">
+                                        <select id="update_select_type"
+                                                v-model="arrInputsModal.select_type_id"
+                                                class="custom-select"
+                                                size="3"
+                                        >
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
                                             >
@@ -410,12 +417,6 @@
                                 </div>
                             </div>
 
-                            <!-- Word description -->
-                            <div class="form-group">
-                                <label for="update_word_description" class="col-form-label">Word description</label>
-                                <textarea v-model="arrInputsModal.description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
-                            </div>
-
                             <!-- Предложения -->
                             <div class="box-content-sentences">
                                 <!-- предложения этого слова -->
@@ -426,14 +427,11 @@
                                 </div>
 
                                 <!-- переключатель добавления предложений -->
-                                <input
-                                    type="checkbox"
-                                    ref="toggle2"
-                                    data-toggle="toggle"
-                                    data-on="Add Sentences"
-                                    data-off="No Sentences"
-                                    class="toggle-input"
-                                />
+                                <div class="form-check form-switch">
+                                    <input ref="toggle2" class="form-check-input" type="checkbox" id="toggle2">
+                                    <label class="form-check-label" for="toggle2">No Sentence</label>
+                                </div>
+
                             </div>
                         </form>
                     </div>
@@ -488,8 +486,6 @@
     // components
     import ModalLearnWord from "../details/ModalLearnWord";
 
-    import 'bootstrap-toggle/js/bootstrap-toggle.min.js';
-    import 'bootstrap-toggle/css/bootstrap-toggle.min.css';
     import $ from 'jquery';
 
     export default {
@@ -1025,50 +1021,22 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // инициализация toggle
             initialiseToggle() {
-                // Инициализация toggle
-                $(this.$refs.toggle1).bootstrapToggle();
-                // Устанавливаем стили после инициализации
-                this.setToggleStyles(this.$refs.toggle1);
                 // Добавляем обработчик событий для вывода значения в консоль
                 $(this.$refs.toggle1).change(this.logToggleState);
-                // Инициализация toggle
-                $(this.$refs.toggle2).bootstrapToggle();
-                // Устанавливаем стили после инициализации
-                this.setToggleStyles(this.$refs.toggle2);
-                // Добавляем обработчик событий для вывода значения в консоль
                 $(this.$refs.toggle2).change(this.logToggleState);
-            },
-            // задает CSS кнопке переключателю toggle
-            setToggleStyles(toggleElement) {
-                const parentDiv = toggleElement.closest('.toggle');
-                if (parentDiv) {
-                    parentDiv.style.minWidth = '101px';
-                    parentDiv.style.minHeight = '50px';
-
-                    let handle = parentDiv.querySelector('.toggle-handle');
-                    if (handle) {
-                        handle.style.minWidth = '19px';
-                        handle.style.border = '1px solid #ccc';
-                        handle.style.padding = '0';
-                    }
-
-                    handle = parentDiv.querySelector('.toggle-off');
-                    if (handle) {
-                        handle.style.paddingLeft = '5px';
-                        handle.style.paddingRight = '0';
-                        handle.style.lineHeight = '18px';
-                    }
-
-                    handle = parentDiv.querySelector('.toggle-on');
-                    if (handle) {
-                        handle.style.paddingRight = '21px';
-                        handle.style.lineHeight = '18px';
-                    }
-                }
             },
             // при изменении toggle
             logToggleState(event) {
                 this.objGenerateSentences.status_toggle = $(event.target).prop('checked');
+                // Находим соответствующий label элемент
+                const label = event.target.nextElementSibling;
+
+                // Обновляем текст в зависимости от состояния переключателя
+                if (this.objGenerateSentences.status_toggle) {
+                    label.textContent = 'Add sentence';
+                } else {
+                    label.textContent = 'No sentence';
+                }
             },
             clearGenerateSentences() {
                 this.objGenerateSentences.status_toggle = false
@@ -1110,6 +1078,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 </script>
 
 <style lang="scss" scoped>
+@import '../../../sass/variables.scss';
 
 #page_list_worlds{
     max-height: calc(100vh - 60px);
@@ -1161,7 +1130,6 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
-                margin-bottom: 1rem;
                 .box-sentences{
                     div{
                         color: #747474;
@@ -1169,8 +1137,28 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         font-size: 13px;
                     }
                 }
+                .form-switch{
+                    display: flex;
+                    flex-flow: column nowrap;
+                    align-items: center;
+                    margin: 20px 0 0 0;
+                    border: 1px solid $modal-grey-border;
+                    padding: 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    input{
+                        margin: 0;
+                        cursor: pointer;
+                    }
+                    label{
+                        text-align: center;
+                        line-height: 20px;
+                        margin-top: 10px;
+                        width: 72px;
+                        cursor: pointer;
+                    }
+                }
             }
-
             .box-view-generate-sentences{
                 width: 100%;
                 height: 100%;
@@ -1244,6 +1232,21 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             }
             form{
                 padding: 0 1rem;
+            }
+            .block_type{
+                margin-top: 30px;
+                .box-left-site{
+                    width: 38%;
+                    .custom-select{
+                        border: 1px solid $modal-grey-border;
+                        border-radius: 5px;
+                        option{
+                            font-weight: 200;
+                            font-size: 17px;
+                            padding: 0 10px;
+                        }
+                    }
+                }
             }
         }
     }

@@ -115,7 +115,8 @@ table.sentence .but_td > span a {
   background-color: #f4f6f9 !important;
 }
 .block_table {
-  margin-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    border: none;
 }
 .vgt-global-search__input.vgt-pull-left span.sr-only {
   position: absolute !important;

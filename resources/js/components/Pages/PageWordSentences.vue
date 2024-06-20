@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <!-- start -->
-                    <button :disabled="disabled_play" @click="initialSpeak" class="btn bg-gradient-success"
+                    <button :disabled="disabled_play" @click="initialSpeak" class="btn btn-success"
                             v-if="!speak.start">
                         <i class="fas fa-play"></i>
                         Sound translation
@@ -32,7 +32,7 @@
                         Pause
                     </button>
                     <!-- continue -->
-                    <button @click="continueReadSound" class="btn bg-gradient-success" v-if="speak.pause">
+                    <button @click="continueReadSound" class="btn btn-success" v-if="speak.pause">
                         <i class="fas fa-play"></i>
                         Continue
                     </button>
@@ -42,7 +42,7 @@
                         Stop
                     </button>
 
-                    <button @click="openModalCreateSentence" class="btn bg-gradient-primary create-sentence">
+                    <button @click="openModalCreateSentence" class="btn btn-primary create-sentence">
                         Add sentence
                     </button>
                 </div>
@@ -86,9 +86,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Create new sentence</h5>
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="#">
@@ -152,9 +150,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Update sentence</h5>
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="#">

@@ -10,9 +10,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
 <div id="app">
@@ -20,7 +19,12 @@
         <a href="/" class="header-element header-main-link">English</a>
         <!-- Выпадающее меню справа -->
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+            >
                 {{ Auth::user()->name ?? 'Menu' }}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -34,6 +38,7 @@
                     </form>
             </div>
         </div>
+
     </header>
 
     <div class="main-page">
@@ -55,10 +60,7 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="{{asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-{{--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>--}}
-<script src="{{asset('adminlte/js/adminlte.js')}}"></script>
-<script src="{{ asset('js/app.js') }}" defer></script>
-
+<script src="{{ mix('js/app.js') }}"></script>
 @yield('js')
 </body>
 </html>

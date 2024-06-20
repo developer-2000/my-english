@@ -50,33 +50,6 @@ svg{
     width: 20px;
     height: 20px;
 }
-.main-page {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    font-size: 18px;
-    margin-top: 0;
-}
-.main-page h2 {
-    text-align: center;
-    margin: 0 40px 40px 40px;
-}
-.main-page #left_menu {
-    width: 200px;
-    min-height: calc(100vh - 60px);
-    padding-top: 15px;
-    border-right: 1px solid #d2d2d2;
-}
-.main-page #left_menu a {
-    width: 100%;
-    display: inline-block;
-    font-size: 16px;
-    margin: 0 0 3px 0;
-    padding: 5px 0 5px 20px;
-    border-radius: 0;
-    border-color: rgba(255, 255, 255, 0);
-    outline-offset: 0;
-}
 .router-link-active {
     border-color: rgba(255, 255, 255, 0);
     color: black;
@@ -84,28 +57,6 @@ svg{
 }
 .router-link-active:hover {
     color: black;
-}
-.main-page #left_menu .link_index {
-    background-color: #f4f6f9;
-    width: 100%;
-    margin-bottom: 25px;
-    padding: 10px 0 6px 0;
-    text-align: center;
-    border-bottom: 1px solid #d2d2d2;
-    border-top: 3px solid #007bff;
-    border-right: 1px solid #d2d2d2;
-}
-.main-page #left_menu .link_index a {
-    display: inline-block;
-    color: #4283ff;
-    font-weight: 700;
-    font-size: 28px;
-    width: 100%;
-}
-.main-page #left_menu .link_index a:hover,
-.main-page #left_menu .link_index a:focus {
-    text-decoration: none;
-    outline: none;
 }
 .container{
     width: 100%;

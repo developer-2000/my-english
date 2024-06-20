@@ -446,7 +446,7 @@ var render = function render() {
       }
     }
   }) : _vm._e()])]) : _vm._e(), _vm._v(" "), !_vm.speak.start ? _c("button", {
-    staticClass: "btn bg-gradient-success",
+    staticClass: "btn btn-success",
     attrs: {
       disabled: _vm.disabled_play
     },
@@ -463,7 +463,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-pause"
   }), _vm._v("\n                    Pause\n                ")]) : _vm._e(), _vm._v(" "), _vm.speak.pause ? _c("button", {
-    staticClass: "btn bg-gradient-success",
+    staticClass: "btn btn-success",
     on: {
       click: _vm.continueReadSound
     }
@@ -477,7 +477,7 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fas fa-stop"
   }), _vm._v("\n                    Stop\n                ")]) : _vm._e(), _vm._v(" "), _c("button", {
-    staticClass: "btn bg-gradient-primary create-sentence",
+    staticClass: "btn btn-primary create-sentence",
     on: {
       click: _vm.openModalCreateSentence
     }
@@ -774,17 +774,13 @@ var staticRenderFns = [function () {
   }, [_c("h5", {
     staticClass: "modal-title"
   }, [_vm._v("Create new sentence")]), _vm._v(" "), _c("button", {
-    staticClass: "close",
+    staticClass: "btn-close",
     attrs: {
-      "aria-label": "Close",
-      "data-dismiss": "modal",
-      type: "button"
+      type: "button",
+      "data-bs-dismiss": "modal",
+      "aria-label": "Close"
     }
-  }, [_c("span", {
-    attrs: {
-      "aria-hidden": "true"
-    }
-  }, [_vm._v("×")])])]);
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -793,17 +789,13 @@ var staticRenderFns = [function () {
   }, [_c("h5", {
     staticClass: "modal-title"
   }, [_vm._v("Update sentence")]), _vm._v(" "), _c("button", {
-    staticClass: "close",
+    staticClass: "btn-close",
     attrs: {
-      "aria-label": "Close",
-      "data-dismiss": "modal",
-      type: "button"
+      type: "button",
+      "data-bs-dismiss": "modal",
+      "aria-label": "Close"
     }
-  }, [_c("span", {
-    attrs: {
-      "aria-hidden": "true"
-    }
-  }, [_vm._v("×")])])]);
+  })]);
 }];
 render._withStripped = true;
 
