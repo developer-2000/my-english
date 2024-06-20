@@ -47,12 +47,12 @@ var staticRenderFns = [function () {
       href: "https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured",
       target: "_blank"
     }
-  }, [_vm._v("\n        БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2\n    ")]), _vm._v(" "), _c("a", {
+  }, [_vm._v("\n        YouTube БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2\n    ")]), _vm._v(" "), _c("a", {
     attrs: {
       href: "https://www.youtube.com/watch?v=vV0-52Z7AOE&list=PLcmoTwMF9KeaGJEsIA3fA5ffFTYbLyUS-&index=1",
       target: "_blank"
     }
-  }, [_vm._v("\n        АНГЛИЙСКИЙ ЯЗЫК ДО ПОЛНОГО АВТОМАТИЗМА С САМОГО НУЛЯ\n    ")]), _vm._v(" "), _c("a", {
+  }, [_vm._v("\n        YouTube АНГЛИЙСКИЙ ЯЗЫК ДО ПОЛНОГО АВТОМАТИЗМА С САМОГО НУЛЯ\n    ")]), _vm._v(" "), _c("a", {
     attrs: {
       href: "https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka",
       target: "_blank"
@@ -62,7 +62,12 @@ var staticRenderFns = [function () {
       href: "https://dictionary.langeek.co/en-RU",
       target: "_blank"
     }
-  }, [_vm._v("\n        LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.\n    ")])]);
+  }, [_vm._v("\n        LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.\n    ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "https://www.youtube.com/@play-en/playlists",
+      target: "_blank"
+    }
+  }, [_vm._v("\n        YouTube Короткие предложения и частые слова\n    ")])]);
 }];
 render._withStripped = true;
 

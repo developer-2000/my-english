@@ -1,16 +1,19 @@
 <template>
     <div class="index-page">
         <a href="https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured" target="_blank">
-            БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2
+            YouTube БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2
         </a>
         <a href="https://www.youtube.com/watch?v=vV0-52Z7AOE&list=PLcmoTwMF9KeaGJEsIA3fA5ffFTYbLyUS-&index=1" target="_blank">
-            АНГЛИЙСКИЙ ЯЗЫК ДО ПОЛНОГО АВТОМАТИЗМА С САМОГО НУЛЯ
+            YouTube АНГЛИЙСКИЙ ЯЗЫК ДО ПОЛНОГО АВТОМАТИЗМА С САМОГО НУЛЯ
         </a>
         <a href="https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka" target="_blank">
             Не правильные глаголы во временах
         </a>
         <a href="https://dictionary.langeek.co/en-RU" target="_blank">
             LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.
+        </a>
+        <a href="https://www.youtube.com/@play-en/playlists" target="_blank">
+            YouTube Короткие предложения и частые слова
         </a>
     </div>
 </template>
