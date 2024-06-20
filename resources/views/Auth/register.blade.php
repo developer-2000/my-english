@@ -8,7 +8,7 @@
                     <div class="card-header">{{ __('Register') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
+                        <form method="POST" action="{{ route('auth.register') }}">
                             @csrf
 
                             <div class="form-group row">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="mt-3 text-center">
-                    <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
+                    <p>Already have an account? <a href="{{ route('auth.showLoginForm') }}">Login here</a></p>
                 </div>
             </div>
         </div>

@@ -19,20 +19,24 @@ Route::group(['prefix'=>'technical'], function (){
 });
 
 // >>> AUTH
-// Маршруты для отображения формы логина и регистрации, и их обработки
-Route::get('login', [AuthController::class, 'showLoginForm'])
-    ->middleware(['guest'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-Route::get('register', [AuthController::class, 'showRegisterForm'])
-    ->middleware(['guest'])->name('register');
-Route::post('register', [AuthController::class, 'register']);
-Route::get('logout', [AuthController::class, 'logout'])
-    ->name('logout');
-// Маршрут для верификации email
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
-    ->name('verification.verify');
+Route::group(['prefix'=>'auth'], function (){
+    // Маршруты для отображения формы логина и регистрации, и их обработки
+    Route::get('login', [AuthController::class, 'showLoginForm'])
+        ->middleware(['guest'])->name('auth.showLoginForm');
+    Route::post('login', [AuthController::class, 'login'])
+        ->name('auth.login');
+    Route::get('register', [AuthController::class, 'showRegisterForm'])
+        ->middleware(['guest'])->name('auth.showRegisterForm');
+    Route::post('register', [AuthController::class, 'register'])
+        ->name('auth.register');
+    Route::get('logout', [AuthController::class, 'logout'])
+        ->name('auth.logout');
+    // Маршрут для верификации email
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+        ->name('verification.verify');
+});
 
-// Отображаем главную страницу для авторизованных пользователей
+// >>> Отображаем главную страницу для авторизованных пользователей
 // Перенаправляем на страницу логина для неавторизованных пользователей
 Route::get('/', function () {
     // Проверяем имеет ли роль 'user' и старше
@@ -44,7 +48,7 @@ Route::get('/', function () {
     }
 })->name('index');
 
-// Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
+// >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::get('/page-list-words', function () {
         return view('index');
@@ -54,7 +58,10 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     })->middleware(BackupDatabase::class);
 });
 
-// Любой другой маршрут перенаправляется ,
+// >>> Error
+Route::view('/errors', 'errors')->name('errors');
+
+// >>> Любой другой маршрут перенаправляется ,
 Route::any('{all}', function () {
     // на index, если авторизован
     if (Auth::check() && Auth::user()->hasRole('user')) {
@@ -62,7 +69,7 @@ Route::any('{all}', function () {
     }
     // иначе на login
     else {
-        return redirect()->route('login');
+        return redirect()->route('auth.showLoginForm');
     }
 })->where('all', '.*');
 

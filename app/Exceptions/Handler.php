@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -12,75 +13,37 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array
-     */
-    protected $dontReport = [
-        //
-    ];
+    // ...
 
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
+     * Render an exception into an HTTP response.
      *
-     * @var array
-     */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
-
-    /**
-     * Register the exception handling callbacks for the application.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @return void
+     * @throws \Throwable
      */
-    public function register()
+    public function render($request, Throwable $exception)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
-    }
-
-    public function report(Throwable $exception)
-    {
-        parent::report($exception);
-    }
-
-
-
-    public function render($request, Throwable $exception) {
-
-        $data = parent::render($request, $exception);
-
-        // при валидации
         if ($exception instanceof ValidationException) {
-            $data = $request->expectsJson() ?
-                response()->json(['code' => 422, 'status' => 'error', 'message' => $exception->getMessage()], 200) :
-                response(['code' => 422, 'status' => 'error', 'message' => $exception->getMessage()], 200);
+            // Ошибка валидации
+            return response()->view('errors', [
+                'code' => 422,
+                'message' => $exception->getMessage(),
+            ], 422);
         }
 
-        return $data;
+        if ($exception instanceof QueryException && $exception->getCode() === '23000') {
+            // Ошибка дублирования уникального ключа
+            return response()->view('errors', [
+                'code' => 500,
+                'message' => 'Duplicate entry error: ' . $exception->getMessage(),
+            ], 500);
+        }
+
+        return parent::render($request, $exception);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // ...
 }

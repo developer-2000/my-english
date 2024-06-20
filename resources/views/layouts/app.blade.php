@@ -29,11 +29,11 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#">{{ __('Profile') }}</a>
-                    <a class="dropdown-item" href="{{ route('logout') }}"
+                    <a class="dropdown-item" href="{{ route('auth.logout') }}"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="GET" class="d-none">
+                    <form id="logout-form" action="{{ route('auth.logout') }}" method="GET" class="d-none">
                         @csrf
                     </form>
             </div>

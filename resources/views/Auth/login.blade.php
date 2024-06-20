@@ -33,7 +33,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('login') }}">
+                        <form method="POST" action="{{ route('auth.login') }}">
                             @csrf
 
                             <div class="form-group row">
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="mt-3 text-center">
-                    <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
+                    <p>Don't have an account? <a href="{{ route('auth.showRegisterForm') }}">Register here</a></p>
                 </div>
             </div>
         </div>

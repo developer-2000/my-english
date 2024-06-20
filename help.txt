@@ -1,4 +1,4 @@
-﻿ОЧЕРЕДИ
+﻿ОЧЕРЕДИ JOB
     php artisan queue:work
 При использовании команды
     php artisan queue:listen --queue=emails
