@@ -42,4 +42,10 @@ class User extends Authenticatable
     {
         return $this->roles->contains('name', $role);
     }
+
+    // Определение отношения "один к одному" с моделью Language
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class, 'language_users');
+    }
 }

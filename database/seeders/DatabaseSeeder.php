@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             TypeSeeder::class,
             RolesTableSeeder::class,
             AdminUserSeeder::class,
+            LanguageSeeder::class,
         ]);
     }
 }

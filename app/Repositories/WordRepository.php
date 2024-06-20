@@ -54,7 +54,7 @@ class WordRepository extends CoreRepository
             ->get();
 
         $types = WordType::get();
-        $colors = config('programm.type.color');
+        $colors = config('program.type.color');
 
         return compact('total_count', 'list', 'types', 'colors');
     }

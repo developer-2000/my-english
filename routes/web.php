@@ -5,6 +5,7 @@ use \Illuminate\Support\Facades\Artisan;
 use \Illuminate\Support\Facades\Auth;
 use \App\Http\Controllers\AuthController;
 use \App\Http\Middleware\BackupDatabase;
+use \App\Http\Controllers\LanguageController;
 
 
 // технический роут /technical/artisan/clear_all
@@ -50,6 +51,10 @@ Route::get('/', function () {
 
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group(['middleware' => ['auth', 'role:user']], function () {
+    Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
+        ->name('get.languages');
+    Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
+        ->name('set.language.learn.user');
     Route::get('/page-list-words', function () {
         return view('index');
     })->middleware(BackupDatabase::class);
