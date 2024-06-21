@@ -1,9 +1,12 @@
 // {{ $t('auth.failed') }}
 
-import $ from "jquery";
-import { loadTranslations, i18n } from '../load_i18n'; // Импортируем функцию загрузки переводов и объект i18n
+import { loadTranslations, i18n } from '../load_i18n';
+import user_mixin from "../mixins/user_mixin";
 
 export default {
+    mixins: [
+        user_mixin
+    ],
     data() {
         return {
             codeLanguage: [
@@ -15,7 +18,9 @@ export default {
         // Взвращает Код языка или его название
         getLanguageText(value = "code", subject = 'interface') {
             // Получаем объект с языками пользователя
-            const code = this.user.language_user;
+            const code = this.getUser !== null ?
+                this.getUser.language_user :
+                this.user.language_user
 
             if (code !== undefined) {
                 // Если показать код языка

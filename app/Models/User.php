@@ -48,10 +48,10 @@ class User extends Authenticatable
     }
 
     // Определение отношения "один к одному" с моделью Language
-    public function languages()
-    {
-        return $this->belongsToMany(Language::class, 'language_users');
-    }
+//    public function languages()
+//    {
+//        return $this->belongsToMany(Language::class, 'language_users');
+//    }
 
 
     /**

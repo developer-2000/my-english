@@ -36,4 +36,14 @@ class LanguageUser extends Model
         return $this->belongsTo(Language::class, 'learn_id')
             ->withDefault([ 'language' => 'en' ]);
     }
+
+    // Автообновление auth()->user() после изменений данных связанных с ним
+    protected static function booted()
+    {
+        static::updated(function ($languageUser) {
+            // После обновления LanguageUser обновляем данные пользователя
+            $languageUser->user->refresh();
+        });
+    }
+
 }

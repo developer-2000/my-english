@@ -218,3 +218,7 @@ git reset --soft HEAD^
 SWAGER
     // проверка
     php artisan l5-swagger:generate
+
+vuex
+сетеры - this.$store.commit('setLearnLanguage', "данные")
+герет - store.getters.getLearnLanguage

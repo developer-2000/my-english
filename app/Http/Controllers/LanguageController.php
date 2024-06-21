@@ -6,7 +6,9 @@ use App\Http\Requests\Language\GetTranslation;
 use App\Http\Requests\Language\SetLearnLanguageUser;
 use App\Http\Responses\ApiResponse;
 use App\Models\Language;
+use App\Models\LanguageUser;
 use App\Services\Translations\ConcreteTranslationCache;
+use Illuminate\Support\Facades\DB;
 
 
 class LanguageController extends Controller
@@ -28,13 +30,20 @@ class LanguageController extends Controller
      */
     public function setLearnLanguageUser(SetLearnLanguageUser $request): ApiResponse
     {
-        $language = Language::where('language', $request->language)->first();
         $user = auth()->user();
+        $language = Language::where('language', $request->language)->first();
 
-        // Связываем пользователя с языком через промежуточную таблицу
-        $user->languages()->sync([$language->id]);
+        if ($language) {
+            DB::transaction(function () use ($user, $language) {
+                LanguageUser::where('user_id', $user->id)
+                    ->update(['learn_id' => $language->id]);
+            });
+        }
 
-        return new ApiResponse(["Language set successfully"]);
+        // Обновляем объект $user после транзакции
+        $user->refresh();
+
+        return new ApiResponse(compact("user"));
     }
 
     /**

@@ -70,6 +70,7 @@
 import $ from "jquery";
 import response_methods_mixin from "../mixins/response_methods_mixin";
 import translation_i18n_mixin from "../mixins/translation_i18n_mixin";
+import user_mixin from "../mixins/user_mixin";
 
 export default {
     data() {
@@ -79,7 +80,9 @@ export default {
         };
     },
     mixins: [
-        response_methods_mixin, translation_i18n_mixin
+        response_methods_mixin,
+        translation_i18n_mixin,
+        user_mixin
     ],
     props: {
         user: {
@@ -125,8 +128,12 @@ export default {
             try {
                 const response = await this.$http.post(`${this.$http.webUrl()}set-language-learn-user`, data);
                 if(this.checkSuccess(response)){
+                    if(response?.data?.data?.user){
+                        this.updateUser(response.data.data.user)
+                    }
+
                     this.$store.commit('setLearnLanguage', language)
-                    await loadTranslations(language);
+                    await this.loadTranslations(language);
                 }
             } catch (e) {
                 console.error('Error fetching languages:', e);
@@ -140,6 +147,7 @@ export default {
         // установить язык интерфейса пользователя
         if(this.user?.language_user?.interface_language?.language){
             this.$store.commit('setLearnLanguage', this.getLanguageText())
+            this.updateUser(this.user)
             this.loadTranslations(this.getLanguageText())
         }
     },
