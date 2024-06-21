@@ -3,17 +3,19 @@ namespace App\Repositories;
 
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
-use App\Models\Word;
 use App\Models\Sentence;
+use App\Models\EnWord;
 use Illuminate\Support\Facades\DB;
 use App\Models\WordType;
 
 class WordRepository extends CoreRepository
 {
-    public function getWords($request): array
+    public function getWords($request)
     {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('type');
+
+//        return $collection->get();
 
         // search
         $searchArray = $vars['search'] ?? [];
@@ -66,7 +68,7 @@ class WordRepository extends CoreRepository
         try {
             // Создаем слово с помощью метода create
             $wordData = $request->except('arr_new_sentences');
-            $word = Word::create($wordData);
+            $word = EnWord::create($wordData);
 
             if (!empty($request->arr_new_sentences)) {
                 // Вставляем новые предложения
@@ -110,7 +112,7 @@ class WordRepository extends CoreRepository
 
     protected function updateWordData(UpdateWordRequest $request)
     {
-        $word = Word::findOrFail($request->id);
+        $word = EnWord::findOrFail($request->id);
 
         $data = $request->except('arr_new_sentences');
 
@@ -150,12 +152,12 @@ class WordRepository extends CoreRepository
             // Разбиваем предложение на массив слов
             $words = explode(" ", trim($sentence));
             // добавить слова которых нет
-            Word::processWords($words);
+            EnWord::processWords($words);
         }
     }
 
     protected function getModelClass(): string
     {
-        return Word::class;
+        return EnWord::class;
     }
 }

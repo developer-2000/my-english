@@ -2260,7 +2260,9 @@ var render = function render() {
         return _vm.goToEditing(_vm.objOldLearnWord.word);
       }
     }
-  }), _vm._v(" "), _c("a", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "box-button"
+  }, [_c("a", {
     staticClass: "btn btn-success",
     attrs: {
       role: "button"
@@ -2279,7 +2281,7 @@ var render = function render() {
     attrs: {
       d: "M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
     }
-  })]), _vm._v("\n                            " + _vm._s(_vm.$t("all.do_not_know")) + "\n                        ")]), _vm._v(" "), _c("a", {
+  })]), _vm._v("\n                                " + _vm._s(_vm.$t("all.do_not_know")) + "\n                            ")]), _vm._v(" "), _c("a", {
     staticClass: "btn btn-warning",
     attrs: {
       role: "button"
@@ -2298,7 +2300,7 @@ var render = function render() {
     attrs: {
       d: "M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
     }
-  })]), _vm._v("\n                            " + _vm._s(_vm.$t("all.know")) + "\n                        ")])]), _vm._v(" "), _vm.objLearnWord.sentences.length > 0 || _vm.objLearnWord.url_image !== null ? _c("div", {
+  })]), _vm._v("\n                                " + _vm._s(_vm.$t("all.know")) + "\n                            ")])])]), _vm._v(" "), _vm.objLearnWord.sentences.length > 0 || _vm.objLearnWord.url_image !== null ? _c("div", {
     staticClass: "box-helper"
   }, [_vm.objLearnWord.url_image !== null ? _c("img", {
     attrs: {
@@ -2675,7 +2677,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#learn_word .custom-modal[data-v-413063d9] {\n  width: 50%;\n  max-width: 3000px !important;\n}\n#learn_word .custom-modal .modal-header[data-v-413063d9] {\n  display: flex;\n  justify-content: space-between;\n}\n#learn_word .custom-modal .modal-header .box-right[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9] {\n  margin-right: 50px;\n  color: #0800ff;\n  padding: 0 5px;\n  cursor: pointer;\n  transition: background 0.3s ease-in-out;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9]:hover {\n  background: #e7e7e7;\n}\n#learn_word .custom-modal .modal-body .box-word[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9] {\n  flex: 1 1 auto;\n  display: flex;\n  justify-content: space-between;\n  padding: 2px 10px;\n  line-height: 38px;\n  cursor: pointer;\n  font-size: 29px;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9]:hover {\n  background: #f2f1f1;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word a[data-v-413063d9] {\n  font-size: 16px;\n}\n#learn_word .custom-modal .modal-body .box-word a svg[data-v-413063d9] {\n  height: 16px;\n  margin-right: 5px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success[data-v-413063d9] {\n  margin: 0 10px;\n}\n#learn_word .custom-modal .modal-body .box-word .btn-success svg[data-v-413063d9] {\n  fill: white;\n}\n#learn_word .custom-modal .modal-body .box-helper[data-v-413063d9] {\n  display: flex;\n  margin-top: 15px;\n}\n#learn_word .custom-modal .modal-body .box-helper img[data-v-413063d9] {\n  width: auto;\n  height: 100px;\n  margin-right: 15px;\n}\n#learn_word .modal-body .write-word[data-v-413063d9] {\n  display: flex;\n  align-items: center;\n}\n#learn_word .modal-body .write-word .svg-like[data-v-413063d9] {\n  fill: #339c03;\n  width: 40px;\n  height: 40px;\n}\n#learn_word .modal-body .write-word .box-writing[data-v-413063d9] {\n  width: 80%;\n  margin-right: 60px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#learn_word .custom-modal[data-v-413063d9] {\n  width: 50%;\n  max-width: 3000px !important;\n}\n#learn_word .custom-modal .modal-header[data-v-413063d9] {\n  display: flex;\n  justify-content: space-between;\n}\n#learn_word .custom-modal .modal-header .box-right[data-v-413063d9] {\n  display: flex;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9] {\n  margin-right: 50px;\n  color: #0800ff;\n  padding: 0 5px;\n  cursor: pointer;\n  transition: background 0.3s ease-in-out;\n}\n#learn_word .custom-modal .modal-header .box-right .language-switch[data-v-413063d9]:hover {\n  background: #e7e7e7;\n}\n#learn_word .custom-modal .modal-body .box-word[data-v-413063d9] {\n  display: flex;\n  flex-flow: column nowrap;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9] {\n  padding: 2px 10px;\n  line-height: 30px;\n  cursor: pointer;\n  font-size: 29px;\n  font-weight: 700;\n  width: 100%;\n  min-height: 40px;\n  margin-bottom: 10px;\n}\n#learn_word .custom-modal .modal-body .box-word .learn-word-trigger[data-v-413063d9]:hover {\n  background: #f2f1f1;\n  font-weight: 700;\n}\n#learn_word .custom-modal .modal-body .box-word .box-button[data-v-413063d9] {\n  display: flex;\n  width: 100%;\n}\n#learn_word .custom-modal .modal-body .box-word .box-button a[data-v-413063d9] {\n  font-size: 16px;\n  width: 50%;\n}\n#learn_word .custom-modal .modal-body .box-word .box-button a svg[data-v-413063d9] {\n  height: 16px;\n  margin-right: 5px;\n}\n#learn_word .custom-modal .modal-body .box-word .box-button .btn-success[data-v-413063d9] {\n  margin-right: 10px;\n}\n#learn_word .custom-modal .modal-body .box-word .box-button .btn-success svg[data-v-413063d9] {\n  fill: white;\n}\n#learn_word .custom-modal .modal-body .box-helper[data-v-413063d9] {\n  display: flex;\n  margin-top: 15px;\n}\n#learn_word .custom-modal .modal-body .box-helper img[data-v-413063d9] {\n  width: auto;\n  height: 100px;\n  margin-right: 15px;\n}\n#learn_word .custom-modal .modal-body .box-helper .box-sentences .sentence[data-v-413063d9]:last-child {\n  margin-bottom: 20px;\n}\n#learn_word .modal-body .write-word[data-v-413063d9] {\n  display: flex;\n  align-items: center;\n}\n#learn_word .modal-body .write-word .svg-like[data-v-413063d9] {\n  fill: #339c03;\n  width: 40px;\n  height: 40px;\n}\n#learn_word .modal-body .write-word .box-writing[data-v-413063d9] {\n  width: 80%;\n  margin-right: 30px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

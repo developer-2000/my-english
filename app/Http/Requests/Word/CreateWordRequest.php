@@ -24,7 +24,7 @@ class CreateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'word' => 'required|string|min:1|unique:words,word',
+            'word' => 'required|string|min:1|unique:en_words,word',
             'translation' => 'required|string|min:1',
             'url_image' => 'nullable|string',
             'description' => 'nullable|string',

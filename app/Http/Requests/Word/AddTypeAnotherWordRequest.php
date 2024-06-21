@@ -24,7 +24,7 @@ class AddTypeAnotherWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'from_word_id' => 'required|integer|exists:words,id',
+            'from_word_id' => 'required|integer|exists:en_words,id',
             'to_word_text' => 'required|string|min:2',
         ];
     }

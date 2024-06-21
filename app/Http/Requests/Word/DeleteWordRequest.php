@@ -23,7 +23,7 @@ class DeleteWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'id' => 'required|integer|exists:words,id',
+            'id' => 'required|integer|exists:en_words,id',
         ];
     }
 

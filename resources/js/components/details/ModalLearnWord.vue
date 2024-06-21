@@ -30,20 +30,22 @@
                                  @click="goToEditing(objOldLearnWord.word)"
                                  v-text="objLearnWord.word"
                             ></div>
-                            <!-- button Не знаю -->
-                            <a class="btn btn-success" role="button"
-                               @click="loadLearnWord('up')"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-                                {{ $t('all.do_not_know') }}
-                            </a>
-                            <!-- button Знаю -->
-                            <a class="btn btn-warning" role="button"
-                               @click="loadLearnWord('down')"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                                {{ $t('all.know') }}
-                            </a>
+                            <div class="box-button">
+                                <!-- button Не знаю -->
+                                <a class="btn btn-success" role="button"
+                                   @click="loadLearnWord('up')"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+                                    {{ $t('all.do_not_know') }}
+                                </a>
+                                <!-- button Знаю -->
+                                <a class="btn btn-warning" role="button"
+                                   @click="loadLearnWord('down')"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+                                    {{ $t('all.know') }}
+                                </a>
+                            </div>
                         </div>
                         <!-- контент слова -->
                         <div class="box-helper"
@@ -262,31 +264,37 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         .modal-body{
             .box-word{
                 display: flex;
+                flex-flow: column nowrap;
                 .learn-word-trigger{
-                    flex: 1 1 auto;
-                    display: flex;
-                    justify-content: space-between;
                     padding: 2px 10px;
-                    line-height: 38px;
+                    line-height: 30px;
                     cursor: pointer;
                     font-size: 29px;
                     font-weight: 700;
+                    width: 100%;
+                    min-height: 40px;
+                    margin-bottom: 10px;
                     &:hover{
                         background: #f2f1f1;
                         font-weight: 700;
                     }
                 }
-                a{
-                    font-size: 16px;
-                    svg{
-                        height: 16px;
-                        margin-right: 5px;
+                .box-button{
+                    display: flex;
+                    width: 100%;
+                    a{
+                        font-size: 16px;
+                        width: 50%;
+                        svg{
+                            height: 16px;
+                            margin-right: 5px;
+                        }
                     }
-                }
-                .btn-success{
-                    margin: 0 10px;
-                    svg{
-                        fill: white;
+                    .btn-success{
+                        margin-right: 10px;
+                        svg{
+                            fill: white;
+                        }
                     }
                 }
             }
@@ -297,6 +305,11 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
                     width: auto;
                     height: 100px;
                     margin-right: 15px;
+                }
+                .box-sentences{
+                    .sentence:last-child{
+                        margin-bottom: 20px;
+                    }
                 }
             }
         }
@@ -312,7 +325,7 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
             }
             .box-writing{
                 width: 80%;
-                margin-right: 60px;
+                margin-right: 30px;
             }
         }
     }

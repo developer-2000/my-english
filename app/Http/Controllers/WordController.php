@@ -9,6 +9,7 @@ use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Sentence;
 use App\Models\Word;
+use App\Models\EnWord;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -57,7 +58,7 @@ class WordController extends Controller
 
     public function deleteWord(DeleteWordRequest $request): ApiResponse
     {
-        Word::where('id',$request->id)
+        EnWord::where('id',$request->id)
             ->delete();
 
         return new ApiResponse([]);

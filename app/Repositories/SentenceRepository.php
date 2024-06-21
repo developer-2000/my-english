@@ -2,7 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Sentence;
-use App\Models\Word;
+use App\Models\EnWord;
 use Illuminate\Support\Facades\DB;
 
 class SentenceRepository extends CoreRepository
@@ -62,7 +62,7 @@ class SentenceRepository extends CoreRepository
         $words = explode(" ", trim($sentence));
 
         // добавить слова которых нет
-        Word::processWords($words);
+        EnWord::processWords($words);
         // добавить предложение
         Sentence::create($request);
     }

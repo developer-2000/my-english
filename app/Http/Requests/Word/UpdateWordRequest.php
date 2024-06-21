@@ -31,8 +31,8 @@ class UpdateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'id' => 'required|integer|exists:words,id',
-            'word' => 'required|string|min:1|unique:words,word,'.$this->id,
+            'id' => 'required|integer|exists:en_words,id',
+            'word' => 'required|string|min:1|unique:en_words,word,'.$this->id,
             'translation' => 'required|string|min:1',
             'url_image' => 'nullable|string',
             'description' => 'nullable|string',

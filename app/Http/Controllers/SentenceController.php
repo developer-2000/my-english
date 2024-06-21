@@ -14,6 +14,7 @@ use App\Models\Sentence;
 use App\Models\SentenceSound;
 use App\Models\Test;
 use App\Models\Word;
+use App\Models\EnWord;
 use App\Repositories\SentenceRepository;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class SentenceController extends Controller
      */
     public function searchWord(SearchWordRequest $request): ApiResponse
     {
-        $coll = Word::where('word', 'like', $request['word'] . '%')
+        $coll = EnWord::where('word', 'like', $request['word'] . '%')
             ->get()
             ->pluck('word');
 
