@@ -30,6 +30,7 @@
         "@popperjs/core": "^2.11.8",
         "vue-bootstrap-toggle": "^1.1.4",
         "vue-good-table": "^2.21.10",
+        "vue-i18n": "^8.28.2",
         "vue-router": "^3.5.2",
         "vue-sweetalert2": "^5.0.2",
         "vue-tippy": "^4.11.0",

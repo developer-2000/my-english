@@ -15,11 +15,16 @@ class CreateLanguageUsersTable extends Migration
     {
         Schema::create('language_users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('language_id');
-            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('learn_id');
+            $table->foreign('learn_id')->references('id')->on('languages')->onDelete('cascade');
+
+            $table->unsignedBigInteger('interface_id');
+            $table->foreign('interface_id')->references('id')->on('languages')->onDelete('cascade');
         });
+
     }
 
     /**

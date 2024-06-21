@@ -15,9 +15,17 @@ class Language extends Model
         'language',
     ];
 
-    // Определение отношения "один к одному" с моделью User
-    public function users()
+    protected $hidden = ['pivot'];
+
+    // Связь с LanguageUser для interface_id
+    public function interfaceLanguageUsers()
     {
-        return $this->belongsToMany(User::class, 'language_users');
+        return $this->hasMany(LanguageUser::class, 'interface_id');
+    }
+
+    // Связь с LanguageUser для learn_id
+    public function learnLanguageUsers()
+    {
+        return $this->hasMany(LanguageUser::class, 'learn_id');
     }
 }

@@ -6,11 +6,15 @@
             <!-- верхнее меню -->
             <div class="top-menu">
                 <!-- заголовок окна-->
-                <h1>List sentences</h1>
+                <h1>
+                    {{ $t('all.list_sentences') }}
+                </h1>
 
                 <div class="box-button">
                     <div id="block_repeat" v-if="!speak.start">
-                        <div class="title_repeat">repeat</div>
+                        <div class="title_repeat">
+                            {{ $t('all.repeat') }}
+                        </div>
                         <div class="block_input_repeat">
                             <input :checked="speak.repeat_bool" @change="speak.repeat_bool = !speak.repeat_bool"
                                    class="checkbox_repeat" type="checkbox"
@@ -24,26 +28,26 @@
                     <button :disabled="disabled_play" @click="initialSpeak" class="btn btn-success"
                             v-if="!speak.start">
                         <i class="fas fa-play"></i>
-                        Sound translation
+                        {{ $t('all.sound_translation') }}
                     </button>
                     <!-- pause -->
                     <button @click="pauseReadSound" class="btn btn-outline-warning" v-if="speak.start && !speak.pause">
                         <i class="fas fa-pause"></i>
-                        Pause
+                        {{ $t('all.pause') }}
                     </button>
                     <!-- continue -->
                     <button @click="continueReadSound" class="btn btn-success" v-if="speak.pause">
                         <i class="fas fa-play"></i>
-                        Continue
+                        {{ $t('all.continue') }}
                     </button>
                     <!-- stop -->
                     <button @click="stopReadSound" class="btn btn-outline-danger" v-if="speak.start">
                         <i class="fas fa-stop"></i>
-                        Stop
+                        {{ $t('all.stop') }}
                     </button>
 
                     <button @click="openModalCreateSentence" class="btn btn-primary create-sentence">
-                        Add sentence
+                        {{ $t('all.add_sentence') }}
                     </button>
                 </div>
             </div>
@@ -85,14 +89,18 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Create new sentence</h5>
+                        <h5 class="modal-title">
+                            {{ $t('all.create_new_sentence') }}
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="#">
                             <!-- new sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="new_sentence">New sentence</label>
+                                <label class="col-form-label" for="new_sentence">
+                                    {{ $t('all.new_sentence') }}
+                                </label>
                                 <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
                                           @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
@@ -102,15 +110,21 @@
                                           v-model="new_sentence"
                                 ></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters
-                                    {{ this.new_sentence.length }} less needed
+                                <div class="invalid-feedback" v-if="!$v.new_sentence.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.new_sentence.length }}
+                                    {{ $t('all.less_needed') }}
                                 </div>
                             </div>
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="translation_sentence">Translation</label>
+                                <label class="col-form-label" for="translation_sentence">
+                                    {{ $t('all.translation') }}
+                                </label>
                                 <textarea :class="{'is-invalid': $v.translation_sentence.$error}"
                                           @blur="touchTranslationSentence()"
                                           class="form-control"
@@ -119,11 +133,13 @@
                                           required
                                           v-model="translation_sentence"
                                 ></textarea>
-                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is
-                                    empty!
+                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">
+                                    {{ $t('all.field_is_empty') }}
                                 </div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of
-                                    characters {{ this.translation_sentence.length }} less needed
+                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.translation_sentence.length }}
+                                    {{ $t('all.less_needed') }}
                                 </div>
                             </div>
 
@@ -134,7 +150,8 @@
                                         @click="createSentence"
                                         class="btn btn-primary"
                                         type="button"
-                                >Save
+                                >
+                                    {{ $t('all.save') }}
                                 </button>
                             </div>
                         </form>
@@ -149,14 +166,18 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update sentence</h5>
+                        <h5 class="modal-title">
+                            {{ $t('all.update_sentence') }}
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="#">
                             <!-- sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="old_sentence">Sentence</label>
+                                <label class="col-form-label" for="old_sentence">
+                                    {{ $t('all.sentence') }}
+                                </label>
                                 <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
                                           @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
@@ -166,15 +187,21 @@
                                           v-model="new_sentence"
                                 ></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.new_sentence.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">Number of characters
-                                    {{ this.new_sentence.length }} less needed
+                                <div class="invalid-feedback" v-if="!$v.new_sentence.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.new_sentence.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.new_sentence.length }}
+                                    {{ $t('all.less_needed') }}
                                 </div>
                             </div>
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="old_translation">Translation</label>
+                                <label class="col-form-label" for="old_translation">
+                                    {{ $t('all.translation') }}
+                                </label>
                                 <textarea :class="{'is-invalid': $v.translation_sentence.$error}"
                                           @blur="touchTranslationSentence()"
                                           class="form-control"
@@ -183,11 +210,13 @@
                                           required
                                           v-model="translation_sentence"
                                 ></textarea>
-                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">The field is
-                                    empty!
+                                <div class="invalid-feedback" v-if="!$v.translation_sentence.required">
+                                    {{ $t('all.field_is_empty') }}
                                 </div>
-                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">Number of
-                                    characters {{ this.translation_sentence.length }} less needed
+                                <div class="invalid-feedback" v-if="(!$v.translation_sentence.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.translation_sentence.length }}
+                                    {{ $t('all.less_needed') }}
                                 </div>
                             </div>
 
@@ -198,7 +227,8 @@
                                         @click="updateSentence"
                                         class="btn btn-primary"
                                         type="button"
-                                >Update
+                                >
+                                    {{ $t('all.update') }}
                                 </button>
                             </div>
                         </form>
@@ -227,6 +257,7 @@
     import sound_word_mixin from "../../mixins/sound_word_mixin";
     // bootstrap toggle
     import BootstrapToggle from 'vue-bootstrap-toggle'
+    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
 
     export default {
         data() {
@@ -252,7 +283,7 @@
                         },
                         {
                             tdClass: 'checkbox_td',
-                            label: 'Sound',
+                            label: 'Озвучка',
                             width: '3%',
                             html: true,
                             field: (val) => {
@@ -263,20 +294,20 @@
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Sentences',
+                            label: 'Предложение',
                             field: 'sentence',
                             width: '44%',
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Translation',
+                            label: 'Перевод',
                             field: 'translation',
                             width: '47%',
                             sortable: false,
                         },
                         {
                             tdClass: 'but_td',
-                            label: 'Edit',
+                            label: 'Правка',
                             width: '47%',
                             sortable: false,
                             html: true,
@@ -314,7 +345,8 @@
             soft_methods_mixin,
             good_table_mixin,
             help_search_word_mixin,
-            sound_word_mixin
+            sound_word_mixin,
+            translation_i18n_mixin
         ],
         components: {
             VueGoodTable,
@@ -485,6 +517,7 @@
 #page_list_sentences{
     max-height: calc(100vh - 60px);
     overflow-y: auto;
+    width: calc(100% - 200px);
     .top-menu{
         display: flex;
         justify-content: space-between;

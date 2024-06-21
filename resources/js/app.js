@@ -28,9 +28,14 @@ window.Vue.use(Vuex);
 // Импортируем наш store
 import store from './store';
 
+import hallway from './components/Hallway'
+
 const app = new Vue({
     el: '#app',
     router,
     store, // подключаем Vuex хранилище к приложению
+    components:{
+        hallway
+    },
 });
 

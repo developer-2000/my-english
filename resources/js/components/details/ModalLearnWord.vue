@@ -7,7 +7,9 @@
             <div class="modal-content">
                 <!-- header -->
                 <div class="modal-header">
-                    <h5 class="modal-title">Learn words</h5>
+                    <h5 class="modal-title">
+                        {{ $t('all.learn_words') }}
+                    </h5>
                     <div class="box-right">
                         <!-- переключатель языка слова -->
                         <div class="language-switch"
@@ -33,14 +35,14 @@
                                @click="loadLearnWord('up')"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-                                не знаю
+                                {{ $t('all.do_not_know') }}
                             </a>
                             <!-- button Знаю -->
                             <a class="btn btn-warning" role="button"
                                @click="loadLearnWord('down')"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                                знаю
+                                {{ $t('all.know') }}
                             </a>
                         </div>
                         <!-- контент слова -->
@@ -60,7 +62,9 @@
                         <!-- write down word  -->
                         <div class="form-group write-word">
                             <div class="box-writing">
-                                <label for="write_word" class="col-form-label">Correct spelling of the word</label>
+                                <label for="write_word" class="col-form-label">
+                                    {{ $t('all.correct_spelling_of_the_word') }}
+                                </label>
                                 <textarea class="form-control entry-field-help"
                                           placeholder="Insert new word"
                                           id="write_word"
@@ -74,7 +78,7 @@
                     </template>
                     <template v-else>
                         <div class="no-word">
-                            There are no words in the database to study
+                            {{ $t('all.no_words_in_database_to_study') }}
                         </div>
                     </template>
                 </div>
@@ -89,6 +93,7 @@ import {tippy} from "vue-tippy";
 import helpSearchWord from "./HelpSearchWord";
 import help_search_word_mixin from "../../mixins/help_search_word_mixin";
 import $ from "jquery";
+import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
 
 export default {
     data() {
@@ -109,6 +114,7 @@ export default {
     mixins: [
         help_search_word_mixin,
         response_methods_mixin,
+        translation_i18n_mixin
     ],
     methods: {
         // загрузка изучаемого слова

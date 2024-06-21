@@ -34,115 +34,11 @@
 </head>
 <body>
 <div id="app">
-
-    {{-- Header меню --}}
-    <header class="d-flex justify-content-between align-items-center p-3">
-        <a href="/" class="header-element header-main-link">English</a>
-        <!-- Выпадающее меню справа -->
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-            >
-                {{ Auth::user()->name ?? 'Menu' }}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#languageLearn">Язык изучения</a>
-                <a class="dropdown-item" href="{{ route('auth.logout') }}">{{ __('Logout') }}</a>
-            </div>
-        </div>
-    </header>
-
-    {{-- Левое меню index страницы --}}
-    <div class="main-page">
-        <ul id="left_menu">
-            <li>
-                <router-link to="/page-list-words" class="left_menu" exact>
-                    Список слов
-                </router-link>
-            </li>
-            <li>
-                <router-link to="/page-word-sentences" class="left_menu" exact>
-                    Предложения слов
-                </router-link>
-            </li>
-        </ul>
-        @yield('content')
-    </div>
-
-    <!-- Модалка выбора языка изучения -->
-    <div class="modal fade" id="languageLearn" tabindex="-1" aria-labelledby="languageLearnLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="languageLearnLabel">Изучить язык</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="languagesList"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <hallway :user="{{ json_encode(Auth::user()) }}"></hallway>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="{{asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <script src="{{ mix('js/app.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        // открытие модалки выбора языка изучения
-        $('#languageLearn').on('show.bs.modal', function (e) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route("get.languages") }}',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (data) {
-                    let languagesList = $('#languagesList');
-                    languagesList.empty();
-
-                    if (data && data.data.learn_languages) {
-                        // Перебираем языки и создаем для каждого кнопку
-                        $.each(data.data.learn_languages, function(language, code) {
-                            let languageOption = $('<div class="language-option"></div>');
-                            languageOption.attr('data-code', code);
-                            languageOption.text(language);
-                            languagesList.append(languageOption);
-
-                            // Язык изучения выбран
-                            languageOption.on('click', function() {
-                                let selectedLanguage = $(this).data('code');
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '{{ route("set.language.learn.user") }}',
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        language: selectedLanguage
-                                    },
-                                    success: function (response) {
-                                        location.reload();
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error('Error saving language:', error);
-                                    }
-                                });
-                            });
-                        });
-                    } else {
-                        console.error('No learn_languages found in the response');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching languages:', error);
-                }
-            });
-        });
-    });
-</script>
 @yield('js')
 </body>
 </html>

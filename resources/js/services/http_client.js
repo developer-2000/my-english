@@ -14,4 +14,7 @@ export default {
     apiUrl() {
         return 'http://english.my/api/';
     },
+    webUrl() {
+        return 'http://english.my/';
+    },
 }

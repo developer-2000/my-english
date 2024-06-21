@@ -19,6 +19,9 @@ Route::group(['prefix'=>'technical'], function (){
     });
 });
 
+Route::get('/translations', [LanguageController::class, 'getTranslations'])
+    ->name('translations');
+
 // >>> AUTH
 Route::group(['prefix'=>'auth'], function (){
     // Маршруты для отображения формы логина и регистрации, и их обработки
@@ -53,8 +56,10 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
         ->name('get.languages');
+
     Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
         ->name('set.language.learn.user');
+
     Route::get('/page-list-words', function () {
         return view('index');
     })->middleware(BackupDatabase::class);

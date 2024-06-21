@@ -4,17 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
     public function run()
     {
-        // присвоить админу все уровни доступа
-        $userRole = Role::where('name', 'user')->first();
-        $adminRole = Role::where('name', 'admin')->first();
-
         // Создаем пользователя-администратора
         $admin = User::create([
             'name' => 'Admin',
@@ -23,8 +18,9 @@ class AdminUserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
+        // Присваиваем пользователю роль 'user'
+        $admin->assignRole('user');
         // Присваиваем пользователю роль 'admin'
-        $admin->roles()->attach($userRole);
-        $admin->roles()->attach($adminRole);
+        $admin->assignRole('admin');
     }
 }

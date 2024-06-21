@@ -5,7 +5,7 @@
             <!-- верхнее меню -->
             <div class="top-menu">
                 <!-- заголовок окна-->
-                <h1>List Words</h1>
+                <h1>{{ $t('all.word_list') }}</h1>
                 <!-- кнопки -->
                 <div class="box-button">
                     <!-- learn words -->
@@ -13,17 +13,17 @@
                             @click="openLearnModal()"
                             v-if="!bool_learn_words"
                     >
-                        Learn words
+                        {{ $t('all.learn_words') }}
                     </button>
                     <!-- stop learn -->
                     <button class="btn btn-warning"
                             v-if="bool_learn_words"
                             @click="bool_learn_words = false"
                     >
-                        Stop learn
+                        {{ $t('all.stop_learn') }}
                     </button>
                     <button class="btn btn-primary" @click="openModalCreateWord">
-                        Add word
+                        {{ $t('all.add_word') }}
                     </button>
                 </div>
             </div>
@@ -70,9 +70,15 @@
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Create new word</h5>
-                        <h5 class="modal-title" v-else>Loading generate sentences</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">
+                            {{ $t('all.create_new_word') }}
+                        </h5>
+                        <h5 class="modal-title" v-else>
+                            {{ $t('all.loading_generate_sentences') }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                        </button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -92,7 +98,10 @@
                             <div class="box-new-sentence"
                                  v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
                             >
-                                <input type="checkbox" class="form-check-input" :value="obj" v-model="objGenerateSentences.selectedSentences">
+                                <input type="checkbox" class="form-check-input"
+                                       :value="obj"
+                                       v-model="objGenerateSentences.selectedSentences"
+                                >
                                 <div class="box-sentence">
                                     <div class="original-sentence" v-text="obj.original"></div>
                                     <div class="translation-sentence" v-text="obj.translated"></div>
@@ -104,7 +113,9 @@
 
                             <!-- new word -->
                             <div class="form-group">
-                                <label for="new_word" class="col-form-label">New word</label>
+                                <label for="new_word" class="col-form-label">
+                                    {{ $t('all.new_word') }}
+                                </label>
                                 <input type="text"
                                        class="form-control entry-field-help"
                                        placeholder="Insert new word"
@@ -117,26 +128,44 @@
                                        required
                                 >
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">Number of characters {{ this.arrInputsModal.new_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.arrInputsModal.new_word.length }}
+                                    {{ $t('all.less_needed') }}
+                                </div>
                             </div>
 
                             <!-- translation word -->
                             <div class="form-group">
-                                <label for="translation_word" class="col-form-label">Translation</label>
-                                <input type="text" class="form-control" placeholder="Insert translation a word" id="translation_word"
+                                <label for="translation_word" class="col-form-label">
+                                    {{ $t('all.translation') }}
+                                </label>
+                                <input type="text" class="form-control"
+                                       placeholder="Insert translation a word"
+                                       id="translation_word"
                                        v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
                                        :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
                                        required
                                 >
-                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">Number of characters {{ this.arrInputsModal.translation_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.arrInputsModal.translation_word.length }}
+                                    {{ $t('all.less_needed') }}
+                                </div>
                             </div>
 
                             <!-- url image from out source -->
                             <div class="form-group">
-                                <label for="url_image" class="col-form-label">Url image</label>
+                                <label for="url_image" class="col-form-label">
+                                    {{ $t('all.stop_learn') }}
+                                </label>
                                 <input type="text" class="form-control" placeholder="Input url" id="url_image"
                                        v-model="arrInputsModal.url_image"
                                 >
@@ -144,7 +173,9 @@
 
                             <!-- Word description -->
                             <div class="form-group">
-                                <label for="word_description" class="col-form-label">Word description</label>
+                                <label for="word_description" class="col-form-label">
+                                    {{ $t('all.word_description') }}
+                                </label>
                                 <textarea class="form-control"
                                           id="word_description"
                                           placeholder="Insert description word"
@@ -157,7 +188,9 @@
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
-                                        <label for="select_type" class="col-form-label">Word type</label>
+                                        <label for="select_type" class="col-form-label">
+                                            {{ $t('all.word_type') }}
+                                        </label>
                                         <select id="select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
@@ -178,7 +211,9 @@
                                     <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
                                         <!-- прошедшее -->
                                         <div class="box-past">
-                                            <label>Past time</label>
+                                            <label>
+                                                {{ $t('all.past_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.past.word"
                                             >
@@ -191,7 +226,9 @@
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
-                                            <label>Present time</label>
+                                            <label>
+                                                {{ $t('all.present_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.present.word"
                                             >
@@ -204,7 +241,9 @@
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
-                                            <label>Future time</label>
+                                            <label>
+                                                {{ $t('all.future_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.future.word"
                                             >
@@ -218,7 +257,9 @@
                                     </div>
 
                                     <div v-if="arrInputsModal.objNumber !== null">
-                                        <label>ввести цыфрой</label>
+                                        <label>
+                                            {{ $t('all.enter_digit') }}
+                                        </label>
                                         <input type="text" class="form-control" placeholder="Insert number"
                                                v-model="arrInputsModal.objNumber.number"
                                         >
@@ -231,7 +272,9 @@
                                 <!-- переключатель добавления предложений -->
                                 <div class="form-check form-switch">
                                     <input ref="toggle1" class="form-check-input" type="checkbox" id="toggle1">
-                                    <label class="form-check-label" for="toggle1">No Sentence</label>
+                                    <label class="form-check-label" for="toggle1">
+                                        {{ $t('all.sentences') }}
+                                    </label>
                                 </div>
                             </div>
                         </form>
@@ -246,14 +289,18 @@
                                     :disabled="$v.$invalid"
                                     @click="createWord"
                                     v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
-                            >Create</button>
+                            >
+                                {{ $t('all.create') }}
+                            </button>
                             <!-- next to generate sentences-->
                             <button type="button" class="btn btn-success"
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="loadGenerateSentences()"
                                     v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
-                            >Next</button>
+                            >
+                                {{ $t('all.next_2') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -268,8 +315,12 @@
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">Update word</h5>
-                        <h5 class="modal-title" v-else>Loading generate sentences</h5>
+                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">
+                            {{ $t('all.update_word') }}
+                        </h5>
+                        <h5 class="modal-title" v-else>
+                            {{ $t('all.loading_generate_sentences') }}
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                     </div>
@@ -291,7 +342,10 @@
                             <div class="box-new-sentence"
                                  v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
                             >
-                                <input type="checkbox" class="form-check-input" :value="obj" v-model="objGenerateSentences.selectedSentences">
+                                <input type="checkbox" class="form-check-input"
+                                       :value="obj"
+                                       v-model="objGenerateSentences.selectedSentences"
+                                >
                                 <div class="box-sentence">
                                     <div class="original-sentence" v-text="obj.original"></div>
                                     <div class="translation-sentence" v-text="obj.translated"></div>
@@ -302,8 +356,13 @@
                         <form action="#" v-show="!objGenerateSentences.boolAddSentences">
                             <!-- word -->
                             <div class="form-group">
-                                <label for="old_word" class="col-form-label">Update word</label>
-                                <input type="text" class="form-control entry-field-help" placeholder="Insert word" id="old_word"
+                                <label for="old_word" class="col-form-label">
+                                    {{ $t('all.update_word') }}
+                                </label>
+                                <input type="text"
+                                       class="form-control entry-field-help"
+                                       placeholder="Insert word"
+                                       id="old_word"
                                        v-model="arrInputsModal.new_word"
                                        @blur="touchNewWord()"
                                        @keyup="searchHelpWord(arrInputsModal.new_word)"
@@ -311,35 +370,62 @@
                                        required
                                 >
                                 <help-search-word :help-dynamic="help_dynamic"/>
-                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">Number of characters {{ this.arrInputsModal.new_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.new_word.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.arrInputsModal.new_word.length }}
+                                    {{ $t('all.less_needed') }}
+                                </div>
                             </div>
 
                             <!-- translation word -->
                             <div class="form-group">
-                                <label for="update_translation" class="col-form-label">Translation</label>
-                                <input type="text" class="form-control" placeholder="Insert translation" id="update_translation"
+                                <label for="update_translation" class="col-form-label">
+                                    {{ $t('all.translation') }}
+                                </label>
+                                <input type="text" class="form-control"
+                                       placeholder="Insert translation"
+                                       id="update_translation"
                                        v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
                                        :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
                                        required
                                 >
-                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">The field is empty!</div>
-                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">Number of characters {{ this.arrInputsModal.translation_word.length }} less needed</div>
+                                <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">
+                                    {{ $t('all.field_is_empty') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="(!$v.arrInputsModal.translation_word.minLength)">
+                                    {{ $t('all.number_of_characters') }}
+                                    {{ this.arrInputsModal.translation_word.length }}
+                                    {{ $t('all.less_needed') }}
+                                </div>
                             </div>
 
                             <!-- url image from out source -->
                             <div class="form-group">
-                                <label for="update_url_image" class="col-form-label">Url image</label>
-                                <input type="text" class="form-control" placeholder="Input url" id="update_url_image"
+                                <label for="update_url_image" class="col-form-label">
+                                    {{ $t('all.url_image') }}
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Input url"
+                                       id="update_url_image"
                                        v-model="arrInputsModal.url_image"
                                 >
                             </div>
 
                             <!-- Word description -->
                             <div class="form-group">
-                                <label for="update_word_description" class="col-form-label">Word description</label>
-                                <textarea v-model="arrInputsModal.description" class="form-control" id="update_word_description" placeholder="Insert description word"></textarea>
+                                <label for="update_word_description" class="col-form-label">
+                                    {{ $t('all.word_description') }}
+                                </label>
+                                <textarea v-model="arrInputsModal.description"
+                                          class="form-control"
+                                          id="update_word_description"
+                                          placeholder="Insert description word">
+                                </textarea>
                             </div>
 
                             <!-- select type word -->
@@ -347,7 +433,9 @@
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
-                                        <label for="update_select_type" class="col-form-label">Word type</label>
+                                        <label for="update_select_type" class="col-form-label">
+                                            {{ $t('all.word_type') }}
+                                        </label>
                                         <select id="update_select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
@@ -369,7 +457,9 @@
                                     <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
                                         <!-- прошедшее -->
                                         <div class="box-past">
-                                            <label>Past time</label>
+                                            <label>
+                                                {{ $t('all.past_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.past.word"
                                             >
@@ -382,7 +472,9 @@
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
-                                            <label>Present time</label>
+                                            <label>
+                                                {{ $t('all.present_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.present.word"
                                             >
@@ -395,7 +487,9 @@
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
-                                            <label>Future time</label>
+                                            <label>
+                                                {{ $t('all.future_time') }}
+                                            </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
                                                    v-model="arrInputsModal.objWordTimeForms.future.word"
                                             >
@@ -408,7 +502,9 @@
                                         </div>
                                     </div>
                                     <div v-if="arrInputsModal.objNumber !== null">
-                                        <label>ввести цыфрой</label>
+                                        <label>
+                                            {{ $t('all.enter_digit') }}
+                                        </label>
                                         <input type="text" class="form-control" placeholder="Insert number"
                                                v-model="arrInputsModal.objNumber.number"
                                         >
@@ -429,7 +525,9 @@
                                 <!-- переключатель добавления предложений -->
                                 <div class="form-check form-switch">
                                     <input ref="toggle2" class="form-check-input" type="checkbox" id="toggle2">
-                                    <label class="form-check-label" for="toggle2">No Sentence</label>
+                                    <label class="form-check-label" for="toggle2">
+                                       {{ $t('all.sentences') }}
+                                    </label>
                                 </div>
 
                             </div>
@@ -445,14 +543,18 @@
                                     :disabled="$v.$invalid"
                                     @click="updateWord"
                                     v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
-                            >Update</button>
+                            >
+                                {{ $t('all.update') }}
+                            </button>
                             <!-- next to generate sentences-->
                             <button type="button" class="btn btn-success"
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="loadGenerateSentences()"
                                     v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
-                            >Next</button>
+                            >
+                                {{ $t('all.next_2') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -483,9 +585,9 @@
     import response_methods_mixin from "../../mixins/response_methods_mixin";
     import help_search_word_mixin from "../../mixins/help_search_word_mixin";
     import helpSearchWord from "../details/HelpSearchWord";
+    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
     // components
     import ModalLearnWord from "../details/ModalLearnWord";
-
     import $ from 'jquery';
 
     export default {
@@ -510,13 +612,13 @@
                     columns: [
                         {
                             tdClass: 'id_td',
-                            label: 'Letter',
+                            label: 'Буквы',
                             field: 'letter',
                             width: '5%',
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Word',
+                            label: 'Слово',
                             width: '19%',
                             sortable: false,
                             html: true,
@@ -531,7 +633,7 @@
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Word',
+                            label: 'Слово',
                             width: '19%',
                             sortable: false,
                             html: true,
@@ -546,7 +648,7 @@
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Word',
+                            label: 'Слово',
                             width: '19%',
                             sortable: false,
                             html: true,
@@ -561,7 +663,7 @@
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Word',
+                            label: 'Слово',
                             width: '19%',
                             sortable: false,
                             html: true,
@@ -576,7 +678,7 @@
                         },
                         {
                             tdClass: 'text_td',
-                            label: 'Word',
+                            label: 'Слово',
                             width: '19%',
                             sortable: false,
                             html: true,
@@ -636,8 +738,15 @@
         mixins: [
             response_methods_mixin,
             good_table_mixin,
-            help_search_word_mixin
+            help_search_word_mixin,
+            translation_i18n_mixin
         ],
+        props: {
+            user: {
+                type: Object,
+                required: true
+            }
+        },
         components: { VueGoodTable, helpSearchWord, ModalLearnWord },
         methods: {
             insertDataForPostWord(){
@@ -1033,9 +1142,10 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 
                 // Обновляем текст в зависимости от состояния переключателя
                 if (this.objGenerateSentences.status_toggle) {
-                    label.textContent = 'Add sentence';
-                } else {
-                    label.textContent = 'No sentence';
+                    label.textContent = this.$t('all.generation');
+                }
+                else {
+                    label.textContent = this.$t('all.sentences');
                 }
             },
             clearGenerateSentences() {
@@ -1083,6 +1193,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 #page_list_worlds{
     max-height: calc(100vh - 60px);
     overflow-y: auto;
+    width: calc(100% - 200px);
     .wrapper{
         .top-menu{
             display: flex;
@@ -1154,8 +1265,9 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         text-align: center;
                         line-height: 20px;
                         margin-top: 10px;
-                        width: 72px;
+                        width: 110px;
                         cursor: pointer;
+                        font-size: 14px;
                     }
                 }
             }
@@ -1242,7 +1354,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         border-radius: 5px;
                         option{
                             font-weight: 200;
-                            font-size: 17px;
+                            font-size: 15px;
                             padding: 0 10px;
                         }
                     }
