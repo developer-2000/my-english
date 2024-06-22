@@ -7,7 +7,7 @@ use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\Sentence;
+use App\Models\EnSentence;
 use App\Models\Word;
 use App\Models\EnWord;
 use App\Repositories\WordRepository;

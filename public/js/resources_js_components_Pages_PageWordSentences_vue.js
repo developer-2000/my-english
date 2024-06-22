@@ -1061,7 +1061,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   methods: {
     initialSpeak: function initialSpeak() {
-      console.log(window.speechSynthesis.getVoices());
       this.voiceActingStatus({
         name: 'start_true'
       });
@@ -1294,7 +1293,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   mounted: function mounted() {
     this.preloadLanguages();
     window.speechSynthesis.onvoiceschanged = function () {
-      console.log(window.speechSynthesis.getVoices());
+      // console.log(window.speechSynthesis.getVoices())
     };
   }
 });

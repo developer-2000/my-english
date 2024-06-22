@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Sentence;
+use App\Models\EnSentence;
 use App\Models\Word;
 use App\Models\EnWord;
 use Carbon\Carbon;
@@ -32,7 +32,7 @@ class LearnWordRepository
 
         // Если слово найдено, выбираем предложения с его участием
         if ($latestWord) {
-            $latestWord->sentences = Sentence::where('sentence', 'like', '%' . $latestWord->word . '%')->get();
+            $latestWord->sentences = EnSentence::where('sentence', 'like', '%' . $latestWord->word . '%')->get();
             return $latestWord;
         }
 

@@ -113,6 +113,7 @@ export default {
                             languageOption.on('click', (event) => {
                                 const selectedLanguage = $(event.currentTarget).data('code');
                                 this.selectLanguage(selectedLanguage);
+                                $('#languageLearn').modal('hide');
                             });
                         });
                     }

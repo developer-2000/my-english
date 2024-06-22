@@ -24,7 +24,7 @@ class BindCheckboxSoundRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'sentence_id' => 'required|integer|exists:sentences,id',
+            'sentence_id' => 'required|integer|exists:en_sentences,id',
             'status' => 'required|boolean',
         ];
     }

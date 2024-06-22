@@ -3,10 +3,10 @@ namespace App\Repositories;
 
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
-use App\Models\Sentence;
+use App\Models\EnSentence;
 use App\Models\EnWord;
 use Illuminate\Support\Facades\DB;
-use App\Models\WordType;
+use App\Models\EnWordType;
 
 class WordRepository extends CoreRepository
 {
@@ -55,7 +55,7 @@ class WordRepository extends CoreRepository
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        $types = WordType::get();
+        $types = EnWordType::get();
         $colors = config('program.type.color');
 
         return compact('total_count', 'list', 'types', 'colors');
@@ -136,7 +136,7 @@ class WordRepository extends CoreRepository
             ];
         }
 
-        Sentence::insert($dataToInsert);
+        EnSentence::insert($dataToInsert);
     }
 
     /**

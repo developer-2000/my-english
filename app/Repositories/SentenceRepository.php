@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\Sentence;
+use App\Models\EnSentence;
 use App\Models\EnWord;
 use Illuminate\Support\Facades\DB;
 
@@ -39,8 +39,8 @@ class SentenceRepository extends CoreRepository
             // по чекбоксам озвучки предложений
             elseif ($vars['sort_column'] == 'sound') {
                 $collection = $this->startConditions()
-                    ->leftJoin('sentence_sounds', 'sentences.id', '=', 'sentence_sounds.sentence_id')
-                    ->select('sentences.*', DB::raw('sentence_sounds.id as sound'))
+                    ->leftJoin('en_sentence_sounds', 'en_sentences.id', '=', 'en_sentence_sounds.sentence_id')
+                    ->select('en_sentences.*', DB::raw('en_sentence_sounds.id as sound'))
                     ->orderBy(DB::raw($vars['sort_column']), $vars['sort_type']);
             }
         }
@@ -64,11 +64,11 @@ class SentenceRepository extends CoreRepository
         // добавить слова которых нет
         EnWord::processWords($words);
         // добавить предложение
-        Sentence::create($request);
+        EnSentence::create($request);
     }
 
     protected function getModelClass(): string
     {
-        return Sentence::class;
+        return EnSentence::class;
     }
 }

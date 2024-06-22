@@ -24,7 +24,7 @@ class CreateSentenceRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'sentence' => 'required|string|min:3|unique:sentences,sentence',
+            'sentence' => 'required|string|min:3|unique:en_sentences,sentence',
             'translation' => 'required|string|min:3',
         ];
     }

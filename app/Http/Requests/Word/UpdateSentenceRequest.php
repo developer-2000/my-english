@@ -31,8 +31,8 @@ class UpdateSentenceRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'id' => 'required|integer|exists:sentences,id',
-            'sentence' => 'required|string|min:3|unique:sentences,sentence,'.$this->id,
+            'id' => 'required|integer|exists:en_sentences,id',
+            'sentence' => 'required|string|min:3|unique:en_sentences,sentence,'.$this->id,
             'translation' => 'required|string|min:3',
         ];
     }

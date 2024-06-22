@@ -26,8 +26,6 @@ export default {
     },
     methods: {
         initialSpeak() {
-            console.log(window.speechSynthesis.getVoices())
-
             this.voiceActingStatus({name:'start_true'});
             // остановить возможно предыдущий запущеный sound
             this.speak.synthesis.cancel();
@@ -224,7 +222,7 @@ export default {
         this.preloadLanguages();
 
         window.speechSynthesis.onvoiceschanged = function() {
-            console.log(window.speechSynthesis.getVoices())
+            // console.log(window.speechSynthesis.getVoices())
         }
     },
 }

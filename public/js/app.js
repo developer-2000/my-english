@@ -5132,6 +5132,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                     languageOption.on('click', function (event) {
                       var selectedLanguage = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.currentTarget).data('code');
                       _this.selectLanguage(selectedLanguage);
+                      jquery__WEBPACK_IMPORTED_MODULE_0___default()('#languageLearn').modal('hide');
                     });
                   });
                 }

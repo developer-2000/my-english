@@ -14,7 +14,7 @@ class EnWord extends Model {
     ];
 
     public function type() {
-        return $this->belongsTo(WordType::class, 'type_id', 'id')->withDefault(function ($type, $word) {
+        return $this->belongsTo(EnWordType::class, 'type_id', 'id')->withDefault(function ($type, $word) {
             $type->type = '';
             $type->color = 'black';
             $type->id = 0;

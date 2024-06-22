@@ -10,8 +10,8 @@ use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateSentenceRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\Sentence;
-use App\Models\SentenceSound;
+use App\Models\EnSentence;
+use App\Models\EnSentenceSound;
 use App\Models\Test;
 use App\Models\Word;
 use App\Models\EnWord;
@@ -35,7 +35,6 @@ class SentenceController extends Controller
      */
     public function index(SelectGetPaginateRequest $request): ApiResponse
     {
-        Test::create(["json"=>1]);
         $sentences = $this->sentenceRepository->getSentences($request->validated());
 
         return new ApiResponse(compact('sentences'));
@@ -60,7 +59,7 @@ class SentenceController extends Controller
      */
     public function update(UpdateSentenceRequest $request): ApiResponse
     {
-        $coll = Sentence::where('id',$request['id'])
+        $coll = EnSentence::where('id',$request['id'])
             ->update(Arr::except($request->validated(),'id'));
 
         return new ApiResponse(compact('coll'));
@@ -89,7 +88,7 @@ class SentenceController extends Controller
      */
     public function searchSentences(SearchWordRequest $request): ApiResponse
     {
-        $sentences = Sentence::where('sentence', 'like', '%' . $request['word'] . '%')
+        $sentences = EnSentence::where('sentence', 'like', '%' . $request['word'] . '%')
             ->get();
 
         return new ApiResponse(compact('sentences'));
@@ -98,12 +97,12 @@ class SentenceController extends Controller
     public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse
     {
         if($request['status']){
-            SentenceSound::firstOrCreate([
+            EnSentenceSound::firstOrCreate([
                 'sentence_id' => $request['sentence_id']
             ]);
         }
         else{
-            SentenceSound::where('sentence_id', $request['sentence_id'])
+            EnSentenceSound::where('sentence_id', $request['sentence_id'])
                 ->delete();
         }
 

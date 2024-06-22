@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
 
-use App\Models\WordType;
+use App\Models\EnWordType;
 use Illuminate\Database\Seeder;
 
 class TypeSeeder extends Seeder {
@@ -69,7 +69,7 @@ class TypeSeeder extends Seeder {
             'description' => json_encode($object),
         ];
 
-        WordType::insert($arrData);
+        EnWordType::insert($arrData);
     }
 }
 
