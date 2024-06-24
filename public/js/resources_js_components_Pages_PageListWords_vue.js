@@ -13,9 +13,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var tippy_js_themes_light_border_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tippy.js/themes/light-border.css */ "./node_modules/tippy.js/themes/light-border.css");
 /* harmony import */ var vue_tippy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-tippy */ "./node_modules/vue-tippy/dist/vue-tippy.esm.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-good-table/dist/vue-good-table.css */ "./node_modules/vue-good-table/dist/vue-good-table.css");
-/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
+/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
 /* harmony import */ var _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../mixins/good_table_mixin */ "./resources/js/mixins/good_table_mixin.js");
 /* harmony import */ var _mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../mixins/response_methods_mixin */ "./resources/js/mixins/response_methods_mixin.js");
 /* harmony import */ var _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../mixins/help_search_word_mixin */ "./resources/js/mixins/help_search_word_mixin.js");
@@ -24,10 +24,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _details_ModalLearnWord__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../details/ModalLearnWord */ "./resources/js/components/details/ModalLearnWord.vue");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _mixins_user_mixin__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../mixins/user_mixin */ "./resources/js/mixins/user_mixin.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // hover alert text
 
 
@@ -43,6 +50,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 // components
+
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -163,7 +172,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     };
   },
-  mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_translation_i18n_mixin__WEBPACK_IMPORTED_MODULE_7__["default"]],
+  mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_good_table_mixin__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_help_search_word_mixin__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_translation_i18n_mixin__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_user_mixin__WEBPACK_IMPORTED_MODULE_10__["default"]],
   props: {
     user: {
       type: Object,
@@ -171,84 +180,107 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
   },
   components: {
-    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_10__.VueGoodTable,
+    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_11__.VueGoodTable,
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_6__["default"],
     ModalLearnWord: _details_ModalLearnWord__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_12__.mapGetters)({
+    // Геттер для получения текущего языка изучения
+    currentLearnLanguage: 'getLearnLanguage'
+  })),
+  watch: {
+    currentLearnLanguage: {
+      handler: 'learnAnotherLanguage',
+      // Вызывает метод loadData при изменении currentLearnLanguage
+      immediate: false // Не Вызов loadData сразу после создания компонента
+    }
+  },
   methods: {
-    insertDataForPostWord: function insertDataForPostWord() {
-      return {
-        word: this.arrInputsModal.new_word,
-        translation: this.arrInputsModal.translation_word,
-        url_image: this.arrInputsModal.url_image,
-        description: this.arrInputsModal.description,
-        arr_new_sentences: this.objGenerateSentences.selectedSentences,
-        type_id: this.arrInputsModal.select_type_id,
-        // id типа из таблицы word_types
-        // типы слова формы времени или числительные
-        // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
-        // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
-        time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms : this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null
-      };
-    },
     createWord: function createWord() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response;
+        var data, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return _this.$http.post("".concat(_this.$http.apiUrl(), "word"), _this.insertDataForPostWord());
-            case 3:
+              data = {
+                word: _this.arrInputsModal.new_word,
+                translation: _this.arrInputsModal.translation_word,
+                url_image: _this.arrInputsModal.url_image,
+                description: _this.arrInputsModal.description,
+                arr_new_sentences: _this.objGenerateSentences.selectedSentences,
+                type_id: _this.arrInputsModal.select_type_id,
+                // id типа из таблицы word_types
+                // типы слова формы времени или числительные
+                // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
+                // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
+                time_forms: _this.arrInputsModal.objWordTimeForms ? _this.arrInputsModal.objWordTimeForms : _this.arrInputsModal.objNumber ? _this.arrInputsModal.objNumber : null
+              };
+              _context.prev = 1;
+              _context.next = 4;
+              return _this.$http.post("".concat(_this.$http.webUrl(), "word"), data);
+            case 4:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
-              _context.next = 10;
+              _context.next = 11;
               break;
-            case 7:
-              _context.prev = 7;
-              _context.t0 = _context["catch"](0);
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](1);
               console.log(_context.t0);
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[1, 8]]);
       }))();
     },
     updateWord: function updateWord() {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var response;
+        var data, response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return _this2.$http.patch("".concat(_this2.$http.apiUrl(), "word/").concat(_this2.arrInputsModal.word_id), _this2.insertDataForPostWord());
-            case 3:
+              data = {
+                word_id: _this2.arrInputsModal.word_id,
+                word: _this2.arrInputsModal.new_word,
+                translation: _this2.arrInputsModal.translation_word,
+                url_image: _this2.arrInputsModal.url_image,
+                description: _this2.arrInputsModal.description,
+                arr_new_sentences: _this2.objGenerateSentences.selectedSentences,
+                type_id: _this2.arrInputsModal.select_type_id,
+                // id типа из таблицы word_types
+                // типы слова формы времени или числительные
+                // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
+                // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
+                time_forms: _this2.arrInputsModal.objWordTimeForms ? _this2.arrInputsModal.objWordTimeForms : _this2.arrInputsModal.objNumber ? _this2.arrInputsModal.objNumber : null
+              };
+              _context2.prev = 1;
+              _context2.next = 4;
+              return _this2.$http.post("".concat(_this2.$http.webUrl(), "word/update-word"), data);
+            case 4:
               response = _context2.sent;
               if (_this2.checkSuccess(response)) {
                 _this2.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#update_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
-              _context2.next = 10;
+              _context2.next = 11;
               break;
-            case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](0);
+            case 8:
+              _context2.prev = 8;
+              _context2.t0 = _context2["catch"](1);
               console.log(_context2.t0);
-            case 10:
+            case 11:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 7]]);
+        }, _callee2, null, [[1, 8]]);
       }))();
     },
     deleteWord: function deleteWord(word_id) {
@@ -264,7 +296,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context3.prev = 1;
               _this3.confirmMessage('message', 'success');
               _context3.next = 5;
-              return _this3.$http.post("".concat(_this3.$http.apiUrl(), "word/delete-word"), data);
+              return _this3.$http.post("".concat(_this3.$http.webUrl(), "word/delete-word"), data);
             case 5:
               response = _context3.sent;
               if (_this3.checkSuccess(response)) {
@@ -295,7 +327,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context4.prev = 0;
               _this4.isLoading = true;
               _context4.next = 4;
-              return _this4.$http.get("".concat(_this4.$http.apiUrl(), "word?search=").concat(_this4.serverParams.search, "&page=").concat(_this4.serverParams.page, "&perPage=").concat(_this4.serverParams.perPage, "&sortField=").concat(_this4.serverParams.sort[0].field, "&sortType=").concat(_this4.serverParams.sort[0].type));
+              return _this4.$http.get("".concat(_this4.$http.webUrl(), "word?search=").concat(_this4.serverParams.search, "&page=").concat(_this4.serverParams.page, "&perPage=").concat(_this4.serverParams.perPage, "&sortField=").concat(_this4.serverParams.sort[0].field, "&sortType=").concat(_this4.serverParams.sort[0].type));
             case 4:
               response = _context4.sent;
               if (_this4.checkSuccess(response)) {
@@ -333,10 +365,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               };
               _context5.prev = 1;
               _context5.next = 4;
-              return _this5.$http.post("".concat(_this5.$http.apiUrl(), "sentence/search-sentences"), data);
+              return _this5.$http.post("".concat(_this5.$http.webUrl(), "sentence/search-sentences"), data);
             case 4:
               response = _context5.sent;
               if (_this5.checkSuccess(response)) {
+                // console.log(response.data.data.sentences)
                 _this5.arrSentences = response.data.data.sentences;
               }
               _context5.next = 11;
@@ -366,7 +399,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               };
               _context6.prev = 3;
               _context6.next = 6;
-              return _this6.$http.post("".concat(_this6.$http.apiUrl(), "ai/generate-sentences"), data);
+              return _this6.$http.post("".concat(_this6.$http.webUrl(), "ai/generate-sentences"), data);
             case 6:
               response = _context6.sent;
               if (_this6.checkSuccess(response)) {
@@ -527,24 +560,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
       var _this9 = this;
       // в модалке создания слова
-      document.getElementById("select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id === _this9.arrInputsModal.select_type_id) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
-            break;
+      var selectTypeElement = document.getElementById("select_type");
+      if (selectTypeElement) {
+        selectTypeElement.addEventListener('change', function () {
+          for (var i = 0; i < _this9.allTypes.length; i++) {
+            if (_this9.allTypes[i].id === _this9.arrInputsModal.select_type_id) {
+              _this9.setStyleDataModal(_this9.allTypes[i]);
+              break;
+            }
           }
-        }
-      });
+        });
+      }
 
-      // в модалке обновления слова
-      document.getElementById("update_select_type").addEventListener('change', function () {
-        for (var i = 0; i < _this9.allTypes.length; i++) {
-          if (_this9.allTypes[i].id == _this9.arrInputsModal.select_type_id) {
-            _this9.setStyleDataModal(_this9.allTypes[i]);
-            break;
+      // в модалке обновления слова - select type
+      var updateSelectTypeElement = document.getElementById("update_select_type");
+      if (updateSelectTypeElement) {
+        updateSelectTypeElement.addEventListener('change', function () {
+          for (var i = 0; i < _this9.allTypes.length; i++) {
+            if (_this9.allTypes[i].id == _this9.arrInputsModal.select_type_id) {
+              _this9.setStyleDataModal(_this9.allTypes[i]);
+              break;
+            }
           }
-        }
-      });
+        });
+      }
     },
     // Возвращает по слову обьект слова
     getRowForWord: function getRowForWord(word) {
@@ -706,6 +745,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         label.textContent = this.$t('all.sentences');
       }
     },
+    // Очистка переменных модалки
     clearGenerateSentences: function clearGenerateSentences() {
       this.objGenerateSentences.status_toggle = false;
       this.objGenerateSentences.boolAddSentences = false;
@@ -715,6 +755,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // Снятие checked состояния после инициализации
       jquery__WEBPACK_IMPORTED_MODULE_9___default()(this.$refs.toggle1).prop('checked', false).change();
       jquery__WEBPACK_IMPORTED_MODULE_9___default()(this.$refs.toggle2).prop('checked', false).change();
+    },
+    // очистка параметров пагинации
+    clearServerParams: function clearServerParams() {
+      this.serverParams.search = '';
+      this.serverParams.page = 0;
+      this.serverParams.sort[0].field = '';
+      this.serverParams.sort[0].type = '';
+    },
+    // операции после смены языка изучения
+    learnAnotherLanguage: function learnAnotherLanguage() {
+      this.clearServerParams();
+      this.initialData();
     }
   },
   mounted: function mounted() {
@@ -732,12 +784,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   validations: {
     arrInputsModal: {
       new_word: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__.required,
-        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__.minLength)(3)
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.required,
+        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.minLength)(3)
       },
       translation_word: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__.required,
-        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__.minLength)(1)
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.required,
+        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.minLength)(1)
       }
     }
   },
@@ -833,7 +885,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 action_with_word: action
               };
               _context.next = 6;
-              return _this.$http.post("".concat(_this.$http.apiUrl(), "learn/get-word"), data);
+              return _this.$http.post("".concat(_this.$http.webUrl(), "learn/get-word"), data);
             case 6:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
@@ -1277,6 +1329,12 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.getCodeLearnLanguage2 == "en",
+      expression: "getCodeLearnLanguage2 == 'en'"
+    }],
     staticClass: "block_type"
   }, [_c("div", {
     staticClass: "box-left-site"
@@ -1836,6 +1894,12 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.getCodeLearnLanguage2 == "en",
+      expression: "getCodeLearnLanguage2 == 'en'"
+    }],
     staticClass: "block_type"
   }, [_c("div", {
     staticClass: "box-left-site"
@@ -2510,7 +2574,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.prev = 0;
               _this.isLoading = true;
               _context.next = 4;
-              return _this.$http.get("".concat(_this.$http.apiUrl(), "sentence/search-word?word=").concat(word));
+              return _this.$http.get("".concat(_this.$http.webUrl(), "sentence/search-word?word=").concat(word));
             case 4:
               response = _context.sent;
               if (_this.checkSuccess(response)) {

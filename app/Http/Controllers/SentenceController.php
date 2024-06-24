@@ -4,21 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Sentence\BindCheckboxSoundRequest;
 use App\Http\Requests\Word\CreateSentenceRequest;
-use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\SearchWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateSentenceRequest;
-use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\EnSentence;
-use App\Models\EnSentenceSound;
-use App\Models\Test;
-use App\Models\Word;
-use App\Models\EnWord;
 use App\Repositories\SentenceRepository;
-use App\Repositories\WordRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class SentenceController extends Controller
 {
@@ -57,10 +47,9 @@ class SentenceController extends Controller
      * @param UpdateSentenceRequest $request
      * @return ApiResponse
      */
-    public function update(UpdateSentenceRequest $request): ApiResponse
+    public function updateSentence(UpdateSentenceRequest $request): ApiResponse
     {
-        $coll = EnSentence::where('id',$request['id'])
-            ->update(Arr::except($request->validated(),'id'));
+        $coll = $this->sentenceRepository->updateSentence($request);
 
         return new ApiResponse(compact('coll'));
     }
@@ -72,9 +61,7 @@ class SentenceController extends Controller
      */
     public function searchWord(SearchWordRequest $request): ApiResponse
     {
-        $coll = EnWord::where('word', 'like', $request['word'] . '%')
-            ->get()
-            ->pluck('word');
+        $coll = $this->sentenceRepository->searchWord($request);
 
         $string = implode(" ", $coll->toArray());
 
@@ -88,23 +75,14 @@ class SentenceController extends Controller
      */
     public function searchSentences(SearchWordRequest $request): ApiResponse
     {
-        $sentences = EnSentence::where('sentence', 'like', '%' . $request['word'] . '%')
-            ->get();
+        $sentences = $this->sentenceRepository->searchSentences($request);
 
         return new ApiResponse(compact('sentences'));
     }
 
     public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse
     {
-        if($request['status']){
-            EnSentenceSound::firstOrCreate([
-                'sentence_id' => $request['sentence_id']
-            ]);
-        }
-        else{
-            EnSentenceSound::where('sentence_id', $request['sentence_id'])
-                ->delete();
-        }
+        $this->sentenceRepository->bindCheckboxSound($request);
 
         return new ApiResponse([]);
     }

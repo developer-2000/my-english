@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateSentenceRequest extends ApiFormRequest
 {
@@ -13,14 +14,7 @@ class UpdateSentenceRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
-    }
-
-    // отловить параметр get и передача в request
-    public function all($keys = null) {
-        $data = parent::all($keys);
-        $data['id'] = $this->route('sentence');
-        return $data;
+        return Auth::check();
     }
 
     /**
@@ -30,10 +24,21 @@ class UpdateSentenceRequest extends ApiFormRequest
      * правила проверки
      */
     public function rules() {
+        $sentenceId = $this->route('sentence_id') ?? $this->input('sentence_id');
+
         return [
-            'id' => 'required|integer|exists:en_sentences,id',
-            'sentence' => 'required|string|min:3|unique:en_sentences,sentence,'.$this->id,
-            'translation' => 'required|string|min:3',
+            'sentence_id' => [
+                'required',
+                'integer',
+                $this->CheckExistsInDB('_sentences', 'id'),
+            ],
+            'sentence' => [
+                'required',
+                'string',
+                'min:3',
+                $this->CheckUniqueInDB('_sentences', 'sentence', $sentenceId),
+            ],
+            'translation' => 'nullable|string|min:3',
         ];
     }
 

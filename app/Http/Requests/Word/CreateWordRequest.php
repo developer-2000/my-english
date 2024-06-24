@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class CreateWordRequest extends ApiFormRequest
 {
@@ -13,7 +14,7 @@ class CreateWordRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,12 @@ class CreateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'word' => 'required|string|min:1|unique:en_words,word',
+            'word' => [
+                'required',
+                'string',
+                'min:1',
+                $this->CheckUniqueInDB('_words', 'word'),
+            ],
             'translation' => 'required|string|min:1',
             'url_image' => 'nullable|string',
             'description' => 'nullable|string',

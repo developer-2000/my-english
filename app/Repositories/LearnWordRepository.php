@@ -7,7 +7,7 @@ use App\Models\Word;
 use App\Models\EnWord;
 use Carbon\Carbon;
 
-class LearnWordRepository
+class LearnWordRepository extends CoreRepository
 {
     /**
      * Получить слово для изучения на основе переданного запроса.
@@ -22,17 +22,17 @@ class LearnWordRepository
             $lastUpdatedAt = Carbon::parse($request->last_updated_at);
 
             // Поиск слова с updated_at, более старым, чем last_updated_at
-            $latestWord = EnWord::where('updated_at', '<', $lastUpdatedAt)
+            $latestWord = $this->getDynamicModelClone("Word")::where('updated_at', '<', $lastUpdatedAt)
                 ->orderBy('updated_at', 'desc')
                 ->first();
         } else {
             // Если last_updated_at не указан, выбираем самое свежее слово
-            $latestWord = EnWord::orderBy('updated_at', 'desc')->first();
+            $latestWord = $this->getDynamicModelClone("Word")::orderBy('updated_at', 'desc')->first();
         }
 
         // Если слово найдено, выбираем предложения с его участием
         if ($latestWord) {
-            $latestWord->sentences = EnSentence::where('sentence', 'like', '%' . $latestWord->word . '%')->get();
+            $latestWord->sentences = $this->getDynamicModelClone("Sentence")::where('sentence', 'like', '%' . $latestWord->word . '%')->get();
             return $latestWord;
         }
 
@@ -57,7 +57,7 @@ class LearnWordRepository
         }
         // Если действие 'down', обновить время до самой старой
         elseif ($action === 'down') {
-            $oldestWord = EnWord::orderBy('updated_at', 'asc')->first();
+            $oldestWord = $this->getDynamicModelClone("Word")::orderBy('updated_at', 'asc')->first();
             if ($oldestWord) {
                 // Отнимаем 1 секунду от самой старой даты
                 $newDate = Carbon::parse($oldestWord->updated_at)->subSeconds(1);
@@ -66,10 +66,16 @@ class LearnWordRepository
 
         // Если новая дата установлена, обновляем слово
         if (!is_null($newDate)) {
-            $wordToUpdate = EnWord::where('id', $wordId)->first();
+            $wordToUpdate = $this->getDynamicModelClone("Word")::where('id', $wordId)->first();
             if ($wordToUpdate) {
                 $wordToUpdate->update(['updated_at' => $newDate]);
             }
         }
+    }
+
+    protected function getModelClass(): string
+    {
+        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+        return "App\\Models\\{$learnLanguage}Word";
     }
 }

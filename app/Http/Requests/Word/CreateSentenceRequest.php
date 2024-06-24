@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class CreateSentenceRequest extends ApiFormRequest
 {
@@ -13,7 +14,7 @@ class CreateSentenceRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,12 @@ class CreateSentenceRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'sentence' => 'required|string|min:3|unique:en_sentences,sentence',
+            'sentence' => [
+                'required',
+                'string',
+                'min:3',
+                $this->CheckUniqueInDB('_sentences', 'sentence'),
+            ],
             'translation' => 'required|string|min:3',
         ];
     }

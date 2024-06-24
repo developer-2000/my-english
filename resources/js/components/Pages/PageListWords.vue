@@ -184,7 +184,7 @@
                             </div>
 
                             <!-- типы значений слова -->
-                            <div class="block_type">
+                            <div class="block_type" v-show="getCodeLearnLanguage2 == 'en'">
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
@@ -428,8 +428,8 @@
                                 </textarea>
                             </div>
 
-                            <!-- select type word -->
-                            <div class="block_type">
+                            <!-- select type word  v-if="getCodeLearnLanguage2 == 'en'"-->
+                            <div class="block_type" v-show="getCodeLearnLanguage2 == 'en'">
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
@@ -589,6 +589,8 @@
     // components
     import ModalLearnWord from "../details/ModalLearnWord";
     import $ from 'jquery';
+    import { mapGetters } from 'vuex';
+    import user_mixin from "../../mixins/user_mixin";
 
     export default {
         data() {
@@ -739,7 +741,8 @@
             response_methods_mixin,
             good_table_mixin,
             help_search_word_mixin,
-            translation_i18n_mixin
+            translation_i18n_mixin,
+            user_mixin
         ],
         props: {
             user: {
@@ -748,9 +751,21 @@
             }
         },
         components: { VueGoodTable, helpSearchWord, ModalLearnWord },
+        computed: {
+            ...mapGetters({
+                // Геттер для получения текущего языка изучения
+                currentLearnLanguage: 'getLearnLanguage'
+            })
+        },
+        watch: {
+            currentLearnLanguage: {
+                handler: 'learnAnotherLanguage', // Вызывает метод loadData при изменении currentLearnLanguage
+                immediate: false // Не Вызов loadData сразу после создания компонента
+            }
+        },
         methods: {
-            insertDataForPostWord(){
-                return {
+            async createWord() {
+                const data =  {
                     word: this.arrInputsModal.new_word,
                     translation: this.arrInputsModal.translation_word,
                     url_image: this.arrInputsModal.url_image,
@@ -763,10 +778,8 @@
                     time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms :
                         this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null,
                 }
-            },
-            async createWord() {
                 try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}word`, this.insertDataForPostWord());
+                    const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#create_word').modal('hide');
@@ -777,8 +790,22 @@
                 }
             },
             async updateWord() {
+                const data = {
+                    word_id: this.arrInputsModal.word_id,
+                    word: this.arrInputsModal.new_word,
+                    translation: this.arrInputsModal.translation_word,
+                    url_image: this.arrInputsModal.url_image,
+                    description: this.arrInputsModal.description,
+                    arr_new_sentences: this.objGenerateSentences.selectedSentences,
+                    type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
+                    // типы слова формы времени или числительные
+                    // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
+                    // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
+                    time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms :
+                        this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null,
+                }
                 try {
-                    const response = await this.$http.patch(`${this.$http.apiUrl()}word/${this.arrInputsModal.word_id}`, this.insertDataForPostWord());
+                    const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#update_word').modal('hide');
@@ -792,7 +819,7 @@
                 let data = { id: word_id };
                 try {
                     this.confirmMessage('message', 'success');
-                    const response = await this.$http.post(`${this.$http.apiUrl()}word/delete-word`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}word/delete-word`, data);
                     if(this.checkSuccess(response)){
                         this.$swal.close()
                         this.initialData();
@@ -805,7 +832,7 @@
             async loadWordsAndTypes() {
                 try {
                     this.isLoading = true;
-                    const response = await this.$http.get(`${this.$http.apiUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`);
+                    const response = await this.$http.get(`${this.$http.webUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`);
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
                         this.makeObjectDataForTable(response.data.data.list);
@@ -823,8 +850,9 @@
                 let data = { word: word };
 
                 try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}sentence/search-sentences`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}sentence/search-sentences`, data);
                     if(this.checkSuccess(response)){
+                        // console.log(response.data.data.sentences)
                         this.arrSentences = response.data.data.sentences
                     }
                 } catch (e) {
@@ -839,7 +867,7 @@
                 };
 
                 try {
-                    const response = await this.$http.post(`${this.$http.apiUrl()}ai/generate-sentences`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}ai/generate-sentences`, data);
                     if(this.checkSuccess(response)){
                         this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
                         this.objGenerateSentences.boolLoadingIndicator = true
@@ -982,24 +1010,30 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // события выборки значения в select типов слов
             showStyleDataOnSelectType(){
                 // в модалке создания слова
-                document.getElementById("select_type").addEventListener('change', () => {
-                    for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
-                            this.setStyleDataModal(this.allTypes[i]);
-                            break;
+                const selectTypeElement = document.getElementById("select_type");
+                if (selectTypeElement) {
+                    selectTypeElement.addEventListener('change', () => {
+                        for(let i=0; i < this.allTypes.length; i++){
+                            if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
+                                this.setStyleDataModal(this.allTypes[i]);
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
-                // в модалке обновления слова
-                document.getElementById("update_select_type").addEventListener('change', () => {
-                    for(let i=0; i < this.allTypes.length; i++){
-                        if(this.allTypes[i].id == this.arrInputsModal.select_type_id){
-                            this.setStyleDataModal(this.allTypes[i]);
-                            break;
+                // в модалке обновления слова - select type
+                const updateSelectTypeElement = document.getElementById("update_select_type");
+                if (updateSelectTypeElement) {
+                    updateSelectTypeElement.addEventListener('change', () => {
+                        for(let i = 0; i < this.allTypes.length; i++) {
+                            if (this.allTypes[i].id == this.arrInputsModal.select_type_id) {
+                                this.setStyleDataModal(this.allTypes[i]);
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             // Возвращает по слову обьект слова
             getRowForWord(word){
@@ -1148,6 +1182,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     label.textContent = this.$t('all.sentences');
                 }
             },
+            // Очистка переменных модалки
             clearGenerateSentences() {
                 this.objGenerateSentences.status_toggle = false
                 this.objGenerateSentences.boolAddSentences = false
@@ -1157,6 +1192,18 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // Снятие checked состояния после инициализации
                 $(this.$refs.toggle1).prop('checked', false).change();
                 $(this.$refs.toggle2).prop('checked', false).change();
+            },
+            // очистка параметров пагинации
+            clearServerParams(){
+                this.serverParams.search = ''
+                this.serverParams.page = 0
+                this.serverParams.sort[0].field = ''
+                this.serverParams.sort[0].type = ''
+            },
+            // операции после смены языка изучения
+            learnAnotherLanguage(){
+                this.clearServerParams()
+                this.initialData()
             },
         },
         mounted() {

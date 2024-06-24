@@ -3,6 +3,7 @@ namespace App\Http\Requests\Sentence;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class BindCheckboxSoundRequest extends ApiFormRequest
 {
@@ -13,7 +14,7 @@ class BindCheckboxSoundRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,11 @@ class BindCheckboxSoundRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'sentence_id' => 'required|integer|exists:en_sentences,id',
+            'sentence_id' => [
+                'required',
+                'integer',
+                $this->CheckExistsInDB('_sentences', 'id'),
+            ],
             'status' => 'required|boolean',
         ];
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSentenceSoundsTable extends Migration
+class CreateRoSentencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateSentenceSoundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sentence_sounds', function (Blueprint $table) {
+        Schema::create('ro_sentences', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sentence_id')->index();
-            $table->foreign('sentence_id')->references('id')->on('en_sentences')
-                ->onUpdate('cascade')->onDelete('cascade');
+            $table->text('sentence');
+            $table->text('translation');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateSentenceSoundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sentence_sounds');
+        Schema::dropIfExists('ro_sentences');
     }
 }

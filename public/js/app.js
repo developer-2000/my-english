@@ -5199,10 +5199,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       _this3.loadLanguages();
     });
     // установить язык интерфейса пользователя
+
     if ((_this$user = this.user) !== null && _this$user !== void 0 && (_this$user = _this$user.language_user) !== null && _this$user !== void 0 && (_this$user = _this$user.interface_language) !== null && _this$user !== void 0 && _this$user.language) {
-      this.$store.commit('setLearnLanguage', this.getLanguageText());
       this.updateUser(this.user);
-      this.loadTranslations(this.getLanguageText());
+      var code_interface = this.getLanguageText();
+      this.$store.commit('setLearnLanguage', code_interface);
+      this.loadTranslations(code_interface);
     }
   }
 });
@@ -5254,7 +5256,12 @@ var render = function render() {
       "data-bs-toggle": "modal",
       "data-bs-target": "#languageLearn"
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("all.language_learning")) + "\n                ")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    " + _vm._s(_vm.$t("all.language_learning")) + "\n                ")]), _vm._v(" "), _c("a", {
+    staticClass: "dropdown-item",
+    attrs: {
+      href: "/auth/logout"
+    }
+  }, [_vm._v("\n                    " + _vm._s(_vm.$t("all.logout")) + "\n                ")])])])]), _vm._v(" "), _c("div", {
     staticClass: "main-page"
   }, [_c("ul", {
     attrs: {
@@ -5623,26 +5630,32 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "code";
       var subject = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'interface';
       // Получаем объект с языками пользователя
-      var code = this.getUser !== null ? this.getUser.language_user : this.user.language_user;
-      if (code !== undefined) {
+      if (this.getUser !== null) {
+        // const code = this.getUser.language_user
+
+        // if (code !== undefined) {
         // Если показать код языка
         if (value === "code") {
           // Язык обучения
           if (subject === "learn") {
-            return code.learn_language.language;
+            return this.getCodeLearnLanguage2;
+            // return code.learn_language.language;
           }
           // Язык интерфейса
           if (subject === "interface") {
-            return code.interface_language.language;
+            return this.getCodeInterfaceLanguage;
+            // return code.interface_language.language;
           }
         }
         // Если показать слово языка
         if (value === "word") {
           var languageCode;
           if (subject === "learn") {
-            languageCode = code.learn_language.language;
+            languageCode = this.getCodeLearnLanguage2;
+            // languageCode = code.learn_language.language;
           } else if (subject === "interface") {
-            languageCode = code.interface_language.language;
+            languageCode = this.getCodeInterfaceLanguage;
+            // languageCode = code.interface_language.language;
           }
 
           // Находим объект с соответствующим языком в массиве codeLanguage
@@ -5654,6 +5667,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             return languageObject[languageCode];
           }
         }
+        // }
       }
 
       // Возвращаем значение по умолчанию
@@ -5712,7 +5726,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapState)(['currentUser'])), (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['getUser'])),
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapState)(['currentUser'])), (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['getUser', 'getCodeInterfaceLanguage', 'getCodeLearnLanguage2'])),
   methods: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['updateUser']))
 });
 
@@ -5953,6 +5967,14 @@ var actions = {
 var getters = {
   getUser: function getUser(state) {
     return state.currentUser;
+  },
+  getCodeInterfaceLanguage: function getCodeInterfaceLanguage(state) {
+    var _state$currentUser;
+    return ((_state$currentUser = state.currentUser) === null || _state$currentUser === void 0 || (_state$currentUser = _state$currentUser.language_user) === null || _state$currentUser === void 0 || (_state$currentUser = _state$currentUser.interface_language) === null || _state$currentUser === void 0 ? void 0 : _state$currentUser.language) || null;
+  },
+  getCodeLearnLanguage2: function getCodeLearnLanguage2(state) {
+    var _state$currentUser2;
+    return ((_state$currentUser2 = state.currentUser) === null || _state$currentUser2 === void 0 || (_state$currentUser2 = _state$currentUser2.language_user) === null || _state$currentUser2 === void 0 || (_state$currentUser2 = _state$currentUser2.learn_language) === null || _state$currentUser2 === void 0 ? void 0 : _state$currentUser2.language) || null;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({

@@ -2,11 +2,13 @@
     <div>
         <!-- Header меню -->
         <header class="d-flex justify-content-between align-items-center p-3">
+            <!-- Язык изучения -->
             <a href="/" class="header-element header-main-link">
                 {{getLanguageText("word", "learn")}}
             </a>
             <!-- Выпадающее меню справа -->
             <div class="dropdown">
+                <!-- кнопка меню -->
                 <button class="btn btn-secondary dropdown-toggle"
                         type="button"
                         id="dropdownMenuButton"
@@ -15,9 +17,17 @@
                 >
                     {{ user.name ?? $t('all.menu') }}
                 </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <!-- меню -->
+                <div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="dropdownMenuButton"
+                >
+                    <!-- вызов модалки изучения языка -->
                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#languageLearn">
                         {{ $t('all.language_learning') }}
+                    </a>
+                    <!-- кнопка выхода -->
+                    <a class="dropdown-item" href="/auth/logout">
+                        {{ $t('all.logout') }}
                     </a>
                 </div>
             </div>
@@ -146,10 +156,12 @@ export default {
             this.loadLanguages();
         });
         // установить язык интерфейса пользователя
+
         if(this.user?.language_user?.interface_language?.language){
-            this.$store.commit('setLearnLanguage', this.getLanguageText())
             this.updateUser(this.user)
-            this.loadTranslations(this.getLanguageText())
+            const code_interface = this.getLanguageText()
+            this.$store.commit('setLearnLanguage', code_interface)
+            this.loadTranslations(code_interface)
         }
     },
 };

@@ -2,20 +2,17 @@
 namespace App\Repositories;
 
 use App\Http\Requests\Word\CreateWordRequest;
+use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
-use App\Models\EnSentence;
-use App\Models\EnWord;
 use Illuminate\Support\Facades\DB;
-use App\Models\EnWordType;
 
 class WordRepository extends CoreRepository
 {
+
     public function getWords($request)
     {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('type');
-
-//        return $collection->get();
 
         // search
         $searchArray = $vars['search'] ?? [];
@@ -55,7 +52,7 @@ class WordRepository extends CoreRepository
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        $types = EnWordType::get();
+        $types = $this->getDynamicModelClone("WordType")::get();
         $colors = config('program.type.color');
 
         return compact('total_count', 'list', 'types', 'colors');
@@ -68,7 +65,7 @@ class WordRepository extends CoreRepository
         try {
             // Создаем слово с помощью метода create
             $wordData = $request->except('arr_new_sentences');
-            $word = EnWord::create($wordData);
+            $word = $this->startConditions()::create($wordData);
 
             if (!empty($request->arr_new_sentences)) {
                 // Вставляем новые предложения
@@ -110,11 +107,17 @@ class WordRepository extends CoreRepository
         return $word;
     }
 
+    public function deleteWord(DeleteWordRequest $request)
+    {
+        $this->startConditions()::where('id',$request->id)
+            ->delete();
+    }
+
     protected function updateWordData(UpdateWordRequest $request)
     {
-        $word = EnWord::findOrFail($request->id);
+        $word = $this->startConditions()::findOrFail($request->word_id);
 
-        $data = $request->except('arr_new_sentences');
+        $data = $request->except(['arr_new_sentences','word_id']);
 
         $word->timestamps = false;
         $word->fill($data)->save();
@@ -136,7 +139,7 @@ class WordRepository extends CoreRepository
             ];
         }
 
-        EnSentence::insert($dataToInsert);
+        $this->getDynamicModelClone("Sentence")::insert($dataToInsert);
     }
 
     /**
@@ -152,12 +155,13 @@ class WordRepository extends CoreRepository
             // Разбиваем предложение на массив слов
             $words = explode(" ", trim($sentence));
             // добавить слова которых нет
-            EnWord::processWords($words);
+            $this->startConditions()::processWords($words);
         }
     }
 
     protected function getModelClass(): string
     {
-        return EnWord::class;
+        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+        return "App\\Models\\{$learnLanguage}Word";
     }
 }

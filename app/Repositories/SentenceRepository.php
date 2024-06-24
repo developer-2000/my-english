@@ -1,8 +1,10 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\EnSentence;
-use App\Models\EnWord;
+use App\Http\Requests\Sentence\BindCheckboxSoundRequest;
+use App\Http\Requests\Word\SearchWordRequest;
+use App\Http\Requests\Word\UpdateSentenceRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class SentenceRepository extends CoreRepository
@@ -62,13 +64,46 @@ class SentenceRepository extends CoreRepository
         $words = explode(" ", trim($sentence));
 
         // добавить слова которых нет
-        EnWord::processWords($words);
+        $this->getDynamicModelClone("Word")::processWords($words);
         // добавить предложение
-        EnSentence::create($request);
+        $this->startConditions()::create($request);
+    }
+
+    public function searchWord(SearchWordRequest $request)
+    {
+        return $this->getDynamicModelClone("Word")::where('word', 'like', $request->word . '%')
+            ->get()
+            ->pluck('word');
+    }
+
+    public function updateSentence(UpdateSentenceRequest $request)
+    {
+        return $this->getDynamicModelClone("Sentence")::where('id',$request->sentence_id)
+            ->update(Arr::except($request->validated(),'sentence_id'));
+    }
+
+    public function searchSentences(SearchWordRequest $request)
+    {
+        return $this->getDynamicModelClone("Sentence")::where('sentence', 'like', '%' . $request->word . '%')
+            ->get();
+    }
+
+    public function bindCheckboxSound(BindCheckboxSoundRequest $request)
+    {
+        if($request['status']){
+            $this->getDynamicModelClone("SentenceSound")::firstOrCreate([
+                'sentence_id' => $request->sentence_id
+            ]);
+        }
+        else{
+            $this->getDynamicModelClone("SentenceSound")::where('sentence_id', $request->sentence_id)
+                ->delete();
+        }
     }
 
     protected function getModelClass(): string
     {
-        return EnSentence::class;
+        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+        return "App\\Models\\{$learnLanguage}Sentence";
     }
 }

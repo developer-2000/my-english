@@ -11,41 +11,48 @@
                 </h1>
 
                 <div class="box-button">
-                    <div id="block_repeat" v-if="!speak.start">
-                        <div class="title_repeat">
-                            {{ $t('all.repeat') }}
+                    <!-- кнопки озвучки предложений -->
+                    <div class="box-sound" v-show="getCodeLearnLanguage2 == 'en'">
+                        <div id="block_repeat" v-if="!speak.start">
+                            <div class="title_repeat">
+                                {{ $t('all.repeat') }}
+                            </div>
+                            <div class="block_input_repeat">
+                                <input :checked="speak.repeat_bool" @change="speak.repeat_bool = !speak.repeat_bool"
+                                       class="checkbox_repeat" type="checkbox"
+                                >
+                                <input class="number_repeat" min="1" max="10" type="number"
+                                       v-if="speak.repeat_bool" v-model="speak.count_repeat"
+                                >
+                            </div>
                         </div>
-                        <div class="block_input_repeat">
-                            <input :checked="speak.repeat_bool" @change="speak.repeat_bool = !speak.repeat_bool"
-                                   class="checkbox_repeat" type="checkbox"
-                            >
-                            <input class="number_repeat" min="1" max="10" type="number"
-                                   v-if="speak.repeat_bool" v-model="speak.count_repeat"
-                            >
-                        </div>
+                        <!-- start -->
+                        <button class="btn btn-success"
+                                :disabled="disabled_play"
+                                @click="initialSpeak"
+                                v-if="!speak.start"
+                        >
+                            <i class="fas fa-play"></i>
+                            {{ $t('all.sound_translation') }}
+                        </button>
+                        <!-- pause -->
+                        <button @click="pauseReadSound" class="btn btn-outline-warning" v-if="speak.start && !speak.pause">
+                            <i class="fas fa-pause"></i>
+                            {{ $t('all.pause') }}
+                        </button>
+                        <!-- continue -->
+                        <button @click="continueReadSound" class="btn btn-success" v-if="speak.pause">
+                            <i class="fas fa-play"></i>
+                            {{ $t('all.continue') }}
+                        </button>
+                        <!-- stop -->
+                        <button @click="stopReadSound" class="btn btn-outline-danger" v-if="speak.start">
+                            <i class="fas fa-stop"></i>
+                            {{ $t('all.stop') }}
+                        </button>
                     </div>
-                    <!-- start -->
-                    <button :disabled="disabled_play" @click="initialSpeak" class="btn btn-success"
-                            v-if="!speak.start">
-                        <i class="fas fa-play"></i>
-                        {{ $t('all.sound_translation') }}
-                    </button>
-                    <!-- pause -->
-                    <button @click="pauseReadSound" class="btn btn-outline-warning" v-if="speak.start && !speak.pause">
-                        <i class="fas fa-pause"></i>
-                        {{ $t('all.pause') }}
-                    </button>
-                    <!-- continue -->
-                    <button @click="continueReadSound" class="btn btn-success" v-if="speak.pause">
-                        <i class="fas fa-play"></i>
-                        {{ $t('all.continue') }}
-                    </button>
-                    <!-- stop -->
-                    <button @click="stopReadSound" class="btn btn-outline-danger" v-if="speak.start">
-                        <i class="fas fa-stop"></i>
-                        {{ $t('all.stop') }}
-                    </button>
 
+                    <!-- Создать предложение -->
                     <button @click="openModalCreateSentence" class="btn btn-primary create-sentence">
                         {{ $t('all.add_sentence') }}
                     </button>
@@ -258,6 +265,8 @@
     // bootstrap toggle
     import BootstrapToggle from 'vue-bootstrap-toggle'
     import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+    import {mapGetters} from "vuex";
+    import user_mixin from "../../mixins/user_mixin";
 
     export default {
         data() {
@@ -353,6 +362,18 @@
             helpSearchWord,
             BootstrapToggle
         },
+        computed: {
+            ...mapGetters({
+                // Геттер для получения текущего языка изучения
+                currentLearnLanguage: 'getLearnLanguage'
+            })
+        },
+        watch: {
+            currentLearnLanguage: {
+                handler: 'learnAnotherLanguage', // Вызывает метод loadData при изменении currentLearnLanguage
+                immediate: false // Не Вызов loadData сразу после создания компонента
+            }
+        },
         methods: {
             async bindCheckboxSound(sentence_id, status) {
                 try {
@@ -360,7 +381,7 @@
                         sentence_id: sentence_id,
                         status: status,
                     };
-                    const response = await this.$http.post(`${this.$http.apiUrl()}sentence/bind-checkbox-sound`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}sentence/bind-checkbox-sound`, data);
                     if (this.checkSuccess(response)) {
                         this.initialData();
                     }
@@ -378,7 +399,7 @@
                         field = 'sound';
                     }
 
-                    const response = await this.$http.get(`${this.$http.apiUrl()}sentence?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
+                    const response = await this.$http.get(`${this.$http.webUrl()}sentence?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
                     );
                     if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;
@@ -398,7 +419,7 @@
                     };
                     $('#create_sentence').modal('hide');
                     $('.modal-backdrop.fade.show').remove();
-                    const response = await this.$http.post(`${this.$http.apiUrl()}sentence`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}sentence`, data);
                     if (this.checkSuccess(response)) {
                         this.initialData();
                     }
@@ -409,10 +430,11 @@
             async updateSentence() {
                 try {
                     let data = {
+                        sentence_id: this.sentence_id,
                         sentence: this.new_sentence,
                         translation: this.translation_sentence,
                     };
-                    const response = await this.$http.patch(`${this.$http.apiUrl()}sentence/${this.sentence_id}`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}sentence/update-sentence`, data);
                     if (this.checkSuccess(response)) {
                         this.initialData();
                         $('#update_sentence').modal('hide');
@@ -486,6 +508,18 @@
                 this.setVariableDefault();
                 $('#create_sentence').modal('show');
             },
+            // очистка параметров пагинации
+            clearServerParams(){
+                this.serverParams.search = ''
+                this.serverParams.page = 0
+                this.serverParams.sort[0].field = ''
+                this.serverParams.sort[0].type = ''
+            },
+            // операции после смены языка изучения
+            learnAnotherLanguage(){
+                this.clearServerParams()
+                this.initialData()
+            },
         },
         mounted() {
             this.initialData();
@@ -525,39 +559,40 @@
         padding: 10px 7px;
         .box-button{
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            button{
-                i{
-                    margin-right: 7px;
-                }
-            }
-            & > button, & > div{
-                margin-right: 15px;
-            }
-            #block_repeat{
-                text-align: center;
-                .title_repeat{
-                    line-height: 15px;
-                    margin-bottom: 3px;
-                    font-size: 14px;
-                    margin-top: -2px;
-                }
-                .block_input_repeat{
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    .checkbox_repeat{
-                        height: 18px;
-                        width: 18px;
-                        cursor: pointer;
+            .box-sound{
+                display: flex;
+                button{
+                    i{
+                        margin-right: 7px;
                     }
-                    .number_repeat{
-                        height: 18px;
-                        font-size: 15px;
-                        width: 50px;
-                        margin-left: 5px;
-                        padding-right: 0px;
+                }
+                & > button, & > div{
+                    margin-right: 15px;
+                }
+                #block_repeat{
+                    text-align: center;
+                    .title_repeat{
+                        line-height: 15px;
+                        margin-bottom: 3px;
+                        font-size: 14px;
+                        margin-top: -2px;
+                    }
+                    .block_input_repeat{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .checkbox_repeat{
+                            height: 18px;
+                            width: 18px;
+                            cursor: pointer;
+                        }
+                        .number_repeat{
+                            height: 18px;
+                            font-size: 15px;
+                            width: 50px;
+                            margin-left: 5px;
+                            padding-right: 0px;
+                        }
                     }
                 }
             }

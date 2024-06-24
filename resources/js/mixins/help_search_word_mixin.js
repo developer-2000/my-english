@@ -12,7 +12,7 @@ export default {
             try {
                 this.isLoading = true;
                 const response = await this.$http.get(
-                    `${this.$http.apiUrl()}sentence/search-word?word=${word}`
+                    `${this.$http.webUrl()}sentence/search-word?word=${word}`
                 );
                 if(this.checkSuccess(response)){
                     this.help_dynamic = response.data.data.string;

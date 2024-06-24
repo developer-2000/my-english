@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateWordRequest extends ApiFormRequest
 {
@@ -13,26 +14,27 @@ class UpdateWordRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
-    }
-
-    // отловить параметр get и передача в request
-    public function all($keys = null) {
-        $data = parent::all($keys);
-        $data['id'] = $this->route('word');
-        return $data;
+        return Auth::check();
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
-     * правила проверки
      */
     public function rules() {
+        $wordId = $this->route('word_id') ?? $this->input('word_id');
+
         return [
-            'id' => 'required|integer|exists:en_words,id',
-            'word' => 'required|string|min:1|unique:en_words,word,'.$this->id,
+            'word_id' => [
+                'required',
+                'integer',
+                $this->CheckExistsInDB('_words', 'id'),
+            ],
+            'word' => [
+                'required',
+                'string',
+                'min:1',
+                $this->CheckUniqueInDB('_words', 'word', $wordId),
+            ],
             'translation' => 'required|string|min:1',
             'url_image' => 'nullable|string',
             'description' => 'nullable|string',

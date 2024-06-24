@@ -20,6 +20,12 @@ const getters = {
     getUser(state) {
         return state.currentUser;
     },
+    getCodeInterfaceLanguage(state) {
+        return state.currentUser?.language_user?.interface_language?.language || null;
+    },
+    getCodeLearnLanguage2(state) {
+        return state.currentUser?.language_user?.learn_language?.language || null;
+    },
 };
 
 export default {

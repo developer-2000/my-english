@@ -6,7 +6,10 @@ use \Illuminate\Support\Facades\Auth;
 use \App\Http\Controllers\AuthController;
 use \App\Http\Middleware\BackupDatabase;
 use \App\Http\Controllers\LanguageController;
-
+use \App\Http\Controllers\WordController;
+use \App\Http\Controllers\SentenceController;
+use \App\Http\Controllers\LearnWordsController;
+use \App\Http\Controllers\GeneratingSentencesAiController;
 
 // технический роут /technical/artisan/clear_all
 Route::group(['prefix'=>'technical'], function (){
@@ -54,12 +57,33 @@ Route::get('/', function () {
 
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group(['middleware' => ['auth', 'role:user']], function () {
+// 1
+    Route::resource('word', WordController::class)->only([
+        'index','store'
+    ]);
+    Route::post('word/update-word', [WordController::class, 'updateWord']);
+    Route::post('word/delete-word', [WordController::class, 'deleteWord']);
+// 2
+    Route::middleware(['throttle:200,1'])->group(function () {
+        Route::resource('sentence', SentenceController::class)->only([
+            'index', 'store'
+        ]);
+        Route::post('sentence/update-sentence', [SentenceController::class, 'updateSentence']);
+        Route::get('sentence/search-word', [SentenceController::class, 'searchWord']);
+        Route::post('sentence/search-sentences', [SentenceController::class, 'searchSentences']);
+        Route::post('sentence/bind-checkbox-sound', [SentenceController::class, 'bindCheckboxSound']);
+    });
+// 3
+    Route::post('learn/get-word', [LearnWordsController::class, 'getLearnWord']);
+// 4
+    Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence']);
+// 5
     Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
         ->name('get.languages');
-
+// 6
     Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
         ->name('set.language.learn.user');
-
+// 7
     Route::get('/page-list-words', function () {
         return view('index');
     })->middleware(BackupDatabase::class);

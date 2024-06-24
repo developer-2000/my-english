@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteWordRequest extends ApiFormRequest
 {
@@ -13,7 +14,7 @@ class DeleteWordRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -23,7 +24,11 @@ class DeleteWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'id' => 'required|integer|exists:en_words,id',
+            'id' => [
+                'required',
+                'integer',
+                $this->CheckExistsInDB('_words', 'id'),
+            ],
         ];
     }
 

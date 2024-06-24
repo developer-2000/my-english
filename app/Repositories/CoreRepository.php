@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CoreRepository
@@ -11,9 +12,11 @@ abstract class CoreRepository
 {
 
     protected $model;
+    protected $user;
 
     public function __construct()
     {
+        $this->user = Auth::user();
         $this->model = app($this->getModelClass());
     }
 
@@ -58,4 +61,12 @@ abstract class CoreRepository
         }
         return false;
     }
+
+    protected function getDynamicModelClone($string)
+    {
+        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+//        return "App\\Models\\{$learnLanguage}{$string}";
+        return clone app("App\\Models\\{$learnLanguage}{$string}");
+    }
+
 }

@@ -1,18 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Word\AddTypeAnotherWordRequest;
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\EnSentence;
-use App\Models\Word;
-use App\Models\EnWord;
 use App\Repositories\WordRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 
 class WordController extends Controller
@@ -49,7 +43,7 @@ class WordController extends Controller
      * @return ApiResponse
      * @throws \Exception
      */
-    public function update(UpdateWordRequest $request): ApiResponse
+    public function updateWord(UpdateWordRequest $request): ApiResponse
     {
         $coll = $this->wordRepository->updateWord($request);
 
@@ -58,8 +52,7 @@ class WordController extends Controller
 
     public function deleteWord(DeleteWordRequest $request): ApiResponse
     {
-        EnWord::where('id',$request->id)
-            ->delete();
+        $this->wordRepository->deleteWord($request);
 
         return new ApiResponse([]);
     }

@@ -128,7 +128,7 @@ export default {
                     last_word_id: this.objLearnWord !== null ? this.objLearnWord.id : null,
                     action_with_word: action,
                 }
-                const response = await this.$http.post(`${this.$http.apiUrl()}learn/get-word`, data);
+                const response = await this.$http.post(`${this.$http.webUrl()}learn/get-word`, data);
 
                 if(this.checkSuccess(response)){
                     this.objLearnWord = response.data.data

@@ -3,6 +3,7 @@ namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class AddTypeAnotherWordRequest extends ApiFormRequest
 {
@@ -13,7 +14,7 @@ class AddTypeAnotherWordRequest extends ApiFormRequest
      * @return bool
      */
     public function authorize() {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -24,7 +25,11 @@ class AddTypeAnotherWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'from_word_id' => 'required|integer|exists:en_words,id',
+            'from_word_id' => [
+                'required',
+                'integer',
+                $this->CheckExistsInDB('_words', 'id'),
+            ],
             'to_word_text' => 'required|string|min:2',
         ];
     }
