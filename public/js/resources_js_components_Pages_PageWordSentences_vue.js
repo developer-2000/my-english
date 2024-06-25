@@ -131,10 +131,21 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     helpSearchWord: _details_HelpSearchWord__WEBPACK_IMPORTED_MODULE_4__["default"],
     BootstrapToggle: (vue_bootstrap_toggle__WEBPACK_IMPORTED_MODULE_6___default())
   },
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_10__.mapGetters)({
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_10__.mapGetters)({
     // Геттер для получения текущего языка изучения
     currentLearnLanguage: 'getLearnLanguage'
-  })),
+  })), {}, {
+    filteredColumns: function filteredColumns() {
+      var _this = this;
+      return this.table.columns.filter(function (column) {
+        // Condition to hide the Озвучка column based on language code
+        if (column.label === 'Озвучка' && _this.getCodeLearnLanguage2 !== 'en') {
+          return false;
+        }
+        return true;
+      });
+    }
+  }),
   watch: {
     currentLearnLanguage: {
       handler: 'learnAnotherLanguage',
@@ -144,7 +155,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   methods: {
     bindCheckboxSound: function bindCheckboxSound(sentence_id, status) {
-      var _this = this;
+      var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -156,11 +167,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
                 status: status
               };
               _context.next = 4;
-              return _this.$http.post("".concat(_this.$http.webUrl(), "sentence/bind-checkbox-sound"), data);
+              return _this2.$http.post("".concat(_this2.$http.webUrl(), "sentence/bind-checkbox-sound"), data);
             case 4:
               response = _context.sent;
-              if (_this.checkSuccess(response)) {
-                _this.initialData();
+              if (_this2.checkSuccess(response)) {
+                _this2.initialData();
               }
               _context.next = 11;
               break;
@@ -177,26 +188,26 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // --- предложения
     loadSentences: function loadSentences() {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var field, response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              _this2.isLoading = true;
-              field = _this2.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
+              _this3.isLoading = true;
+              field = _this3.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
               if (typeof field !== "string" && field.name == "field") {
                 field = 'sound';
               }
               _context2.next = 6;
-              return _this2.$http.get("".concat(_this2.$http.webUrl(), "sentence?search=").concat(_this2.serverParams.search, "&page=").concat(_this2.serverParams.page, "&perPage=").concat(_this2.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this2.serverParams.sort[0].type));
+              return _this3.$http.get("".concat(_this3.$http.webUrl(), "sentence?search=").concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this3.serverParams.sort[0].type));
             case 6:
               response = _context2.sent;
-              if (_this2.checkSuccess(response)) {
-                _this2.table.totalRecords = response.data.data.sentences.total_count;
-                _this2.makeObjectDataForTable(response.data.data.sentences.list);
-                _this2.table.origin_rows = response.data.data.sentences.list;
+              if (_this3.checkSuccess(response)) {
+                _this3.table.totalRecords = response.data.data.sentences.total_count;
+                _this3.makeObjectDataForTable(response.data.data.sentences.list);
+                _this3.table.origin_rows = response.data.data.sentences.list;
               }
               _context2.next = 13;
               break;
@@ -205,7 +216,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
             case 13:
-              _this2.isLoading = false;
+              _this3.isLoading = false;
             case 14:
             case "end":
               return _context2.stop();
@@ -214,7 +225,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }))();
     },
     createSentence: function createSentence() {
-      var _this3 = this;
+      var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
@@ -222,17 +233,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             case 0:
               _context3.prev = 0;
               data = {
-                sentence: _this3.new_sentence,
-                translation: _this3.translation_sentence
+                sentence: _this4.new_sentence,
+                translation: _this4.translation_sentence
               };
               $('#create_sentence').modal('hide');
               $('.modal-backdrop.fade.show').remove();
               _context3.next = 6;
-              return _this3.$http.post("".concat(_this3.$http.webUrl(), "sentence"), data);
+              return _this4.$http.post("".concat(_this4.$http.webUrl(), "sentence"), data);
             case 6:
               response = _context3.sent;
-              if (_this3.checkSuccess(response)) {
-                _this3.initialData();
+              if (_this4.checkSuccess(response)) {
+                _this4.initialData();
               }
               _context3.next = 13;
               break;
@@ -248,7 +259,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }))();
     },
     updateSentence: function updateSentence() {
-      var _this4 = this;
+      var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
@@ -256,16 +267,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             case 0:
               _context4.prev = 0;
               data = {
-                sentence_id: _this4.sentence_id,
-                sentence: _this4.new_sentence,
-                translation: _this4.translation_sentence
+                sentence_id: _this5.sentence_id,
+                sentence: _this5.new_sentence,
+                translation: _this5.translation_sentence
               };
               _context4.next = 4;
-              return _this4.$http.post("".concat(_this4.$http.webUrl(), "sentence/update-sentence"), data);
+              return _this5.$http.post("".concat(_this5.$http.webUrl(), "sentence/update-sentence"), data);
             case 4:
               response = _context4.sent;
-              if (_this4.checkSuccess(response)) {
-                _this4.initialData();
+              if (_this5.checkSuccess(response)) {
+                _this5.initialData();
                 $('#update_sentence').modal('hide');
                 $('.modal-backdrop.fade.show').remove();
               }
@@ -301,16 +312,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
     },
     activationButtonSoundInMenu: function activationButtonSoundInMenu() {
-      var _this5 = this;
+      var _this6 = this;
       setTimeout(function () {
         // состояние кнопки sound по умолчанию
-        _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+        _this6.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
         // Сначала отвязываем предыдущие обработчики
         $(".memorable_checkbox").off('change');
         // изменнеие одного из sound checkbox
         $(".memorable_checkbox").on('change', function (e) {
-          _this5.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
-          _this5.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
+          _this6.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+          _this6.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
         });
       }, 1000);
     },
@@ -333,17 +344,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return row;
     },
     initialClickButSentenceUpdate: function initialClickButSentenceUpdate() {
-      var _this6 = this;
+      var _this7 = this;
       // открываем редактирование предложения
       setTimeout(function () {
         $('.btn_sentence').off('click');
         $('.btn_sentence').on('click', function (e) {
           var queryObj = $(e.target).prop("tagName") !== "A" ? $(e.target).parent() : $(e.target);
           var id = queryObj.attr("data-id");
-          var row = _this6.getSentenceCollection(id);
-          _this6.setVariableDefault(row.id, row.sentence, row.translation);
+          var row = _this7.getSentenceCollection(id);
+          _this7.setVariableDefault(row.id, row.sentence, row.translation);
           $('#update_sentence').modal('show');
-          _this6.help_dynamic = '';
+          _this7.help_dynamic = '';
         });
       }, 1000);
     },
@@ -365,10 +376,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   mounted: function mounted() {
-    var _this7 = this;
+    var _this8 = this;
     this.initialData();
     $(".modal").on("hidden.bs.modal", function () {
-      _this7.help_dynamic = "";
+      _this8.help_dynamic = "";
     });
   },
   validations: {
@@ -435,7 +446,7 @@ var render = function render() {
     staticClass: "wrapper"
   }, [_c("div", {
     staticClass: "top-menu"
-  }, [_c("h1", [_vm._v("\n                " + _vm._s(_vm.$t("all.list_sentences")) + "\n            ")]), _vm._v(" "), _c("div", {
+  }, [_c("h1", [_vm._v("\n                    " + _vm._s(_vm.$t("all.list_sentences")) + "\n                ")]), _vm._v(" "), _c("div", {
     staticClass: "box-button"
   }, [_c("div", {
     directives: [{
@@ -451,7 +462,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "title_repeat"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.repeat")) + "\n                        ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.repeat")) + "\n                            ")]), _vm._v(" "), _c("div", {
     staticClass: "block_input_repeat"
   }, [_c("input", {
     staticClass: "checkbox_repeat",
@@ -498,33 +509,33 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-play"
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.sound_translation")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.start && !_vm.speak.pause ? _c("button", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.sound_translation")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.start && !_vm.speak.pause ? _c("button", {
     staticClass: "btn btn-outline-warning",
     on: {
       click: _vm.pauseReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-pause"
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.pause")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.pause ? _c("button", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.pause")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.pause ? _c("button", {
     staticClass: "btn btn-success",
     on: {
       click: _vm.continueReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-play"
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.continue")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.start ? _c("button", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.continue")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.start ? _c("button", {
     staticClass: "btn btn-outline-danger",
     on: {
       click: _vm.stopReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-stop"
-  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.stop")) + "\n                    ")]) : _vm._e()]), _vm._v(" "), _c("button", {
+  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.stop")) + "\n                        ")]) : _vm._e()]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary create-sentence",
     on: {
       click: _vm.openModalCreateSentence
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.$t("all.add_sentence")) + "\n                ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.add_sentence")) + "\n                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "content-wrapper",
     attrs: {
       id: "content-wrapper"
@@ -537,7 +548,7 @@ var render = function render() {
     staticClass: "table_wrapper"
   }, [_c("vue-good-table", {
     attrs: {
-      columns: _vm.table.columns,
+      columns: _vm.filteredColumns,
       isLoading: _vm.table.isLoading,
       mode: _vm.table.mode,
       "pagination-options": _vm.table.optionsPaginate,
@@ -583,7 +594,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.create_new_sentence")) + "\n                    ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.create_new_sentence")) + "\n                        ")]), _vm._v(" "), _c("button", {
     staticClass: "btn-close",
     attrs: {
       type: "button",
@@ -603,7 +614,7 @@ var render = function render() {
     attrs: {
       "for": "new_sentence"
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.new_sentence")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.new_sentence")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -640,16 +651,16 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.new_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.new_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.new_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
     attrs: {
       "for": "translation_sentence"
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.translation")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.translation")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -679,9 +690,13 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.translation_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.translation_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.translation_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("div", {
+    staticClass: "button_footer"
+  }, [_c("div", {
     staticClass: "button_footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -696,7 +711,7 @@ var render = function render() {
     on: {
       click: _vm.createSentence
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.save")) + "\n                            ")])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.save")) + "\n                                ")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
       "aria-hidden": "true",
@@ -716,7 +731,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.update_sentence")) + "\n                    ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.update_sentence")) + "\n                        ")]), _vm._v(" "), _c("button", {
     staticClass: "btn-close",
     attrs: {
       type: "button",
@@ -736,7 +751,7 @@ var render = function render() {
     attrs: {
       "for": "old_sentence"
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.sentence")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.sentence")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -773,16 +788,16 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.new_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.new_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.new_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
     attrs: {
       "for": "old_translation"
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.translation")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.translation")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -812,9 +827,11 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.translation_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.translation_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.translation_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("div", {
     staticClass: "button_footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -829,7 +846,7 @@ var render = function render() {
     on: {
       click: _vm.updateSentence
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.update")) + "\n                            ")])])])])])])])]);
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.update")) + "\n                            ")])])])])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

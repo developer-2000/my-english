@@ -270,9 +270,11 @@
                             <!-- Предложения -->
                             <div class="box-content-sentences">
                                 <!-- переключатель добавления предложений -->
-                                <div class="form-check form-switch">
-                                    <input ref="toggle1" class="form-check-input" type="checkbox" id="toggle1">
-                                    <label class="form-check-label" for="toggle1">
+                                <div class="form-check form-switch" @click="toggleSwitch($event, 'toggle1')">
+                                    <input ref="toggle1" class="form-check-input" type="checkbox" id="toggle1"
+                                           @click="preventDefault"
+                                    >
+                                    <label class="form-check-label">
                                         {{ $t('all.sentences') }}
                                     </label>
                                 </div>
@@ -523,13 +525,14 @@
                                 </div>
 
                                 <!-- переключатель добавления предложений -->
-                                <div class="form-check form-switch">
-                                    <input ref="toggle2" class="form-check-input" type="checkbox" id="toggle2">
-                                    <label class="form-check-label" for="toggle2">
+                                <div class="form-check form-switch" @click="toggleSwitch($event, 'toggle2')">
+                                    <input ref="toggle2" class="form-check-input" type="checkbox" id="toggle2"
+                                           @click="preventDefault"
+                                    >
+                                    <label class="form-check-label">
                                        {{ $t('all.sentences') }}
                                     </label>
                                 </div>
-
                             </div>
                         </form>
                     </div>
@@ -1162,25 +1165,32 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     this.arrInputsModal.objNumber = null;
                 }
             },
-            // инициализация toggle
-            initialiseToggle() {
-                // Добавляем обработчик событий для вывода значения в консоль
-                $(this.$refs.toggle1).change(this.logToggleState);
-                $(this.$refs.toggle2).change(this.logToggleState);
+            // отключить событие по умолчанию у переключателя input генерации предложений
+            preventDefault(event) {
+                event.preventDefault();
             },
-            // при изменении toggle
-            logToggleState(event) {
-                this.objGenerateSentences.status_toggle = $(event.target).prop('checked');
-                // Находим соответствующий label элемент
-                const label = event.target.nextElementSibling;
+            // Клик по родителю переключателя генерации предложений
+            toggleSwitch(event, ref) {
+                setTimeout(()=>{
+                    this.$refs[ref].checked = !this.$refs[ref].checked;
+                    this.objGenerateSentences.status_toggle = this.$refs[ref].checked
 
-                // Обновляем текст в зависимости от состояния переключателя
-                if (this.objGenerateSentences.status_toggle) {
-                    label.textContent = this.$t('all.generation');
-                }
-                else {
-                    label.textContent = this.$t('all.sentences');
-                }
+                    // Находим родительский элемент div.form-check.form-switch
+                    const parentElement = event.target.closest('.form-switch');
+                    if (!parentElement) {
+                        return;
+                    }
+                    // Находим дочерний label элемент внутри родительского элемента
+                    const label = parentElement.querySelector('label');
+
+                    // Обновляем текст в зависимости от состояния переключателя
+                    if (this.objGenerateSentences.status_toggle) {
+                        label.textContent = this.$t('all.generation');
+                    }
+                    else {
+                        label.textContent = this.$t('all.sentences');
+                    }
+                },100)
             },
             // Очистка переменных модалки
             clearGenerateSentences() {
@@ -1208,7 +1218,6 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
         },
         mounted() {
             this.initialData();
-            this.initialiseToggle()
         },
         beforeDestroy: function () {
             $('.btn-warning').unbind('click');

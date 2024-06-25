@@ -63,8 +63,9 @@
                 <div class="container-fluid">
                     <div class="card card-primary card-outline block_table">
                         <div class="table_wrapper">
+<!--                            :columns="table.columns"-->
                             <vue-good-table
-                                :columns="table.columns"
+                                :columns="filteredColumns"
                                 :isLoading.sync="table.isLoading"
                                 :mode="table.mode"
                                 :pagination-options="table.optionsPaginate"
@@ -90,17 +91,20 @@
             </div>
         </div>
 
-        <!-- Modals -->
-        <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade" id="create_sentence" role="dialog"
-             tabindex="-1">
+        <!-- Modals создать предложение -->
+        <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade"
+             id="create_sentence" role="dialog" tabindex="-1"
+        >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
+                    <!-- header -->
                     <div class="modal-header">
                         <h5 class="modal-title">
                             {{ $t('all.create_new_sentence') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- body -->
                     <div class="modal-body">
                         <form action="#">
                             <!-- new sentence -->
@@ -149,7 +153,12 @@
                                     {{ $t('all.less_needed') }}
                                 </div>
                             </div>
-
+                        </form>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <!-- button save -->
+                        <div class="button_footer">
                             <!-- button save -->
                             <div class="button_footer">
                                 <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
@@ -161,23 +170,26 @@
                                     {{ $t('all.save') }}
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 2 -->
-        <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade" id="update_sentence" role="dialog"
-             tabindex="-1">
+        <!-- Modals обновить предложение -->
+        <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade"
+             id="update_sentence" role="dialog" tabindex="-1"
+        >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
+                    <!-- header -->
                     <div class="modal-header">
                         <h5 class="modal-title">
                             {{ $t('all.update_sentence') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- body -->
                     <div class="modal-body">
                         <form action="#">
                             <!-- sentence -->
@@ -226,19 +238,21 @@
                                     {{ $t('all.less_needed') }}
                                 </div>
                             </div>
-
-                            <!-- button save -->
-                            <div class="button_footer">
-                                <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
-                                        @click="updateSentence"
-                                        class="btn btn-primary"
-                                        type="button"
-                                >
-                                    {{ $t('all.update') }}
-                                </button>
-                            </div>
                         </form>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <!-- button save -->
+                        <div class="button_footer">
+                            <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                    :disabled="$v.$invalid"
+                                    @click="updateSentence"
+                                    class="btn btn-primary"
+                                    type="button"
+                            >
+                                {{ $t('all.update') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -366,7 +380,16 @@
             ...mapGetters({
                 // Геттер для получения текущего языка изучения
                 currentLearnLanguage: 'getLearnLanguage'
-            })
+            }),
+            filteredColumns() {
+                return this.table.columns.filter(column => {
+                    // Condition to hide the Озвучка column based on language code
+                    if (column.label === 'Озвучка' && this.getCodeLearnLanguage2 !== 'en') {
+                        return false;
+                    }
+                    return true;
+                });
+            }
         },
         watch: {
             currentLearnLanguage: {

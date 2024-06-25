@@ -726,24 +726,32 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         this.arrInputsModal.objNumber = null;
       }
     },
-    // инициализация toggle
-    initialiseToggle: function initialiseToggle() {
-      // Добавляем обработчик событий для вывода значения в консоль
-      jquery__WEBPACK_IMPORTED_MODULE_9___default()(this.$refs.toggle1).change(this.logToggleState);
-      jquery__WEBPACK_IMPORTED_MODULE_9___default()(this.$refs.toggle2).change(this.logToggleState);
+    // отключить событие по умолчанию у переключателя input генерации предложений
+    preventDefault: function preventDefault(event) {
+      event.preventDefault();
     },
-    // при изменении toggle
-    logToggleState: function logToggleState(event) {
-      this.objGenerateSentences.status_toggle = jquery__WEBPACK_IMPORTED_MODULE_9___default()(event.target).prop('checked');
-      // Находим соответствующий label элемент
-      var label = event.target.nextElementSibling;
+    // Клик по родителю переключателя генерации предложений
+    toggleSwitch: function toggleSwitch(event, ref) {
+      var _this14 = this;
+      setTimeout(function () {
+        _this14.$refs[ref].checked = !_this14.$refs[ref].checked;
+        _this14.objGenerateSentences.status_toggle = _this14.$refs[ref].checked;
 
-      // Обновляем текст в зависимости от состояния переключателя
-      if (this.objGenerateSentences.status_toggle) {
-        label.textContent = this.$t('all.generation');
-      } else {
-        label.textContent = this.$t('all.sentences');
-      }
+        // Находим родительский элемент div.form-check.form-switch
+        var parentElement = event.target.closest('.form-switch');
+        if (!parentElement) {
+          return;
+        }
+        // Находим дочерний label элемент внутри родительского элемента
+        var label = parentElement.querySelector('label');
+
+        // Обновляем текст в зависимости от состояния переключателя
+        if (_this14.objGenerateSentences.status_toggle) {
+          label.textContent = _this14.$t('all.generation');
+        } else {
+          label.textContent = _this14.$t('all.sentences');
+        }
+      }, 100);
     },
     // Очистка переменных модалки
     clearGenerateSentences: function clearGenerateSentences() {
@@ -771,7 +779,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   mounted: function mounted() {
     this.initialData();
-    this.initialiseToggle();
   },
   beforeDestroy: function beforeDestroy() {
     jquery__WEBPACK_IMPORTED_MODULE_9___default()('.btn-warning').unbind('click');
@@ -1600,19 +1607,24 @@ var render = function render() {
   })]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "box-content-sentences"
   }, [_c("div", {
-    staticClass: "form-check form-switch"
+    staticClass: "form-check form-switch",
+    on: {
+      click: function click($event) {
+        return _vm.toggleSwitch($event, "toggle1");
+      }
+    }
   }, [_c("input", {
     ref: "toggle1",
     staticClass: "form-check-input",
     attrs: {
       type: "checkbox",
       id: "toggle1"
+    },
+    on: {
+      click: _vm.preventDefault
     }
   }), _vm._v(" "), _c("label", {
-    staticClass: "form-check-label",
-    attrs: {
-      "for": "toggle1"
-    }
+    staticClass: "form-check-label"
   }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.sentences")) + "\n                                ")])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
@@ -2171,19 +2183,24 @@ var render = function render() {
       key: key
     }, [_vm._v("\n                                    " + _vm._s(sentence.sentence) + "\n                                ")]);
   }), 0), _vm._v(" "), _c("div", {
-    staticClass: "form-check form-switch"
+    staticClass: "form-check form-switch",
+    on: {
+      click: function click($event) {
+        return _vm.toggleSwitch($event, "toggle2");
+      }
+    }
   }, [_c("input", {
     ref: "toggle2",
     staticClass: "form-check-input",
     attrs: {
       type: "checkbox",
       id: "toggle2"
+    },
+    on: {
+      click: _vm.preventDefault
     }
   }), _vm._v(" "), _c("label", {
-    staticClass: "form-check-label",
-    attrs: {
-      "for": "toggle2"
-    }
+    staticClass: "form-check-label"
   }, [_vm._v("\n                                   " + _vm._s(_vm.$t("all.sentences")) + "\n                                ")])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
