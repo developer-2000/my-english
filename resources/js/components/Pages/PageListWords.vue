@@ -113,6 +113,7 @@
 
                             <!-- new word -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8 .9 0 1.8 .1 2.8 .2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7 .3 13.7 .3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256S125.6 492.6 256 492.6c130.5 0 236.6-106.1 236.6-236.6z"/></svg>
                                 <label for="new_word" class="col-form-label">
                                     {{ $t('all.new_word') }}
                                 </label>
@@ -140,6 +141,7 @@
 
                             <!-- translation word -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg>
                                 <label for="translation_word" class="col-form-label">
                                     {{ $t('all.translation') }}
                                 </label>
@@ -163,8 +165,9 @@
 
                             <!-- url image from out source -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>
                                 <label for="url_image" class="col-form-label">
-                                    {{ $t('all.stop_learn') }}
+                                    {{ $t('all.url_image') }}
                                 </label>
                                 <input type="text" class="form-control" placeholder="Input url" id="url_image"
                                        v-model="arrInputsModal.url_image"
@@ -173,6 +176,7 @@
 
                             <!-- Word description -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3 0 0 0 0 0 0 0 0c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9zM224 160c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v48h48c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H288v48c0 8.8-7.2 16-16 16H240c-8.8 0-16-7.2-16-16V272H176c-8.8 0-16-7.2-16-16V224c0-8.8 7.2-16 16-16h48V160z"/></svg>
                                 <label for="word_description" class="col-form-label">
                                     {{ $t('all.word_description') }}
                                 </label>
@@ -208,7 +212,10 @@
                                 <div class="desc_type">
 
                                     <div class="text"></div>
-                                    <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
+                                    <!-- формы времени -->
+                                    <div v-if="arrInputsModal.objWordTimeForms !== null"
+                                         class="box-time-forms"
+                                    >
                                         <!-- прошедшее -->
                                         <div class="box-past">
                                             <label>
@@ -255,7 +262,7 @@
                                             >
                                         </div>
                                     </div>
-
+                                    <!-- числительные -->
                                     <div v-if="arrInputsModal.objNumber !== null">
                                         <label>
                                             {{ $t('all.enter_digit') }}
@@ -263,6 +270,24 @@
                                         <input type="text" class="form-control" placeholder="Insert number"
                                                v-model="arrInputsModal.objNumber.number"
                                         >
+                                    </div>
+                                    <!-- союзы -->
+                                    <div v-if="arrInputsModal.objConjunction !== null"
+                                         class="box-conjunction-select"
+                                    >
+                                        <select class="form-select" v-model="arrInputsModal.selectedConjunction" @change="updateSelection">
+                                            <option v-for="(conjunction, key) in arrInputsModal.objConjunction" :key="key" :value="key">
+                                                {{ conjunction.name }}
+                                            </option>
+                                        </select>
+                                        <template v-if="arrInputsModal.objConjunction">
+                                            <label v-for="(conjunction, key) in arrInputsModal.objConjunction" v-if="conjunction.select" :key="key">
+                                                {{ conjunction.about }}
+                                            </label>
+                                        </template>
+                                        <label v-if="!hasSelectedConjunction">
+                                            Выбрать нужный союз
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -358,6 +383,7 @@
                         <form action="#" v-show="!objGenerateSentences.boolAddSentences">
                             <!-- word -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8 .9 0 1.8 .1 2.8 .2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7 .3 13.7 .3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256S125.6 492.6 256 492.6c130.5 0 236.6-106.1 236.6-236.6z"/></svg>
                                 <label for="old_word" class="col-form-label">
                                     {{ $t('all.update_word') }}
                                 </label>
@@ -384,6 +410,7 @@
 
                             <!-- translation word -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg>
                                 <label for="update_translation" class="col-form-label">
                                     {{ $t('all.translation') }}
                                 </label>
@@ -407,6 +434,7 @@
 
                             <!-- url image from out source -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>
                                 <label for="update_url_image" class="col-form-label">
                                     {{ $t('all.url_image') }}
                                 </label>
@@ -420,6 +448,7 @@
 
                             <!-- Word description -->
                             <div class="form-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3 0 0 0 0 0 0 0 0c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9zM224 160c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v48h48c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H288v48c0 8.8-7.2 16-16 16H240c-8.8 0-16-7.2-16-16V272H176c-8.8 0-16-7.2-16-16V224c0-8.8 7.2-16 16-16h48V160z"/></svg>
                                 <label for="update_word_description" class="col-form-label">
                                     {{ $t('all.word_description') }}
                                 </label>
@@ -430,7 +459,7 @@
                                 </textarea>
                             </div>
 
-                            <!-- select type word  v-if="getCodeLearnLanguage2 == 'en'"-->
+                            <!-- select type word-->
                             <div class="block_type" v-show="getCodeLearnLanguage2 == 'en'">
                                 <!-- select значений -->
                                 <div class="box-left-site">
@@ -456,7 +485,10 @@
                                 <div class="desc_type">
 
                                     <div class="text"></div>
-                                    <div class="box-time-forms" v-if="arrInputsModal.objWordTimeForms !== null">
+                                    <!-- формы времени -->
+                                    <div v-if="arrInputsModal.objWordTimeForms !== null"
+                                         class="box-time-forms"
+                                    >
                                         <!-- прошедшее -->
                                         <div class="box-past">
                                             <label>
@@ -503,13 +535,32 @@
                                             >
                                         </div>
                                     </div>
-                                    <div v-if="arrInputsModal.objNumber !== null">
+                                    <!-- числительные -->
+                                    <div v-if="arrInputsModal.objNumber !== null" >
                                         <label>
                                             {{ $t('all.enter_digit') }}
                                         </label>
                                         <input type="text" class="form-control" placeholder="Insert number"
                                                v-model="arrInputsModal.objNumber.number"
                                         >
+                                    </div>
+                                    <!-- союзы -->
+                                    <div v-if="arrInputsModal.objConjunction !== null"
+                                         class="box-conjunction-select"
+                                    >
+                                        <select class="form-select" v-model="arrInputsModal.selectedConjunction" @change="updateSelection">
+                                            <option v-for="(conjunction, key) in arrInputsModal.objConjunction" :key="key" :value="key">
+                                                {{ conjunction.name }}
+                                            </option>
+                                        </select>
+                                        <template v-if="arrInputsModal.objConjunction">
+                                            <label v-for="(conjunction, key) in arrInputsModal.objConjunction" v-if="conjunction.select" :key="key">
+                                                {{ conjunction.about }}
+                                            </label>
+                                        </template>
+                                        <label v-if="!hasSelectedConjunction">
+                                            Выбрать нужный союз
+                                        </label>
                                     </div>
 
                                 </div>
@@ -737,6 +788,7 @@
                     description: '',
                     objWordTimeForms: null,
                     objNumber: null,
+                    objConjunction: null,
                 },
             };
         },
@@ -758,15 +810,63 @@
             ...mapGetters({
                 // Геттер для получения текущего языка изучения
                 currentLearnLanguage: 'getLearnLanguage'
-            })
+            }),
+            hasSelectedConjunction() {
+                if (this.arrInputsModal.objConjunction) {
+                    return Object.values(this.arrInputsModal.objConjunction).some(conjunction => conjunction.select);
+                }
+                return false;
+            }
         },
         watch: {
             currentLearnLanguage: {
                 handler: 'learnAnotherLanguage', // Вызывает метод loadData при изменении currentLearnLanguage
                 immediate: false // Не Вызов loadData сразу после создания компонента
+            },
+            'arrInputsModal.objConjunction': {
+                handler(newVal) {
+                    if (newVal) {
+                        this.initSelection();
+                    }
+                },
+                immediate: true,
+                deep: true
             }
         },
         methods: {
+            initSelection() {
+                for (const [key, value] of Object.entries(this.arrInputsModal.objConjunction)) {
+                    if (value.select) {
+                        this.arrInputsModal.selectedConjunction = key;
+                        return;
+                    }
+                }
+                this.arrInputsModal.selectedConjunction = '';
+            },
+            updateSelection() {
+                if (this.arrInputsModal.objConjunction) {
+                    for (const key in this.arrInputsModal.objConjunction) {
+                        this.arrInputsModal.objConjunction[key].select = (key === this.arrInputsModal.selectedConjunction);
+                    }
+                }
+            },
+            getCustomForms(){
+                // типы слова формы времени или числительные
+                let forms = null
+                // кастом input - свойства object - поля description - таблицы word_types
+                if(this.arrInputsModal.objWordTimeForms){
+                    forms = this.arrInputsModal.objWordTimeForms
+                }
+                // кастом input - свойства object - поля description - таблицы word_types
+                else if(this.arrInputsModal.objNumber){
+                    forms = this.arrInputsModal.objNumber
+                }
+                // кастом select - свойства object - поля description - таблицы word_types
+                else if(this.arrInputsModal.objConjunction){
+                    forms = this.arrInputsModal.objConjunction
+                }
+                return forms
+            },
             async createWord() {
                 const data =  {
                     word: this.arrInputsModal.new_word,
@@ -775,11 +875,7 @@
                     description: this.arrInputsModal.description,
                     arr_new_sentences: this.objGenerateSentences.selectedSentences,
                     type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
-                    // типы слова формы времени или числительные
-                    // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
-                    // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
-                    time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms :
-                        this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null,
+                    time_forms: this.getCustomForms(),
                 }
                 try {
                     const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
@@ -801,11 +897,7 @@
                     description: this.arrInputsModal.description,
                     arr_new_sentences: this.objGenerateSentences.selectedSentences,
                     type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
-                    // типы слова формы времени или числительные
-                    // this.objWordTimeForms - кастом input - свойства object - поля description - таблицы word_types
-                    // this.objNumber - кастом input - свойства object - поля description - таблицы word_types
-                    time_forms: this.arrInputsModal.objWordTimeForms ? this.arrInputsModal.objWordTimeForms :
-                        this.arrInputsModal.objNumber ? this.arrInputsModal.objNumber : null,
+                    time_forms: this.getCustomForms(),
                 }
                 try {
                     const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
@@ -855,7 +947,6 @@
                 try {
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/search-sentences`, data);
                     if(this.checkSuccess(response)){
-                        // console.log(response.data.data.sentences)
                         this.arrSentences = response.data.data.sentences
                     }
                 } catch (e) {
@@ -1062,6 +1153,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 let string = ''
                 this.arrInputsModal.objWordTimeForms = null
                 this.arrInputsModal.objNumber = null
+                this.arrInputsModal.objConjunction = null
 
                 if(type.description == null){
                     string = ''
@@ -1078,6 +1170,10 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         // числительные
                         else if(type.description['object']['number'] !== undefined){
                             this.arrInputsModal.objNumber = type.description['object']
+                        }
+                        // союзы
+                        else if(type.description['object']['coordinating'] !== undefined){
+                            this.arrInputsModal.objConjunction = type.description['object']
                         }
                     }
                 }
@@ -1150,19 +1246,23 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.arrInputsModal.url_image = obj.url_image || '';
                 this.arrInputsModal.select_type_id = obj.type.id || 0;
                 this.arrInputsModal.description = obj.description || '""';
+                this.arrInputsModal.objWordTimeForms = null;
+                this.arrInputsModal.objNumber = null;
+                this.arrInputsModal.objConjunction = null;
 
-                // типы слова формы времени или числительные
                 if(obj.time_forms !== null){
+                    // типы слова формы времени
                     if(obj.time_forms.past !== undefined){
                         this.arrInputsModal.objWordTimeForms = obj.time_forms || null;
                     }
+                    // типы слова числительные
                     else if(obj.time_forms.number !== undefined){
                         this.arrInputsModal.objNumber = obj.time_forms || null;
                     }
-                }
-                else{
-                    this.arrInputsModal.objWordTimeForms = null;
-                    this.arrInputsModal.objNumber = null;
+                    // типы слова союзы
+                    else if(obj.time_forms.coordinating !== undefined){
+                        this.arrInputsModal.objConjunction = obj.time_forms || null;
+                    }
                 }
             },
             // отключить событие по умолчанию у переключателя input генерации предложений
@@ -1416,6 +1516,12 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     }
                 }
             }
+            .form-group{
+                margin-top: 5px;
+                svg{
+                    fill: #595959;
+                }
+            }
         }
     }
     #create_word{
@@ -1424,6 +1530,12 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 justify-content: flex-end;
             }
         }
+    }
+}
+.box-conjunction-select{
+    margin-top: 5px;
+    label{
+        margin-top: 5px;
     }
 }
 

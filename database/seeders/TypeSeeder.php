@@ -65,7 +65,32 @@ class TypeSeeder extends Seeder {
         $object->object = ["number" => null];
         $arrData[] = [
             'type' => 'числительные',
-            'color' => '#000000',
+            'color' => 'rgb(118, 0, 151)',
+            'description' => json_encode($object),
+        ];
+
+        // 6
+        $object->text = null;
+        $object->object = [
+            "coordinating" => [
+                "select" => false,
+                "about" => 'Эти союзы соединяют слова, фразы или предложения, которые имеют равное значение',
+                "name" => 'Сочинительные',
+            ],
+            "subordinating" => [
+                "select" => false,
+                "about" => 'Эти союзы соединяют главное предложение с придаточным, показывая зависимость одного от другого',
+                "name" => 'Подчинительные',
+            ],
+            "correlative" => [
+                "select" => false,
+                "about" => 'Эти союзы работают парами для соединения слов, фраз или предложений',
+                "name" => 'Коррелативные',
+            ],
+        ];
+        $arrData[] = [
+            'type' => 'союзы',
+            'color' => 'rgb(0, 170, 188)',
             'description' => json_encode($object),
         ];
 
