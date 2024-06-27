@@ -46,7 +46,6 @@ export default {
                 $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
 
                 $('#clear_search').bind('click', (e) => {
-
                     setTimeout(()=>{
                         // сместить search
                         $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
@@ -54,22 +53,37 @@ export default {
                         $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
                     },50)
 
-                    this.serverParams.search = '';
-
-                    // Очищаем поле ввода поиска
-                    const searchInput = document.querySelector('.vgt-global-search__input input');
-                    if (searchInput) {
-                        // Создаем новое событие ввода
-                        const event = new Event('input', { bubbles: true });
-                        // Устанавливаем значение поля ввода в пустую строку
-                        searchInput.value = '';
-                        // Диспатчим событие ввода
-                        searchInput.dispatchEvent(event);
-                    }
-
-                    this.initialData();
+                    // Убрать возможный выбор select типов слов
+                    this.table.selectedOption = null
+                    // Убрать возможные параметры выборки слов
+                    this.clearServerParams()
+                    // Убрать возможный поиск типа слов
+                    this.serverParams.selection_type_id = ''
+                    this.resetButtonClearSearch()
                 });
             }, 500);
+        },
+        // очистка поля поиска слов
+        resetButtonClearSearch() {
+            // обратиться к кнопке зачистки поля поиска
+            const clearSearchButton = document.getElementById('clear_search');
+            if (clearSearchButton) {
+
+                this.serverParams.search = '';
+
+                // Очищаем поле ввода поиска
+                const searchInput = document.querySelector('.vgt-global-search__input input');
+                if (searchInput) {
+                    // Создаем новое событие ввода
+                    const event = new Event('input', { bubbles: true });
+                    // Устанавливаем значение поля ввода в пустую строку
+                    searchInput.value = '';
+                    // Диспатчим событие ввода
+                    searchInput.dispatchEvent(event);
+                }
+
+                this.initialData();
+            }
         },
     },
 }

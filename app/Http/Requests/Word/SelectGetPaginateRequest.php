@@ -23,6 +23,7 @@ class SelectGetPaginateRequest extends ApiFormRequest {
      */
     public function rules() {
         return [
+            'selection_type_id' => 'nullable|integer',
             'sortField' => 'nullable|string',
             'sortType' => 'nullable|string',
             'search' => 'nullable|string',

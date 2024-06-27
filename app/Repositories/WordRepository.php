@@ -29,6 +29,12 @@ class WordRepository extends CoreRepository
                     }
                 }
         }
+
+        // выбрать указанные типы слов
+        if ($vars['selection_type_id']) {
+            $collection = $collection->where('type_id', $vars['selection_type_id']);
+        }
+
         $total_count = $collection->get()->count();
 
         // sort

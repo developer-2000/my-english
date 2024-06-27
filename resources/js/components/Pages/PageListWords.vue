@@ -52,8 +52,20 @@
                                 @on-per-page-change="onPerPageChange"
                                 @on-sort-change="onSortChange"
                             >
-                                <template slot="loadingContent">
-                                    <div></div>
+                                <template v-slot:table-actions>
+                                    <div style="display: flex; justify-content: flex-end; align-items: center;">
+                                        <!-- Select поиска типов слов -->
+                                        <select class="form-select search-select-types"
+                                                v-model="table.selectedOption"
+                                                @change="handleSelectChange"
+                                        >
+                                            <option value="null">Типы слов</option>
+                                            <option v-for="(obj, key) in formattedTypes" :key="key"
+                                                    :value="obj.id"
+                                                    v-text="obj.type"
+                                            ></option>
+                                        </select>
+                                    </div>
                                 </template>
                             </vue-good-table>
                         </div>
@@ -761,8 +773,10 @@
                     // sorting server data on the client side
                     mode: "remote",
                     isLoading: true,
+                    selectedOption: null
                 },
                 serverParams: {
+                    selection_type_id: '',
                     search: '',
                     page: 0,
                     perPage: 50,
@@ -816,6 +830,12 @@
                     return Object.values(this.arrInputsModal.objConjunction).some(conjunction => conjunction.select);
                 }
                 return false;
+            },
+            formattedTypes() {
+                return this.allTypes.map(type => ({
+                    ...type,
+                    type: type.type.charAt(0).toUpperCase() + type.type.slice(1)
+                }));
             }
         },
         watch: {
@@ -834,6 +854,16 @@
             }
         },
         methods: {
+            // Выбор Select типов слов
+            handleSelectChange() {
+                if(this.table.selectedOption === 'null'){
+                    return false
+                }
+
+                this.clearServerParams()
+                this.serverParams.selection_type_id = this.table.selectedOption
+                this.resetButtonClearSearch()
+            },
             initSelection() {
                 for (const [key, value] of Object.entries(this.arrInputsModal.objConjunction)) {
                     if (value.select) {
@@ -850,6 +880,7 @@
                     }
                 }
             },
+            // Заполнение данных и типе слова для передачи на сервер
             getCustomForms(){
                 // типы слова формы времени или числительные
                 let forms = null
@@ -867,8 +898,9 @@
                 }
                 return forms
             },
-            async createWord() {
-                const data =  {
+            // Сформированный обьект для передачи на сервер
+            getDataSaveServer(){
+                return  {
                     word: this.arrInputsModal.new_word,
                     translation: this.arrInputsModal.translation_word,
                     url_image: this.arrInputsModal.url_image,
@@ -877,8 +909,10 @@
                     type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
                     time_forms: this.getCustomForms(),
                 }
+            },
+            async createWord() {
                 try {
-                    const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
+                    const response = await this.$http.post(`${this.$http.webUrl()}word`, this.getDataSaveServer());
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#create_word').modal('hide');
@@ -889,16 +923,8 @@
                 }
             },
             async updateWord() {
-                const data = {
-                    word_id: this.arrInputsModal.word_id,
-                    word: this.arrInputsModal.new_word,
-                    translation: this.arrInputsModal.translation_word,
-                    url_image: this.arrInputsModal.url_image,
-                    description: this.arrInputsModal.description,
-                    arr_new_sentences: this.objGenerateSentences.selectedSentences,
-                    type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
-                    time_forms: this.getCustomForms(),
-                }
+                let data = this.getDataSaveServer()
+                data.word_id = this.arrInputsModal.word_id
                 try {
                     const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
                     if(this.checkSuccess(response)){
@@ -924,10 +950,14 @@
                 }
             },
             // выборка слов и типов слов с пагинацией
+            // http://english.my/word?search=&page=0&perPage=50&sortField=&sortType=
             async loadWordsAndTypes() {
+                const url = `selection_type_id=${this.serverParams.selection_type_id}&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
+
                 try {
                     this.isLoading = true;
-                    const response = await this.$http.get(`${this.$http.webUrl()}word?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`);
+                    const response = await this.$http.get(`${this.$http.webUrl()}word?${url}`)
+
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
                         this.makeObjectDataForTable(response.data.data.list);
@@ -1305,6 +1335,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // очистка параметров пагинации
             clearServerParams(){
+                this.serverParams.selection_type_id = ''
                 this.serverParams.search = ''
                 this.serverParams.page = 0
                 this.serverParams.sort[0].field = ''
@@ -1371,6 +1402,21 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
         .content-wrapper{
             .container-fluid{
                 padding-right: 0;
+                .table_wrapper{
+                    .search-select-types{
+                        padding: 4px 35px 3px 15px;
+                        margin-right: 7px;
+                        cursor: pointer;
+                        option{
+                            cursor: pointer;
+                            &:first-child{
+                                background: #ddd;
+                                color: #888;
+                                cursor: default;
+                            }
+                        }
+                    }
+                }
             }
             padding-right: 15.5px;
         }

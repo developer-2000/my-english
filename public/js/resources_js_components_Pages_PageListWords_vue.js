@@ -147,9 +147,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         },
         // sorting server data on the client side
         mode: "remote",
-        isLoading: true
+        isLoading: true,
+        selectedOption: null
       },
       serverParams: {
+        selection_type_id: '',
         search: '',
         page: 0,
         perPage: 50,
@@ -202,6 +204,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
       return false;
+    },
+    formattedTypes: function formattedTypes() {
+      return this.allTypes.map(function (type) {
+        return _objectSpread(_objectSpread({}, type), {}, {
+          type: type.type.charAt(0).toUpperCase() + type.type.slice(1)
+        });
+      });
     }
   }),
   watch: {
@@ -221,6 +230,15 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    // Выбор Select типов слов
+    handleSelectChange: function handleSelectChange() {
+      if (this.table.selectedOption === 'null') {
+        return false;
+      }
+      this.clearServerParams();
+      this.serverParams.selection_type_id = this.table.selectedOption;
+      this.resetButtonClearSearch();
+    },
     initSelection: function initSelection() {
       for (var _i = 0, _Object$entries = Object.entries(this.arrInputsModal.objConjunction); _i < _Object$entries.length; _i++) {
         var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
@@ -240,6 +258,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       }
     },
+    // Заполнение данных и типе слова для передачи на сервер
     getCustomForms: function getCustomForms() {
       // типы слова формы времени или числительные
       var forms = null;
@@ -257,44 +276,47 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return forms;
     },
+    // Сформированный обьект для передачи на сервер
+    getDataSaveServer: function getDataSaveServer() {
+      return {
+        word: this.arrInputsModal.new_word,
+        translation: this.arrInputsModal.translation_word,
+        url_image: this.arrInputsModal.url_image,
+        description: this.arrInputsModal.description,
+        arr_new_sentences: this.objGenerateSentences.selectedSentences,
+        type_id: this.arrInputsModal.select_type_id,
+        // id типа из таблицы word_types
+        time_forms: this.getCustomForms()
+      };
+    },
     createWord: function createWord() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var data, response;
+        var response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              data = {
-                word: _this.arrInputsModal.new_word,
-                translation: _this.arrInputsModal.translation_word,
-                url_image: _this.arrInputsModal.url_image,
-                description: _this.arrInputsModal.description,
-                arr_new_sentences: _this.objGenerateSentences.selectedSentences,
-                type_id: _this.arrInputsModal.select_type_id,
-                // id типа из таблицы word_types
-                time_forms: _this.getCustomForms()
-              };
-              _context.prev = 1;
-              _context.next = 4;
-              return _this.$http.post("".concat(_this.$http.webUrl(), "word"), data);
-            case 4:
+              _context.prev = 0;
+              _context.next = 3;
+              return _this.$http.post("".concat(_this.$http.webUrl(), "word"), _this.getDataSaveServer());
+            case 3:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
-              _context.next = 11;
+              _context.next = 10;
               break;
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](1);
+            case 7:
+              _context.prev = 7;
+              _context.t0 = _context["catch"](0);
               console.log(_context.t0);
-            case 11:
+            case 10:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 8]]);
+        }, _callee, null, [[0, 7]]);
       }))();
     },
     updateWord: function updateWord() {
@@ -304,38 +326,29 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              data = {
-                word_id: _this2.arrInputsModal.word_id,
-                word: _this2.arrInputsModal.new_word,
-                translation: _this2.arrInputsModal.translation_word,
-                url_image: _this2.arrInputsModal.url_image,
-                description: _this2.arrInputsModal.description,
-                arr_new_sentences: _this2.objGenerateSentences.selectedSentences,
-                type_id: _this2.arrInputsModal.select_type_id,
-                // id типа из таблицы word_types
-                time_forms: _this2.getCustomForms()
-              };
-              _context2.prev = 1;
-              _context2.next = 4;
+              data = _this2.getDataSaveServer();
+              data.word_id = _this2.arrInputsModal.word_id;
+              _context2.prev = 2;
+              _context2.next = 5;
               return _this2.$http.post("".concat(_this2.$http.webUrl(), "word/update-word"), data);
-            case 4:
+            case 5:
               response = _context2.sent;
               if (_this2.checkSuccess(response)) {
                 _this2.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#update_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
-              _context2.next = 11;
+              _context2.next = 12;
               break;
-            case 8:
-              _context2.prev = 8;
-              _context2.t0 = _context2["catch"](1);
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](2);
               console.log(_context2.t0);
-            case 11:
+            case 12:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[1, 8]]);
+        }, _callee2, null, [[2, 9]]);
       }))();
     },
     deleteWord: function deleteWord(word_id) {
@@ -372,18 +385,20 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }))();
     },
     // выборка слов и типов слов с пагинацией
+    // http://english.my/word?search=&page=0&perPage=50&sortField=&sortType=
     loadWordsAndTypes: function loadWordsAndTypes() {
       var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var response;
+        var url, response;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.prev = 0;
+              url = "selection_type_id=".concat(_this4.serverParams.selection_type_id, "&search=").concat(_this4.serverParams.search, "&page=").concat(_this4.serverParams.page, "&perPage=").concat(_this4.serverParams.perPage, "&sortField=").concat(_this4.serverParams.sort[0].field, "&sortType=").concat(_this4.serverParams.sort[0].type);
+              _context4.prev = 1;
               _this4.isLoading = true;
-              _context4.next = 4;
-              return _this4.$http.get("".concat(_this4.$http.webUrl(), "word?search=").concat(_this4.serverParams.search, "&page=").concat(_this4.serverParams.page, "&perPage=").concat(_this4.serverParams.perPage, "&sortField=").concat(_this4.serverParams.sort[0].field, "&sortType=").concat(_this4.serverParams.sort[0].type));
-            case 4:
+              _context4.next = 5;
+              return _this4.$http.get("".concat(_this4.$http.webUrl(), "word?").concat(url));
+            case 5:
               response = _context4.sent;
               if (_this4.checkSuccess(response)) {
                 _this4.table.totalRecords = response.data.data.total_count;
@@ -392,19 +407,19 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
                 _this4.allTypes = response.data.data.types;
                 _this4.deleteColorFromArrColor(response.data.data.colors);
               }
-              _context4.next = 11;
+              _context4.next = 12;
               break;
-            case 8:
-              _context4.prev = 8;
-              _context4.t0 = _context4["catch"](0);
+            case 9:
+              _context4.prev = 9;
+              _context4.t0 = _context4["catch"](1);
               console.log(_context4.t0);
-            case 11:
-              _this4.isLoading = false;
             case 12:
+              _this4.isLoading = false;
+            case 13:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, null, [[0, 8]]);
+        }, _callee4, null, [[1, 9]]);
       }))();
     },
     // выбрать все предложения с этим словом
@@ -830,6 +845,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // очистка параметров пагинации
     clearServerParams: function clearServerParams() {
+      this.serverParams.selection_type_id = '';
       this.serverParams.search = '';
       this.serverParams.page = 0;
       this.serverParams.sort[0].field = '';
@@ -1147,10 +1163,52 @@ var render = function render() {
       "on-page-change": _vm.onPageChange,
       "on-per-page-change": _vm.onPerPageChange,
       "on-sort-change": _vm.onSortChange
-    }
-  }, [_c("template", {
-    slot: "loadingContent"
-  }, [_c("div")])], 2)], 1) : _vm._e()])])])]), _vm._v(" "), _c("div", {
+    },
+    scopedSlots: _vm._u([{
+      key: "table-actions",
+      fn: function fn() {
+        return [_c("div", {
+          staticStyle: {
+            display: "flex",
+            "justify-content": "flex-end",
+            "align-items": "center"
+          }
+        }, [_c("select", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.table.selectedOption,
+            expression: "table.selectedOption"
+          }],
+          staticClass: "form-select search-select-types",
+          on: {
+            change: [function ($event) {
+              var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+                return o.selected;
+              }).map(function (o) {
+                var val = "_value" in o ? o._value : o.value;
+                return val;
+              });
+              _vm.$set(_vm.table, "selectedOption", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+            }, _vm.handleSelectChange]
+          }
+        }, [_c("option", {
+          attrs: {
+            value: "null"
+          }
+        }, [_vm._v("Типы слов")]), _vm._v(" "), _vm._l(_vm.formattedTypes, function (obj, key) {
+          return _c("option", {
+            key: key,
+            domProps: {
+              value: obj.id,
+              textContent: _vm._s(obj.type)
+            }
+          });
+        })], 2)])];
+      },
+      proxy: true
+    }], null, false, 275484816)
+  })], 1) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
       id: "create_word",
@@ -2735,23 +2793,38 @@ __webpack_require__.r(__webpack_exports__);
             // спрятать кнопку
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
-          _this2.serverParams.search = '';
 
-          // Очищаем поле ввода поиска
-          var searchInput = document.querySelector('.vgt-global-search__input input');
-          if (searchInput) {
-            // Создаем новое событие ввода
-            var event = new Event('input', {
-              bubbles: true
-            });
-            // Устанавливаем значение поля ввода в пустую строку
-            searchInput.value = '';
-            // Диспатчим событие ввода
-            searchInput.dispatchEvent(event);
-          }
-          _this2.initialData();
+          // Убрать возможный выбор select типов слов
+          _this2.table.selectedOption = null;
+          // Убрать возможные параметры выборки слов
+          _this2.clearServerParams();
+          // Убрать возможный поиск типа слов
+          _this2.serverParams.selection_type_id = '';
+          _this2.resetButtonClearSearch();
         });
       }, 500);
+    },
+    // очистка поля поиска слов
+    resetButtonClearSearch: function resetButtonClearSearch() {
+      // обратиться к кнопке зачистки поля поиска
+      var clearSearchButton = document.getElementById('clear_search');
+      if (clearSearchButton) {
+        this.serverParams.search = '';
+
+        // Очищаем поле ввода поиска
+        var searchInput = document.querySelector('.vgt-global-search__input input');
+        if (searchInput) {
+          // Создаем новое событие ввода
+          var event = new Event('input', {
+            bubbles: true
+          });
+          // Устанавливаем значение поля ввода в пустую строку
+          searchInput.value = '';
+          // Диспатчим событие ввода
+          searchInput.dispatchEvent(event);
+        }
+        this.initialData();
+      }
     }
   }
 });
@@ -2935,7 +3008,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types[data-v-461a95d4] {\n  padding: 4px 35px 3px 15px;\n  margin-right: 7px;\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4] {\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4]:first-child {\n  background: #ddd;\n  color: #888;\n  cursor: default;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

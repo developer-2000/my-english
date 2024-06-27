@@ -957,23 +957,38 @@ __webpack_require__.r(__webpack_exports__);
             // спрятать кнопку
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
-          _this2.serverParams.search = '';
 
-          // Очищаем поле ввода поиска
-          var searchInput = document.querySelector('.vgt-global-search__input input');
-          if (searchInput) {
-            // Создаем новое событие ввода
-            var event = new Event('input', {
-              bubbles: true
-            });
-            // Устанавливаем значение поля ввода в пустую строку
-            searchInput.value = '';
-            // Диспатчим событие ввода
-            searchInput.dispatchEvent(event);
-          }
-          _this2.initialData();
+          // Убрать возможный выбор select типов слов
+          _this2.table.selectedOption = null;
+          // Убрать возможные параметры выборки слов
+          _this2.clearServerParams();
+          // Убрать возможный поиск типа слов
+          _this2.serverParams.selection_type_id = '';
+          _this2.resetButtonClearSearch();
         });
       }, 500);
+    },
+    // очистка поля поиска слов
+    resetButtonClearSearch: function resetButtonClearSearch() {
+      // обратиться к кнопке зачистки поля поиска
+      var clearSearchButton = document.getElementById('clear_search');
+      if (clearSearchButton) {
+        this.serverParams.search = '';
+
+        // Очищаем поле ввода поиска
+        var searchInput = document.querySelector('.vgt-global-search__input input');
+        if (searchInput) {
+          // Создаем новое событие ввода
+          var event = new Event('input', {
+            bubbles: true
+          });
+          // Устанавливаем значение поля ввода в пустую строку
+          searchInput.value = '';
+          // Диспатчим событие ввода
+          searchInput.dispatchEvent(event);
+        }
+        this.initialData();
+      }
     }
   }
 });
