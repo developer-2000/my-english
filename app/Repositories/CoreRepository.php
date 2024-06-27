@@ -30,7 +30,7 @@ abstract class CoreRepository
     protected function getVariablesForTables(array $data)
     {
         $collected_data = collect($data);
-        $selection_type_id = $collected_data->get('selection_type_id', null);
+        $selection_type_id = $data['selection_type_id'] !== 'null' ? $data['selection_type_id'] : null;
         $sort_column = $collected_data->get('sortField', null);
         $sort_type = $collected_data->get('sortType', null);
         $sort_type = $sort_type === 'none' ? null : $sort_type;

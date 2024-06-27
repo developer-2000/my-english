@@ -151,7 +151,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         selectedOption: null
       },
       serverParams: {
-        selection_type_id: '',
+        selection_type_id: 'null',
         search: '',
         page: 0,
         perPage: 50,
@@ -232,9 +232,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   methods: {
     // Выбор Select типов слов
     handleSelectChange: function handleSelectChange() {
-      if (this.table.selectedOption === 'null') {
-        return false;
-      }
       this.clearServerParams();
       this.serverParams.selection_type_id = this.table.selectedOption;
       this.resetButtonClearSearch();
@@ -596,20 +593,34 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       var text_type = row.type !== null ? row.type.type : "";
       var text_description = row.time_forms === null && row.type.description !== undefined ? ' - ' + row.type.description.text : "";
-      // типы слова формы времени или числительные
+
+      // типы слова
       if (row.time_forms !== null) {
+        // формы времени
         if (row.time_forms.past !== undefined) {
           text_description = ' - Прошлое: ' + row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.';
           text_description += ' Настоящее: ' + row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.';
           text_description += ' Будущее: ' + row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.';
-        } else if (row.time_forms.number !== undefined) {
+        }
+        // числительные
+        else if (row.time_forms.number !== undefined) {
           text_description = ' - ' + row.time_forms.number;
+        }
+        // числительные
+        else if (row.time_forms.coordinating !== undefined) {
+          if (row.time_forms.coordinating.select) {
+            text_description = row.time_forms.coordinating.name + ' - ' + row.time_forms.coordinating.about;
+          } else if (row.time_forms.correlative.select) {
+            text_description = row.time_forms.correlative.name + ' - ' + row.time_forms.correlative.about;
+          } else if (row.time_forms.subordinating.select) {
+            text_description = row.time_forms.subordinating.name + ' - ' + row.time_forms.subordinating.about;
+          }
         }
       }
       var span_style = row.type == null ? '' : 'color:' + row.type.color;
 
       // строка html для таблицы
-      var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type, " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
+      var html = "<div style=\"text-align: left;\">\n<div style=\"font-weight: 700;\">".concat(row.translation == null ? '' : row.translation.toLowerCase(), "\n<span style=\"").concat(span_style, ";\">").concat(text_type.charAt(0).toUpperCase() + text_type.slice(1), " ").concat(text_description, "</span>\n</div>\n").concat(row.description == null ? '' : row.description.toLowerCase(), "\n</div>\n").concat(row.url_image != null ? "<img style=\"width: auto; height: 100px;\" src=\"".concat(row.url_image, "\" alt=\"Image\">") : '', "\n");
 
       // Получить ссылку на экземпляр tippy
       var instance = jquery__WEBPACK_IMPORTED_MODULE_9___default()(event.target)[0]._tippy;
@@ -872,7 +883,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     arrInputsModal: {
       new_word: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.required,
-        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.minLength)(3)
+        minLength: (0,vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.minLength)(1)
       },
       translation_word: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_13__.required,
@@ -2794,13 +2805,9 @@ __webpack_require__.r(__webpack_exports__);
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
 
-          // Убрать возможный выбор select типов слов
-          _this2.table.selectedOption = null;
-          // Убрать возможные параметры выборки слов
-          _this2.clearServerParams();
-          // Убрать возможный поиск типа слов
-          _this2.serverParams.selection_type_id = '';
-          _this2.resetButtonClearSearch();
+          // Установить
+          _this2.table.selectedOption = 'null';
+          _this2.handleSelectChange();
         });
       }, 500);
     },

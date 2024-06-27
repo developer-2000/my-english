@@ -53,13 +53,9 @@ export default {
                         $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
                     },50)
 
-                    // Убрать возможный выбор select типов слов
-                    this.table.selectedOption = null
-                    // Убрать возможные параметры выборки слов
-                    this.clearServerParams()
-                    // Убрать возможный поиск типа слов
-                    this.serverParams.selection_type_id = ''
-                    this.resetButtonClearSearch()
+                    // Установить
+                    this.table.selectedOption = 'null'
+                    this.handleSelectChange()
                 });
             }, 500);
         },

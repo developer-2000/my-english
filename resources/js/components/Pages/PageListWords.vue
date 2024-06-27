@@ -776,7 +776,7 @@
                     selectedOption: null
                 },
                 serverParams: {
-                    selection_type_id: '',
+                    selection_type_id: 'null',
                     search: '',
                     page: 0,
                     perPage: 50,
@@ -856,10 +856,6 @@
         methods: {
             // Выбор Select типов слов
             handleSelectChange() {
-                if(this.table.selectedOption === 'null'){
-                    return false
-                }
-
                 this.clearServerParams()
                 this.serverParams.selection_type_id = this.table.selectedOption
                 this.resetButtonClearSearch()
@@ -1093,15 +1089,30 @@
                 let text_description = (row.time_forms === null && row.type.description !== undefined) ?
                     ' - '+ row.type.description.text :
                     ""
-                // типы слова формы времени или числительные
+
+                // типы слова
                 if(row.time_forms !== null){
+                    // формы времени
                     if(row.time_forms.past !== undefined){
                         text_description = ' - Прошлое: '+ row.time_forms.past.word + ', ' + row.time_forms.past.translation + ', ' + row.time_forms.past.accent + '.'
                         text_description += ' Настоящее: '+ row.time_forms.present.word + ', ' + row.time_forms.present.translation + ', ' + row.time_forms.present.accent + '.'
                         text_description += ' Будущее: '+ row.time_forms.future.word + ', ' + row.time_forms.future.translation + ', ' + row.time_forms.future.accent + '.'
                     }
+                    // числительные
                     else if(row.time_forms.number !== undefined){
                         text_description = ' - '+ row.time_forms.number
+                    }
+                    // числительные
+                    else if(row.time_forms.coordinating !== undefined){
+                        if(row.time_forms.coordinating.select){
+                            text_description = row.time_forms.coordinating.name+' - '+ row.time_forms.coordinating.about
+                        }
+                        else if(row.time_forms.correlative.select){
+                            text_description = row.time_forms.correlative.name+' - '+ row.time_forms.correlative.about
+                        }
+                        else if(row.time_forms.subordinating.select){
+                            text_description = row.time_forms.subordinating.name+' - '+ row.time_forms.subordinating.about
+                        }
                     }
                 }
                 let span_style = row.type == null ? '' : 'color:'+row.type.color
@@ -1109,7 +1120,7 @@
                 // строка html для таблицы
                 let html = `<div style="text-align: left;">
 <div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}
-<span style="${span_style};">${text_type} ${text_description}</span>
+<span style="${span_style};">${text_type.charAt(0).toUpperCase() + text_type.slice(1)} ${text_description}</span>
 </div>
 ${row.description == null ? '' : row.description.toLowerCase()}
 </div>
@@ -1362,7 +1373,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             arrInputsModal: {
                 new_word: {
                     required,
-                    minLength: minLength(3)
+                    minLength: minLength(1)
                 },
                 translation_word: {
                     required,

@@ -958,13 +958,9 @@ __webpack_require__.r(__webpack_exports__);
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
 
-          // Убрать возможный выбор select типов слов
-          _this2.table.selectedOption = null;
-          // Убрать возможные параметры выборки слов
-          _this2.clearServerParams();
-          // Убрать возможный поиск типа слов
-          _this2.serverParams.selection_type_id = '';
-          _this2.resetButtonClearSearch();
+          // Установить
+          _this2.table.selectedOption = 'null';
+          _this2.handleSelectChange();
         });
       }, 500);
     },
