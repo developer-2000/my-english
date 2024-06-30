@@ -379,7 +379,7 @@
         computed: {
             ...mapGetters({
                 // Геттер для получения текущего языка изучения
-                currentLearnLanguage: 'getLearnLanguage'
+                getLearnLanguage: 'getLearnLanguage'
             }),
             filteredColumns() {
                 return this.table.columns.filter(column => {
@@ -392,8 +392,8 @@
             }
         },
         watch: {
-            currentLearnLanguage: {
-                handler: 'learnAnotherLanguage', // Вызывает метод loadData при изменении currentLearnLanguage
+            getLearnLanguage: {
+                handler: 'learnAnotherLanguage', // Вызывает метод при изменении getLearnLanguage - язык изучения
                 immediate: false // Не Вызов loadData сразу после создания компонента
             }
         },
@@ -422,7 +422,8 @@
                         field = 'sound';
                     }
 
-                    const response = await this.$http.get(`${this.$http.webUrl()}sentence?search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
+                    const url = `selection_type_id=&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
+                    const response = await this.$http.get(`${this.$http.webUrl()}sentence?${url}`
                     );
                     if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;

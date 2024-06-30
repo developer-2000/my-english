@@ -32,7 +32,6 @@ class LearnWordsController extends Controller
                 // Обновляем метку времени предыдущего слова
                 $this->learnWordRepository->updateWordTimestamp($request->last_word_id, $request->action_with_word);
             }
-
             // Возвращаем найденное слово
             return new ApiResponse($latestWord);
         }

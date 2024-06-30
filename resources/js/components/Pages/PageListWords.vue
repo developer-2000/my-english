@@ -840,7 +840,8 @@
         },
         watch: {
             currentLearnLanguage: {
-                handler: 'learnAnotherLanguage', // Вызывает метод loadData при изменении currentLearnLanguage
+                // Вызывает метод loadData при изменении currentLearnLanguage
+                handler: 'learnAnotherLanguage',
                 immediate: false // Не Вызов loadData сразу после создания компонента
             },
             'arrInputsModal.objConjunction': {

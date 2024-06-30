@@ -30,6 +30,7 @@
                                  @click="goToEditing(objOldLearnWord.word)"
                                  v-text="objLearnWord.word"
                             ></div>
+                            <!-- кнопки -->
                             <div class="box-button">
                                 <!-- button Не знаю -->
                                 <a class="btn btn-success" role="button"
@@ -37,6 +38,7 @@
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
                                     {{ $t('all.do_not_know') }}
+                                    <div class="alert-number" v-text="not_know"></div>
                                 </a>
                                 <!-- button Знаю -->
                                 <a class="btn btn-warning" role="button"
@@ -44,6 +46,7 @@
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                                     {{ $t('all.know') }}
+                                    <div class="alert-number" v-text="know"></div>
                                 </a>
                             </div>
                         </div>
@@ -62,7 +65,7 @@
                             </div>
                         </div>
                         <!-- write down word  -->
-                        <div class="form-group write-word">
+                        <div class="form-group box-write-word">
                             <div class="box-writing">
                                 <label for="write_word" class="col-form-label">
                                     {{ $t('all.correct_spelling_of_the_word') }}
@@ -96,6 +99,7 @@ import helpSearchWord from "./HelpSearchWord";
 import help_search_word_mixin from "../../mixins/help_search_word_mixin";
 import $ from "jquery";
 import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+import {mapGetters} from "vuex";
 
 export default {
     data() {
@@ -110,6 +114,8 @@ export default {
             objOldLearnWord: null,
             last_updated_at: null, // дата изменения изучаемого слова
             write_word: "",
+            know: 0,
+            not_know: 0,
         };
     },
     components: { helpSearchWord, },
@@ -118,10 +124,29 @@ export default {
         response_methods_mixin,
         translation_i18n_mixin
     ],
+    computed: {
+        ...mapGetters({
+            // Геттер для получения текущего языка изучения
+            getLearnLanguage: 'getLearnLanguage'
+        }),
+    },
+    watch: {
+        // Событие обновления данных Vuex
+        getLearnLanguage: {
+            handler: 'clearStudyVariables', // Вызывает метод при изменении getLearnLanguage - язык изучения
+            immediate: false // Не Вызов сразу после создания компонента
+        }
+    },
     methods: {
         // загрузка изучаемого слова
         async loadLearnWord(action = null) {
             this.clearWritingVariables()
+            if(action == "up"){
+                this.not_know++
+            }
+            else if(action == "down"){
+                this.know++
+            }
             try {
                 let data = {
                     last_updated_at: this.last_updated_at,
@@ -226,6 +251,13 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
             this.help_dynamic = "";
             this.write_word = ""
         },
+        // при смене языка изучения
+        clearStudyVariables(){
+            this.objLearnWord = null
+            this.last_updated_at = null
+            this.know = 0
+            this.not_know = 0
+        },
     },
     mounted() {
         let languageIndex = localStorage.getItem('languageIndex');
@@ -285,9 +317,21 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
                     a{
                         font-size: 16px;
                         width: 50%;
+                        position: relative;
                         svg{
                             height: 16px;
                             margin-right: 5px;
+                        }
+                        .alert-number{
+                            position: absolute;
+                            right: -8px;
+                            top: -12px;
+                            background: #d9d9d9;
+                            color: black;
+                            line-height: 13px;
+                            padding: 5px;
+                            border-radius: 20px;
+                            outline: 1px solid #b4b4b4;
                         }
                     }
                     .btn-success{
@@ -312,20 +356,18 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
                     }
                 }
             }
-        }
-    }
-    .modal-body{
-        .write-word{
-            display: flex;
-            align-items: center;
-            .svg-like{
-                fill: #339c03;
-                width: 40px;
-                height: 40px;
-            }
-            .box-writing{
-                width: 80%;
-                margin-right: 30px;
+            .box-write-word{
+                display: flex;
+                align-items: center;
+                .box-writing{
+                    width: 80%;
+                    margin-right: 30px;
+                }
+                .svg-like{
+                    fill: #339c03;
+                    width: 40px;
+                    height: 40px;
+                }
             }
         }
     }

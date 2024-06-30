@@ -133,7 +133,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_10__.mapGetters)({
     // Геттер для получения текущего языка изучения
-    currentLearnLanguage: 'getLearnLanguage'
+    getLearnLanguage: 'getLearnLanguage'
   })), {}, {
     filteredColumns: function filteredColumns() {
       var _this = this;
@@ -147,9 +147,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   }),
   watch: {
-    currentLearnLanguage: {
+    getLearnLanguage: {
       handler: 'learnAnotherLanguage',
-      // Вызывает метод loadData при изменении currentLearnLanguage
+      // Вызывает метод при изменении getLearnLanguage - язык изучения
       immediate: false // Не Вызов loadData сразу после создания компонента
     }
   },
@@ -190,7 +190,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     loadSentences: function loadSentences() {
       var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var field, response;
+        var field, url, response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -200,28 +200,29 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               if (typeof field !== "string" && field.name == "field") {
                 field = 'sound';
               }
-              _context2.next = 6;
-              return _this3.$http.get("".concat(_this3.$http.webUrl(), "sentence?search=").concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this3.serverParams.sort[0].type));
-            case 6:
+              url = "selection_type_id=&search=".concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this3.serverParams.sort[0].type);
+              _context2.next = 7;
+              return _this3.$http.get("".concat(_this3.$http.webUrl(), "sentence?").concat(url));
+            case 7:
               response = _context2.sent;
               if (_this3.checkSuccess(response)) {
                 _this3.table.totalRecords = response.data.data.sentences.total_count;
                 _this3.makeObjectDataForTable(response.data.data.sentences.list);
                 _this3.table.origin_rows = response.data.data.sentences.list;
               }
-              _context2.next = 13;
+              _context2.next = 14;
               break;
-            case 10:
-              _context2.prev = 10;
+            case 11:
+              _context2.prev = 11;
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
-            case 13:
-              _this3.isLoading = false;
             case 14:
+              _this3.isLoading = false;
+            case 15:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 10]]);
+        }, _callee2, null, [[0, 11]]);
       }))();
     },
     createSentence: function createSentence() {
