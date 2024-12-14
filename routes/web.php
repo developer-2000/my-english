@@ -46,6 +46,9 @@ Route::group(['prefix'=>'auth'], function (){
 // >>> Отображаем главную страницу для авторизованных пользователей
 // Перенаправляем на страницу логина для неавторизованных пользователей
 Route::get('/', function () {
+
+//    dd(auth()->user()->toArray());
+
     // Проверяем имеет ли роль 'user' и старше
     if (Auth::check() && Auth::user()->hasRole('user')) {
         return view('index');

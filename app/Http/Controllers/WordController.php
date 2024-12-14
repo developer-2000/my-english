@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Word\CreateWordRequest;
@@ -6,19 +7,18 @@ use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Test;
 use App\Repositories\WordRepository;
+use Illuminate\Http\Request;
 
-
-class WordController extends Controller
-{
+class WordController extends Controller {
     protected $wordRepository;
 
     public function __construct() {
         $this->wordRepository = new WordRepository();
     }
 
-    public function index(SelectGetPaginateRequest $request): ApiResponse
-    {
+    public function index(SelectGetPaginateRequest $request): ApiResponse {
         $words = $this->wordRepository->getWords($request->validated());
 
         return new ApiResponse($words);
@@ -30,8 +30,7 @@ class WordController extends Controller
      * @return ApiResponse
      * @throws \Exception
      */
-    public function store(CreateWordRequest $request): ApiResponse
-    {
+    public function store(CreateWordRequest $request): ApiResponse {
         $coll = $this->wordRepository->createWord($request);
 
         return new ApiResponse(compact('coll'));
@@ -43,15 +42,13 @@ class WordController extends Controller
      * @return ApiResponse
      * @throws \Exception
      */
-    public function updateWord(UpdateWordRequest $request): ApiResponse
-    {
+    public function updateWord(UpdateWordRequest $request): ApiResponse {
         $coll = $this->wordRepository->updateWord($request);
 
         return new ApiResponse(compact('coll'));
     }
 
-    public function deleteWord(DeleteWordRequest $request): ApiResponse
-    {
+    public function deleteWord(DeleteWordRequest $request): ApiResponse {
         $this->wordRepository->deleteWord($request);
 
         return new ApiResponse([]);

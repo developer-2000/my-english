@@ -41,7 +41,9 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "index-page"
+    attrs: {
+      className: "index-page"
+    }
   }, [_c("a", {
     attrs: {
       href: "https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured",
@@ -54,20 +56,27 @@ var staticRenderFns = [function () {
     }
   }, [_vm._v("\n        YouTube АНГЛИЙСКИЙ ЯЗЫК ДО ПОЛНОГО АВТОМАТИЗМА С САМОГО НУЛЯ\n    ")]), _vm._v(" "), _c("a", {
     attrs: {
-      href: "https://kids-books.com.ua/nepravilnye-glagoly-angliyskogo-yazyka",
-      target: "_blank"
-    }
-  }, [_vm._v("\n        Не правильные глаголы во временах\n    ")]), _vm._v(" "), _c("a", {
-    attrs: {
       href: "https://dictionary.langeek.co/en-RU",
       target: "_blank"
     }
-  }, [_vm._v("\n        LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать слова с визуальными образами.\n    ")]), _vm._v(" "), _c("a", {
+  }, [_vm._v("\n        LanGeek - изучение языков, иллюстрированный словарь изображений. Изображения помогают учащимся ассоциировать\n        слова с визуальными образами.\n    ")]), _vm._v(" "), _c("a", {
     attrs: {
       href: "https://www.youtube.com/@play-en/playlists",
       target: "_blank"
     }
-  }, [_vm._v("\n        YouTube Короткие предложения и частые слова\n    ")])]);
+  }, [_vm._v("\n        YouTube Короткие предложения и частые слова\n    ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "/table-of-irregular-verbs.pdf",
+      target: "_blank",
+      rel: "noopener noreferrer"
+    }
+  }, [_vm._v("\n        Не правильные глаголы во временах\n    ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "/Top%203000%20English%20words.pdf",
+      target: "_blank",
+      rel: "noopener noreferrer"
+    }
+  }, [_vm._v("\n        Открыть: Top 3000 English words\n    ")])]);
 }];
 render._withStripped = true;
 

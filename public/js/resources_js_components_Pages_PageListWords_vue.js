@@ -289,31 +289,32 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     createWord: function createWord() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var response;
+        var data, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              _context.next = 3;
-              return _this.$http.post("".concat(_this.$http.webUrl(), "word"), _this.getDataSaveServer());
-            case 3:
+              data = _this.getDataSaveServer();
+              _context.next = 4;
+              return _this.$http.post("".concat(_this.$http.webUrl(), "word"), data);
+            case 4:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_word').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
-              _context.next = 10;
+              _context.next = 11;
               break;
-            case 7:
-              _context.prev = 7;
+            case 8:
+              _context.prev = 8;
               _context.t0 = _context["catch"](0);
               console.log(_context.t0);
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[0, 8]]);
       }))();
     },
     updateWord: function updateWord() {

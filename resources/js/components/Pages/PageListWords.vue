@@ -909,7 +909,10 @@
             },
             async createWord() {
                 try {
-                    const response = await this.$http.post(`${this.$http.webUrl()}word`, this.getDataSaveServer());
+                    const data = this.getDataSaveServer()
+
+                    const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
+
                     if(this.checkSuccess(response)){
                         this.initialData();
                         $('#create_word').modal('hide');

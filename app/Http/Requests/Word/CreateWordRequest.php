@@ -25,10 +25,7 @@ class CreateWordRequest extends ApiFormRequest
      */
     public function rules() {
         return [
-            'word' => [
-                'required',
-                'string',
-                'min:1',
+            'word' => [ 'required','string','min:1',
                 $this->CheckUniqueInDB('_words', 'word'),
             ],
             'translation' => 'required|string|min:1',
@@ -37,6 +34,18 @@ class CreateWordRequest extends ApiFormRequest
             'type_id' => 'required|integer',
             'time_forms' => 'nullable',
             'arr_new_sentences' => 'nullable|array',
+        ];
+    }
+
+    /**
+     * Получаем пользовательские сообщения об ошибках для правил валидации.
+     *
+     * @return array
+     */
+    public function messages() {
+        $table = $this->userLearnLanguage() . '_words';
+        return [
+            'word.unique' => "Слово уже существует в таблице {$table}.",
         ];
     }
 }
