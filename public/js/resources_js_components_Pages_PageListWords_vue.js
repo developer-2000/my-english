@@ -230,6 +230,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    // Предложения с большой буквы
+    capitalizeFirstLetter: function capitalizeFirstLetter(sentence) {
+      if (!sentence) return '';
+      return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+    },
     // Выбор Select типов слов
     handleSelectChange: function handleSelectChange() {
       this.clearServerParams();
@@ -2484,7 +2489,7 @@ var render = function render() {
   }, _vm._l(_vm.arrSentences, function (sentence, key) {
     return _c("div", {
       key: key
-    }, [_vm._v("\n                                    " + _vm._s(sentence.sentence) + "\n                                ")]);
+    }, [_vm._v("\n                                    " + _vm._s(_vm.capitalizeFirstLetter(sentence.sentence)) + "\n                                ")]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "form-check form-switch",
     on: {

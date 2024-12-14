@@ -583,7 +583,7 @@
                                 <!-- предложения этого слова -->
                                 <div class="box-sentences">
                                     <div v-for="(sentence, key) in arrSentences" :key="key">
-                                        {{sentence.sentence}}
+                                        {{ capitalizeFirstLetter(sentence.sentence) }}
                                     </div>
                                 </div>
 
@@ -855,6 +855,11 @@
             }
         },
         methods: {
+            // Предложения с большой буквы
+            capitalizeFirstLetter(sentence) {
+                if (!sentence) return '';
+                return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+            },
             // Выбор Select типов слов
             handleSelectChange() {
                 this.clearServerParams()
