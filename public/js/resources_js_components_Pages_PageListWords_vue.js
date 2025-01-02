@@ -150,16 +150,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         isLoading: true,
         selectedOption: null
       },
-      serverParams: {
-        selection_type_id: 'null',
-        search: '',
-        page: 0,
-        perPage: 50,
-        sort: [{
-          field: '',
-          type: ''
-        }]
-      },
       allTypes: [],
       allColor: [],
       objUpdateWord: null,
@@ -178,6 +168,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         objWordTimeForms: null,
         objNumber: null,
         objConjunction: null
+      },
+      serverParams: {
+        selection_type_id: null,
+        search: '',
+        page: 0,
+        perPage: 50,
+        sort: [{
+          field: '',
+          type: ''
+        }]
       }
     };
   },
@@ -1570,7 +1570,7 @@ var render = function render() {
     staticClass: "custom-select",
     attrs: {
       id: "select_type",
-      size: "3"
+      size: "6"
     },
     on: {
       change: function change($event) {
@@ -2208,7 +2208,7 @@ var render = function render() {
     staticClass: "custom-select",
     attrs: {
       id: "update_select_type",
-      size: "3"
+      size: "6"
     },
     on: {
       change: function change($event) {
@@ -2847,6 +2847,10 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
         $('#clear_search').bind('click', function (e) {
+          _this2.serverParams.selection_type_id = null;
+
+          // Очистить поле ввода
+          _this2.resetButtonClearSearch();
           setTimeout(function () {
             // сместить search
             $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
@@ -2854,9 +2858,11 @@ __webpack_require__.r(__webpack_exports__);
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
 
-          // Установить
-          _this2.table.selectedOption = 'null';
-          _this2.handleSelectChange();
+          // На странице page-list-words
+          if (typeof _this2.handleSelectChange === 'function') {
+            _this2.handleSelectChange();
+            _this2.table.selectedOption = 'null';
+          }
         });
       }, 500);
     },
@@ -3064,7 +3070,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types[data-v-461a95d4] {\n  padding: 4px 35px 3px 15px;\n  margin-right: 7px;\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4] {\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4]:first-child {\n  background: #ddd;\n  color: #888;\n  cursor: default;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types[data-v-461a95d4] {\n  padding: 4px 35px 3px 15px;\n  margin-right: 7px;\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4] {\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4]:first-child {\n  background: #ddd;\n  color: #888;\n  cursor: default;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .form-group[data-v-461a95d4] {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

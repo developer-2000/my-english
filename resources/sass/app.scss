@@ -119,6 +119,7 @@ table.sentence{
 }
 .block_type{
     display: flex;
+    align-items: flex-start;
     .box-left-site{
         width: 35%;
         margin-right: 10px;
@@ -138,6 +139,7 @@ table.sentence{
         color: #747474;
         font-size: 16px;
         border-radius: 7px;
+        height: 150px;
     }
 }
 .tab-content{

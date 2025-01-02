@@ -1,5 +1,5 @@
 <template>
-    <div className="index-page">
+    <div class="index-page">
         <a href="https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured" target="_blank">
             YouTube БЕСПЛАТНЫЙ РЕПЕТИТОР - АНГЛИЙСКИЙ ЯЗЫК. УРОКИ 2
         </a>

@@ -12074,6 +12074,7 @@ table.sentence .but_td > span a {
 
 .block_type {
   display: flex;
+  align-items: flex-start;
 }
 .block_type .box-left-site {
   width: 35%;
@@ -12092,6 +12093,7 @@ table.sentence .but_td > span a {
   color: #747474;
   font-size: 16px;
   border-radius: 7px;
+  height: 150px;
 }
 
 .tab-content > .tab-pane,

@@ -63,7 +63,6 @@
                 <div class="container-fluid">
                     <div class="card card-primary card-outline block_table">
                         <div class="table_wrapper">
-<!--                            :columns="table.columns"-->
                             <vue-good-table
                                 :columns="filteredColumns"
                                 :isLoading.sync="table.isLoading"

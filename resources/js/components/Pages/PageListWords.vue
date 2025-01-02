@@ -210,7 +210,7 @@
                                         <select id="select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
-                                                size="3"
+                                                size="6"
                                         >
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
@@ -482,7 +482,7 @@
                                         <select id="update_select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
-                                                size="3"
+                                                size="6"
                                         >
                                             <option v-for="(type, key) in allTypes" :key="key"
                                                     :value="type.id"
@@ -775,16 +775,6 @@
                     isLoading: true,
                     selectedOption: null
                 },
-                serverParams: {
-                    selection_type_id: 'null',
-                    search: '',
-                    page: 0,
-                    perPage: 50,
-                    sort: [{
-                        field: '',
-                        type: '',
-                    }],
-                },
                 allTypes: [],
                 allColor: [],
                 objUpdateWord: null,
@@ -803,6 +793,16 @@
                     objWordTimeForms: null,
                     objNumber: null,
                     objConjunction: null,
+                },
+                serverParams: {
+                    selection_type_id: null,
+                    search: '',
+                    page: 0,
+                    perPage: 50,
+                    sort: [{
+                        field: '',
+                        type: '',
+                    }],
                 },
             };
         },
@@ -1579,6 +1579,9 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                             font-size: 15px;
                             padding: 0 10px;
                         }
+                    }
+                    .form-group{
+                        margin: 0;
                     }
                 }
             }

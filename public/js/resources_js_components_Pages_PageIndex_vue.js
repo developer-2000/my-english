@@ -41,9 +41,7 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    attrs: {
-      className: "index-page"
-    }
+    staticClass: "index-page"
   }, [_c("a", {
     attrs: {
       href: "https://www.youtube.com/channel/UCcnjJu-ejZlLaz-OwpBd7dQ/featured",

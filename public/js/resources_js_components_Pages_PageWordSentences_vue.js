@@ -447,7 +447,7 @@ var render = function render() {
     staticClass: "wrapper"
   }, [_c("div", {
     staticClass: "top-menu"
-  }, [_c("h1", [_vm._v("\n                    " + _vm._s(_vm.$t("all.list_sentences")) + "\n                ")]), _vm._v(" "), _c("div", {
+  }, [_c("h1", [_vm._v("\n                " + _vm._s(_vm.$t("all.list_sentences")) + "\n            ")]), _vm._v(" "), _c("div", {
     staticClass: "box-button"
   }, [_c("div", {
     directives: [{
@@ -463,7 +463,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "title_repeat"
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.repeat")) + "\n                            ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.repeat")) + "\n                        ")]), _vm._v(" "), _c("div", {
     staticClass: "block_input_repeat"
   }, [_c("input", {
     staticClass: "checkbox_repeat",
@@ -510,33 +510,33 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-play"
-  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.sound_translation")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.start && !_vm.speak.pause ? _c("button", {
+  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.sound_translation")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.start && !_vm.speak.pause ? _c("button", {
     staticClass: "btn btn-outline-warning",
     on: {
       click: _vm.pauseReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-pause"
-  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.pause")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.pause ? _c("button", {
+  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.pause")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.pause ? _c("button", {
     staticClass: "btn btn-success",
     on: {
       click: _vm.continueReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-play"
-  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.continue")) + "\n                        ")]) : _vm._e(), _vm._v(" "), _vm.speak.start ? _c("button", {
+  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.continue")) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.speak.start ? _c("button", {
     staticClass: "btn btn-outline-danger",
     on: {
       click: _vm.stopReadSound
     }
   }, [_c("i", {
     staticClass: "fas fa-stop"
-  }), _vm._v("\n                            " + _vm._s(_vm.$t("all.stop")) + "\n                        ")]) : _vm._e()]), _vm._v(" "), _c("button", {
+  }), _vm._v("\n                        " + _vm._s(_vm.$t("all.stop")) + "\n                    ")]) : _vm._e()]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary create-sentence",
     on: {
       click: _vm.openModalCreateSentence
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.add_sentence")) + "\n                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    " + _vm._s(_vm.$t("all.add_sentence")) + "\n                ")])])]), _vm._v(" "), _c("div", {
     staticClass: "content-wrapper",
     attrs: {
       id: "content-wrapper"
@@ -595,7 +595,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.create_new_sentence")) + "\n                        ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.create_new_sentence")) + "\n                    ")]), _vm._v(" "), _c("button", {
     staticClass: "btn-close",
     attrs: {
       type: "button",
@@ -615,7 +615,7 @@ var render = function render() {
     attrs: {
       "for": "new_sentence"
     }
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.new_sentence")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.new_sentence")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -652,16 +652,16 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.new_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.new_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.new_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
     attrs: {
       "for": "translation_sentence"
     }
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.translation")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.translation")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -691,9 +691,9 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.translation_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.translation_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.translation_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
     staticClass: "button_footer"
@@ -712,7 +712,7 @@ var render = function render() {
     on: {
       click: _vm.createSentence
     }
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.save")) + "\n                                ")])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.save")) + "\n                            ")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
       "aria-hidden": "true",
@@ -732,7 +732,7 @@ var render = function render() {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title"
-  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.update_sentence")) + "\n                        ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.$t("all.update_sentence")) + "\n                    ")]), _vm._v(" "), _c("button", {
     staticClass: "btn-close",
     attrs: {
       type: "button",
@@ -752,7 +752,7 @@ var render = function render() {
     attrs: {
       "for": "old_sentence"
     }
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.sentence")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.sentence")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -789,16 +789,16 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.new_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.new_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.new_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.new_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     staticClass: "col-form-label",
     attrs: {
       "for": "old_translation"
     }
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.translation")) + "\n                                ")]), _vm._v(" "), _c("textarea", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.translation")) + "\n                            ")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -828,9 +828,9 @@ var render = function render() {
     }
   }), _vm._v(" "), !_vm.$v.translation_sentence.required ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                                ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.field_is_empty")) + "\n                            ")]) : _vm._e(), _vm._v(" "), !_vm.$v.translation_sentence.minLength ? _c("div", {
     staticClass: "invalid-feedback"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                    " + _vm._s(this.translation_sentence.length) + "\n                                    " + _vm._s(_vm.$t("all.less_needed")) + "\n                                ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.number_of_characters")) + "\n                                " + _vm._s(this.translation_sentence.length) + "\n                                " + _vm._s(_vm.$t("all.less_needed")) + "\n                            ")]) : _vm._e()])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
     staticClass: "button_footer"
@@ -847,7 +847,7 @@ var render = function render() {
     on: {
       click: _vm.updateSentence
     }
-  }, [_vm._v("\n                                " + _vm._s(_vm.$t("all.update")) + "\n                            ")])])])])])])]);
+  }, [_vm._v("\n                            " + _vm._s(_vm.$t("all.update")) + "\n                        ")])])])])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -952,6 +952,10 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         $('.vgt-global-search__input span.sr-only').html('<span id="clear_search" aria-hidden="true">&times;</span>');
         $('#clear_search').bind('click', function (e) {
+          _this2.serverParams.selection_type_id = null;
+
+          // Очистить поле ввода
+          _this2.resetButtonClearSearch();
           setTimeout(function () {
             // сместить search
             $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
@@ -959,9 +963,11 @@ __webpack_require__.r(__webpack_exports__);
             $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
           }, 50);
 
-          // Установить
-          _this2.table.selectedOption = 'null';
-          _this2.handleSelectChange();
+          // На странице page-list-words
+          if (typeof _this2.handleSelectChange === 'function') {
+            _this2.handleSelectChange();
+            _this2.table.selectedOption = 'null';
+          }
         });
       }, 500);
     },
