@@ -491,6 +491,69 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }, _callee6, null, [[3, 10]]);
       }))();
     },
+    getPresentTenseWords: function getPresentTenseWords() {
+      var _this7 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+        var response, words, textarea;
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.prev = 0;
+              _context7.next = 3;
+              return _this7.$http.get("".concat(_this7.$http.webUrl(), "word/get-present-tense"));
+            case 3:
+              response = _context7.sent;
+              if (_this7.checkSuccess(response)) {
+                // Получаем все слова через запятую
+                words = response.data.data.map(function (item) {
+                  return item.word;
+                }).join(', '); // Создаем временный textarea элемент
+                textarea = document.createElement('textarea');
+                textarea.value = words;
+                textarea.style.position = 'fixed'; // Предотвращаем прокрутку до элемента
+                textarea.style.opacity = '0'; // Делаем элемент невидимым
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                  // Пытаемся скопировать текст
+                  document.execCommand('copy');
+                  // Показываем уведомление об успешном копировании
+                  _this7.$swal({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    icon: 'success',
+                    title: 'Слова скопированы в буфер обмена'
+                  });
+                } catch (err) {
+                  console.error('Ошибка при копировании:', err);
+                  _this7.$swal({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    icon: 'error',
+                    title: 'Ошибка при копировании в буфер обмена'
+                  });
+                } finally {
+                  // Удаляем временный элемент
+                  document.body.removeChild(textarea);
+                }
+              }
+              _context7.next = 10;
+              break;
+            case 7:
+              _context7.prev = 7;
+              _context7.t0 = _context7["catch"](0);
+              console.error('Ошибка при получении слов в настоящем времени:', _context7.t0);
+            case 10:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee7, null, [[0, 7]]);
+      }))();
+    },
     touchNewWord: function touchNewWord() {
       this.$v.arrInputsModal.new_word.$touch();
     },
@@ -556,7 +619,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // methods table
     updateColumnTable: function updateColumnTable() {
-      var _this7 = this;
+      var _this8 = this;
       var timerId = setTimeout(function () {
         var row = '';
         var prev = '';
@@ -568,7 +631,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }
           // преобразовать слово в столбце
           else {
-            row = _this7.getRowForWord(prev.text());
+            row = _this8.getRowForWord(prev.text());
             // if (row == null || row.type == null) { return false; }
             if (row.translation != '' && row.translation != null) {
               prev.css('color', row.type.color);
@@ -585,9 +648,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // навести на слово в таблице
     hoverWordShowTitle: function hoverWordShowTitle() {
-      var _this8 = this;
+      var _this9 = this;
       jquery__WEBPACK_IMPORTED_MODULE_9___default()('body').on('mouseover', '.trigger', function (event) {
-        _this8.outputHelperAlertInTable(event);
+        _this9.outputHelperAlertInTable(event);
       });
     },
     // вывод подсказки при наведении на слово в таблице
@@ -644,14 +707,14 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // события выборки значения в select типов слов
     showStyleDataOnSelectType: function showStyleDataOnSelectType() {
-      var _this9 = this;
+      var _this10 = this;
       // в модалке создания слова
       var selectTypeElement = document.getElementById("select_type");
       if (selectTypeElement) {
         selectTypeElement.addEventListener('change', function () {
-          for (var i = 0; i < _this9.allTypes.length; i++) {
-            if (_this9.allTypes[i].id === _this9.arrInputsModal.select_type_id) {
-              _this9.setStyleDataModal(_this9.allTypes[i]);
+          for (var i = 0; i < _this10.allTypes.length; i++) {
+            if (_this10.allTypes[i].id === _this10.arrInputsModal.select_type_id) {
+              _this10.setStyleDataModal(_this10.allTypes[i]);
               break;
             }
           }
@@ -662,9 +725,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       var updateSelectTypeElement = document.getElementById("update_select_type");
       if (updateSelectTypeElement) {
         updateSelectTypeElement.addEventListener('change', function () {
-          for (var i = 0; i < _this9.allTypes.length; i++) {
-            if (_this9.allTypes[i].id == _this9.arrInputsModal.select_type_id) {
-              _this9.setStyleDataModal(_this9.allTypes[i]);
+          for (var i = 0; i < _this10.allTypes.length; i++) {
+            if (_this10.allTypes[i].id == _this10.arrInputsModal.select_type_id) {
+              _this10.setStyleDataModal(_this10.allTypes[i]);
               break;
             }
           }
@@ -721,28 +784,28 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // события клика по кнопкам - удалить или редактировать слово
     initialClickButWordUpdate: function initialClickButWordUpdate() {
-      var _this10 = this;
+      var _this11 = this;
       var a = setTimeout(function () {
         // удалить
         jquery__WEBPACK_IMPORTED_MODULE_9___default()('.btn-danger.delete').bind('click', function (e) {
           var queryObj = jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).prop("tagName") !== "A" ? jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).parent() : jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target);
           var word = queryObj.parent().prev(".trigger").text();
-          var row = _this10.getRowForWord(word);
+          var row = _this11.getRowForWord(word);
           // confirm delete
-          _this10.confirmMessage('Really delete word ?', 'success', row.id);
+          _this11.confirmMessage('Really delete word ?', 'success', row.id);
         });
         // редактировать
         jquery__WEBPACK_IMPORTED_MODULE_9___default()('.btn-warning.edit').bind('click', function (e) {
           var queryObj = jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).prop("tagName") !== "A" ? jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).parent() : jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target);
           var word = queryObj.parent().prev(".trigger").text();
           // открытие модалки редактирования
-          _this10.openUpdateWordModal(word);
+          _this11.openUpdateWordModal(word);
         });
       }, 1000);
     },
     // Открыть модалку создания
     openModalCreateWord: function openModalCreateWord() {
-      var _this11 = this;
+      var _this12 = this;
       this.setVariableDefault();
       this.setStyleDataModal({
         description: null,
@@ -751,7 +814,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       });
       jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_word').modal('show');
       jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_word').on('shown.bs.modal', function () {
-        _this11.$refs.new_word.focus();
+        _this12.$refs.new_word.focus();
       });
     },
     // Открыть модалку редактирования
@@ -766,23 +829,23 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // Закрыть любую модалку
     closeAllModals: function closeAllModals() {
-      var _this12 = this;
+      var _this13 = this;
       jquery__WEBPACK_IMPORTED_MODULE_9___default()(".modal").on("hidden.bs.modal", function () {
-        _this12.help_dynamic = "";
-        _this12.objWordFromTable.bool_click_button_word_from_table = false;
-        _this12.objUpdateWord = null;
-        _this12.clearGenerateSentences();
+        _this13.help_dynamic = "";
+        _this13.objWordFromTable.bool_click_button_word_from_table = false;
+        _this13.objUpdateWord = null;
+        _this13.clearGenerateSentences();
       });
     },
     // Открыть модалку изучения слова
     openLearnModal: function openLearnModal() {
-      var _this13 = this;
+      var _this14 = this;
       // Вызов openLearnModal у дочернего компонента через референцию
       this.$refs.modalLearnWord.openLearnModal();
       this.bool_learn_words = true;
       // событие закрытия модалки
       jquery__WEBPACK_IMPORTED_MODULE_9___default()('#learn_word').on('hidden.bs.modal', function () {
-        _this13.bool_learn_words = false;
+        _this14.bool_learn_words = false;
       });
     },
     // заполнение переменных для модалок создания и редактирования слова
@@ -828,10 +891,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // Клик по родителю переключателя генерации предложений
     toggleSwitch: function toggleSwitch(event, ref) {
-      var _this14 = this;
+      var _this15 = this;
       setTimeout(function () {
-        _this14.$refs[ref].checked = !_this14.$refs[ref].checked;
-        _this14.objGenerateSentences.status_toggle = _this14.$refs[ref].checked;
+        _this15.$refs[ref].checked = !_this15.$refs[ref].checked;
+        _this15.objGenerateSentences.status_toggle = _this15.$refs[ref].checked;
 
         // Находим родительский элемент div.form-check.form-switch
         var parentElement = event.target.closest('.form-switch');
@@ -842,10 +905,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         var label = parentElement.querySelector('label');
 
         // Обновляем текст в зависимости от состояния переключателя
-        if (_this14.objGenerateSentences.status_toggle) {
-          label.textContent = _this14.$t('all.generation');
+        if (_this15.objGenerateSentences.status_toggle) {
+          label.textContent = _this15.$t('all.generation');
         } else {
-          label.textContent = _this14.$t('all.sentences');
+          label.textContent = _this15.$t('all.sentences');
         }
       }, 100);
     },
@@ -1254,10 +1317,17 @@ var render = function render() {
               textContent: _vm._s(obj.type)
             }
           });
-        })], 2)])];
+        })], 2), _vm._v(" "), _vm.table.selectedOption === 4 ? _c("div", {
+          staticClass: "type-4-buttons"
+        }, [_c("button", {
+          staticClass: "btn btn-primary button-present-tense",
+          on: {
+            click: _vm.getPresentTenseWords
+          }
+        }, [_vm._v("\n                                            Скопировать настоящее время\n                                        ")])]) : _vm._e()])];
       },
       proxy: true
-    }], null, false, 275484816)
+    }], null, false, 2878900339)
   })], 1) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -3070,7 +3140,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types[data-v-461a95d4] {\n  padding: 4px 35px 3px 15px;\n  margin-right: 7px;\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4] {\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4]:first-child {\n  background: #ddd;\n  color: #888;\n  cursor: default;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .form-group[data-v-461a95d4] {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n#page_list_worlds[data-v-461a95d4] {\n  max-height: calc(100vh - 60px);\n  overflow-y: auto;\n  width: calc(100% - 200px);\n}\n#page_list_worlds .wrapper .top-menu[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 10px 15px 10px 7px;\n}\n#page_list_worlds .wrapper .top-menu .box-button[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4] {\n  margin-right: 15px;\n}\n#page_list_worlds .wrapper .top-menu .box-button button[data-v-461a95d4]:last-child {\n  margin-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper[data-v-461a95d4] {\n  padding-right: 15.5px;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid[data-v-461a95d4] {\n  padding-right: 0;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types[data-v-461a95d4] {\n  padding: 4px 35px 3px 15px;\n  margin-right: 7px;\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4] {\n  cursor: pointer;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .search-select-types option[data-v-461a95d4]:first-child {\n  background: #ddd;\n  color: #888;\n  cursor: default;\n}\n#page_list_worlds .wrapper .content-wrapper .container-fluid .table_wrapper .button-present-tense[data-v-461a95d4] {\n  white-space: nowrap;\n}\n#page_list_worlds .modal .modal-body[data-v-461a95d4] {\n  overflow: hidden;\n  padding: 1rem 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms label[data-v-461a95d4] {\n  padding: 3px 0;\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4], #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4] {\n  margin-bottom: 5px;\n}\n#page_list_worlds .modal .modal-body .box-time-forms .box-past input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-present input[data-v-461a95d4]:last-child, #page_list_worlds .modal .modal-body .box-time-forms .box-future input[data-v-461a95d4]:last-child {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  align-items: flex-end;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .box-sentences div[data-v-461a95d4] {\n  color: #747474;\n  font-weight: 700;\n  font-size: 13px;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch[data-v-461a95d4] {\n  display: flex;\n  flex-flow: column nowrap;\n  align-items: center;\n  margin: 20px 0 0 0;\n  border: 1px solid #dfdfdf;\n  padding: 10px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch input[data-v-461a95d4] {\n  margin: 0;\n  cursor: pointer;\n}\n#page_list_worlds .modal .modal-body .box-content-sentences .form-switch label[data-v-461a95d4] {\n  text-align: center;\n  line-height: 20px;\n  margin-top: 10px;\n  width: 110px;\n  cursor: pointer;\n  font-size: 14px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences[data-v-461a95d4] {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */\n  -webkit-backdrop-filter: blur(10px);\n          backdrop-filter: blur(10px); /* Размытие фона */\n  position: absolute;\n  left: 100%;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  z-index: 1;\n  transition: left 0.3s ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader[data-v-461a95d4] {\n  display: flex;\n  justify-content: space-between;\n  width: 80px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4] {\n  width: 20px;\n  height: 20px;\n  background-color: #3498db;\n  border-radius: 50%;\n  animation: bounce-461a95d4 1.5s infinite ease-in-out;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(2) {\n  animation-delay: -0.5s;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .dots-loader .dot[data-v-461a95d4]:nth-child(3) {\n  animation-delay: -1s;\n}\n@keyframes bounce-461a95d4 {\n0%, 100% {\n    transform: scale(0);\n}\n50% {\n    transform: scale(1);\n}\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4] {\n  display: flex;\n  align-items: center;\n  padding: 6px 15px;\n  border-bottom: 1px solid #e9ecef;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence[data-v-461a95d4]:last-child {\n  border: none;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .form-check-input[data-v-461a95d4] {\n  padding: 0;\n  position: static;\n  cursor: pointer;\n  margin: 0 15px 0 0;\n  min-width: 16px;\n  min-height: 16px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4] {\n  line-height: 23px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence div[data-v-461a95d4]:first-child {\n  margin-bottom: 3px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .original-sentence[data-v-461a95d4] {\n  font-weight: 700;\n  font-size: 17px;\n}\n#page_list_worlds .modal .modal-body .box-view-generate-sentences .box-new-sentence .box-sentence .translation-sentence[data-v-461a95d4] {\n  color: #525252;\n}\n#page_list_worlds .modal .modal-body .visible-generate-sentences[data-v-461a95d4] {\n  left: 0;\n  position: relative;\n}\n#page_list_worlds .modal .modal-body form[data-v-461a95d4] {\n  padding: 0 1rem;\n}\n#page_list_worlds .modal .modal-body .block_type[data-v-461a95d4] {\n  margin-top: 30px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site[data-v-461a95d4] {\n  width: 38%;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select[data-v-461a95d4] {\n  border: 1px solid #dfdfdf;\n  border-radius: 5px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .custom-select option[data-v-461a95d4] {\n  font-weight: 200;\n  font-size: 15px;\n  padding: 0 10px;\n}\n#page_list_worlds .modal .modal-body .block_type .box-left-site .form-group[data-v-461a95d4] {\n  margin: 0;\n}\n#page_list_worlds .modal .modal-body .form-group[data-v-461a95d4] {\n  margin-top: 5px;\n}\n#page_list_worlds .modal .modal-body .form-group svg[data-v-461a95d4] {\n  fill: #595959;\n}\n#page_list_worlds #create_word .modal-body .box-content-sentences[data-v-461a95d4] {\n  justify-content: flex-end;\n}\n.box-conjunction-select[data-v-461a95d4] {\n  margin-top: 5px;\n}\n.box-conjunction-select label[data-v-461a95d4] {\n  margin-top: 5px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

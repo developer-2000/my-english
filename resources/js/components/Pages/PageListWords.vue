@@ -65,6 +65,16 @@
                                                     v-text="obj.type"
                                             ></option>
                                         </select>
+
+
+                                        <!-- Кнопки для типа 4 -->
+                                        <div v-if="table.selectedOption === 4" class="type-4-buttons">
+                                            <button class="btn btn-primary button-present-tense"
+                                                    @click="getPresentTenseWords"
+                                            >
+                                                Скопировать настоящее время
+                                            </button>
+                                        </div>
                                     </div>
                                 </template>
                             </vue-good-table>
@@ -1005,6 +1015,55 @@
                     console.log(e);
                 }
             },
+            async getPresentTenseWords() {
+                try {
+                    const response = await this.$http.get(`${this.$http.webUrl()}word/get-present-tense`);
+
+                    if (this.checkSuccess(response)) {
+                        // Получаем все слова через запятую
+                        const words = response.data.data
+                            .map(item => item.word)
+                            .join(', ');
+
+                        // Создаем временный textarea элемент
+                        const textarea = document.createElement('textarea');
+                        textarea.value = words;
+                        textarea.style.position = 'fixed';  // Предотвращаем прокрутку до элемента
+                        textarea.style.opacity = '0';       // Делаем элемент невидимым
+                        document.body.appendChild(textarea);
+                        textarea.select();
+
+                        try {
+                            // Пытаемся скопировать текст
+                            document.execCommand('copy');
+                            // Показываем уведомление об успешном копировании
+                            this.$swal({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                icon: 'success',
+                                title: 'Слова скопированы в буфер обмена'
+                            });
+                        } catch (err) {
+                            console.error('Ошибка при копировании:', err);
+                            this.$swal({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                icon: 'error',
+                                title: 'Ошибка при копировании в буфер обмена'
+                            });
+                        } finally {
+                            // Удаляем временный элемент
+                            document.body.removeChild(textarea);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Ошибка при получении слов в настоящем времени:', e);
+                }
+            },
             touchNewWord() {
                 this.$v.arrInputsModal.new_word.$touch();
             },
@@ -1435,6 +1494,10 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                                 cursor: default;
                             }
                         }
+                    }
+
+                    .button-present-tense {
+                        white-space: nowrap;
                     }
                 }
             }

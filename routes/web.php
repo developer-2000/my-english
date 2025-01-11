@@ -62,8 +62,12 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::resource('word', WordController::class)->only([
         'index','store'
     ]);
-    Route::post('word/update-word', [WordController::class, 'updateWord']);
-    Route::post('word/delete-word', [WordController::class, 'deleteWord']);
+    Route::group(['prefix'=>'word'], function (){
+        Route::post('update-word', [WordController::class, 'updateWord']);
+        Route::post('delete-word', [WordController::class, 'deleteWord']);
+        Route::get('get-present-tense', [WordController::class, 'getPresentTense']);
+    });
+
 // 2
     Route::middleware(['throttle:200,1'])->group(function () {
         Route::resource('sentence', SentenceController::class)->only([

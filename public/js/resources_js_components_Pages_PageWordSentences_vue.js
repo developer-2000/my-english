@@ -374,6 +374,31 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     learnAnotherLanguage: function learnAnotherLanguage() {
       this.clearServerParams();
       this.initialData();
+    },
+    handlePaste: function handlePaste(event) {
+      event.preventDefault();
+      var pastedText = event.clipboardData.getData('text');
+
+      // Ищем пары предложений, разделенные тире с пробелами по бокам
+      var parts = pastedText.split(/\s+[-–—]\s+/);
+      if (parts.length >= 2) {
+        // Очищаем и получаем первое предложение (английское)
+        var englishSentence = parts[0].trim();
+
+        // Очищаем и получаем второе предложение (русское)
+        var russianSentence = parts[1].trim();
+        this.new_sentence = englishSentence;
+        this.translation_sentence = russianSentence;
+      } else {
+        // Если нет разделителя, определяем язык предложения
+        var cleanedText = pastedText.trim();
+        var isRussian = /[а-яА-ЯёЁ]/.test(cleanedText);
+        if (isRussian) {
+          this.translation_sentence = cleanedText;
+        } else {
+          this.new_sentence = cleanedText;
+        }
+      }
     }
   },
   mounted: function mounted() {
@@ -628,7 +653,7 @@ var render = function render() {
     },
     attrs: {
       id: "new_sentence",
-      placeholder: "Insert new sentence",
+      placeholder: "New sentence",
       required: ""
     },
     domProps: {
@@ -641,6 +666,7 @@ var render = function render() {
       keyup: function keyup($event) {
         return _vm.searchHelpWord(_vm.new_sentence);
       },
+      paste: _vm.handlePaste,
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.new_sentence = $event.target.value;
@@ -674,7 +700,7 @@ var render = function render() {
     },
     attrs: {
       id: "translation_sentence",
-      placeholder: "Insert translation sentence",
+      placeholder: "Translation sentence",
       required: ""
     },
     domProps: {

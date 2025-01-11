@@ -5698,6 +5698,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     $t: function $t() {
       return _load_i18n__WEBPACK_IMPORTED_MODULE_0__.i18n.t.bind(_load_i18n__WEBPACK_IMPORTED_MODULE_0__.i18n);
     }
+  },
+  mounted: function mounted() {
+    // удалить все storages
+    // sessionStorage.clear();
   }
 });
 

@@ -7,6 +7,7 @@ use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\EnWord;
 use App\Models\Test;
 use App\Repositories\WordRepository;
 use Illuminate\Http\Request;
@@ -52,6 +53,14 @@ class WordController extends Controller {
         $this->wordRepository->deleteWord($request);
 
         return new ApiResponse([]);
+    }
+
+    public function getPresentTense(Request $request): ApiResponse {
+        $words = EnWord::where('type_id', 4)
+            ->where('description', 'like', '%настоящее время%')
+            ->get();
+
+        return new ApiResponse($words);
     }
 
 }

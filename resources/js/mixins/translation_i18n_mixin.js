@@ -75,6 +75,10 @@ export default {
             return i18n.t.bind(i18n);
         }
     },
+    mounted() {
+        // удалить все storages
+        // sessionStorage.clear();
+    },
 }
 
 

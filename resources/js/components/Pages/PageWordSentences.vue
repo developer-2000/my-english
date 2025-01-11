@@ -111,11 +111,13 @@
                                 <label class="col-form-label" for="new_sentence">
                                     {{ $t('all.new_sentence') }}
                                 </label>
-                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
+                                <textarea class="form-control entry-field-help"
+                                          :class="{'is-invalid': $v.new_sentence.$error}"
+                                          @blur="touchNewSentence()"
                                           @keyup="searchHelpWord(new_sentence)"
-                                          class="form-control entry-field-help"
+                                          @paste="handlePaste"
                                           id="new_sentence"
-                                          placeholder="Insert new sentence"
+                                          placeholder="New sentence"
                                           required
                                           v-model="new_sentence"
                                 ></textarea>
@@ -135,11 +137,11 @@
                                 <label class="col-form-label" for="translation_sentence">
                                     {{ $t('all.translation') }}
                                 </label>
-                                <textarea :class="{'is-invalid': $v.translation_sentence.$error}"
+                                <textarea class="form-control"
+                                          :class="{'is-invalid': $v.translation_sentence.$error}"
                                           @blur="touchTranslationSentence()"
-                                          class="form-control"
                                           id="translation_sentence"
-                                          placeholder="Insert translation sentence"
+                                          placeholder="Translation sentence"
                                           required
                                           v-model="translation_sentence"
                                 ></textarea>
@@ -543,6 +545,34 @@
                 this.clearServerParams()
                 this.initialData()
             },
+            handlePaste(event) {
+                event.preventDefault();
+                const pastedText = event.clipboardData.getData('text');
+
+                // Ищем пары предложений, разделенные тире с пробелами по бокам
+                const parts = pastedText.split(/\s+[-–—]\s+/);
+
+                if (parts.length >= 2) {
+                    // Очищаем и получаем первое предложение (английское)
+                    const englishSentence = parts[0].trim();
+
+                    // Очищаем и получаем второе предложение (русское)
+                    const russianSentence = parts[1].trim();
+
+                    this.new_sentence = englishSentence;
+                    this.translation_sentence = russianSentence;
+                } else {
+                    // Если нет разделителя, определяем язык предложения
+                    const cleanedText = pastedText.trim();
+                    const isRussian = /[а-яА-ЯёЁ]/.test(cleanedText);
+
+                    if (isRussian) {
+                        this.translation_sentence = cleanedText;
+                    } else {
+                        this.new_sentence = cleanedText;
+                    }
+                }
+            }
         },
         mounted() {
             this.initialData();
