@@ -47,9 +47,10 @@ class SentenceRepository extends CoreRepository {
 
         // 4 Выбрать в пагинации
         $list = $collection
-            ->skip($vars['offset'])
-            ->take($vars['limit'])
-            ->orderBy('priority', 'desc')
+            ->orderBy('priority', 'desc') // Сначала сортируем по priority
+            ->orderBy('id', 'desc') // Затем сортируем по id, если priority одинаковый
+            ->skip($vars['offset']) // Пропускаем нужное количество записей
+            ->take($vars['limit']) // Берем нужное количество записей
             ->get();
 
         return compact('total_count', 'list');

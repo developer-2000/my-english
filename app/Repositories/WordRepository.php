@@ -15,34 +15,34 @@ class WordRepository extends CoreRepository {
         $collection = $this->startConditions()->with('type');
 
         // search
-        $searchArray = $vars['search'] ?? [];
-        if (!empty($searchArray) && !empty($searchArray[0])) {
-            // word language
-            if ($language = $this->getLanguage($searchArray[0])) {
-                // Select a column name depending on the language
-                $column_name = $language === 'en' ? 'word' : 'translation';
-                foreach ($searchArray as $word) {
-                    if ($column_name == 'translation') {
-                        $word = '%' . $word;
-                    }
-                    $collection = $collection->Orwhere($column_name, 'like', $word . '%');
-                }
-            }
-        }
+//        $searchArray = $vars['search'] ?? [];
+//        if (!empty($searchArray) && !empty($searchArray[0])) {
+//            // word language
+//            if ($language = $this->getLanguage($searchArray[0])) {
+//                // Select a column name depending on the language
+//                $column_name = $language === 'en' ? 'word' : 'translation';
+//                foreach ($searchArray as $word) {
+//                    if ($column_name == 'translation') {
+//                        $word = '%' . $word;
+//                    }
+//                    $collection = $collection->Orwhere($column_name, 'like', $word . '%');
+//                }
+//            }
+//        }
 
         // выбрать указанные типы слов
-        if ($vars['selection_type_id']) {
-            $collection = $collection->where('type_id', $vars['selection_type_id']);
-        }
+//        if ($vars['selection_type_id']) {
+//            $collection = $collection->where('type_id', $vars['selection_type_id']);
+//        }
 
         $total_count = $collection->get()->count();
 
         // sort
-        if ($vars['sort_column'] && $vars['sort_type']) {
-            if ($vars['sort_column'] == 'letter') {
-                $collection = $collection->orderBy('word', $vars['sort_type']);
-            }
-        }
+//        if ($vars['sort_column'] && $vars['sort_type']) {
+//            if ($vars['sort_column'] == 'letter') {
+//                $collection = $collection->orderBy('word', $vars['sort_type']);
+//            }
+//        }
 
         // выбрать минимальное время в базе
         $minUpdatedAt = $collection->min('updated_at');
@@ -52,7 +52,16 @@ class WordRepository extends CoreRepository {
         }
 
         // paginate
-        $list = $collection->skip($vars['offset'])->take($vars['limit'])->orderBy('updated_at', 'desc')->get();
+//        $list = $collection->skip($vars['offset'])
+//            ->take($vars['limit'])
+//            ->orderBy('updated_at', 'desc')
+//            ->get();
+        $list = $collection
+            ->orderBy('updated_at', 'desc') // Сначала сортируем по priority
+            ->orderBy('id', 'desc') // Затем сортируем по id, если priority одинаковый
+            ->skip($vars['offset']) // Пропускаем нужное количество записей
+            ->take($vars['limit']) // Берем нужное количество записей
+            ->get();
 
         $types = $this->getDynamicModelClone("WordType")::get();
         $colors = config('program.type.color');
@@ -123,10 +132,15 @@ class WordRepository extends CoreRepository {
             $lastUpdatedAt = Carbon::parse($request->last_updated_at);
 
             // Поиск слова с updated_at, более старым, чем last_updated_at
-            $latestWord = $this->getDynamicModelClone("Word")::where('updated_at', '<', $lastUpdatedAt)->orderBy('updated_at', 'desc')->first();
-        } else {
+            $latestWord = $this->getDynamicModelClone("Word")::where('updated_at', '<', $lastUpdatedAt)
+                ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
+                ->first();
+        }
+        else {
             // Если last_updated_at не указан, выбираем самое свежее слово
-            $latestWord = $this->getDynamicModelClone("Word")::orderBy('updated_at', 'desc')->first();
+            $latestWord = $this->getDynamicModelClone("Word")::orderBy('updated_at', 'desc')
+                ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
+                ->first();
         }
 
         // Если слово найдено, выбираем предложения с его участием

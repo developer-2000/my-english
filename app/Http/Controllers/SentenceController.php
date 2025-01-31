@@ -112,7 +112,9 @@ class SentenceController extends Controller {
         }
 
         // Получаем следующее предложение с наибольшим priority
-        $nextSentence = EnSentence::orderBy('priority', 'desc')->first();
+        $nextSentence = EnSentence::orderBy('priority', 'desc')
+            ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
+            ->first();
 
         // Если слова не найдены, возвращаем сообщение об ошибке
         return new ApiResponse(compact("nextSentence"));

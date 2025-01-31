@@ -94,6 +94,7 @@ export default {
 
                 if(this.checkSuccess(response)){
                     this.currentSentence = response.data.data.nextSentence
+                    console.log(this.currentSentence)
                 }
             }
             catch (e) {

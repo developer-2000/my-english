@@ -532,6 +532,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               response = _context.sent;
               if (_this.checkSuccess(response)) {
                 _this.currentSentence = response.data.data.nextSentence;
+                console.log(_this.currentSentence);
               }
               _context.next = 13;
               break;
