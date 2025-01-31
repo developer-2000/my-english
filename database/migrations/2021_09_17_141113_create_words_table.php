@@ -4,21 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWordsTable extends Migration
-{
+class CreateWordsTable extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('words', function (Blueprint $table) {
+    public function up() {
+        Schema::create('en_words', function (Blueprint $table) {
             $table->id();
             $table->string('word')->nullable()->default(null);
             $table->string('translation')->nullable()->default(null);
+            $table->string('url_image')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
-            $table->tinyInteger('type')->default(0)->comment('type word');
+            $table->tinyInteger('type_id')->default(0)->comment('type word');
+            $table->text('time_forms')->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -28,8 +28,7 @@ class CreateWordsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('words');
+    public function down() {
+        Schema::dropIfExists('en_words');
     }
 }

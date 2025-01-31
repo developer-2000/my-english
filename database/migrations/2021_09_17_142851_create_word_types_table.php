@@ -13,7 +13,7 @@ class CreateWordTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('word_types', function (Blueprint $table) {
+        Schema::create('en_word_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->string('color');
@@ -28,6 +28,6 @@ class CreateWordTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('word_types');
+        Schema::dropIfExists('en_word_types');
     }
 }

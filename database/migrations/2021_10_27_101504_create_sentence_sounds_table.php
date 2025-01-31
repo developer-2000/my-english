@@ -13,7 +13,7 @@ class CreateSentenceSoundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sentence_sounds', function (Blueprint $table) {
+        Schema::create('en_sentence_sounds', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sentence_id')->index();
             $table->foreign('sentence_id')->references('id')->on('en_sentences')
@@ -29,6 +29,6 @@ class CreateSentenceSoundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sentence_sounds');
+        Schema::dropIfExists('en_sentence_sounds');
     }
 }

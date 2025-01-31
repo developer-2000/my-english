@@ -1,6 +1,5 @@
 <template>
     <div id="page_list_sentences">
-
         <!-- body page -->
         <div class="wrapper">
             <!-- верхнее меню -->
@@ -55,6 +54,14 @@
                     <!-- Создать предложение -->
                     <button @click="openModalCreateSentence" class="btn btn-primary create-sentence">
                         {{ $t('all.add_sentence') }}
+                    </button>
+
+                    <!-- learn sentences -->
+                    <button class="btn btn-primary learn-sentence"
+                            @click="openLearnModal()"
+                            v-if="!bool_learn_sentences"
+                    >
+                        Learn
                     </button>
                 </div>
             </div>
@@ -259,6 +266,11 @@
             </div>
         </div>
 
+        <!-- Modals изучения слов  -->
+        <ModalLearnSentence
+            ref="modalLearnSentence"
+        ></ModalLearnSentence>
+
     </div>
 </template>
 
@@ -282,6 +294,9 @@
     import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
     import {mapGetters} from "vuex";
     import user_mixin from "../../mixins/user_mixin";
+    import $ from "jquery";
+    // components
+    import ModalLearnSentence from "../details/ModalLearnSentence";
 
     export default {
         data() {
@@ -363,6 +378,7 @@
                         type: '',
                     }],
                 },
+                bool_learn_sentences: false,
             };
         },
         mixins: [
@@ -375,7 +391,8 @@
         components: {
             VueGoodTable,
             helpSearchWord,
-            BootstrapToggle
+            BootstrapToggle,
+            ModalLearnSentence
         },
         computed: {
             ...mapGetters({
@@ -399,6 +416,18 @@
             }
         },
         methods: {
+            // Открыть модалку изучения предложений
+            openLearnModal() {
+                // Вызов openLearnModal у дочернего компонента через референцию
+                this.$refs.modalLearnSentence.openLearnModal();
+                this.bool_learn_sentences = true;
+                // событие закрытия модалки
+                $('#learn_sentences').on('hidden.bs.modal', () => {
+                    this.bool_learn_sentences = false;
+                })
+            },
+
+
             async bindCheckboxSound(sentence_id, status) {
                 try {
                     let data = {
@@ -572,7 +601,7 @@
                         this.new_sentence = cleanedText;
                     }
                 }
-            }
+            },
         },
         mounted() {
             this.initialData();
@@ -649,7 +678,7 @@
                     }
                 }
             }
-            .create-sentence{
+            .create-sentence, .learn-sentence{
                 margin-right: 10px;
             }
         }

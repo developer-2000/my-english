@@ -153,7 +153,7 @@ export default {
                     last_word_id: this.objLearnWord !== null ? this.objLearnWord.id : null,
                     action_with_word: action,
                 }
-                const response = await this.$http.post(`${this.$http.webUrl()}learn/get-word`, data);
+                const response = await this.$http.post(`${this.$http.webUrl()}word/learn/get-word`, data);
 
                 if(this.checkSuccess(response)){
                     this.objLearnWord = response.data.data
@@ -176,7 +176,7 @@ export default {
             $('body').on('mouseover', '.learn-word-trigger', (event) => {
                 this.outputHelperAlertInLearn(event)
             });
-            // если до этого не открывалось слово
+            // если уже открывалось слово
             if(this.last_updated_at !== null){
                 // Преобразование строки в объект Date
                 let date = new Date(this.last_updated_at);

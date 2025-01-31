@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class EnSentence extends Model{
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        "sentence",
+        "translation",
+        "priority",
+    ];
 
     public function sound() {
         return $this->hasOne(EnSentenceSound::class, 'sentence_id', 'id');

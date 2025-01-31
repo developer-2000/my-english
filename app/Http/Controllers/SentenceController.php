@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LearnWord\GetLearnWordRequest;
 use App\Http\Requests\Sentence\BindCheckboxSoundRequest;
+use App\Http\Requests\Sentence\GetLearnSentenceRequest;
 use App\Http\Requests\Word\CreateSentenceRequest;
 use App\Http\Requests\Word\SearchWordRequest;
 use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateSentenceRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\EnSentence;
+use App\Models\Test;
 use App\Repositories\SentenceRepository;
 
-class SentenceController extends Controller
-{
+class SentenceController extends Controller {
     protected $sentenceRepository;
 
     public function __construct() {
@@ -23,8 +26,7 @@ class SentenceController extends Controller
      * @param SelectGetPaginateRequest $request
      * @return ApiResponse
      */
-    public function index(SelectGetPaginateRequest $request): ApiResponse
-    {
+    public function index(SelectGetPaginateRequest $request): ApiResponse {
         $sentences = $this->sentenceRepository->getSentences($request->validated());
 
         return new ApiResponse(compact('sentences'));
@@ -35,8 +37,7 @@ class SentenceController extends Controller
      * @param CreateSentenceRequest $request
      * @return ApiResponse
      */
-    public function store(CreateSentenceRequest $request): ApiResponse
-    {
+    public function store(CreateSentenceRequest $request): ApiResponse {
         $this->sentenceRepository->storeSentences($request->validated());
 
         return new ApiResponse([]);
@@ -47,8 +48,7 @@ class SentenceController extends Controller
      * @param UpdateSentenceRequest $request
      * @return ApiResponse
      */
-    public function updateSentence(UpdateSentenceRequest $request): ApiResponse
-    {
+    public function updateSentence(UpdateSentenceRequest $request): ApiResponse {
         $coll = $this->sentenceRepository->updateSentence($request);
 
         return new ApiResponse(compact('coll'));
@@ -59,8 +59,7 @@ class SentenceController extends Controller
      * @param SearchWordRequest $request
      * @return ApiResponse
      */
-    public function searchWord(SearchWordRequest $request): ApiResponse
-    {
+    public function searchWord(SearchWordRequest $request): ApiResponse {
         $coll = $this->sentenceRepository->searchWord($request);
 
         $string = implode(" ", $coll->toArray());
@@ -73,17 +72,49 @@ class SentenceController extends Controller
      * @param SearchWordRequest $request
      * @return ApiResponse
      */
-    public function searchSentences(SearchWordRequest $request): ApiResponse
-    {
+    public function searchSentences(SearchWordRequest $request): ApiResponse {
         $sentences = $this->sentenceRepository->searchSentences($request);
 
         return new ApiResponse(compact('sentences'));
     }
 
-    public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse
-    {
+    public function bindCheckboxSound(BindCheckboxSoundRequest $request): ApiResponse {
         $this->sentenceRepository->bindCheckboxSound($request);
 
         return new ApiResponse([]);
+    }
+
+    /**
+     * Получить предложение
+     *
+     */
+    public function getLearnSentence(GetLearnSentenceRequest $request): ApiResponse {
+        $sentenceId = $request->sentence_id ?? null;
+        $action = $request->action ?? null;
+
+        // Если передан ID, находим текущее предложение
+        if ($sentenceId) {
+            $sentence = EnSentence::find($sentenceId);
+
+            if ($sentence) {
+                // Поднимаем в выдаче
+                if ($action === "up") {
+                    // Находим текущее максимальное значение priority
+                    $maxPriority = EnSentence::max('priority');
+                    $sentence->update(['priority' => $maxPriority + 1]);
+                }
+                elseif ($action === "down") {
+                    // Находим текущее минимальное значение priority
+                    $minPriority = EnSentence::min('priority');
+                    $sentence->update(['priority' => $minPriority - 1]);
+                }
+            }
+        }
+
+        // Получаем следующее предложение с наибольшим priority
+        $nextSentence = EnSentence::orderBy('priority', 'desc')->first();
+
+        // Если слова не найдены, возвращаем сообщение об ошибке
+        return new ApiResponse(compact("nextSentence"));
     }
 }

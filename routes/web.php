@@ -8,7 +8,6 @@ use \App\Http\Middleware\BackupDatabase;
 use \App\Http\Controllers\LanguageController;
 use \App\Http\Controllers\WordController;
 use \App\Http\Controllers\SentenceController;
-use \App\Http\Controllers\LearnWordsController;
 use \App\Http\Controllers\GeneratingSentencesAiController;
 
 // технический роут /technical/artisan/clear_all
@@ -58,7 +57,8 @@ Route::get('/', function () {
 
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group(['middleware' => ['auth', 'role:user']], function () {
-// 1
+
+// 1 word
     Route::resource('word', WordController::class)->only([
         'index','store'
     ]);
@@ -66,28 +66,34 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
         Route::post('update-word', [WordController::class, 'updateWord']);
         Route::post('delete-word', [WordController::class, 'deleteWord']);
         Route::get('get-present-tense', [WordController::class, 'getPresentTense']);
+        Route::post('learn/get-word', [WordController::class, 'getLearnWord']);
     });
 
-// 2
+// 2 sentence
     Route::middleware(['throttle:200,1'])->group(function () {
         Route::resource('sentence', SentenceController::class)->only([
             'index', 'store'
         ]);
-        Route::post('sentence/update-sentence', [SentenceController::class, 'updateSentence']);
-        Route::get('sentence/search-word', [SentenceController::class, 'searchWord']);
-        Route::post('sentence/search-sentences', [SentenceController::class, 'searchSentences']);
-        Route::post('sentence/bind-checkbox-sound', [SentenceController::class, 'bindCheckboxSound']);
+        Route::group(['prefix'=>'sentence'], function (){
+            Route::post('update-sentence', [SentenceController::class, 'updateSentence']);
+            Route::get('search-word', [SentenceController::class, 'searchWord']);
+            Route::post('search-sentences', [SentenceController::class, 'searchSentences']);
+            Route::post('bind-checkbox-sound', [SentenceController::class, 'bindCheckboxSound']);
+            Route::post('learn/get-sentence', [SentenceController::class, 'getLearnSentence']);
+        });
     });
-// 3
-    Route::post('learn/get-word', [LearnWordsController::class, 'getLearnWord']);
+
 // 4
     Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence']);
+
 // 5
     Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
         ->name('get.languages');
+
 // 6
     Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
         ->name('set.language.learn.user');
+
 // 7
     Route::get('/page-list-words', function () {
         return view('index');
@@ -100,7 +106,7 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
 // >>> Error
 Route::view('/errors', 'errors')->name('errors');
 
-// >>> Любой другой маршрут перенаправляется ,
+// >>> Любой другой маршрут перенаправляется
 Route::any('{all}', function () {
     // на index, если авторизован
     if (Auth::check() && Auth::user()->hasRole('user')) {

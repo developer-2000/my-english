@@ -22,7 +22,6 @@ class SentenceRepository extends CoreRepository {
                 // Select a column name depending on the language
                 $column_name = $language === 'en' ? 'sentence' : 'translation';
                 foreach ($searchArray as $word) {
-//                    $collection = $collection->where($column_name, 'like', '%' . $word . '%');
                     $collection = $collection->where($column_name, 'REGEXP', '(^|[^a-zA-Z0-9])' . $word . '($|[^a-zA-Z0-9])');
                 }
             }
@@ -35,15 +34,23 @@ class SentenceRepository extends CoreRepository {
         if ($vars['sort_column'] && $vars['sort_type']) {
             // по предложению
             if ($vars['sort_column'] == 'sentence') {
-                $collection = $collection->orderBy('sentence', $vars['sort_type']);
+                $collection = $collection
+                    ->orderBy('sentence', $vars['sort_type']);
             } // по чекбоксам озвучки предложений
             elseif ($vars['sort_column'] == 'sound') {
-                $collection = $this->startConditions()->leftJoin('en_sentence_sounds', 'en_sentences.id', '=', 'en_sentence_sounds.sentence_id')->select('en_sentences.*', DB::raw('en_sentence_sounds.id as sound'))->orderBy(DB::raw($vars['sort_column']), $vars['sort_type']);
+                $collection = $this->startConditions()
+                    ->leftJoin('en_sentence_sounds', 'en_sentences.id', '=', 'en_sentence_sounds.sentence_id')
+                    ->select('en_sentences.*', DB::raw('en_sentence_sounds.id as sound'))
+                    ->orderBy(DB::raw($vars['sort_column']), $vars['sort_type']);
             }
         }
 
         // 4 Выбрать в пагинации
-        $list = $collection->skip($vars['offset'])->take($vars['limit'])->orderBy('id', 'desc')->get();
+        $list = $collection
+            ->skip($vars['offset'])
+            ->take($vars['limit'])
+            ->orderBy('priority', 'desc')
+            ->get();
 
         return compact('total_count', 'list');
     }
