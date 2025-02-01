@@ -3,7 +3,7 @@
     <div class="modal fade" id="learn_word" tabindex="-1" role="dialog"
          aria-labelledby="learn_word_label" aria-hidden="true"
     >
-        <div class="modal-dialog custom-modal" role="document">
+        <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
             <div class="modal-content">
                 <!-- header -->
                 <div class="modal-header">
@@ -187,7 +187,7 @@ export default {
             }
             this.loadLearnWord()
         },
-        // какое слово отобразить а какое перевод
+        // Поменять местами текст и перевод
         switchViewWord() {
             // выбран русский
             if(this.objLanguage.languageIndex === 1){

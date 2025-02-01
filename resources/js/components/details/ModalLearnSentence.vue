@@ -3,7 +3,7 @@
     <div class="modal fade" id="learn_sentences" tabindex="-1" role="dialog"
          aria-labelledby="learn_sentences_label" aria-hidden="true"
     >
-        <div class="modal-dialog custom-modal" role="document">
+        <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
             <div class="modal-content">
                 <!-- header -->
                 <div class="modal-header">
@@ -11,6 +11,11 @@
                         Изучать предложения
                     </h5>
                     <div class="box-right">
+                        <!-- переключатель языка -->
+                        <div class="language-switch"
+                             @click="switchLanguage()"
+                             v-text="viewLanguageLine()"
+                        ></div>
                         <!-- закрыть модалку -->
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -64,7 +69,12 @@ export default {
             know: 0,
             not_know: 0,
             last_updated_at: null,
-            currentSentence: null,    // изучаемое слово
+            currentSentence: null,
+            copySentence: null,
+            objLanguage:{
+                languageIndex:0,
+                languages: ['Eng', 'Ru'],
+            },
         };
     },
     components: { },
@@ -93,8 +103,9 @@ export default {
                 const response = await this.$http.post(`${this.$http.webUrl()}sentence/learn/get-sentence`, data);
 
                 if(this.checkSuccess(response)){
-                    this.currentSentence = response.data.data.nextSentence
-                    console.log(this.currentSentence)
+                    const nextSentence = response.data.data.nextSentence;
+                    this.currentSentence = nextSentence;
+                    this.copySentence = JSON.parse(JSON.stringify(nextSentence)); // Глубокая копия
                 }
             }
             catch (e) {
@@ -130,6 +141,30 @@ export default {
                     allowHTML: true,
                 });
             }
+        },
+        // переключение языков
+        switchLanguage(){
+            this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0
+
+            this.switchViewWord()
+        },
+        // Поменять местами текст и перевод
+        switchViewWord() {
+            // выбран русский
+            if(this.objLanguage.languageIndex === 1){
+                this.currentSentence.sentence = this.copySentence.translation
+                this.currentSentence.translation = this.copySentence.sentence
+            }
+            else{
+                this.currentSentence.sentence = this.copySentence.sentence
+                this.currentSentence.translation = this.copySentence.translation
+            }
+        },
+        // отобразить с какого на какой язык перевод
+        viewLanguageLine() {
+            return (this.objLanguage.languageIndex === 0) ?
+                this.objLanguage.languages[0] + ' ~ ' + this.objLanguage.languages[1] :
+                this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0]
         },
     },
     mounted() {

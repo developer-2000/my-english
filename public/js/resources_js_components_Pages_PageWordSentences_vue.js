@@ -498,7 +498,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       know: 0,
       not_know: 0,
       last_updated_at: null,
-      currentSentence: null // изучаемое слово
+      currentSentence: null,
+      copySentence: null,
+      objLanguage: {
+        languageIndex: 0,
+        languages: ['Eng', 'Ru']
+      }
     };
   },
   components: {},
@@ -511,7 +516,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var _arguments = arguments,
         _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var action, data, response;
+        var action, data, response, nextSentence;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -531,8 +536,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 6:
               response = _context.sent;
               if (_this.checkSuccess(response)) {
-                _this.currentSentence = response.data.data.nextSentence;
-                console.log(_this.currentSentence);
+                nextSentence = response.data.data.nextSentence;
+                _this.currentSentence = nextSentence;
+                _this.copySentence = JSON.parse(JSON.stringify(nextSentence)); // Глубокая копия
               }
               _context.next = 13;
               break;
@@ -574,6 +580,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           allowHTML: true
         });
       }
+    },
+    // переключение языков
+    switchLanguage: function switchLanguage() {
+      this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0;
+      this.switchViewWord();
+    },
+    // Поменять местами текст и перевод
+    switchViewWord: function switchViewWord() {
+      // выбран русский
+      if (this.objLanguage.languageIndex === 1) {
+        this.currentSentence.sentence = this.copySentence.translation;
+        this.currentSentence.translation = this.copySentence.sentence;
+      } else {
+        this.currentSentence.sentence = this.copySentence.sentence;
+        this.currentSentence.translation = this.copySentence.translation;
+      }
+    },
+    // отобразить с какого на какой язык перевод
+    viewLanguageLine: function viewLanguageLine() {
+      return this.objLanguage.languageIndex === 0 ? this.objLanguage.languages[0] + ' ~ ' + this.objLanguage.languages[1] : this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0];
     }
   },
   mounted: function mounted() {},
@@ -1076,13 +1102,36 @@ var render = function render() {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog custom-modal",
+    staticClass: "modal-dialog modal-dialog-centered custom-modal",
     attrs: {
       role: "document"
     }
   }, [_c("div", {
     staticClass: "modal-content"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title"
+  }, [_vm._v("\n                    Изучать предложения\n                ")]), _vm._v(" "), _c("div", {
+    staticClass: "box-right"
+  }, [_c("div", {
+    staticClass: "language-switch",
+    domProps: {
+      textContent: _vm._s(_vm.viewLanguageLine())
+    },
+    on: {
+      click: function click($event) {
+        return _vm.switchLanguage();
+      }
+    }
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn-close",
+    attrs: {
+      type: "button",
+      "data-bs-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  })])]), _vm._v(" "), _c("div", {
     staticClass: "modal-body"
   }, [_vm.currentSentence ? [_c("div", {
     staticClass: "box-word"
@@ -1143,24 +1192,7 @@ var render = function render() {
     }
   })])])])] : _vm._e()], 2)])])]);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-header"
-  }, [_c("h5", {
-    staticClass: "modal-title"
-  }, [_vm._v("\n                    Изучать предложения\n                ")]), _vm._v(" "), _c("div", {
-    staticClass: "box-right"
-  }, [_c("button", {
-    staticClass: "btn-close",
-    attrs: {
-      type: "button",
-      "data-bs-dismiss": "modal",
-      "aria-label": "Close"
-    }
-  })])]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 

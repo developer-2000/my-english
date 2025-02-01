@@ -1122,7 +1122,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       this.loadLearnWord();
     },
-    // какое слово отобразить а какое перевод
+    // Поменять местами текст и перевод
     switchViewWord: function switchViewWord() {
       // выбран русский
       if (this.objLanguage.languageIndex === 1) {
@@ -2689,7 +2689,7 @@ var render = function render() {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog custom-modal",
+    staticClass: "modal-dialog modal-dialog-centered custom-modal",
     attrs: {
       role: "document"
     }
