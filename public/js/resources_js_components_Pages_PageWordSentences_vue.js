@@ -162,19 +162,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
-    // Открыть модалку изучения предложений
-    openLearnModal: function openLearnModal() {
-      var _this2 = this;
-      // Вызов openLearnModal у дочернего компонента через референцию
-      this.$refs.modalLearnSentence.openLearnModal();
-      this.bool_learn_sentences = true;
-      // событие закрытия модалки
-      jquery__WEBPACK_IMPORTED_MODULE_9___default()('#learn_sentences').on('hidden.bs.modal', function () {
-        _this2.bool_learn_sentences = false;
-      });
-    },
     bindCheckboxSound: function bindCheckboxSound(sentence_id, status) {
-      var _this3 = this;
+      var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -186,11 +175,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
                 status: status
               };
               _context.next = 4;
-              return _this3.$http.post("".concat(_this3.$http.webUrl(), "sentence/bind-checkbox-sound"), data);
+              return _this2.$http.post("".concat(_this2.$http.webUrl(), "sentence/bind-checkbox-sound"), data);
             case 4:
               response = _context.sent;
-              if (_this3.checkSuccess(response)) {
-                _this3.initialData();
+              if (_this2.checkSuccess(response)) {
+                _this2.initialData();
               }
               _context.next = 11;
               break;
@@ -207,27 +196,27 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     // --- предложения
     loadSentences: function loadSentences() {
-      var _this4 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var field, url, response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              _this4.isLoading = true;
-              field = _this4.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
+              _this3.isLoading = true;
+              field = _this3.serverParams.sort[0].field; // заменить название столбца для сортировки checkbox sound
               if (typeof field !== "string" && field.name == "field") {
                 field = 'sound';
               }
-              url = "selection_type_id=&search=".concat(_this4.serverParams.search, "&page=").concat(_this4.serverParams.page, "&perPage=").concat(_this4.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this4.serverParams.sort[0].type);
+              url = "selection_type_id=&search=".concat(_this3.serverParams.search, "&page=").concat(_this3.serverParams.page, "&perPage=").concat(_this3.serverParams.perPage, "&sortField=").concat(field, "&sortType=").concat(_this3.serverParams.sort[0].type);
               _context2.next = 7;
-              return _this4.$http.get("".concat(_this4.$http.webUrl(), "sentence?").concat(url));
+              return _this3.$http.get("".concat(_this3.$http.webUrl(), "sentence?").concat(url));
             case 7:
               response = _context2.sent;
-              if (_this4.checkSuccess(response)) {
-                _this4.table.totalRecords = response.data.data.sentences.total_count;
-                _this4.makeObjectDataForTable(response.data.data.sentences.list);
-                _this4.table.origin_rows = response.data.data.sentences.list;
+              if (_this3.checkSuccess(response)) {
+                _this3.table.totalRecords = response.data.data.sentences.total_count;
+                _this3.makeObjectDataForTable(response.data.data.sentences.list);
+                _this3.table.origin_rows = response.data.data.sentences.list;
               }
               _context2.next = 14;
               break;
@@ -236,7 +225,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               _context2.t0 = _context2["catch"](0);
               console.log(_context2.t0);
             case 14:
-              _this4.isLoading = false;
+              _this3.isLoading = false;
             case 15:
             case "end":
               return _context2.stop();
@@ -245,7 +234,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }))();
     },
     createSentence: function createSentence() {
-      var _this5 = this;
+      var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
@@ -253,17 +242,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             case 0:
               _context3.prev = 0;
               data = {
-                sentence: _this5.new_sentence,
-                translation: _this5.translation_sentence
+                sentence: _this4.new_sentence,
+                translation: _this4.translation_sentence
               };
               jquery__WEBPACK_IMPORTED_MODULE_9___default()('#create_sentence').modal('hide');
               jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               _context3.next = 6;
-              return _this5.$http.post("".concat(_this5.$http.webUrl(), "sentence"), data);
+              return _this4.$http.post("".concat(_this4.$http.webUrl(), "sentence"), data);
             case 6:
               response = _context3.sent;
-              if (_this5.checkSuccess(response)) {
-                _this5.initialData();
+              if (_this4.checkSuccess(response)) {
+                _this4.initialData();
               }
               _context3.next = 13;
               break;
@@ -279,7 +268,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }))();
     },
     updateSentence: function updateSentence() {
-      var _this6 = this;
+      var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var data, response;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
@@ -287,16 +276,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             case 0:
               _context4.prev = 0;
               data = {
-                sentence_id: _this6.sentence_id,
-                sentence: _this6.new_sentence,
-                translation: _this6.translation_sentence
+                sentence_id: _this5.sentence_id,
+                sentence: _this5.new_sentence,
+                translation: _this5.translation_sentence
               };
               _context4.next = 4;
-              return _this6.$http.post("".concat(_this6.$http.webUrl(), "sentence/update-sentence"), data);
+              return _this5.$http.post("".concat(_this5.$http.webUrl(), "sentence/update-sentence"), data);
             case 4:
               response = _context4.sent;
-              if (_this6.checkSuccess(response)) {
-                _this6.initialData();
+              if (_this5.checkSuccess(response)) {
+                _this5.initialData();
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('#update_sentence').modal('hide');
                 jquery__WEBPACK_IMPORTED_MODULE_9___default()('.modal-backdrop.fade.show').remove();
               }
@@ -332,16 +321,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
     },
     activationButtonSoundInMenu: function activationButtonSoundInMenu() {
-      var _this7 = this;
+      var _this6 = this;
       setTimeout(function () {
         // состояние кнопки sound по умолчанию
-        _this7.disabled_play = jquery__WEBPACK_IMPORTED_MODULE_9___default()('.memorable_checkbox:checked').length ? false : true;
+        _this6.disabled_play = jquery__WEBPACK_IMPORTED_MODULE_9___default()('.memorable_checkbox:checked').length ? false : true;
         // Сначала отвязываем предыдущие обработчики
         jquery__WEBPACK_IMPORTED_MODULE_9___default()(".memorable_checkbox").off('change');
         // изменнеие одного из sound checkbox
         jquery__WEBPACK_IMPORTED_MODULE_9___default()(".memorable_checkbox").on('change', function (e) {
-          _this7.disabled_play = jquery__WEBPACK_IMPORTED_MODULE_9___default()('.memorable_checkbox:checked').length ? false : true;
-          _this7.bindCheckboxSound(jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).attr('data-id'), e.target.checked);
+          _this6.disabled_play = jquery__WEBPACK_IMPORTED_MODULE_9___default()('.memorable_checkbox:checked').length ? false : true;
+          _this6.bindCheckboxSound(jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).attr('data-id'), e.target.checked);
         });
       }, 1000);
     },
@@ -364,17 +353,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return row;
     },
     initialClickButSentenceUpdate: function initialClickButSentenceUpdate() {
-      var _this8 = this;
+      var _this7 = this;
       // открываем редактирование предложения
       setTimeout(function () {
         jquery__WEBPACK_IMPORTED_MODULE_9___default()('.btn_sentence').off('click');
         jquery__WEBPACK_IMPORTED_MODULE_9___default()('.btn_sentence').on('click', function (e) {
           var queryObj = jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).prop("tagName") !== "A" ? jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target).parent() : jquery__WEBPACK_IMPORTED_MODULE_9___default()(e.target);
           var id = queryObj.attr("data-id");
-          var row = _this8.getSentenceCollection(id);
-          _this8.setVariableDefault(row.id, row.sentence, row.translation);
+          var row = _this7.getSentenceCollection(id);
+          _this7.setVariableDefault(row.id, row.sentence, row.translation);
           jquery__WEBPACK_IMPORTED_MODULE_9___default()('#update_sentence').modal('show');
-          _this8.help_dynamic = '';
+          _this7.help_dynamic = '';
         });
       }, 1000);
     },
@@ -418,6 +407,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           this.new_sentence = cleanedText;
         }
       }
+    },
+    // Открыть модалку изучения предложений
+    openLearnModal: function openLearnModal() {
+      var _this8 = this;
+      // Вызов openLearnModal у дочернего компонента через референцию
+      this.$refs.modalLearnSentence.openLearnModal();
+      this.bool_learn_sentences = true;
+      // событие закрытия модалки
+      jquery__WEBPACK_IMPORTED_MODULE_9___default()('#learn_sentences').on('hidden.bs.modal', function () {
+        _this8.bool_learn_sentences = false;
+      });
     }
   },
   mounted: function mounted() {
@@ -506,10 +506,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     };
   },
-  components: {},
   mixins: [_mixins_response_methods_mixin__WEBPACK_IMPORTED_MODULE_0__["default"], _mixins_translation_i18n_mixin__WEBPACK_IMPORTED_MODULE_1__["default"]],
-  computed: {},
-  watch: {},
   methods: {
     // загрузка изучаемого слова
     loadLearnSentence: function loadLearnSentence() {
@@ -539,6 +536,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 nextSentence = response.data.data.nextSentence;
                 _this.currentSentence = nextSentence;
                 _this.copySentence = JSON.parse(JSON.stringify(nextSentence)); // Глубокая копия
+                _this.switchViewWord();
               }
               _context.next = 13;
               break;
@@ -556,6 +554,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     // открываем модалку изучения слов
     openLearnModal: function openLearnModal() {
       var _this2 = this;
+      this.currentSentence = null;
+      this.know = 0;
+      this.not_know = 0;
       jquery__WEBPACK_IMPORTED_MODULE_3___default()('#learn_sentences').modal('show');
       // инициализация hover на изучаемое слово
       jquery__WEBPACK_IMPORTED_MODULE_3___default()('body').on('mouseover', '.learn-word-trigger', function (event) {
@@ -584,6 +585,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     // переключение языков
     switchLanguage: function switchLanguage() {
       this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0;
+      localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
       this.switchViewWord();
     },
     // Поменять местами текст и перевод
@@ -602,7 +604,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return this.objLanguage.languageIndex === 0 ? this.objLanguage.languages[0] + ' ~ ' + this.objLanguage.languages[1] : this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0];
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    var languageIndex = localStorage.getItem('languageIndex');
+    if (languageIndex !== null) {
+      this.objLanguage.languageIndex = parseInt(languageIndex);
+    }
+  },
   name: "ModalLearnSentence"
 });
 

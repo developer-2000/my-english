@@ -91,32 +91,48 @@ class SentenceController extends Controller {
     public function getLearnSentence(GetLearnSentenceRequest $request): ApiResponse {
         $sentenceId = $request->sentence_id ?? null;
         $action = $request->action ?? null;
+        $nextSentence = null;
 
         // Если передан ID, находим текущее предложение
         if ($sentenceId) {
             $sentence = EnSentence::find($sentenceId);
 
             if ($sentence) {
-                // Поднимаем в выдаче
+                $oldPriority = $sentence->priority; // Запоминаем старый priority
+
                 if ($action === "up") {
-                    // Находим текущее максимальное значение priority
                     $maxPriority = EnSentence::max('priority');
                     $sentence->update(['priority' => $maxPriority + 1]);
-                }
-                elseif ($action === "down") {
-                    // Находим текущее минимальное значение priority
+                } elseif ($action === "down") {
                     $minPriority = EnSentence::min('priority');
                     $sentence->update(['priority' => $minPriority - 1]);
+                }
+
+                // Ищем следующее предложение с тем же приоритетом
+                $nextSentence = EnSentence::where('priority', $oldPriority)
+                    ->where('id', '!=', $sentenceId)
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                // Если такого нет, берём ближайшее с меньшим priority
+                if (!$nextSentence) {
+                    $nextSentence = EnSentence::where('priority', '<', $oldPriority)
+                        ->orderBy('priority', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->first();
                 }
             }
         }
 
-        // Получаем следующее предложение с наибольшим priority
-        $nextSentence = EnSentence::orderBy('priority', 'desc')
-            ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
-            ->first();
+        if (!$nextSentence) {
+            $nextSentence = EnSentence::orderBy('priority', 'desc')
+                ->orderBy('id', 'desc')
+                ->first();
+        }
 
         // Если слова не найдены, возвращаем сообщение об ошибке
         return new ApiResponse(compact("nextSentence"));
     }
+
+
 }

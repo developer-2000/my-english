@@ -77,13 +77,10 @@ export default {
             },
         };
     },
-    components: { },
     mixins: [
         response_methods_mixin,
         translation_i18n_mixin
     ],
-    computed: { },
-    watch: { },
     methods: {
         // загрузка изучаемого слова
         async loadLearnSentence(action = null) {
@@ -106,6 +103,7 @@ export default {
                     const nextSentence = response.data.data.nextSentence;
                     this.currentSentence = nextSentence;
                     this.copySentence = JSON.parse(JSON.stringify(nextSentence)); // Глубокая копия
+                    this.switchViewWord()
                 }
             }
             catch (e) {
@@ -114,6 +112,10 @@ export default {
         },
         // открываем модалку изучения слов
         openLearnModal() {
+            this.currentSentence = null
+            this.know = 0
+            this.not_know = 0
+
             $('#learn_sentences').modal('show');
             // инициализация hover на изучаемое слово
             $('body').on('mouseover', '.learn-word-trigger', (event) => {
@@ -145,6 +147,7 @@ export default {
         // переключение языков
         switchLanguage(){
             this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0
+            localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
 
             this.switchViewWord()
         },
@@ -168,7 +171,10 @@ export default {
         },
     },
     mounted() {
-
+        let languageIndex = localStorage.getItem('languageIndex');
+        if(languageIndex !== null){
+            this.objLanguage.languageIndex = parseInt(languageIndex)
+        }
     },
     name: "ModalLearnSentence"
 }

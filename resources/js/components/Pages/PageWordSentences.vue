@@ -416,18 +416,6 @@
             }
         },
         methods: {
-            // Открыть модалку изучения предложений
-            openLearnModal() {
-                // Вызов openLearnModal у дочернего компонента через референцию
-                this.$refs.modalLearnSentence.openLearnModal();
-                this.bool_learn_sentences = true;
-                // событие закрытия модалки
-                $('#learn_sentences').on('hidden.bs.modal', () => {
-                    this.bool_learn_sentences = false;
-                })
-            },
-
-
             async bindCheckboxSound(sentence_id, status) {
                 try {
                     let data = {
@@ -601,6 +589,16 @@
                         this.new_sentence = cleanedText;
                     }
                 }
+            },
+            // Открыть модалку изучения предложений
+            openLearnModal() {
+                // Вызов openLearnModal у дочернего компонента через референцию
+                this.$refs.modalLearnSentence.openLearnModal();
+                this.bool_learn_sentences = true;
+                // событие закрытия модалки
+                $('#learn_sentences').on('hidden.bs.modal', () => {
+                    this.bool_learn_sentences = false;
+                })
             },
         },
         mounted() {
