@@ -1,11 +1,16 @@
 <template>
-    <div>
+    <div class="box-container-page">
         <!-- Header меню -->
         <header class="d-flex justify-content-between align-items-center p-3">
             <!-- Язык изучения -->
             <a href="/" class="header-element header-main-link">
+                <div class="header-logo">M</div>
                 {{getLanguageText("word", "learn")}}
             </a>
+
+            <!-- Theme Toggle Button -->
+
+
             <!-- Выпадающее меню справа -->
             <div class="dropdown">
                 <!-- кнопка меню -->
@@ -35,21 +40,32 @@
 
         <!-- Левое меню index страницы-->
         <div class="main-page">
-            <ul id="left_menu">
-                <li>
-                    <router-link to="/page-list-words" class="left_menu" exact>
-                        {{ $t('all.word_list') }}
+            <div class="left-menu-container">
+                <nav id="left_menu">
+                    <router-link to="/page-list-words" class="nav-menu-item" exact>
+                        <div class="nav-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <span class="nav-text">{{ $t('all.word_list') }}</span>
                     </router-link>
-                </li>
-                <li>
-                    <router-link to="/page-word-sentences" class="left_menu" exact>
-                        {{ $t('all.word_sentences') }}
+
+                    <router-link to="/page-word-sentences" class="nav-menu-item" exact>
+                        <div class="nav-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <span class="nav-text">{{ $t('all.word_sentences') }}</span>
                     </router-link>
-                </li>
-            </ul>
+                </nav>
+            </div>
 
             <!-- Вставляемый контент страницы -->
-            <router-view :user="user"></router-view>
+            <div class="content-wrapper">
+                <router-view :user="user"></router-view>
+            </div>
         </div>
 
         <!-- Модалка выбора языка изучения -->
@@ -82,6 +98,8 @@ import response_methods_mixin from "../mixins/response_methods_mixin";
 import translation_i18n_mixin from "../mixins/translation_i18n_mixin";
 import user_mixin from "../mixins/user_mixin";
 
+
+
 export default {
     data() {
         return {
@@ -94,6 +112,8 @@ export default {
         translation_i18n_mixin,
         user_mixin
     ],
+    components: {
+    },
     props: {
         user: {
             type: Object,
@@ -150,6 +170,8 @@ export default {
                 console.error('Error fetching languages:', e);
             }
         },
+
+
     },
     mounted() {
         $('#languageLearn').on('show.bs.modal', (e) => {

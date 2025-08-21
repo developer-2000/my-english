@@ -1,121 +1,146 @@
 <template>
-    <div id="page_list_sentences">
-        <!-- body page -->
-        <div class="wrapper">
-            <!-- верхнее меню -->
-            <div class="top-menu">
-                <!-- заголовок окна-->
-                <h1>
-                    {{ $t('all.list_sentences') }}
-                </h1>
+    <div id="page_list_sentences" class="page-word-sentences">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-bold tracking-tight">
+                        {{ $t('all.list_sentences') }}
+                    </h1>
+                    <p class="text-muted-foreground">
+                        Управление предложениями и их переводами
+                    </p>
+                </div>
 
-                <div class="box-button">
+                <div class="flex items-center space-x-3">
                     <!-- кнопки озвучки предложений -->
                     <div class="box-sound" v-show="getCodeLearnLanguage2 == 'en'">
-                        <div id="block_repeat" v-if="!speak.start">
-                            <div class="title_repeat">
-                                {{ $t('all.repeat') }}
-                            </div>
-                            <div class="block_input_repeat">
-                                <input :checked="speak.repeat_bool" @change="speak.repeat_bool = !speak.repeat_bool"
-                                       class="checkbox_repeat" type="checkbox"
-                                >
-                                <input class="number_repeat" min="1" max="10" type="number"
-                                       v-if="speak.repeat_bool" v-model="speak.count_repeat"
-                                >
+                        <div id="block_repeat" v-if="!speak.start" class="flex items-center space-x-3">
+                            <div class="text-center">
+                                <div class="title_repeat text-sm font-medium">
+                                    {{ $t('all.repeat') }}
+                                </div>
+                                <div class="block_input_repeat flex items-center justify-center space-x-2">
+                                    <input :checked="speak.repeat_bool" 
+                                           @change="speak.repeat_bool = !speak.repeat_bool"
+                                           class="checkbox_repeat" 
+                                           type="checkbox">
+                                    <input class="number_repeat" 
+                                           min="1" 
+                                           max="10" 
+                                           type="number"
+                                           v-if="speak.repeat_bool" 
+                                           v-model="speak.count_repeat">
+                                </div>
                             </div>
                         </div>
+                        
                         <!-- start -->
                         <button class="btn btn-success"
                                 :disabled="disabled_play"
                                 @click="initialSpeak"
-                                v-if="!speak.start"
-                        >
-                            <i class="fas fa-play"></i>
+                                v-if="!speak.start">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                             {{ $t('all.sound_translation') }}
                         </button>
+                        
                         <!-- pause -->
-                        <button @click="pauseReadSound" class="btn btn-outline-warning" v-if="speak.start && !speak.pause">
-                            <i class="fas fa-pause"></i>
+                        <button @click="pauseReadSound" 
+                                class="btn btn-outline" 
+                                v-if="speak.start && !speak.pause">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                             {{ $t('all.pause') }}
                         </button>
+                        
                         <!-- continue -->
-                        <button @click="continueReadSound" class="btn btn-success" v-if="speak.pause">
-                            <i class="fas fa-play"></i>
+                        <button @click="continueReadSound" 
+                                class="btn btn-success" 
+                                v-if="speak.pause">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                             {{ $t('all.continue') }}
                         </button>
+                        
                         <!-- stop -->
-                        <button @click="stopReadSound" class="btn btn-outline-danger" v-if="speak.start">
-                            <i class="fas fa-stop"></i>
+                        <button @click="stopReadSound" 
+                                class="btn btn-destructive" 
+                                v-if="speak.start">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                            </svg>
                             {{ $t('all.stop') }}
                         </button>
                     </div>
 
                     <!-- Создать предложение -->
-                    <button @click="openModalCreateSentence" class="btn btn-primary create-sentence">
+                    <button @click="openModalCreateSentence" 
+                            class="btn btn-primary">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
                         {{ $t('all.add_sentence') }}
                     </button>
 
                     <!-- learn sentences -->
-                    <button class="btn btn-primary learn-sentence"
+                    <button class="btn btn-secondary"
                             @click="openLearnModal()"
-                            v-if="!bool_learn_sentences"
-                    >
+                            v-if="!bool_learn_sentences">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
                         Learn
                     </button>
                 </div>
             </div>
+
             <!-- Table -->
-            <div class="content-wrapper" id="content-wrapper">
-                <div class="container-fluid">
-                    <div class="card card-primary card-outline block_table">
-                        <div class="table_wrapper">
-                            <vue-good-table
-                                :columns="filteredColumns"
-                                :isLoading.sync="table.isLoading"
-                                :mode="table.mode"
-                                :pagination-options="table.optionsPaginate"
-                                :rows="table.rows"
-                                :search-options="{
-                                    enabled: true,
-                                    placeholder: 'Search word',
-                                }"
-                                :totalRows="table.totalRecords"
-                                @on-page-change="onPageChange"
-                                @on-per-page-change="onPerPageChange"
-                                @on-search="onSearch"
-                                @on-sort-change="onSortChange"
-                                styleClass="vgt-table bordered sentence"
-                            >
-                                <template slot="loadingContent">
-                                    <div></div>
-                                </template>
-                            </vue-good-table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <vue-good-table
+                :columns="filteredColumns"
+                :isLoading.sync="table.isLoading"
+                :mode="table.mode"
+                :pagination-options="table.optionsPaginate"
+                :rows="table.rows"
+                :search-options="{
+                    enabled: true,
+                    placeholder: 'Search word',
+                }"
+                :totalRows="table.totalRecords"
+                @on-page-change="onPageChange"
+                @on-per-page-change="onPerPageChange"
+                @on-search="onSearch"
+                @on-sort-change="onSortChange"
+                styleClass="vgt-table sentence"
+            >
+                <template slot="loadingContent">
+                    <div></div>
+                </template>
+            </vue-good-table>
         </div>
 
         <!-- Modals создать предложение -->
         <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade"
-             id="create_sentence" role="dialog" tabindex="-1"
-        >
+             id="create_sentence" role="dialog" tabindex="-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 class="modal-title text-lg font-semibold">
                             {{ $t('all.create_new_sentence') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
-                        <form action="#">
+                        <form action="#" class="space-y-4">
                             <!-- new sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="new_sentence">
+                                <label class="form-label" for="new_sentence">
                                     {{ $t('all.new_sentence') }}
                                 </label>
                                 <textarea class="form-control entry-field-help"
@@ -127,7 +152,7 @@
                                           placeholder="New sentence"
                                           required
                                           v-model="new_sentence"
-                                ></textarea>
+                                          rows="3"></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">
                                     {{ $t('all.field_is_empty') }}
@@ -141,7 +166,7 @@
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="translation_sentence">
+                                <label class="form-label" for="translation_sentence">
                                     {{ $t('all.translation') }}
                                 </label>
                                 <textarea class="form-control"
@@ -151,7 +176,7 @@
                                           placeholder="Translation sentence"
                                           required
                                           v-model="translation_sentence"
-                                ></textarea>
+                                          rows="3"></textarea>
                                 <div class="invalid-feedback" v-if="!$v.translation_sentence.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -165,20 +190,13 @@
                     </div>
                     <!-- footer -->
                     <div class="modal-footer">
-                        <!-- button save -->
-                        <div class="button_footer">
-                            <!-- button save -->
-                            <div class="button_footer">
-                                <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                        :disabled="$v.$invalid"
-                                        @click="createSentence"
-                                        class="btn btn-primary"
-                                        type="button"
-                                >
-                                    {{ $t('all.save') }}
-                                </button>
-                            </div>
-                        </div>
+                        <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                :disabled="$v.$invalid"
+                                @click="createSentence"
+                                class="btn btn-primary"
+                                type="button">
+                            {{ $t('all.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -186,33 +204,33 @@
 
         <!-- Modals обновить предложение -->
         <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade"
-             id="update_sentence" role="dialog" tabindex="-1"
-        >
+             id="update_sentence" role="dialog" tabindex="-1">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 class="modal-title text-lg font-semibold">
                             {{ $t('all.update_sentence') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
-                        <form action="#">
+                        <form action="#" class="space-y-4">
                             <!-- sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="old_sentence">
+                                <label class="form-label" for="old_sentence">
                                     {{ $t('all.sentence') }}
                                 </label>
-                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" @blur="touchNewSentence()"
+                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" 
+                                          @blur="touchNewSentence()"
                                           @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
                                           id="old_sentence"
                                           placeholder="Insert new sentence"
                                           required
                                           v-model="new_sentence"
-                                ></textarea>
+                                          rows="3"></textarea>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">
                                     {{ $t('all.field_is_empty') }}
@@ -226,7 +244,7 @@
 
                             <!-- translation sentence -->
                             <div class="form-group">
-                                <label class="col-form-label" for="old_translation">
+                                <label class="form-label" for="old_translation">
                                     {{ $t('all.translation') }}
                                 </label>
                                 <textarea :class="{'is-invalid': $v.translation_sentence.$error}"
@@ -236,7 +254,7 @@
                                           placeholder="Insert translation sentence"
                                           required
                                           v-model="translation_sentence"
-                                ></textarea>
+                                          rows="3"></textarea>
                                 <div class="invalid-feedback" v-if="!$v.translation_sentence.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -250,17 +268,13 @@
                     </div>
                     <!-- footer -->
                     <div class="modal-footer">
-                        <!-- button save -->
-                        <div class="button_footer">
-                            <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
-                                    :disabled="$v.$invalid"
-                                    @click="updateSentence"
-                                    class="btn btn-primary"
-                                    type="button"
-                            >
-                                {{ $t('all.update') }}
-                            </button>
-                        </div>
+                        <button :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
+                                :disabled="$v.$invalid"
+                                @click="updateSentence"
+                                class="btn btn-primary"
+                                type="button">
+                            {{ $t('all.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -270,7 +284,6 @@
         <ModalLearnSentence
             ref="modalLearnSentence"
         ></ModalLearnSentence>
-
     </div>
 </template>
 
@@ -628,64 +641,270 @@
 
 <style lang="scss" scoped>
 
-#page_list_sentences{
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
-    width: calc(100% - 200px);
-    .top-menu{
+.page-word-sentences {
+    padding: var(--spacing-6) 0;
+    
+    .container {
+        padding: 0 var(--spacing-4);
+        
+        @media (min-width: 640px) {
+            padding: 0 var(--spacing-6);
+        }
+    }
+    
+    .max-w-7xl {
+        max-width: 80rem;
+    }
+    
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .flex {
         display: flex;
-        justify-content: space-between;
+    }
+    
+    .items-center {
         align-items: center;
-        padding: 10px 7px;
-        .box-button{
-            display: flex;
-            .box-sound{
+    }
+    
+    .justify-between {
+        justify-content: space-between;
+    }
+    
+    .space-y-1 > * + * {
+        margin-top: var(--spacing-1);
+    }
+    
+    .space-y-3 > * + * {
+        margin-left: var(--spacing-3);
+    }
+    
+    .space-y-4 > * + * {
+        margin-top: var(--spacing-4);
+    }
+    
+    .mb-6 {
+        margin-bottom: var(--spacing-6);
+    }
+    
+    .mr-2 {
+        margin-right: var(--spacing-2);
+    }
+    
+    .text-3xl {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+    
+    .text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+    
+    .text-sm {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    .font-bold {
+        font-weight: 700;
+    }
+    
+    .font-semibold {
+        font-weight: 600;
+    }
+    
+    .font-medium {
+        font-weight: 500;
+    }
+    
+    .tracking-tight {
+        letter-spacing: -0.025em;
+    }
+    
+    .text-muted-foreground {
+        color: var(--muted-foreground);
+    }
+    
+    .w-4 {
+        width: 1rem;
+    }
+    
+    .h-4 {
+        height: 1rem;
+    }
+    
+    // Прямые стили для таблицы предложений
+    .vgt-table.sentence {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none !important;
+        transition: none !important;
+        
+        &:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+    }
+    
+    .p-0 {
+        padding: 0;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .space-x-2 > * + * {
+        margin-left: var(--spacing-2);
+    }
+    
+    // Sound controls
+    .box-sound {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-3);
+        
+        #block_repeat {
+            .title_repeat {
+                line-height: 1.25rem;
+                margin-bottom: 0.25rem;
+                font-size: 0.875rem;
+                margin-top: 0;
+                color: var(--foreground);
+            }
+            
+            .block_input_repeat {
                 display: flex;
-                button{
-                    i{
-                        margin-right: 7px;
+                align-items: center;
+                justify-content: center;
+                gap: var(--spacing-2);
+                
+                .checkbox_repeat {
+                    height: 1.125rem;
+                    width: 1.125rem;
+                    cursor: pointer;
+                    border-radius: var(--radius);
+                    border: 1px solid var(--border);
+                    
+                    &:checked {
+                        background-color: var(--primary);
+                        border-color: var(--primary);
                     }
                 }
-                & > button, & > div{
-                    margin-right: 15px;
-                }
-                #block_repeat{
+                
+                .number_repeat {
+                    height: 1.125rem;
+                    font-size: 0.875rem;
+                    width: 3rem;
+                    margin-left: 0;
+                    padding: 0 0.25rem;
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius);
                     text-align: center;
-                    .title_repeat{
-                        line-height: 15px;
-                        margin-bottom: 3px;
-                        font-size: 14px;
-                        margin-top: -2px;
-                    }
-                    .block_input_repeat{
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        .checkbox_repeat{
-                            height: 18px;
-                            width: 18px;
-                            cursor: pointer;
-                        }
-                        .number_repeat{
-                            height: 18px;
-                            font-size: 15px;
-                            width: 50px;
-                            margin-left: 5px;
-                            padding-right: 0px;
-                        }
+                    
+                    &:focus {
+                        outline: 2px solid transparent;
+                        outline-offset: 2px;
+                        border-color: var(--ring);
+                        box-shadow: 0 0 0 2px var(--ring);
                     }
                 }
             }
-            .create-sentence, .learn-sentence{
-                margin-right: 10px;
+        }
+        
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 200ms ease-in-out;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 0.5rem 1rem;
+            
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
             }
         }
     }
-    .content-wrapper{
-        .container-fluid{
-            padding-right: 0;
+    
+    // Modal styles
+    .modal {
+        .modal-content {
+            background-color: var(--card);
+            color: var(--card-foreground);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
         }
-        padding-right: 15.5px;
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-6);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-body {
+            padding: var(--spacing-4) 0;
+            
+            .form-group {
+                margin-top: 0.5rem;
+                
+                .form-label {
+                    display: block;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    color: var(--foreground);
+                    margin-bottom: 0.5rem;
+                }
+            }
+            
+            form {
+                padding: 0 var(--spacing-4);
+            }
+        }
+        
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: var(--spacing-6);
+            border-top: 1px solid var(--border);
+            gap: var(--spacing-3);
+        }
+    }
+    
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        .flex.items-center.justify-between {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-4);
+        }
+        
+        .space-x-3 {
+            flex-wrap: wrap;
+            gap: var(--spacing-2);
+        }
+        
+        .box-sound {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-2);
+        }
     }
 }
 

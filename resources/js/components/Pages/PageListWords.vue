@@ -1,85 +1,93 @@
 <template>
-    <div id="page_list_worlds">
-        <!-- Контент -->
-        <div class="wrapper">
-            <!-- верхнее меню -->
-            <div class="top-menu">
-                <!-- заголовок окна-->
-                <h1>{{ $t('all.word_list') }}</h1>
-                <!-- кнопки -->
-                <div class="box-button">
-                    <!-- learn words -->
-                    <button class="btn btn-success"
+    <div id="page_list_worlds" class="page-list-words">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-bold tracking-tight">{{ $t('all.word_list') }}</h1>
+                    <p class="text-muted-foreground">
+                        Управление словарным запасом и изучение новых слов
+                    </p>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button v-if="!bool_learn_words"
                             @click="openLearnModal()"
-                            v-if="!bool_learn_words"
-                    >
+                            class="btn btn-secondary">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
                         {{ $t('all.learn_words') }}
                     </button>
-                    <!-- stop learn -->
-                    <button class="btn btn-warning"
-                            v-if="bool_learn_words"
+
+                    <button v-if="bool_learn_words"
                             @click="bool_learn_words = false"
-                    >
+                            class="btn btn-outline">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                         {{ $t('all.stop_learn') }}
                     </button>
-                    <button class="btn btn-primary" @click="openModalCreateWord">
+
+                    <button @click="openModalCreateWord"
+                            class="btn btn-primary">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
                         {{ $t('all.add_word') }}
                     </button>
                 </div>
             </div>
 
-            <!-- таблица слов -->
-            <div class="content-wrapper">
-                <div class="container-fluid">
-                    <!-- body окна-->
-                    <div class="card card-primary card-outline block_table">
-                        <!-- Table -->
-                        <div v-if="table.rows.length" class="table_wrapper">
-                            <vue-good-table
-                                :isLoading.sync="table.isLoading"
-                                :mode="table.mode"
-                                :totalRows="table.totalRecords"
-                                :rows="table.rows"
-                                :columns="table.columns"
-                                :pagination-options="table.optionsPaginate"
-                                :search-options="{
-                                    enabled: true,
-                                    placeholder: 'Search word',
-                                }"
-                                styleClass="vgt-table bordered"
-                                @on-search="onSearch"
-                                @on-page-change="onPageChange"
-                                @on-per-page-change="onPerPageChange"
-                                @on-sort-change="onSortChange"
-                            >
-                                <template v-slot:table-actions>
-                                    <div style="display: flex; justify-content: flex-end; align-items: center;">
-                                        <!-- Select поиска типов слов -->
+            <!-- Table -->
+            <div class="card">
+                <div class="card-body p-0">
+                    <div v-if="table.rows.length" class="table_wrapper">
+                        <vue-good-table
+                            :isLoading.sync="table.isLoading"
+                            :mode="table.mode"
+                            :totalRows="table.totalRecords"
+                            :rows="table.rows"
+                            :columns="table.columns"
+                            :pagination-options="table.optionsPaginate"
+                            :search-options="{
+                                enabled: true,
+                                placeholder: 'Search word',
+                            }"
+                            styleClass="vgt-table"
+                            @on-search="onSearch"
+                            @on-page-change="onPageChange"
+                            @on-per-page-change="onPerPageChange"
+                            @on-sort-change="onSortChange"
+                        >
+                            <template v-slot:table-actions>
+                                <div class="flex items-center justify-end space-x-3">
+                                    <!-- Select поиска типов слов -->
+                                    <div class="relative">
                                         <select class="form-select search-select-types"
                                                 v-model="table.selectedOption"
-                                                @change="handleSelectChange"
-                                        >
+                                                @change="handleSelectChange">
                                             <option value="null">Типы слов</option>
-                                            <option v-for="(obj, key) in formattedTypes" :key="key"
+                                            <option v-for="(obj, key) in formattedTypes"
+                                                    :key="key"
                                                     :value="obj.id"
-                                                    v-text="obj.type"
-                                            ></option>
+                                                    v-text="obj.type">
+                                            </option>
                                         </select>
-
-
-                                        <!-- Кнопки для типа 4 -->
-                                        <button class="btn btn-primary button-present-tense"
-                                                @click="getPresentTenseWords"
-                                                v-if="table.selectedOption === 4"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                            </svg>
-                                        </button>
                                     </div>
-                                </template>
-                            </vue-good-table>
-                        </div>
+
+                                    <!-- Кнопки для типа 4 -->
+                                    <button class="btn btn-primary button-present-tense"
+                                            @click="getPresentTenseWords"
+                                            v-if="table.selectedOption === 4">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
+                                        </svg>
+                                        Present Tense
+                                    </button>
+                                </div>
+                            </template>
+                        </vue-good-table>
                     </div>
                 </div>
             </div>
@@ -87,44 +95,37 @@
 
         <!-- Modals создать слово -->
         <div class="modal fade" id="create_word" tabindex="-1" role="dialog"
-             aria-labelledby="create_word" aria-hidden="true"
-        >
+             aria-labelledby="create_word" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">
+                        <h5 class="modal-title text-lg font-semibold" v-if="!objGenerateSentences.boolAddSentences">
                             {{ $t('all.create_new_word') }}
                         </h5>
-                        <h5 class="modal-title" v-else>
+                        <h5 class="modal-title text-lg font-semibold" v-else>
                             {{ $t('all.loading_generate_sentences') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
                         <!-- Чекбоксы сгенерированных предложений -->
                         <div class="box-view-generate-sentences"
-                             :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }"
-                        >
+                             :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }">
                             <!-- Индикатор загрузки предложений -->
                             <div class="dots-loader"
-                                 v-if="!objGenerateSentences.boolLoadingIndicator"
-                            >
+                                 v-if="!objGenerateSentences.boolLoadingIndicator">
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                             </div>
                             <!-- Сгенерированные предложения -->
                             <div class="box-new-sentence"
-                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
-                            >
+                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key">
                                 <input type="checkbox" class="form-check-input"
                                        :value="obj"
-                                       v-model="objGenerateSentences.selectedSentences"
-                                >
+                                       v-model="objGenerateSentences.selectedSentences">
                                 <div class="box-sentence">
                                     <div class="original-sentence" v-text="obj.original"></div>
                                     <div class="translation-sentence" v-text="obj.translated"></div>
@@ -132,12 +133,10 @@
                             </div>
                         </div>
                         <!-- Поля создаваемого слова -->
-                        <form action="#" v-show="!objGenerateSentences.boolAddSentences">
-
+                        <form action="#" v-show="!objGenerateSentences.boolAddSentences" class="space-y-4">
                             <!-- new word -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8 .9 0 1.8 .1 2.8 .2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7 .3 13.7 .3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256S125.6 492.6 256 492.6c130.5 0 236.6-106.1 236.6-236.6z"/></svg>
-                                <label for="new_word" class="col-form-label">
+                                <label for="new_word" class="form-label">
                                     {{ $t('all.new_word') }}
                                 </label>
                                 <input type="text"
@@ -149,8 +148,7 @@
                                        @blur="touchNewWord()"
                                        @keyup="searchHelpWord(arrInputsModal.new_word)"
                                        :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
-                                       required
-                                >
+                                       required>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
                                     {{ $t('all.field_is_empty') }}
@@ -164,8 +162,7 @@
 
                             <!-- translation word -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg>
-                                <label for="translation_word" class="col-form-label">
+                                <label for="translation_word" class="form-label">
                                     {{ $t('all.translation') }}
                                 </label>
                                 <input type="text" class="form-control"
@@ -174,8 +171,7 @@
                                        v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
                                        :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
-                                       required
-                                >
+                                       required>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -188,26 +184,25 @@
 
                             <!-- url image from out source -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>
-                                <label for="url_image" class="col-form-label">
+                                <label for="url_image" class="form-label">
                                     {{ $t('all.url_image') }}
                                 </label>
-                                <input type="text" class="form-control" placeholder="Input url" id="url_image"
-                                       v-model="arrInputsModal.url_image"
-                                >
+                                <input type="text" class="form-control"
+                                       placeholder="Input url"
+                                       id="url_image"
+                                       v-model="arrInputsModal.url_image">
                             </div>
 
                             <!-- Word description -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3 0 0 0 0 0 0 0 0c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9zM224 160c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v48h48c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H288v48c0 8.8-7.2 16-16 16H240c-8.8 0-16-7.2-16-16V272H176c-8.8 0-16-7.2-16-16V224c0-8.8 7.2-16 16-16h48V160z"/></svg>
-                                <label for="word_description" class="col-form-label">
+                                <label for="word_description" class="form-label">
                                     {{ $t('all.word_description') }}
                                 </label>
                                 <textarea class="form-control"
                                           id="word_description"
                                           placeholder="Insert description word"
                                           v-model="arrInputsModal.description"
-                                ></textarea>
+                                          rows="3"></textarea>
                             </div>
 
                             <!-- типы значений слова -->
@@ -215,17 +210,15 @@
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
-                                        <label for="select_type" class="col-form-label">
+                                        <label for="select_type" class="form-label">
                                             {{ $t('all.word_type') }}
                                         </label>
                                         <select id="select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
-                                                size="6"
-                                        >
+                                                size="6">
                                             <option v-for="(type, key) in allTypes" :key="key"
-                                                    :value="type.id"
-                                            >
+                                                    :value="type.id">
                                                 {{type.type}}
                                             </option>
                                         </select>
@@ -233,71 +226,58 @@
                                 </div>
                                 <!-- правый блок свойств -->
                                 <div class="desc_type">
-
                                     <div class="text"></div>
                                     <!-- формы времени -->
                                     <div v-if="arrInputsModal.objWordTimeForms !== null"
-                                         class="box-time-forms"
-                                    >
+                                         class="box-time-forms">
                                         <!-- прошедшее -->
                                         <div class="box-past">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.past_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.accent">
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.present_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.accent">
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.future_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.accent">
                                         </div>
                                     </div>
                                     <!-- числительные -->
                                     <div v-if="arrInputsModal.objNumber !== null">
-                                        <label>
+                                        <label class="form-label">
                                             {{ $t('all.enter_digit') }}
                                         </label>
                                         <input type="text" class="form-control" placeholder="Insert number"
-                                               v-model="arrInputsModal.objNumber.number"
-                                        >
+                                               v-model="arrInputsModal.objNumber.number">
                                     </div>
                                     <!-- союзы -->
                                     <div v-if="arrInputsModal.objConjunction !== null"
-                                         class="box-conjunction-select"
-                                    >
+                                         class="box-conjunction-select">
                                         <select class="form-select" v-model="arrInputsModal.selectedConjunction" @change="updateSelection">
                                             <option v-for="(conjunction, key) in arrInputsModal.objConjunction" :key="key" :value="key">
                                                 {{ conjunction.name }}
@@ -320,8 +300,7 @@
                                 <!-- переключатель добавления предложений -->
                                 <div class="form-check form-switch" @click="toggleSwitch($event, 'toggle1')">
                                     <input ref="toggle1" class="form-check-input" type="checkbox" id="toggle1"
-                                           @click="preventDefault"
-                                    >
+                                           @click="preventDefault">
                                     <label class="form-check-label">
                                         {{ $t('all.sentences') }}
                                     </label>
@@ -338,8 +317,7 @@
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="createWord"
-                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
-                            >
+                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences">
                                 {{ $t('all.create') }}
                             </button>
                             <!-- next to generate sentences-->
@@ -347,8 +325,7 @@
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="loadGenerateSentences()"
-                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
-                            >
+                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences">
                                 {{ $t('all.next_2') }}
                             </button>
                         </div>
@@ -359,43 +336,37 @@
 
         <!-- Modals обновить слово  -->
         <div class="modal fade" id="update_word" tabindex="-1" role="dialog"
-             aria-labelledby="update_word" aria-hidden="true"
-        >
+             aria-labelledby="update_word" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" v-if="!objGenerateSentences.boolAddSentences">
+                        <h5 class="modal-title text-lg font-semibold" v-if="!objGenerateSentences.boolAddSentences">
                             {{ $t('all.update_word') }}
                         </h5>
-                        <h5 class="modal-title" v-else>
+                        <h5 class="modal-title text-lg font-semibold" v-else>
                             {{ $t('all.loading_generate_sentences') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
                     </div>
                     <!-- body -->
                     <div class="modal-body">
                         <!-- Чекбоксы сгенерированных предложений -->
                         <div class="box-view-generate-sentences"
-                            :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }"
-                        >
+                            :class="{ 'visible-generate-sentences': objGenerateSentences.boolAddSentences }">
                             <!-- Индикатор загрузки предложений -->
                             <div class="dots-loader"
-                                 v-if="!objGenerateSentences.boolLoadingIndicator"
-                            >
+                                 v-if="!objGenerateSentences.boolLoadingIndicator">
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                             </div>
                             <!-- Сгенерированные предложения -->
                             <div class="box-new-sentence"
-                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key"
-                            >
+                                 v-for="(obj, key) in objGenerateSentences.arrGenerateSentences" :key="key">
                                 <input type="checkbox" class="form-check-input"
                                        :value="obj"
-                                       v-model="objGenerateSentences.selectedSentences"
-                                >
+                                       v-model="objGenerateSentences.selectedSentences">
                                 <div class="box-sentence">
                                     <div class="original-sentence" v-text="obj.original"></div>
                                     <div class="translation-sentence" v-text="obj.translated"></div>
@@ -403,11 +374,10 @@
                             </div>
                         </div>
                         <!-- Поля создаваемого слова -->
-                        <form action="#" v-show="!objGenerateSentences.boolAddSentences">
+                        <form action="#" v-show="!objGenerateSentences.boolAddSentences" class="space-y-4">
                             <!-- word -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8 .9 0 1.8 .1 2.8 .2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7 .3 13.7 .3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256S125.6 492.6 256 492.6c130.5 0 236.6-106.1 236.6-236.6z"/></svg>
-                                <label for="old_word" class="col-form-label">
+                                <label for="old_word" class="form-label">
                                     {{ $t('all.update_word') }}
                                 </label>
                                 <input type="text"
@@ -418,8 +388,7 @@
                                        @blur="touchNewWord()"
                                        @keyup="searchHelpWord(arrInputsModal.new_word)"
                                        :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
-                                       required
-                                >
+                                       required>
                                 <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
                                     {{ $t('all.field_is_empty') }}
@@ -433,8 +402,7 @@
 
                             <!-- translation word -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg>
-                                <label for="update_translation" class="col-form-label">
+                                <label for="update_translation" class="form-label">
                                     {{ $t('all.translation') }}
                                 </label>
                                 <input type="text" class="form-control"
@@ -443,8 +411,7 @@
                                        v-model="arrInputsModal.translation_word"
                                        @blur="touchTranslationWord()"
                                        :class="{'is-invalid': $v.arrInputsModal.translation_word.$error}"
-                                       required
-                                >
+                                       required>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.translation_word.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -457,28 +424,26 @@
 
                             <!-- url image from out source -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>
-                                <label for="update_url_image" class="col-form-label">
+                                <label for="update_url_image" class="form-label">
                                     {{ $t('all.url_image') }}
                                 </label>
                                 <input type="text"
                                        class="form-control"
                                        placeholder="Input url"
                                        id="update_url_image"
-                                       v-model="arrInputsModal.url_image"
-                                >
+                                       v-model="arrInputsModal.url_image">
                             </div>
 
                             <!-- Word description -->
                             <div class="form-group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3 0 0 0 0 0 0 0 0c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9zM224 160c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v48h48c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H288v48c0 8.8-7.2 16-16 16H240c-8.8 0-16-7.2-16-16V272H176c-8.8 0-16-7.2-16-16V224c0-8.8 7.2-16 16-16h48V160z"/></svg>
-                                <label for="update_word_description" class="col-form-label">
+                                <label for="update_word_description" class="form-label">
                                     {{ $t('all.word_description') }}
                                 </label>
                                 <textarea v-model="arrInputsModal.description"
                                           class="form-control"
                                           id="update_word_description"
-                                          placeholder="Insert description word">
+                                          placeholder="Insert description word"
+                                          rows="3">
                                 </textarea>
                             </div>
 
@@ -487,17 +452,15 @@
                                 <!-- select значений -->
                                 <div class="box-left-site">
                                     <div class="form-group">
-                                        <label for="update_select_type" class="col-form-label">
+                                        <label for="update_select_type" class="form-label">
                                             {{ $t('all.word_type') }}
                                         </label>
                                         <select id="update_select_type"
                                                 v-model="arrInputsModal.select_type_id"
                                                 class="custom-select"
-                                                size="6"
-                                        >
+                                                size="6">
                                             <option v-for="(type, key) in allTypes" :key="key"
-                                                    :value="type.id"
-                                            >
+                                                    :value="type.id">
                                                 {{type.type}}
                                             </option>
                                         </select>
@@ -506,71 +469,58 @@
 
                                 <!-- правый блок свойств -->
                                 <div class="desc_type">
-
                                     <div class="text"></div>
                                     <!-- формы времени -->
                                     <div v-if="arrInputsModal.objWordTimeForms !== null"
-                                         class="box-time-forms"
-                                    >
+                                         class="box-time-forms">
                                         <!-- прошедшее -->
                                         <div class="box-past">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.past_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.past.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.past.accent">
                                         </div>
                                         <!-- настоящее -->
                                         <div class="box-present">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.present_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.present.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.present.accent">
                                         </div>
                                         <!-- будущее -->
                                         <div class="box-future">
-                                            <label>
+                                            <label class="form-label">
                                                 {{ $t('all.future_time') }}
                                             </label>
                                             <input type="text" class="form-control" placeholder="Insert word"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.word"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.word">
                                             <input type="text" class="form-control" placeholder="Insert translation"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.translation"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.translation">
                                             <input type="text" class="form-control" placeholder="Insert accent"
-                                                   v-model="arrInputsModal.objWordTimeForms.future.accent"
-                                            >
+                                                   v-model="arrInputsModal.objWordTimeForms.future.accent">
                                         </div>
                                     </div>
                                     <!-- числительные -->
                                     <div v-if="arrInputsModal.objNumber !== null" >
-                                        <label>
+                                        <label class="form-label">
                                             {{ $t('all.enter_digit') }}
                                         </label>
                                         <input type="text" class="form-control" placeholder="Insert number"
-                                               v-model="arrInputsModal.objNumber.number"
-                                        >
+                                               v-model="arrInputsModal.objNumber.number">
                                     </div>
                                     <!-- союзы -->
                                     <div v-if="arrInputsModal.objConjunction !== null"
-                                         class="box-conjunction-select"
-                                    >
+                                         class="box-conjunction-select">
                                         <select class="form-select" v-model="arrInputsModal.selectedConjunction" @change="updateSelection">
                                             <option v-for="(conjunction, key) in arrInputsModal.objConjunction" :key="key" :value="key">
                                                 {{ conjunction.name }}
@@ -585,7 +535,6 @@
                                             Выбрать нужный союз
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -601,8 +550,7 @@
                                 <!-- переключатель добавления предложений -->
                                 <div class="form-check form-switch" @click="toggleSwitch($event, 'toggle2')">
                                     <input ref="toggle2" class="form-check-input" type="checkbox" id="toggle2"
-                                           @click="preventDefault"
-                                    >
+                                           @click="preventDefault">
                                     <label class="form-check-label">
                                        {{ $t('all.sentences') }}
                                     </label>
@@ -619,8 +567,7 @@
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="updateWord"
-                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences"
-                            >
+                                    v-if="!objGenerateSentences.status_toggle || objGenerateSentences.boolAddSentences">
                                 {{ $t('all.update') }}
                             </button>
                             <!-- next to generate sentences-->
@@ -628,8 +575,7 @@
                                     :class="{'un_active': $v.$invalid, 'active2': !$v.$invalid}"
                                     :disabled="$v.$invalid"
                                     @click="loadGenerateSentences()"
-                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences"
-                            >
+                                    v-if="objGenerateSentences.status_toggle && !objGenerateSentences.boolAddSentences">
                                 {{ $t('all.next_2') }}
                             </button>
                         </div>
@@ -644,7 +590,6 @@
             @callInitialData="initialData"
             @callOpenUpdateWordModal="openUpdateWordModal"
         ></ModalLearnWord>
-
     </div>
 </template>
 
@@ -1457,112 +1402,262 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 <style lang="scss" scoped>
 @import '../../../sass/variables.scss';
 
-#page_list_worlds{
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
-    width: calc(100% - 200px);
-    .wrapper{
-        .top-menu{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px 10px 7px;
-            .box-button{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                button{
-                    margin-right: 15px;
-                    &:last-child{
-                        margin-right: 0;
-                    }
-                }
-            }
-        }
-        .content-wrapper{
-            .container-fluid{
-                padding-right: 0;
-                .table_wrapper{
-                    .search-select-types{
-                        padding: 4px 35px 3px 15px;
-                        margin-right: 7px;
-                        cursor: pointer;
-                        option{
-                            cursor: pointer;
-                            &:first-child{
-                                background: #ddd;
-                                color: #888;
-                                cursor: default;
-                            }
-                        }
-                    }
-                    .button-present-tense {
-                        white-space: nowrap;
-                        min-width: auto;
-                        margin-right: 5px;
-                    }
-                }
-            }
-            padding-right: 15.5px;
+.page-list-words {
+    padding: var(--spacing-6) 0;
+
+    .container {
+        padding: 0 var(--spacing-4);
+
+        @media (min-width: 640px) {
+            padding: 0 var(--spacing-6);
         }
     }
-    .modal{
-        .modal-body{
+
+    .max-w-7xl {
+        max-width: 80rem;
+    }
+
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .items-center {
+        align-items: center;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .space-y-1 > * + * {
+        margin-top: var(--spacing-1);
+    }
+
+    .space-y-3 > * + * {
+        margin-left: var(--spacing-3);
+    }
+
+    .space-y-4 > * + * {
+        margin-top: var(--spacing-4);
+    }
+
+    .mb-6 {
+        margin-bottom: var(--spacing-6);
+    }
+
+    .mr-2 {
+        margin-right: var(--spacing-2);
+    }
+
+    .text-3xl {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+
+    .text-lg {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+
+    .font-bold {
+        font-weight: 700;
+    }
+
+    .font-semibold {
+        font-weight: 600;
+    }
+
+    .tracking-tight {
+        letter-spacing: -0.025em;
+    }
+
+    .text-muted-foreground {
+        color: var(--muted-foreground);
+    }
+
+    .w-4 {
+        width: 1rem;
+    }
+
+    .h-4 {
+        height: 1rem;
+    }
+
+    .card {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-radius: 0;
+        border: 1px solid var(--border);
+        box-shadow: none !important;
+    }
+
+    .card-body {
+        padding: var(--spacing-6);
+    }
+
+    .p-0 {
+        padding: 0;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    .form-select {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        color: var(--foreground);
+        background-color: var(--background);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        appearance: none;
+        transition: border-color 200ms ease-in-out, box-shadow 200ms ease-in-out;
+
+        &:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px var(--ring);
+        }
+
+        option {
+            cursor: pointer;
+
+            &:first-child {
+                background: var(--muted);
+                color: var(--muted-foreground);
+                cursor: default;
+            }
+        }
+    }
+
+    .search-select-types {
+        padding: 0.375rem 2rem 0.375rem 0.75rem;
+        margin-right: 0.5rem;
+        cursor: pointer;
+        min-width: 120px;
+        height: 32px;
+        line-height: 1.5;
+    }
+
+    .form-select {
+        border-radius: 0 !important;
+    }
+
+    .button-present-tense {
+        white-space: nowrap;
+        min-width: auto;
+        margin-right: 0.25rem;
+    }
+
+    // Modal styles
+    .modal {
+        .modal-content {
+            background-color: var(--card);
+            color: var(--card-foreground);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-6);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-body {
             overflow: hidden;
-            padding: 1rem 0;
-            .box-time-forms{
-                label{
-                    padding: 3px 0;
+            padding: var(--spacing-4) 0;
+
+            .box-time-forms {
+                label {
+                    padding: 0.25rem 0;
                     margin: 0;
+                    font-weight: 500;
+                    color: var(--foreground);
                 }
-                .box-past, .box-present, .box-future{
-                    input{
-                        margin-bottom: 5px;
-                        &:last-child{
+
+                .box-past, .box-present, .box-future {
+                    margin-bottom: var(--spacing-4);
+
+                    input {
+                        margin-bottom: 0.5rem;
+
+                        &:last-child {
                             margin: 0;
                         }
                     }
                 }
             }
-            .box-content-sentences{
+
+            .box-content-sentences {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
-                .box-sentences{
-                    div{
-                        color: #747474;
-                        font-weight: 700;
-                        font-size: 13px;
+                margin-top: var(--spacing-6);
+
+                .box-sentences {
+                    div {
+                        color: var(--muted-foreground);
+                        font-weight: 600;
+                        font-size: 0.875rem;
+                        margin-bottom: 0.25rem;
                     }
                 }
-                .form-switch{
+
+                .form-switch {
                     display: flex;
                     flex-flow: column nowrap;
                     align-items: center;
-                    margin: 20px 0 0 0;
-                    border: 1px solid $modal-grey-border;
-                    padding: 10px;
-                    border-radius: 5px;
+                    margin: 1.25rem 0 0 0;
+                    border: 1px solid var(--border);
+                    padding: var(--spacing-4);
+                    border-radius: var(--radius);
                     cursor: pointer;
-                    input{
+                    background-color: var(--muted/50);
+
+                    input {
                         margin: 0;
                         cursor: pointer;
                     }
-                    label{
+
+                    label {
                         text-align: center;
-                        line-height: 20px;
-                        margin-top: 10px;
+                        line-height: 1.25rem;
+                        margin-top: 0.5rem;
                         width: 110px;
                         cursor: pointer;
-                        font-size: 14px;
+                        font-size: 0.875rem;
+                        font-weight: 500;
                     }
                 }
             }
-            .box-view-generate-sentences{
+
+            .box-view-generate-sentences {
                 width: 100%;
                 height: 100%;
-                background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */
-                backdrop-filter: blur(10px); /* Размытие фона */
+                background-color: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
                 position: absolute;
                 left: 100%;
                 top: 0;
@@ -1570,6 +1665,8 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 bottom: 0;
                 z-index: 1;
                 transition: left 0.3s ease-in-out;
+                border-radius: var(--radius);
+
                 .dots-loader {
                     display: flex;
                     justify-content: space-between;
@@ -1578,99 +1675,173 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     left: 50%;
                     top: 50%;
                     transform: translate(-50%, -50%);
+
                     .dot {
                         width: 20px;
                         height: 20px;
-                        background-color: #3498db;
+                        background-color: var(--primary);
                         border-radius: 50%;
                         animation: bounce 1.5s infinite ease-in-out;
-                        &:nth-child(2) { animation-delay: -0.5s; }
-                        &:nth-child(3) { animation-delay: -1s; }
+
+                        &:nth-child(2) {
+                            animation-delay: -0.5s;
+                        }
+
+                        &:nth-child(3) {
+                            animation-delay: -1s;
+                        }
+
                         @keyframes bounce {
-                            0%, 100% { transform: scale(0); }
-                            50% { transform: scale(1); }
+                            0%, 100% {
+                                transform: scale(0);
+                            }
+                            50% {
+                                transform: scale(1);
+                            }
                         }
                     }
                 }
-                .box-new-sentence{
+
+                .box-new-sentence {
                     display: flex;
                     align-items: center;
-                    padding: 6px 15px;
-                    border-bottom: 1px solid #e9ecef;
-                    &:last-child{
+                    padding: 0.5rem 1rem;
+                    border-bottom: 1px solid var(--border);
+
+                    &:last-child {
                         border: none;
                     }
-                    .form-check-input{
+
+                    .form-check-input {
                         padding: 0;
                         position: static;
                         cursor: pointer;
-                        margin: 0 15px 0 0;
+                        margin: 0 1rem 0 0;
                         min-width: 16px;
                         min-height: 16px;
                     }
-                    .box-sentence{
-                        div{
-                            line-height: 23px;
-                            &:first-child{
-                                margin-bottom: 3px;
+
+                    .box-sentence {
+                        div {
+                            line-height: 1.5;
+
+                            &:first-child {
+                                margin-bottom: 0.25rem;
                             }
                         }
-                        .original-sentence{
-                            font-weight: 700;
-                            font-size: 17px;
+
+                        .original-sentence {
+                            font-weight: 600;
+                            font-size: 1rem;
+                            color: var(--foreground);
                         }
-                        .translation-sentence{
-                            color: #525252;
+
+                        .translation-sentence {
+                            color: var(--muted-foreground);
+                            font-size: 0.875rem;
                         }
                     }
                 }
             }
-            .visible-generate-sentences{
+
+            .visible-generate-sentences {
                 left: 0;
                 position: relative;
             }
-            form{
-                padding: 0 1rem;
+
+            form {
+                padding: 0 var(--spacing-4);
             }
-            .block_type{
-                margin-top: 30px;
-                .box-left-site{
+
+            .block_type {
+                margin-top: 2rem;
+
+                .box-left-site {
                     width: 38%;
-                    .custom-select{
-                        border: 1px solid $modal-grey-border;
-                        border-radius: 5px;
-                        option{
-                            font-weight: 200;
-                            font-size: 15px;
-                            padding: 0 10px;
+
+                    .custom-select {
+                        border: 1px solid var(--border);
+                        border-radius: var(--radius);
+
+                        option {
+                            font-weight: 400;
+                            font-size: 0.875rem;
+                            padding: 0 0.5rem;
                         }
                     }
-                    .form-group{
+
+                    .form-group {
                         margin: 0;
                     }
                 }
             }
-            .form-group{
-                margin-top: 5px;
-                svg{
-                    fill: #595959;
+
+            .form-group {
+                margin-top: 0.5rem;
+
+                .form-label {
+                    display: block;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    color: var(--foreground);
+                    margin-bottom: 0.5rem;
                 }
             }
         }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: var(--spacing-6);
+            border-top: 1px solid var(--border);
+            gap: var(--spacing-3);
+        }
     }
-    #create_word{
-        .modal-body{
-            .box-content-sentences{
+
+    #create_word {
+        .modal-body {
+            .box-content-sentences {
                 justify-content: flex-end;
             }
         }
     }
 }
-.box-conjunction-select{
-    margin-top: 5px;
-    label{
-        margin-top: 5px;
+
+.box-conjunction-select {
+    margin-top: 0.5rem;
+
+    label {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
     }
 }
 
+// Responsive adjustments
+@media (max-width: 768px) {
+    .page-list-words {
+        .flex.items-center.justify-between {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-4);
+        }
+
+        .space-y-3 {
+            flex-wrap: wrap;
+            gap: var(--spacing-2);
+        }
+
+        .modal {
+            .modal-body {
+                .block_type {
+                    .box-left-site {
+                        width: 100%;
+                        margin-bottom: var(--spacing-4);
+                    }
+                }
+            }
+        }
+    }
+}
 </style>

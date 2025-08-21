@@ -18,6 +18,8 @@ window.Vue.component("tippy", TippyComponent);
 import http_client from './services/http_client';
 window.Vue.prototype.$http = http_client;
 
+
+
 import VueSweetalert2 from 'vue-sweetalert2';
 window.Vue.use(VueSweetalert2);
 

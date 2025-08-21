@@ -1,0 +1,115 @@
+// ========================================
+// THEME SYSTEM - CSS VARIABLES (LIGHT THEME ONLY)
+// ========================================
+
+:root {
+    // ========================================
+    // LIGHT THEME (DEFAULT)
+    // ========================================
+    
+    // Background colors
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --bg-quaternary: #f0f2f5;
+    
+    // Text colors
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    --text-inverse: #ffffff;
+    
+    // Border colors
+    --border-primary: #dee2e6;
+    --border-secondary: #c1c5cb;
+    --border-focus: #007bff;
+    
+    // Shadow colors
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --shadow-heavy: rgba(0, 0, 0, 0.25);
+    
+    // Component specific
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --table-bg: #ffffff;
+    --table-border: #dee2e6;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --input-focus-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --modal-backdrop: rgba(0, 0, 0, 0.5);
+    
+    // Semantic colors (Bootstrap compatible)
+    --primary: #007bff;
+    --primary-hover: #0056b3;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+
+    // ========================================
+    // SHADCN/UI STYLE COLORS
+    // ========================================
+
+    // Основные цвета
+    --background: #ffffff;
+    --foreground: #020817;
+    --card: #ffffff;
+    --card-foreground: #020817;
+    --popover: #ffffff;
+    --popover-foreground: #020817;
+
+    // Семантические цвета
+    --primary-shadcn: #0f172a;
+    --primary-foreground: #f8fafc;
+    --secondary-shadcn: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
+
+    // UI элементы
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #0f172a;
+    --radius: 0.5rem;
+
+    // Дополнительные цвета для My English
+    --success-shadcn: #22c55e;
+    --success-foreground: #f8fafc;
+    --warning-shadcn: #f59e0b;
+    --warning-foreground: #0f172a;
+    --info-shadcn: #06b6d4;
+    --info-foreground: #f8fafc;
+
+    // Тени
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    // Legacy support (для совместимости с Bootstrap)
+    --bs-primary: var(--primary);
+    --bs-secondary: var(--secondary);
+    --bs-success: var(--success);
+    --bs-info: var(--info);
+    --bs-warning: var(--warning);
+    --bs-danger: var(--destructive);
+}
+
+// ========================================
+// THEME TRANSITION
+// ========================================
+
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
