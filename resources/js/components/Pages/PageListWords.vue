@@ -603,16 +603,16 @@
     import 'vue-good-table/dist/vue-good-table.css'
     import { VueGoodTable } from 'vue-good-table';
     // mixins
-    import good_table_mixin from "../../mixins/good_table_mixin";
-    import response_methods_mixin from "../../mixins/response_methods_mixin";
-    import help_search_word_mixin from "../../mixins/help_search_word_mixin";
-    import helpSearchWord from "../details/HelpSearchWord";
-    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+    import good_table_mixin from "../../mixins/good_table_mixin.js";
+    import response_methods_mixin from "../../mixins/response_methods_mixin.js";
+    import help_search_word_mixin from "../../mixins/help_search_word_mixin.js";
+    import helpSearchWord from "../details/HelpSearchWord.vue";
+    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin.js";
     // components
-    import ModalLearnWord from "../details/ModalLearnWord";
+    import ModalLearnWord from "../details/ModalLearnWord.vue";
     import $ from 'jquery';
     import { mapGetters } from 'vuex';
-    import user_mixin from "../../mixins/user_mixin";
+    import user_mixin from "../../mixins/user_mixin.js";
 
     export default {
         data() {

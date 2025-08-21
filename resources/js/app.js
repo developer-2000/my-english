@@ -1,36 +1,44 @@
-require('./bootstrap');
+// Полифил для Node.js переменных в браузере
+if (typeof global === 'undefined') {
+    var global = globalThis;
+}
+
+import './bootstrap';
 import 'bootstrap';
 import '@popperjs/core';
 
-window.Vue = require('vue').default;
+import Vue from 'vue';
+
+// Отключаем Vue DevTools предупреждения и dev режим предупреждения
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+Vue.config.silent = true;
 
 import VueRouter from 'vue-router'
-window.Vue.use(VueRouter);
+Vue.use(VueRouter);
 import router from './router'
 
 import Vuelidate from 'vuelidate'
-window.Vue.use(Vuelidate)
+Vue.use(Vuelidate)
 
 import VueTippy, { TippyComponent } from "vue-tippy";
-window.Vue.use(VueTippy);
-window.Vue.component("tippy", TippyComponent);
+Vue.use(VueTippy);
+Vue.component("tippy", TippyComponent);
 
 import http_client from './services/http_client';
-window.Vue.prototype.$http = http_client;
-
-
+Vue.prototype.$http = http_client;
 
 import VueSweetalert2 from 'vue-sweetalert2';
-window.Vue.use(VueSweetalert2);
+Vue.use(VueSweetalert2);
 
 // Добавляем Vuex
 import Vuex from 'vuex';
-window.Vue.use(Vuex);
+Vue.use(Vuex);
 
 // Импортируем наш store
 import store from './store';
 
-import hallway from './components/Hallway'
+import hallway from './components/Hallway.vue'
 
 const app = new Vue({
     el: '#app',

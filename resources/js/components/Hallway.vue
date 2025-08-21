@@ -94,9 +94,9 @@
 
 <script>
 import $ from "jquery";
-import response_methods_mixin from "../mixins/response_methods_mixin";
-import translation_i18n_mixin from "../mixins/translation_i18n_mixin";
-import user_mixin from "../mixins/user_mixin";
+import response_methods_mixin from "../mixins/response_methods_mixin.js";
+import translation_i18n_mixin from "../mixins/translation_i18n_mixin.js";
+import user_mixin from "../mixins/user_mixin.js";
 
 
 

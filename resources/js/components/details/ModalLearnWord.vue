@@ -93,12 +93,12 @@
 </template>
 
 <script>
-import response_methods_mixin from "../../mixins/response_methods_mixin";
+import response_methods_mixin from "../../mixins/response_methods_mixin.js";
 import {tippy} from "vue-tippy";
-import helpSearchWord from "./HelpSearchWord";
-import help_search_word_mixin from "../../mixins/help_search_word_mixin";
+import helpSearchWord from "./HelpSearchWord.vue";
+import help_search_word_mixin from "../../mixins/help_search_word_mixin.js";
 import $ from "jquery";
-import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+import translation_i18n_mixin from "../../mixins/translation_i18n_mixin.js";
 import {mapGetters} from "vuex";
 
 export default {

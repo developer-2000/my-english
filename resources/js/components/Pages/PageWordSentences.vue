@@ -21,20 +21,20 @@
                                     {{ $t('all.repeat') }}
                                 </div>
                                 <div class="block_input_repeat flex items-center justify-center space-x-2">
-                                    <input :checked="speak.repeat_bool" 
+                                    <input :checked="speak.repeat_bool"
                                            @change="speak.repeat_bool = !speak.repeat_bool"
-                                           class="checkbox_repeat" 
+                                           class="checkbox_repeat"
                                            type="checkbox">
-                                    <input class="number_repeat" 
-                                           min="1" 
-                                           max="10" 
+                                    <input class="number_repeat"
+                                           min="1"
+                                           max="10"
                                            type="number"
-                                           v-if="speak.repeat_bool" 
+                                           v-if="speak.repeat_bool"
                                            v-model="speak.count_repeat">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- start -->
                         <button class="btn btn-success"
                                 :disabled="disabled_play"
@@ -45,30 +45,30 @@
                             </svg>
                             {{ $t('all.sound_translation') }}
                         </button>
-                        
+
                         <!-- pause -->
-                        <button @click="pauseReadSound" 
-                                class="btn btn-outline" 
+                        <button @click="pauseReadSound"
+                                class="btn btn-outline"
                                 v-if="speak.start && !speak.pause">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             {{ $t('all.pause') }}
                         </button>
-                        
+
                         <!-- continue -->
-                        <button @click="continueReadSound" 
-                                class="btn btn-success" 
+                        <button @click="continueReadSound"
+                                class="btn btn-success"
                                 v-if="speak.pause">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             {{ $t('all.continue') }}
                         </button>
-                        
+
                         <!-- stop -->
-                        <button @click="stopReadSound" 
-                                class="btn btn-destructive" 
+                        <button @click="stopReadSound"
+                                class="btn btn-destructive"
                                 v-if="speak.start">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -79,7 +79,7 @@
                     </div>
 
                     <!-- Создать предложение -->
-                    <button @click="openModalCreateSentence" 
+                    <button @click="openModalCreateSentence"
                             class="btn btn-primary">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -222,7 +222,7 @@
                                 <label class="form-label" for="old_sentence">
                                     {{ $t('all.sentence') }}
                                 </label>
-                                <textarea :class="{'is-invalid': $v.new_sentence.$error}" 
+                                <textarea :class="{'is-invalid': $v.new_sentence.$error}"
                                           @blur="touchNewSentence()"
                                           @keyup="searchHelpWord(new_sentence)"
                                           class="form-control entry-field-help"
@@ -294,22 +294,22 @@
     // table
     import 'vue-good-table/dist/vue-good-table.css'
     import {VueGoodTable} from 'vue-good-table';
-    import good_table_mixin from "../../mixins/good_table_mixin";
+    import good_table_mixin from "../../mixins/good_table_mixin.js";
     // soft methods
-    import soft_methods_mixin from "../../mixins/response_methods_mixin";
+    import soft_methods_mixin from "../../mixins/response_methods_mixin.js";
     // help_search_word
-    import help_search_word_mixin from "../../mixins/help_search_word_mixin";
-    import helpSearchWord from "../details/HelpSearchWord";
+    import help_search_word_mixin from "../../mixins/help_search_word_mixin.js";
+    import helpSearchWord from "../details/HelpSearchWord.vue";
     // sound_word
-    import sound_word_mixin from "../../mixins/sound_word_mixin";
+    import sound_word_mixin from "../../mixins/sound_word_mixin.js";
     // bootstrap toggle
     import BootstrapToggle from 'vue-bootstrap-toggle'
-    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+    import translation_i18n_mixin from "../../mixins/translation_i18n_mixin.js";
     import {mapGetters} from "vuex";
-    import user_mixin from "../../mixins/user_mixin";
+    import user_mixin from "../../mixins/user_mixin.js";
     import $ from "jquery";
     // components
-    import ModalLearnSentence from "../details/ModalLearnSentence";
+    import ModalLearnSentence from "../details/ModalLearnSentence.vue";
 
     export default {
         data() {
@@ -643,99 +643,99 @@
 
 .page-word-sentences {
     padding: var(--spacing-6) 0;
-    
+
     .container {
         padding: 0 var(--spacing-4);
-        
+
         @media (min-width: 640px) {
             padding: 0 var(--spacing-6);
         }
     }
-    
+
     .max-w-7xl {
         max-width: 80rem;
     }
-    
+
     .mx-auto {
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .flex {
         display: flex;
     }
-    
+
     .items-center {
         align-items: center;
     }
-    
+
     .justify-between {
         justify-content: space-between;
     }
-    
+
     .space-y-1 > * + * {
         margin-top: var(--spacing-1);
     }
-    
+
     .space-y-3 > * + * {
         margin-left: var(--spacing-3);
     }
-    
+
     .space-y-4 > * + * {
         margin-top: var(--spacing-4);
     }
-    
+
     .mb-6 {
         margin-bottom: var(--spacing-6);
     }
-    
+
     .mr-2 {
         margin-right: var(--spacing-2);
     }
-    
+
     .text-3xl {
         font-size: 1.875rem;
         line-height: 2.25rem;
     }
-    
+
     .text-lg {
         font-size: 1.125rem;
         line-height: 1.75rem;
     }
-    
+
     .text-sm {
         font-size: 0.875rem;
         line-height: 1.25rem;
     }
-    
+
     .font-bold {
         font-weight: 700;
     }
-    
+
     .font-semibold {
         font-weight: 600;
     }
-    
+
     .font-medium {
         font-weight: 500;
     }
-    
+
     .tracking-tight {
         letter-spacing: -0.025em;
     }
-    
+
     .text-muted-foreground {
         color: var(--muted-foreground);
     }
-    
+
     .w-4 {
         width: 1rem;
     }
-    
+
     .h-4 {
         height: 1rem;
     }
-    
+
     // Прямые стили для таблицы предложений
     .vgt-table.sentence {
         background-color: var(--card);
@@ -746,31 +746,31 @@
         max-width: 100%;
         box-shadow: none !important;
         transition: none !important;
-        
+
         &:hover {
             transform: none !important;
             box-shadow: none !important;
         }
     }
-    
+
     .p-0 {
         padding: 0;
     }
-    
+
     .text-center {
         text-align: center;
     }
-    
+
     .space-x-2 > * + * {
         margin-left: var(--spacing-2);
     }
-    
+
     // Sound controls
     .box-sound {
         display: flex;
         align-items: center;
         gap: var(--spacing-3);
-        
+
         #block_repeat {
             .title_repeat {
                 line-height: 1.25rem;
@@ -779,26 +779,26 @@
                 margin-top: 0;
                 color: var(--foreground);
             }
-            
+
             .block_input_repeat {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 gap: var(--spacing-2);
-                
+
                 .checkbox_repeat {
                     height: 1.125rem;
                     width: 1.125rem;
                     cursor: pointer;
                     border-radius: var(--radius);
                     border: 1px solid var(--border);
-                    
+
                     &:checked {
                         background-color: var(--primary);
                         border-color: var(--primary);
                     }
                 }
-                
+
                 .number_repeat {
                     height: 1.125rem;
                     font-size: 0.875rem;
@@ -808,7 +808,7 @@
                     border: 1px solid var(--border);
                     border-radius: var(--radius);
                     text-align: center;
-                    
+
                     &:focus {
                         outline: 2px solid transparent;
                         outline-offset: 2px;
@@ -818,7 +818,7 @@
                 }
             }
         }
-        
+
         button {
             display: inline-flex;
             align-items: center;
@@ -831,14 +831,14 @@
             font-size: 0.875rem;
             line-height: 1.25rem;
             padding: 0.5rem 1rem;
-            
+
             &:disabled {
                 opacity: 0.5;
                 cursor: not-allowed;
             }
         }
     }
-    
+
     // Modal styles
     .modal {
         .modal-content {
@@ -848,7 +848,7 @@
             border: 1px solid var(--border);
             box-shadow: var(--shadow-lg);
         }
-        
+
         .modal-header {
             display: flex;
             align-items: center;
@@ -856,13 +856,13 @@
             padding: var(--spacing-6);
             border-bottom: 1px solid var(--border);
         }
-        
+
         .modal-body {
             padding: var(--spacing-4) 0;
-            
+
             .form-group {
                 margin-top: 0.5rem;
-                
+
                 .form-label {
                     display: block;
                     font-size: 0.875rem;
@@ -871,12 +871,12 @@
                     margin-bottom: 0.5rem;
                 }
             }
-            
+
             form {
                 padding: 0 var(--spacing-4);
             }
         }
-        
+
         .modal-footer {
             display: flex;
             align-items: center;
@@ -886,7 +886,7 @@
             gap: var(--spacing-3);
         }
     }
-    
+
     // Responsive adjustments
     @media (max-width: 768px) {
         .flex.items-center.justify-between {
@@ -894,12 +894,12 @@
             align-items: flex-start;
             gap: var(--spacing-4);
         }
-        
+
         .space-x-3 {
             flex-wrap: wrap;
             gap: var(--spacing-2);
         }
-        
+
         .box-sound {
             flex-direction: column;
             align-items: flex-start;

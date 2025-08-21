@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Error Page</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @if(app()->environment('local'))
+        <link rel="stylesheet" href="http://localhost:5173/resources/sass/app.scss">
+    @else
+        <link href="{{ asset('build/app.css') }}" rel="stylesheet">
+    @endif
     <style>
         .container {
             display: flex;

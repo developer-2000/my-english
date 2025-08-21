@@ -58,8 +58,8 @@
 
 <script>
 
-import response_methods_mixin from "../../mixins/response_methods_mixin";
-import translation_i18n_mixin from "../../mixins/translation_i18n_mixin";
+import response_methods_mixin from "../../mixins/response_methods_mixin.js";
+import translation_i18n_mixin from "../../mixins/translation_i18n_mixin.js";
 import {tippy} from "vue-tippy";
 import $ from "jquery";
 

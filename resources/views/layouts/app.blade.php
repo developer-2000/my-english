@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     
     <!-- CSS loaded normally -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    @if(app()->environment('local'))
+        <link rel="stylesheet" href="http://localhost:5173/resources/sass/app.scss">
+    @else
+        <link href="{{ asset('build/app.css') }}" rel="stylesheet">
+    @endif
     <style>
         #languagesList{
             display: flex;
@@ -41,7 +45,12 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="{{ mix('js/app.js') }}"></script>
+@if(app()->environment('local'))
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
+@else
+    <script src="{{ asset('build/app.js') }}"></script>
+@endif
 @yield('js')
 </body>
 </html>
