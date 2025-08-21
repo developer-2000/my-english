@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Spatie\DbDumper\Databases\MySql;
 use Illuminate\Support\Facades\Config;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Exceptions\DumpFailed;
 
 class BackupDatabase
 {
@@ -42,6 +44,14 @@ class BackupDatabase
         $this->createBackup($dateToday);
     }
 
+    /**
+     * Адрес бекапов - \storage\app\backups\2025-02-02.sql
+     *
+     * @param $date
+     * @return void
+     * @throws CannotStartDump
+     * @throws DumpFailed
+     */
     protected function createBackup($date) {
         // Получаем настройки базы данных из конфигурации Laravel
         $dbName = Config::get('database.connections.mysql.database');

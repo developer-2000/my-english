@@ -15,34 +15,34 @@ class WordRepository extends CoreRepository {
         $collection = $this->startConditions()->with('type');
 
         // search
-//        $searchArray = $vars['search'] ?? [];
-//        if (!empty($searchArray) && !empty($searchArray[0])) {
-//            // word language
-//            if ($language = $this->getLanguage($searchArray[0])) {
-//                // Select a column name depending on the language
-//                $column_name = $language === 'en' ? 'word' : 'translation';
-//                foreach ($searchArray as $word) {
-//                    if ($column_name == 'translation') {
-//                        $word = '%' . $word;
-//                    }
-//                    $collection = $collection->Orwhere($column_name, 'like', $word . '%');
-//                }
-//            }
-//        }
+        $searchArray = $vars['search'] ?? [];
+        if (!empty($searchArray) && !empty($searchArray[0])) {
+            // word language
+            if ($language = $this->getLanguage($searchArray[0])) {
+                // Select a column name depending on the language
+                $column_name = $language === 'en' ? 'word' : 'translation';
+                foreach ($searchArray as $word) {
+                    if ($column_name == 'translation') {
+                        $word = '%' . $word;
+                    }
+                    $collection = $collection->Orwhere($column_name, 'like', $word . '%');
+                }
+            }
+        }
 
         // выбрать указанные типы слов
-//        if ($vars['selection_type_id']) {
-//            $collection = $collection->where('type_id', $vars['selection_type_id']);
-//        }
+        if ($vars['selection_type_id']) {
+            $collection = $collection->where('type_id', $vars['selection_type_id']);
+        }
 
         $total_count = $collection->get()->count();
 
         // sort
-//        if ($vars['sort_column'] && $vars['sort_type']) {
-//            if ($vars['sort_column'] == 'letter') {
-//                $collection = $collection->orderBy('word', $vars['sort_type']);
-//            }
-//        }
+        if ($vars['sort_column'] && $vars['sort_type']) {
+            if ($vars['sort_column'] == 'letter') {
+                $collection = $collection->orderBy('word', $vars['sort_type']);
+            }
+        }
 
         // выбрать минимальное время в базе
         $minUpdatedAt = $collection->min('updated_at');
@@ -229,7 +229,7 @@ class WordRepository extends CoreRepository {
     }
 
     protected function getModelClass(): string {
-        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+        $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language ?? "en");
         return "App\\Models\\{$learnLanguage}Word";
     }
 
