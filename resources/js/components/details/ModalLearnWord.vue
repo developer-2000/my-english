@@ -117,6 +117,13 @@ export default {
             write_word: "",
             know: 0,
             not_know: 0,
+            // Добавляем переменные для отслеживания обработчиков
+            escapeHandler: null,
+            mouseoverHandler: null,
+            eventListenersCount: {
+                escape: 0,
+                mouseover: 0
+            }
         };
     },
     components: { helpSearchWord, },
@@ -172,8 +179,20 @@ export default {
         },
         // открываем модалку изучения слов
         openLearnModal() {
+            console.log('🔍 [MODAL_LEARN_WORD] openLearnModal called');
+            
+            // Проверяем и удаляем существующий обработчик Escape
+            if (this.escapeHandler) {
+                console.log('🔍 [MODAL_LEARN_WORD] Removing existing escape handler');
+                document.removeEventListener('keydown', this.escapeHandler);
+                this.eventListenersCount.escape--;
+            }
+            
             // Добавляем обработчик клавиши Escape
-            document.addEventListener('keydown', this.handleEscapeKey);
+            this.escapeHandler = this.handleEscapeKey.bind(this);
+            document.addEventListener('keydown', this.escapeHandler);
+            this.eventListenersCount.escape++;
+            console.log('🔍 [MODAL_LEARN_WORD] Escape handler added, count:', this.eventListenersCount.escape);
             
             // Открываем модалку изучения слов
             const modalElement = document.getElementById('learn_word');
@@ -192,10 +211,22 @@ export default {
                     document.body.appendChild(backdrop);
                 }
             }
+            
+            // Удаляем существующий обработчик mouseover перед добавлением нового
+            if (this.mouseoverHandler) {
+                console.log('🔍 [MODAL_LEARN_WORD] Removing existing mouseover handler');
+                $('body').off('mouseover', '.learn-word-trigger', this.mouseoverHandler);
+                this.eventListenersCount.mouseover--;
+            }
+            
             // инициализация hover на изучаемое слово
-            $('body').on('mouseover', '.learn-word-trigger', (event) => {
+            this.mouseoverHandler = (event) => {
                 this.outputHelperAlertInLearn(event)
-            });
+            };
+            $('body').on('mouseover', '.learn-word-trigger', this.mouseoverHandler);
+            this.eventListenersCount.mouseover++;
+            console.log('🔍 [MODAL_LEARN_WORD] Mouseover handler added, count:', this.eventListenersCount.mouseover);
+            
             // если уже открывалось слово
             if(this.last_updated_at !== null){
                 // Преобразование строки в объект Date
@@ -209,8 +240,23 @@ export default {
         },
         // Закрыть модалку
         closeModal() {
+            console.log('🔍 [MODAL_LEARN_WORD] closeModal called');
+            
             // Удаляем обработчик клавиши Escape
-            document.removeEventListener('keydown', this.handleEscapeKey);
+            if (this.escapeHandler) {
+                document.removeEventListener('keydown', this.escapeHandler);
+                this.eventListenersCount.escape--;
+                console.log('🔍 [MODAL_LEARN_WORD] Escape handler removed, count:', this.eventListenersCount.escape);
+                this.escapeHandler = null;
+            }
+            
+            // Удаляем обработчик mouseover
+            if (this.mouseoverHandler) {
+                $('body').off('mouseover', '.learn-word-trigger', this.mouseoverHandler);
+                this.eventListenersCount.mouseover--;
+                console.log('🔍 [MODAL_LEARN_WORD] Mouseover handler removed, count:', this.eventListenersCount.mouseover);
+                this.mouseoverHandler = null;
+            }
             
             const modalElement = document.getElementById('learn_word');
             if (modalElement) {
@@ -237,12 +283,16 @@ export default {
         },
         // Обработчик клавиши Escape
         handleEscapeKey(event) {
+            console.log('🔍 [MODAL_LEARN_WORD] handleEscapeKey called');
             if (event.key === 'Escape') {
+                console.log('🔍 [MODAL_LEARN_WORD] Escape key pressed, closing modal');
                 this.closeModal();
             }
         },
         // Поменять местами текст и перевод
         switchViewWord() {
+            console.log('🔍 [MODAL_LEARN_WORD] switchViewWord called');
+            console.log('🔍 [MODAL_LEARN_WORD] languageIndex:', this.objLanguage.languageIndex);
             // выбран русский
             if(this.objLanguage.languageIndex === 1){
                 this.objLearnWord.word = this.objOldLearnWord.translation
@@ -255,15 +305,22 @@ export default {
         },
         // переключение языков
         switchLanguage(){
+            console.log('🔍 [MODAL_LEARN_WORD] switchLanguage called');
+            console.log('🔍 [MODAL_LEARN_WORD] languageIndex before:', this.objLanguage.languageIndex);
             this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0
+            console.log('🔍 [MODAL_LEARN_WORD] languageIndex after:', this.objLanguage.languageIndex);
             localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
             this.switchViewWord()
         },
         // отобразить с какого на какой язык перевод
         viewLanguageLine() {
-            return (this.objLanguage.languageIndex === 0) ?
+            console.log('🔍 [MODAL_LEARN_WORD] viewLanguageLine called');
+            console.log('🔍 [MODAL_LEARN_WORD] languageIndex:', this.objLanguage.languageIndex);
+            const result = (this.objLanguage.languageIndex === 0) ?
                 this.objLanguage.languages[0] + ' ~ ' + this.objLanguage.languages[1] :
-                this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0]
+                this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0];
+            console.log('🔍 [MODAL_LEARN_WORD] viewLanguageLine result:', result);
+            return result;
         },
         // вывод подсказки при наведении на слово в таблице
         outputHelperAlertInLearn(event){
@@ -331,10 +388,30 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         },
     },
     mounted() {
+        console.log('🔍 [MODAL_LEARN_WORD] Component mounted');
         let languageIndex = localStorage.getItem('languageIndex');
         if(languageIndex !== null){
             this.objLanguage.languageIndex = parseInt(languageIndex)
         }
+    },
+    beforeDestroy() {
+        console.log('🔍 [MODAL_LEARN_WORD] Component destroying, cleaning up event listeners');
+        
+        // Очищаем все обработчики событий при уничтожении компонента
+        if (this.escapeHandler) {
+            document.removeEventListener('keydown', this.escapeHandler);
+            console.log('🔍 [MODAL_LEARN_WORD] Escape handler cleaned up on destroy');
+        }
+        
+        if (this.mouseoverHandler) {
+            $('body').off('mouseover', '.learn-word-trigger', this.mouseoverHandler);
+            console.log('🔍 [MODAL_LEARN_WORD] Mouseover handler cleaned up on destroy');
+        }
+        
+        // Сбрасываем счетчики
+        this.eventListenersCount.escape = 0;
+        this.eventListenersCount.mouseover = 0;
+        console.log('🔍 [MODAL_LEARN_WORD] Event listeners count reset to 0');
     },
     name: "ModalLearnWord"
 }

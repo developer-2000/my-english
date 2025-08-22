@@ -20,6 +20,31 @@
 // }
 import axios from "axios";
 
+// Добавляем интерцепторы для логирования
+axios.interceptors.request.use(
+    config => {
+        console.log('🔍 [HTTP] Request started:', config.method?.toUpperCase(), config.url);
+        console.log('🔍 [HTTP] Request data:', config.data || config.params);
+        return config;
+    },
+    error => {
+        console.log('🔍 [HTTP] Request error:', error);
+        return Promise.reject(error);
+    }
+);
+
+axios.interceptors.response.use(
+    response => {
+        console.log('🔍 [HTTP] Request completed:', response.config.method?.toUpperCase(), response.config.url);
+        console.log('🔍 [HTTP] Response status:', response.status);
+        return response;
+    },
+    error => {
+        console.log('🔍 [HTTP] Response error:', error.response?.status, error.config?.url);
+        return Promise.reject(error);
+    }
+);
+
 export default {
     async get(url, data = {}, headers = {}) {
         try {

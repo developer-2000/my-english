@@ -76,6 +76,11 @@ export default {
             return true;
         },
         forSpeak() {
+            console.log('🔍 [SOUND] forSpeak called, arrText length:', this.speak.arrText.length);
+            console.log('🔍 [SOUND] speak.start:', this.speak.start);
+            console.log('🔍 [SOUND] repeat_bool:', this.speak.repeat_bool);
+            console.log('🔍 [SOUND] count_repeat:', this.speak.count_repeat);
+            
             let item_count = 0;
             let arr_count = this.speak.arrText.length;
 
@@ -99,6 +104,7 @@ export default {
             }, 200);
         },
         async readSound(text, index) {
+            console.log('🔍 [SOUND] readSound called for:', text);
             return new Promise(resolve => {
                 let utterance = new SpeechSynthesisUtterance(text);
                 // определить язык текста
@@ -139,22 +145,37 @@ export default {
             }
         },
         pauseReadSound() {
+            console.log('🔍 [SOUND] pauseReadSound called');
+            console.log('🔍 [SOUND] speak.stop before:', this.speak.stop);
+            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
             this.voiceActingStatus({name:'stop_true'});
             this.voiceActingStatus({name:'pause_true'});
             this.speak.synthesis.cancel();
             this.speak.arrText = [...this.speak.pauseArrText];
             this.speak.arrIdCollText = [...this.speak.pauseIdCollText];
+            console.log('🔍 [SOUND] speak.stop after:', this.speak.stop);
+            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
         },
         stopReadSound() {
+            console.log('🔍 [SOUND] stopReadSound called');
+            console.log('🔍 [SOUND] speak.stop before:', this.speak.stop);
+            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
+            console.log('🔍 [SOUND] speak.start before:', this.speak.start);
             this.voiceActingStatus({name:'stop_false'});
             this.voiceActingStatus({name:'pause_false'});
             this.voiceActingStatus({name:'start_false'});
             this.speak.synthesis.cancel();
             this.changeColorLineSound();
+            console.log('🔍 [SOUND] speak.stop after:', this.speak.stop);
+            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
+            console.log('🔍 [SOUND] speak.start after:', this.speak.start);
         },
         continueReadSound() {
+            console.log('🔍 [SOUND] continueReadSound called');
+            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
             this.voiceActingStatus({name:'pause_false'});
             this.forSpeak();
+            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
         },
         scrollingToText(id) {
             if (id !== undefined) {

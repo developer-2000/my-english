@@ -22,7 +22,8 @@ class SentenceRepository extends CoreRepository {
                 // Select a column name depending on the language
                 $column_name = $language === 'en' ? 'sentence' : 'translation';
                 foreach ($searchArray as $word) {
-                    $collection = $collection->where($column_name, 'REGEXP', '(^|[^a-zA-Z0-9])' . $word . '($|[^a-zA-Z0-9])');
+                    // Используем LIKE для более гибкого поиска, нечувствительного к регистру
+                    $collection = $collection->whereRaw("LOWER({$column_name}) LIKE ?", ['%' . strtolower($word) . '%']);
                 }
             }
         }

@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="block_input_repeat flex items-center justify-center space-x-2">
                                     <input :checked="speak.repeat_bool"
-                                           @change="speak.repeat_bool = !speak.repeat_bool"
+                                           @change="handleRepeatCheckboxChange"
                                            class="checkbox_repeat"
                                            type="checkbox">
                                     <input class="form-control number_repeat"
@@ -30,7 +30,8 @@
                                            max="10"
                                            type="number"
                                            v-if="speak.repeat_bool"
-                                           v-model="speak.count_repeat">
+                                           v-model="speak.count_repeat"
+                                           @input="handleRepeatCountChange">
                                 </div>
                             </div>
                         </div>
@@ -429,25 +430,34 @@
                 globalPerPage: 'getPerPage'
             }),
             filteredColumns() {
-                return this.table.columns.filter(column => {
+                console.log('🔍 [COMPUTED] filteredColumns calculated');
+                console.log('🔍 [COMPUTED] getCodeLearnLanguage2:', this.getCodeLearnLanguage2);
+                const filtered = this.table.columns.filter(column => {
                     // Condition to hide the Озвучка column based on language code
                     if (column.label === 'Озвучка' && this.getCodeLearnLanguage2 !== 'en') {
                         return false;
                     }
                     return true;
                 });
+                console.log('🔍 [COMPUTED] filteredColumns result length:', filtered.length);
+                return filtered;
             },
             currentPage() {
+                console.log('🔍 [COMPUTED] currentPage calculated:', this.serverParams.page);
                 return this.serverParams.page;
             }
         },
         watch: {
             getLearnLanguage: {
-                handler: 'learnAnotherLanguage', // Вызывает метод при изменении getLearnLanguage - язык изучения
+                handler(newVal, oldVal) {
+                    console.log('🔍 [WATCHER] getLearnLanguage changed:', oldVal, '->', newVal);
+                    this.learnAnotherLanguage();
+                },
                 immediate: false // Не Вызов loadData сразу после создания компонента
             },
             globalPerPage: {
-                handler(newPerPage) {
+                handler(newPerPage, oldPerPage) {
+                    console.log('🔍 [WATCHER] globalPerPage changed:', oldPerPage, '->', newPerPage);
                     this.serverParams.perPage = newPerPage;
                 },
                 immediate: true
@@ -455,21 +465,28 @@
         },
         methods: {
             async bindCheckboxSound(sentence_id, status) {
+                console.log('🔍 [PAGE_WORD_SENTENCES] bindCheckboxSound called, sentence_id:', sentence_id, 'status:', status);
                 try {
                     let data = {
                         sentence_id: sentence_id,
                         status: status,
                     };
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request to bind checkbox sound');
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/bind-checkbox-sound`, data);
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
                     if (this.checkSuccess(response)) {
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Checkbox sound binding successful, calling initialData');
                         this.initialData();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in bindCheckboxSound:', e);
                 }
             },
             // --- предложения
             async loadSentences() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] loadSentences called');
+                console.log('🔍 [PAGE_WORD_SENTENCES] isLoading before:', this.isLoading);
+                
                 try {
                     this.isLoading = true;
                     let field = this.serverParams.sort[0].field;
@@ -479,49 +496,77 @@
                     }
 
                     const url = `selection_type_id=&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Request URL:', url);
+                    
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request');
                     const response = await this.$http.get(`${this.$http.webUrl()}sentence?${url}`
                     );
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
+                    
                     if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Total records:', this.table.totalRecords);
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentences list length:', response.data.data.sentences.list.length);
+                        
                         this.makeObjectDataForTable(response.data.data.sentences.list);
                         this.table.origin_rows = response.data.data.sentences.list;
+                        
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Table rows after processing:', this.table.rows.length);
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in loadSentences:', e);
                 }
                 this.isLoading = false;
+                console.log('🔍 [PAGE_WORD_SENTENCES] isLoading after:', this.isLoading);
             },
             async createSentence() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] createSentence called');
                 try {
                     let data = {
                         sentence: this.new_sentence,
                         translation: this.translation_sentence,
                     };
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Data to save:', JSON.stringify(data));
+                    
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Closing create modal');
                     $('#create_sentence').modal('hide');
                     $('.modal-backdrop.fade.show').remove();
+                    
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request to create sentence');
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence`, data);
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
+                    
                     if (this.checkSuccess(response)) {
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence created successfully, calling initialData');
                         this.initialData();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in createSentence:', e);
                 }
             },
             async updateSentence() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] updateSentence called');
                 try {
                     let data = {
                         sentence_id: this.sentence_id,
                         sentence: this.new_sentence,
                         translation: this.translation_sentence,
                     };
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Data to update:', JSON.stringify(data));
+                    
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request to update sentence');
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/update-sentence`, data);
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
+                    
                     if (this.checkSuccess(response)) {
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence updated successfully, calling initialData');
                         this.initialData();
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Closing update modal');
                         $('#update_sentence').modal('hide');
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in updateSentence:', e);
                 }
             },
             // --- validate
@@ -533,6 +578,7 @@
             },
             // set all
             initialData() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] initialData called');
                 this.loadSentences();
                 this.initialClickButSentenceUpdate();
                 this.initialCheckbox();
@@ -540,43 +586,64 @@
             },
             // --- checkbox
             initialCheckbox() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] initialCheckbox called');
                 this.activationButtonSoundInMenu(); // активация кнопки Sound в меню
             },
             activationButtonSoundInMenu() {
-                setTimeout(() => {
+                console.log('🔍 [PAGE_WORD_SENTENCES] activationButtonSoundInMenu called');
+                const timerId = setTimeout(() => {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] activationButtonSoundInMenu timer executed, ID:', timerId);
                     // состояние кнопки sound по умолчанию
                     this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
+                    console.log('🔍 [PAGE_WORD_SENTENCES] disabled_play set to:', this.disabled_play);
+                    
                     // Сначала отвязываем предыдущие обработчики
                     $(".memorable_checkbox").off('change');
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Previous event handlers removed');
+                    
                     // изменнеие одного из sound checkbox
                     $(".memorable_checkbox").on('change', (e) => {
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Checkbox change event triggered');
                         this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
                         this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
                     });
                 }, 1000);
+                console.log('🔍 [PAGE_WORD_SENTENCES] activationButtonSoundInMenu timer created, ID:', timerId);
             },
             setVariableDefault(sentence_id = 0, sentence = '', translation = '') {
+                console.log('🔍 [PAGE_WORD_SENTENCES] setVariableDefault called, sentence_id:', sentence_id, 'sentence:', sentence, 'translation:', translation);
                 this.sentence_id = sentence_id;
                 this.new_sentence = sentence;
                 this.translation_sentence = translation;
             },
             getSentenceCollection(id) {
+                console.log('🔍 [PAGE_WORD_SENTENCES] getSentenceCollection called, id:', id);
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {
                     if (this.table.origin_rows[i].id == id) {
                         row = this.table.origin_rows[i];
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence found:', row);
                         break;
                     }
+                }
+                if (!row) {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Sentence not found for id:', id);
                 }
                 return row;
             },
             initialClickButSentenceUpdate() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] initialClickButSentenceUpdate called');
                 // открываем редактирование предложения
-                setTimeout(() => {
+                const timerId = setTimeout(() => {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] initialClickButSentenceUpdate timer executed, ID:', timerId);
                     $('.btn_sentence').off('click');
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Previous btn_sentence handlers removed');
+                    
                     $('.btn_sentence').on('click', (e) => {
+                        console.log('🔍 [PAGE_WORD_SENTENCES] btn_sentence clicked');
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let id = queryObj.attr("data-id");
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence ID:', id);
                         let row = this.getSentenceCollection(id);
                         this.setVariableDefault(row.id, row.sentence, row.translation);
                         // Открываем модалку обновления предложения
@@ -599,15 +666,19 @@
                         this.help_dynamic = '';
                     })
                 }, 1000);
+                console.log('🔍 [PAGE_WORD_SENTENCES] initialClickButSentenceUpdate timer created, ID:', timerId);
             },
             openModalCreateSentence() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] openModalCreateSentence called');
                 this.setVariableDefault();
                 // Открываем модалку создания предложения
                 const modalElement = document.getElementById('create_sentence');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Create modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Bootstrap create modal shown');
                     } else {
                         modalElement.style.display = 'block';
                         modalElement.classList.add('show');
@@ -617,27 +688,37 @@
                         const backdrop = document.createElement('div');
                         backdrop.className = 'modal-backdrop fade show';
                         document.body.appendChild(backdrop);
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Create modal shown manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Create modal element not found');
                 }
             },
             // очистка параметров пагинации
             clearServerParams(){
+                console.log('🔍 [PAGE_WORD_SENTENCES] clearServerParams called');
+                console.log('🔍 [PAGE_WORD_SENTENCES] Server params before clear:', JSON.stringify(this.serverParams));
                 this.serverParams.search = ''
                 this.serverParams.page = 0
                 this.serverParams.sort[0].field = ''
                 this.serverParams.sort[0].type = ''
+                console.log('🔍 [PAGE_WORD_SENTENCES] Server params after clear:', JSON.stringify(this.serverParams));
             },
             // операции после смены языка изучения
             learnAnotherLanguage(){
+                console.log('🔍 [PAGE_WORD_SENTENCES] learnAnotherLanguage called');
                 this.clearServerParams()
                 this.initialData()
             },
             handlePaste(event) {
+                console.log('🔍 [PAGE_WORD_SENTENCES] handlePaste called');
                 event.preventDefault();
                 const pastedText = event.clipboardData.getData('text');
+                console.log('🔍 [PAGE_WORD_SENTENCES] Pasted text:', pastedText);
 
                 // Ищем пары предложений, разделенные тире с пробелами по бокам
                 const parts = pastedText.split(/\s+[-–—]\s+/);
+                console.log('🔍 [PAGE_WORD_SENTENCES] Parts after split:', parts);
 
                 if (parts.length >= 2) {
                     // Очищаем и получаем первое предложение (английское)
@@ -648,32 +729,42 @@
 
                     this.new_sentence = englishSentence;
                     this.translation_sentence = russianSentence;
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Set english sentence:', englishSentence);
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Set russian sentence:', russianSentence);
                 } else {
                     // Если нет разделителя, определяем язык предложения
                     const cleanedText = pastedText.trim();
                     const isRussian = /[а-яА-ЯёЁ]/.test(cleanedText);
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Is Russian text:', isRussian);
 
                     if (isRussian) {
                         this.translation_sentence = cleanedText;
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Set as translation:', cleanedText);
                     } else {
                         this.new_sentence = cleanedText;
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Set as new sentence:', cleanedText);
                     }
                 }
             },
             // Открыть модалку изучения предложений
             openLearnModal() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] openLearnModal called');
                 // Вызов openLearnModal у дочернего компонента через референцию
                 this.$refs.modalLearnSentence.openLearnModal();
                 this.bool_learn_sentences = true;
+                console.log('🔍 [PAGE_WORD_SENTENCES] bool_learn_sentences set to:', this.bool_learn_sentences);
             },
             // Закрыть модалку создания предложения
             closeCreateSentenceModal() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] closeCreateSentenceModal called');
                 const modalElement = document.getElementById('create_sentence');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Create modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = bootstrap.Modal.getInstance(modalElement);
                         if (modal) {
                             modal.hide();
+                            console.log('🔍 [PAGE_WORD_SENTENCES] Bootstrap create modal hidden');
                         }
                     } else {
                         modalElement.style.display = 'none';
@@ -685,17 +776,36 @@
                         if (backdrop) {
                             backdrop.remove();
                         }
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Create modal hidden manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Create modal element not found');
                 }
+            },
+            // Обработчик изменения чекбокса повтора
+            handleRepeatCheckboxChange() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] Repeat checkbox changed');
+                console.log('🔍 [PAGE_WORD_SENTENCES] Previous repeat_bool:', this.speak.repeat_bool);
+                this.speak.repeat_bool = !this.speak.repeat_bool;
+                console.log('🔍 [PAGE_WORD_SENTENCES] New repeat_bool:', this.speak.repeat_bool);
+                console.log('🔍 [PAGE_WORD_SENTENCES] count_repeat:', this.speak.count_repeat);
+            },
+            // Обработчик изменения количества повторений
+            handleRepeatCountChange() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] Repeat count changed');
+                console.log('🔍 [PAGE_WORD_SENTENCES] New count_repeat:', this.speak.count_repeat);
             },
             // Закрыть модалку обновления предложения
             closeUpdateSentenceModal() {
+                console.log('🔍 [PAGE_WORD_SENTENCES] closeUpdateSentenceModal called');
                 const modalElement = document.getElementById('update_sentence');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Update modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = bootstrap.Modal.getInstance(modalElement);
                         if (modal) {
                             modal.hide();
+                            console.log('🔍 [PAGE_WORD_SENTENCES] Bootstrap update modal hidden');
                         }
                     } else {
                         modalElement.style.display = 'none';
@@ -707,13 +817,22 @@
                         if (backdrop) {
                             backdrop.remove();
                         }
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Update modal hidden manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Update modal element not found');
                 }
             },
         },
+        created() {
+            console.log('🔍 [PAGE_WORD_SENTENCES] Component created');
+        },
         mounted() {
+            console.log('🔍 [PAGE_WORD_SENTENCES] Component mounted');
+            console.log('🔍 [LIFECYCLE] PageWordSentences component mounted');
             this.initialData();
             $(".modal").on("hidden.bs.modal", () => {
+                console.log('🔍 [LIFECYCLE] Modal hidden event triggered in PageWordSentences');
                 this.help_dynamic = "";
             })
         },
@@ -728,6 +847,7 @@
             },
         },
         beforeDestroy: function () {
+            console.log('🔍 [LIFECYCLE] PageWordSentences component destroying');
             $('.btn_sentence').off('click');
             $('#clear_search').unbind('click');
             $(".memorable_checkbox").unbind('change');

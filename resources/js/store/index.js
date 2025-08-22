@@ -13,12 +13,18 @@ export default new Vuex.Store({
     },
     mutations: {
         SET_PER_PAGE(state, perPage) {
+            console.log('🔍 [VUEX] SET_PER_PAGE mutation called with:', perPage);
+            console.log('🔍 [VUEX] Old perPage value:', state.pagination.perPage);
             state.pagination.perPage = perPage;
             localStorage.setItem('pagination_per_page', perPage);
+            console.log('🔍 [VUEX] New perPage value:', state.pagination.perPage);
         }
     },
     getters: {
-        getPerPage: state => state.pagination.perPage
+        getPerPage: state => {
+            console.log('🔍 [VUEX] getPerPage getter called, returning:', state.pagination.perPage);
+            return state.pagination.perPage;
+        }
     },
     modules: {
         language,

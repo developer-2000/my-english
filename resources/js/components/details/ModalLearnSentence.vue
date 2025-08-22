@@ -186,21 +186,28 @@ export default {
         },
         // переключение языков
         switchLanguage(){
+            console.log('🔍 [MODAL_LEARN_SENTENCE] switchLanguage called');
+            console.log('🔍 [MODAL_LEARN_SENTENCE] Current languageIndex:', this.objLanguage.languageIndex);
             this.objLanguage.languageIndex = this.objLanguage.languageIndex === 0 ? 1 : 0
+            console.log('🔍 [MODAL_LEARN_SENTENCE] New languageIndex:', this.objLanguage.languageIndex);
             localStorage.setItem('languageIndex', this.objLanguage.languageIndex);
 
             this.switchViewWord()
         },
         // Поменять местами текст и перевод
         switchViewWord() {
+            console.log('🔍 [MODAL_LEARN_SENTENCE] switchViewWord called');
+            console.log('🔍 [MODAL_LEARN_SENTENCE] languageIndex:', this.objLanguage.languageIndex);
             // выбран русский
             if(this.objLanguage.languageIndex === 1){
                 this.currentSentence.sentence = this.copySentence.translation
                 this.currentSentence.translation = this.copySentence.sentence
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Switched to Russian view');
             }
             else{
                 this.currentSentence.sentence = this.copySentence.sentence
                 this.currentSentence.translation = this.copySentence.translation
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Switched to English view');
             }
         },
         // отобразить с какого на какой язык перевод

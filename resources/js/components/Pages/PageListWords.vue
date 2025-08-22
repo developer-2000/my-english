@@ -814,23 +814,29 @@
                 }));
             },
             currentPage() {
+                console.log('🔍 [COMPUTED] currentPage calculated:', this.serverParams.page);
                 return this.serverParams.page;
             }
         },
         watch: {
             currentLearnLanguage: {
                 // Вызывает метод loadData при изменении currentLearnLanguage
-                handler: 'learnAnotherLanguage',
+                handler(newVal, oldVal) {
+                    console.log('🔍 [WATCHER] currentLearnLanguage changed:', oldVal, '->', newVal);
+                    this.learnAnotherLanguage();
+                },
                 immediate: false // Не Вызов loadData сразу после создания компонента
             },
             globalPerPage: {
-                handler(newPerPage) {
+                handler(newPerPage, oldPerPage) {
+                    console.log('🔍 [WATCHER] globalPerPage changed:', oldPerPage, '->', newPerPage);
                     this.serverParams.perPage = newPerPage;
                 },
                 immediate: true
             },
             'arrInputsModal.objConjunction': {
-                handler(newVal) {
+                handler(newVal, oldVal) {
+                    console.log('🔍 [WATCHER] arrInputsModal.objConjunction changed');
                     if (newVal) {
                         this.initSelection();
                     }
@@ -842,52 +848,68 @@
         methods: {
             // Предложения с большой буквы
             capitalizeFirstLetter(sentence) {
+                console.log('🔍 [PAGE_LIST_WORDS] capitalizeFirstLetter called, sentence:', sentence);
                 if (!sentence) return '';
-                return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+                const result = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+                console.log('🔍 [PAGE_LIST_WORDS] Capitalized result:', result);
+                return result;
             },
             // Выбор Select типов слов
             handleSelectChange() {
+                console.log('🔍 [PAGE_LIST_WORDS] handleSelectChange called');
+                console.log('🔍 [PAGE_LIST_WORDS] selectedOption:', this.table.selectedOption);
                 this.clearServerParams()
                 this.serverParams.selection_type_id = this.table.selectedOption
                 this.resetButtonClearSearch()
             },
             initSelection() {
+                console.log('🔍 [PAGE_LIST_WORDS] initSelection called');
                 for (const [key, value] of Object.entries(this.arrInputsModal.objConjunction)) {
                     if (value.select) {
                         this.arrInputsModal.selectedConjunction = key;
+                        console.log('🔍 [PAGE_LIST_WORDS] Selected conjunction:', key);
                         return;
                     }
                 }
                 this.arrInputsModal.selectedConjunction = '';
+                console.log('🔍 [PAGE_LIST_WORDS] No conjunction selected');
             },
             updateSelection() {
+                console.log('🔍 [PAGE_LIST_WORDS] updateSelection called');
                 if (this.arrInputsModal.objConjunction) {
                     for (const key in this.arrInputsModal.objConjunction) {
                         this.arrInputsModal.objConjunction[key].select = (key === this.arrInputsModal.selectedConjunction);
                     }
+                    console.log('🔍 [PAGE_LIST_WORDS] Selection updated, selectedConjunction:', this.arrInputsModal.selectedConjunction);
                 }
             },
             // Заполнение данных и типе слова для передачи на сервер
             getCustomForms(){
+                console.log('🔍 [PAGE_LIST_WORDS] getCustomForms called');
                 // типы слова формы времени или числительные
                 let forms = null
                 // кастом input - свойства object - поля description - таблицы word_types
                 if(this.arrInputsModal.objWordTimeForms){
                     forms = this.arrInputsModal.objWordTimeForms
+                    console.log('🔍 [PAGE_LIST_WORDS] Using objWordTimeForms');
                 }
                 // кастом input - свойства object - поля description - таблицы word_types
                 else if(this.arrInputsModal.objNumber){
                     forms = this.arrInputsModal.objNumber
+                    console.log('🔍 [PAGE_LIST_WORDS] Using objNumber');
                 }
                 // кастом select - свойства object - поля description - таблицы word_types
                 else if(this.arrInputsModal.objConjunction){
                     forms = this.arrInputsModal.objConjunction
+                    console.log('🔍 [PAGE_LIST_WORDS] Using objConjunction');
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Custom forms:', forms);
                 return forms
             },
             // Сформированный обьект для передачи на сервер
             getDataSaveServer(){
-                return  {
+                console.log('🔍 [PAGE_LIST_WORDS] getDataSaveServer called');
+                const data = {
                     word: this.arrInputsModal.new_word,
                     translation: this.arrInputsModal.translation_word,
                     url_image: this.arrInputsModal.url_image,
@@ -896,16 +918,24 @@
                     type_id: this.arrInputsModal.select_type_id, // id типа из таблицы word_types
                     time_forms: this.getCustomForms(),
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Data for server:', JSON.stringify(data));
+                return data
             },
             async createWord() {
+                console.log('🔍 [PAGE_LIST_WORDS] createWord called');
                 try {
                     const data = this.getDataSaveServer()
+                    console.log('🔍 [PAGE_LIST_WORDS] Data to save:', JSON.stringify(data));
 
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to create word');
                     const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
 
                     if(this.checkSuccess(response)){
+                        console.log('🔍 [PAGE_LIST_WORDS] Word created successfully, calling initialData');
                         this.initialData();
                         // Закрываем модалку создания слова
+                        console.log('🔍 [PAGE_LIST_WORDS] Closing create modal');
                         const modalElement = document.getElementById('create_word');
                         if (modalElement) {
                             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -926,17 +956,23 @@
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in createWord:', e);
                 }
             },
             async updateWord() {
+                console.log('🔍 [PAGE_LIST_WORDS] updateWord called');
                 let data = this.getDataSaveServer()
                 data.word_id = this.arrInputsModal.word_id
+                console.log('🔍 [PAGE_LIST_WORDS] Data for update:', JSON.stringify(data));
                 try {
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to update word');
                     const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
                     if(this.checkSuccess(response)){
+                        console.log('🔍 [PAGE_LIST_WORDS] Word updated successfully, calling initialData');
                         this.initialData();
                         // Закрываем модалку обновления слова
+                        console.log('🔍 [PAGE_LIST_WORDS] Closing update modal');
                         const modalElement = document.getElementById('update_word');
                         if (modalElement) {
                             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -957,85 +993,111 @@
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in updateWord:', e);
                 }
             },
             async deleteWord(word_id) {
+                console.log('🔍 [PAGE_LIST_WORDS] deleteWord called, word_id:', word_id);
                 let data = { id: word_id };
                 try {
-                    this.confirmMessage('message', 'success');
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to delete word');
                     const response = await this.$http.post(`${this.$http.webUrl()}word/delete-word`, data);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
                     if(this.checkSuccess(response)){
+                        console.log('🔍 [PAGE_LIST_WORDS] Word deleted successfully, calling initialData');
                         this.$swal.close()
                         this.initialData();
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in deleteWord:', e);
                 }
             },
             // выборка слов и типов слов с пагинацией
             // http://english.my/word?search=&page=0&perPage=50&sortField=&sortType=
             async loadWordsAndTypes() {
+                console.log('🔍 [PAGE_LIST_WORDS] loadWordsAndTypes called');
+                console.log('🔍 [PAGE_LIST_WORDS] isLoading before:', this.isLoading);
+                
                 const url = `selection_type_id=${this.serverParams.selection_type_id}&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
-
-
+                console.log('🔍 [PAGE_LIST_WORDS] Request URL:', url);
 
                 try {
                     this.isLoading = true;
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request');
                     const response = await this.$http.get(`${this.$http.webUrl()}word?${url}`)
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
 
                     if(this.checkSuccess(response)){
                         this.table.totalRecords = response.data.data.total_count;
+                        console.log('🔍 [PAGE_LIST_WORDS] Total records:', this.table.totalRecords);
+                        console.log('🔍 [PAGE_LIST_WORDS] Data list length:', response.data.data.list.length);
+                        
                         this.makeObjectDataForTable(response.data.data.list);
                         this.table.origin_rows = response.data.data.list;
                         this.allTypes = response.data.data.types;
                         this.deleteColorFromArrColor(response.data.data.colors);
+                        
+                        console.log('🔍 [PAGE_LIST_WORDS] Table rows after processing:', this.table.rows.length);
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in loadWordsAndTypes:', e);
                 } finally {
                     this.isLoading = false;
+                    console.log('🔍 [PAGE_LIST_WORDS] isLoading after:', this.isLoading);
                 }
             },
             // выбрать все предложения с этим словом
             async searchSentences(word) {
+                console.log('🔍 [PAGE_LIST_WORDS] searchSentences called, word:', word);
                 let data = { word: word };
 
                 try {
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to search sentences');
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/search-sentences`, data);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
                     if(this.checkSuccess(response)){
                         this.arrSentences = response.data.data.sentences
+                        console.log('🔍 [PAGE_LIST_WORDS] Sentences found:', this.arrSentences.length);
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in searchSentences:', e);
                 }
             },
             async loadGenerateSentences(){
+                console.log('🔍 [PAGE_LIST_WORDS] loadGenerateSentences called');
                 this.objGenerateSentences.boolAddSentences = true
                 this.objGenerateSentences.boolLoadingIndicator = false
                 let data = {
                     arr_words: Array.isArray(this.arrInputsModal.new_word) ? this.arrInputsModal.new_word : [this.arrInputsModal.new_word],
                 };
+                console.log('🔍 [PAGE_LIST_WORDS] Data for AI generation:', JSON.stringify(data));
 
                 try {
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to generate sentences');
                     const response = await this.$http.post(`${this.$http.webUrl()}ai/generate-sentences`, data);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
                     if(this.checkSuccess(response)){
                         this.objGenerateSentences.arrGenerateSentences = response.data.data.sentences
                         this.objGenerateSentences.boolLoadingIndicator = true
+                        console.log('🔍 [PAGE_LIST_WORDS] Generated sentences:', this.objGenerateSentences.arrGenerateSentences.length);
                     }
                 } catch (e) {
-                    console.log(e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in loadGenerateSentences:', e);
                 }
             },
             async getPresentTenseWords() {
+                console.log('🔍 [PAGE_LIST_WORDS] getPresentTenseWords called');
                 try {
+                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to get present tense words');
                     const response = await this.$http.get(`${this.$http.webUrl()}word/get-present-tense`);
+                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
 
                     if (this.checkSuccess(response)) {
                         // Получаем все слова через запятую
                         const words = response.data.data
                             .map(item => item.word)
                             .join(', ');
+                        console.log('🔍 [PAGE_LIST_WORDS] Words to copy:', words);
 
                         // Создаем временный textarea элемент
                         const textarea = document.createElement('textarea');
@@ -1048,6 +1110,7 @@
                         try {
                             // Пытаемся скопировать текст
                             document.execCommand('copy');
+                            console.log('🔍 [PAGE_LIST_WORDS] Words copied to clipboard');
                             // Показываем уведомление об успешном копировании
                             this.$swal({
                                 toast: true,
@@ -1058,7 +1121,7 @@
                                 title: 'Слова скопированы в буфер обмена'
                             });
                         } catch (err) {
-                            console.error('Ошибка при копировании:', err);
+                            console.error('🔍 [PAGE_LIST_WORDS] Error copying to clipboard:', err);
                             this.$swal({
                                 toast: true,
                                 position: 'top-end',
@@ -1073,16 +1136,19 @@
                         }
                     }
                 } catch (e) {
-                    console.error('Ошибка при получении слов в настоящем времени:', e);
+                    console.error('🔍 [PAGE_LIST_WORDS] Error in getPresentTenseWords:', e);
                 }
             },
             touchNewWord() {
+                console.log('🔍 [PAGE_LIST_WORDS] touchNewWord called');
                 this.$v.arrInputsModal.new_word.$touch();
             },
             touchTranslationWord() {
+                console.log('🔍 [PAGE_LIST_WORDS] touchTranslationWord called');
                 this.$v.arrInputsModal.translation_word.$touch();
             },
             initialData() {
+                console.log('🔍 [PAGE_LIST_WORDS] initialData called');
                 this.loadWordsAndTypes();
                 this.hoverWordShowTitle();
                 this.showStyleDataOnSelectType();
@@ -1092,16 +1158,20 @@
                 this.closeAllModals()
             },
             deleteColorFromArrColor(arrColor) {
+                console.log('🔍 [PAGE_LIST_WORDS] deleteColorFromArrColor called, arrColor length:', arrColor.length);
                 let index = 0;
                 this.allColor = arrColor;
                 for(let i=0; i < this.allTypes.length; i++){
                     index = this.allColor.indexOf(this.allTypes[i].color);
                     if(index !== -1){
                         this.allColor.splice(index,1)
+                        console.log('🔍 [PAGE_LIST_WORDS] Removed color:', this.allTypes[i].color);
                     }
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Final allColor length:', this.allColor.length);
             },
             makeObjectDataForTable(list) {
+                console.log('🔍 [PAGE_LIST_WORDS] makeObjectDataForTable called, list length:', list.length);
                 let row = {letter:"", word1:"", word2: "", word3: "", word4: "", word5: ""};
                 this.table.rows = [];
                 let tick = 1;
@@ -1125,14 +1195,20 @@
                 }
                 row['letter'] = simbol.substring(0, simbol.length - 1);
                 this.table.rows.push(row);
+                console.log('🔍 [PAGE_LIST_WORDS] Table rows created:', this.table.rows.length);
             },
             // methods table
             updateColumnTable(){
+                console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable called');
                 let timerId = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer executed, ID:', timerId);
                     let row = '';
                     let prev = '';
 
-                    document.querySelectorAll("#vgt-table .btn_block_column").forEach((tag) => {
+                    const elements = document.querySelectorAll("#vgt-table .btn_block_column");
+                    console.log('🔍 [PAGE_LIST_WORDS] Found elements to process:', elements.length);
+                    
+                    elements.forEach((tag, index) => {
                         prev = $(tag).prev();
                         // нет слова в столбце
                         if(prev.text() == ''){
@@ -1152,18 +1228,25 @@
                         }
                     });
                 }, 500);
+                console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer created, ID:', timerId);
             },
             // навести на слово в таблице
             hoverWordShowTitle() {
+                console.log('🔍 [PAGE_LIST_WORDS] hoverWordShowTitle called');
                 $('body').on('mouseover', '.trigger', (event) => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Mouse over trigger element:', event.target.textContent);
                     this.outputHelperAlertInTable(event)
                 });
             },
             // вывод подсказки при наведении на слово в таблице
             outputHelperAlertInTable(event){
+                console.log('🔍 [PAGE_LIST_WORDS] outputHelperAlertInTable called');
                 // выбрать колекцию слова
                 let row = this.getRowForWord($(event.target).text());
-                if (row == null) { return false; }
+                if (row == null) { 
+                    console.log('🔍 [PAGE_LIST_WORDS] Row not found, returning false');
+                    return false; 
+                }
 
                 let text_type = (row.type !== null) ? row.type.type : ""
                 let text_description = (row.time_forms === null && row.type.description !== undefined) ?
@@ -1211,9 +1294,11 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 let instance = $(event.target)[0]._tippy;
                 // Если экземпляр tippy существует, обновить его содержимое
                 if (instance) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Updating existing tippy instance');
                     instance.setContent(html);
                 }
                 else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Creating new tippy instance');
                     // 2 показ подсказки
                     tippy(event.target, {
                         content: html,
@@ -1224,10 +1309,13 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // события выборки значения в select типов слов
             showStyleDataOnSelectType(){
+                console.log('🔍 [PAGE_LIST_WORDS] showStyleDataOnSelectType called');
                 // в модалке создания слова
                 const selectTypeElement = document.getElementById("select_type");
                 if (selectTypeElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Adding event listener to select_type');
                     selectTypeElement.addEventListener('change', () => {
+                        console.log('🔍 [PAGE_LIST_WORDS] select_type changed, value:', this.arrInputsModal.select_type_id);
                         for(let i=0; i < this.allTypes.length; i++){
                             if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
                                 this.setStyleDataModal(this.allTypes[i]);
@@ -1240,7 +1328,9 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // в модалке обновления слова - select type
                 const updateSelectTypeElement = document.getElementById("update_select_type");
                 if (updateSelectTypeElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Adding event listener to update_select_type');
                     updateSelectTypeElement.addEventListener('change', () => {
+                        console.log('🔍 [PAGE_LIST_WORDS] update_select_type changed, value:', this.arrInputsModal.select_type_id);
                         for(let i = 0; i < this.allTypes.length; i++) {
                             if (this.allTypes[i].id == this.arrInputsModal.select_type_id) {
                                 this.setStyleDataModal(this.allTypes[i]);
@@ -1252,25 +1342,34 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // Возвращает по слову обьект слова
             getRowForWord(word){
+                console.log('🔍 [PAGE_LIST_WORDS] getRowForWord called, word:', word);
                 let row = null;
                 for (let i = 0; i < this.table.origin_rows.length; i++) {
                     if (this.table.origin_rows[i].word.toLowerCase() == word) {
                         row = this.table.origin_rows[i];
+                        console.log('🔍 [PAGE_LIST_WORDS] Word found:', row);
                         break;
                     }
+                }
+                if (!row) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Word not found for:', word);
                 }
                 return row;
             },
             getType(id){
+                console.log('🔍 [PAGE_LIST_WORDS] getType called, id:', id);
                 for (let i = 0; i < this.allTypes.length; i++) {
                     if (this.allTypes[i].id == id) {
+                        console.log('🔍 [PAGE_LIST_WORDS] Type found:', this.allTypes[i]);
                         return this.allTypes[i];
                     }
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Type not found for id:', id);
                 return null;
             },
             // отобразить значение типа слова в правой части select выбора
             setStyleDataModal(type){
+                console.log('🔍 [PAGE_LIST_WORDS] setStyleDataModal called, type:', type);
                 let string = ''
                 this.arrInputsModal.objWordTimeForms = null
                 this.arrInputsModal.objNumber = null
@@ -1298,24 +1397,31 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         }
                     }
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Style data set, string:', string);
                 $('.desc_type').css('border-color',type.color);
                 $('.desc_type .text').html(string);
             },
             // события клика по кнопкам - удалить или редактировать слово
             initialClickButWordUpdate(){
+                console.log('🔍 [PAGE_LIST_WORDS] initialClickButWordUpdate called');
                 let a = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] initialClickButWordUpdate timer executed, ID:', a);
                     // удалить
                     $('.btn-danger.delete').bind('click', (e) => {
+                        console.log('🔍 [PAGE_LIST_WORDS] Delete button clicked');
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let word = queryObj.parent().prev(".trigger").text();
+                        console.log('🔍 [PAGE_LIST_WORDS] Word to delete:', word);
                         let row = this.getRowForWord(word);
                         // confirm delete
                         this.confirmMessage('Really delete word ?', 'success', row.id)
                     });
                     // редактировать
                     $('.btn-warning.edit').bind('click', (e) => {
+                        console.log('🔍 [PAGE_LIST_WORDS] Edit button clicked');
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
                         let word = queryObj.parent().prev(".trigger").text();
+                        console.log('🔍 [PAGE_LIST_WORDS] Word to edit:', word);
                         // открытие модалки редактирования
                         this.openUpdateWordModal(word)
                     });
@@ -1323,14 +1429,17 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // Открыть модалку создания
             openModalCreateWord(){
+                console.log('🔍 [PAGE_LIST_WORDS] openModalCreateWord called');
                 this.setVariableDefault();
                 this.setStyleDataModal({description:null, type:'', color:'black'});
                 // Открываем модалку создания слова
                 const modalElement = document.getElementById('create_word');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Create modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
+                        console.log('🔍 [PAGE_LIST_WORDS] Bootstrap create modal shown');
                     } else {
                         modalElement.style.display = 'block';
                         modalElement.classList.add('show');
@@ -1340,14 +1449,19 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         const backdrop = document.createElement('div');
                         backdrop.className = 'modal-backdrop fade show';
                         document.body.appendChild(backdrop);
+                        console.log('🔍 [PAGE_LIST_WORDS] Create modal shown manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Create modal element not found');
                 }
                 $('#create_word').on('shown.bs.modal', () => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Create modal shown event triggered');
                     this.$refs.new_word.focus();
                 });
             },
             // Открыть модалку редактирования
             openUpdateWordModal(word){
+                console.log('🔍 [PAGE_LIST_WORDS] openUpdateWordModal called, word:', word);
                 // Выбрать обьект слова по слову
                 let row = this.getRowForWord(word);
                 this.objUpdateWord = row
@@ -1357,9 +1471,11 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // Открываем модалку обновления слова
                 const modalElement = document.getElementById('update_word');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Update modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
+                        console.log('🔍 [PAGE_LIST_WORDS] Bootstrap update modal shown');
                     } else {
                         modalElement.style.display = 'block';
                         modalElement.classList.add('show');
@@ -1369,12 +1485,17 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         const backdrop = document.createElement('div');
                         backdrop.className = 'modal-backdrop fade show';
                         document.body.appendChild(backdrop);
+                        console.log('🔍 [PAGE_LIST_WORDS] Update modal shown manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Update modal element not found');
                 }
             },
             // Закрыть любую модалку
             closeAllModals(){
+                console.log('🔍 [PAGE_LIST_WORDS] closeAllModals called');
                 $(".modal").on("hidden.bs.modal", () => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Modal hidden event triggered');
                     this.help_dynamic = "";
                     this.objWordFromTable.bool_click_button_word_from_table = false
                     this.objUpdateWord = null
@@ -1383,22 +1504,29 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             },
             // Открыть модалку изучения слова
             openLearnModal() {
+                console.log('🔍 [PAGE_LIST_WORDS] openLearnModal called');
                 // Вызов openLearnModal у дочернего компонента через референцию
                 this.$refs.modalLearnWord.openLearnModal();
                 this.bool_learn_words = true;
+                console.log('🔍 [PAGE_LIST_WORDS] bool_learn_words set to:', this.bool_learn_words);
             },
             // Обработчик закрытия модалки изучения слов
             onModalClosed() {
+                console.log('🔍 [PAGE_LIST_WORDS] onModalClosed called');
                 this.bool_learn_words = false;
+                console.log('🔍 [PAGE_LIST_WORDS] bool_learn_words set to:', this.bool_learn_words);
             },
             // Закрыть модалку создания слова
             closeCreateModal() {
+                console.log('🔍 [PAGE_LIST_WORDS] closeCreateModal called');
                 const modalElement = document.getElementById('create_word');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = bootstrap.Modal.getInstance(modalElement);
                         if (modal) {
                             modal.hide();
+                            console.log('🔍 [PAGE_LIST_WORDS] Bootstrap modal hidden');
                         }
                     } else {
                         modalElement.style.display = 'none';
@@ -1410,17 +1538,23 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         if (backdrop) {
                             backdrop.remove();
                         }
+                        console.log('🔍 [PAGE_LIST_WORDS] Modal hidden manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Modal element not found');
                 }
             },
             // Закрыть модалку обновления слова
             closeUpdateModal() {
+                console.log('🔍 [PAGE_LIST_WORDS] closeUpdateModal called');
                 const modalElement = document.getElementById('update_word');
                 if (modalElement) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Update modal element found');
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         const modal = bootstrap.Modal.getInstance(modalElement);
                         if (modal) {
                             modal.hide();
+                            console.log('🔍 [PAGE_LIST_WORDS] Bootstrap update modal hidden');
                         }
                     } else {
                         modalElement.style.display = 'none';
@@ -1432,11 +1566,15 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         if (backdrop) {
                             backdrop.remove();
                         }
+                        console.log('🔍 [PAGE_LIST_WORDS] Update modal hidden manually');
                     }
+                } else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Update modal element not found');
                 }
             },
             // заполнение переменных для модалок создания и редактирования слова
             setVariableDefault(obj = {id: 0, word: '', translation: '', url_image: '', type: {id: 0}, description: '""', time_forms: null}){
+                console.log('🔍 [PAGE_LIST_WORDS] setVariableDefault called, obj:', obj);
                 this.arrInputsModal.word_id = obj.id || 0;
                 this.arrInputsModal.new_word = obj.word || '';
                 this.arrInputsModal.translation_word = obj.translation || '';
@@ -1461,21 +1599,27 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         this.arrInputsModal.objConjunction = obj.time_forms || null;
                     }
                 }
+                console.log('🔍 [PAGE_LIST_WORDS] Modal variables set, word_id:', this.arrInputsModal.word_id, 'word:', this.arrInputsModal.new_word);
             },
             // отключить событие по умолчанию у переключателя input генерации предложений
             preventDefault(event) {
+                console.log('🔍 [PAGE_LIST_WORDS] preventDefault called');
                 event.preventDefault();
             },
             // Клик по родителю переключателя генерации предложений
             toggleSwitch(event, ref) {
-                setTimeout(()=>{
+                console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch called, ref:', ref);
+                const timerId = setTimeout(()=>{
+                    console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer executed, ID:', timerId);
                     if (this.$refs[ref]) {
                         this.$refs[ref].checked = !this.$refs[ref].checked;
                         this.objGenerateSentences.status_toggle = this.$refs[ref].checked
+                        console.log('🔍 [PAGE_LIST_WORDS] Toggle state:', this.objGenerateSentences.status_toggle);
 
                         // Находим родительский элемент div.form-check.form-switch
                         const parentElement = event.target.closest('.form-switch');
                         if (!parentElement) {
+                            console.log('🔍 [PAGE_LIST_WORDS] Parent element not found');
                             return;
                         }
                         // Находим дочерний label элемент внутри родительского элемента
@@ -1488,42 +1632,60 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         else {
                             label.textContent = this.$t('all.sentences');
                         }
+                        console.log('🔍 [PAGE_LIST_WORDS] Label text updated to:', label.textContent);
+                    } else {
+                        console.log('🔍 [PAGE_LIST_WORDS] Ref not found:', ref);
                     }
                 },100)
+                console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer created, ID:', timerId);
             },
             // Очистка переменных модалки
             clearGenerateSentences() {
+                console.log('🔍 [PAGE_LIST_WORDS] clearGenerateSentences called');
                 this.objGenerateSentences.status_toggle = false
                 this.objGenerateSentences.boolAddSentences = false
                 this.objGenerateSentences.boolLoadingIndicator = false
                 this.objGenerateSentences.selectedSentences = []
                 this.objGenerateSentences.arrGenerateSentences = []
+                console.log('🔍 [PAGE_LIST_WORDS] Generate sentences object cleared');
                 // Снятие checked состояния после инициализации
                 if (this.$refs.toggle1) {
                     $(this.$refs.toggle1).prop('checked', false).change();
+                    console.log('🔍 [PAGE_LIST_WORDS] toggle1 unchecked');
                 }
                 if (this.$refs.toggle2) {
                     $(this.$refs.toggle2).prop('checked', false).change();
+                    console.log('🔍 [PAGE_LIST_WORDS] toggle2 unchecked');
                 }
             },
             // очистка параметров пагинации
             clearServerParams(){
+                console.log('🔍 [PAGE_LIST_WORDS] clearServerParams called');
+                console.log('🔍 [PAGE_LIST_WORDS] Server params before clear:', JSON.stringify(this.serverParams));
                 this.serverParams.selection_type_id = ''
                 this.serverParams.search = ''
                 this.serverParams.page = 0
                 this.serverParams.sort[0].field = ''
                 this.serverParams.sort[0].type = ''
+                console.log('🔍 [PAGE_LIST_WORDS] Server params after clear:', JSON.stringify(this.serverParams));
             },
             // операции после смены языка изучения
             learnAnotherLanguage(){
+                console.log('🔍 [PAGE_LIST_WORDS] learnAnotherLanguage called');
                 this.clearServerParams()
                 this.initialData()
             },
         },
+        created() {
+            console.log('🔍 [PAGE_LIST_WORDS] Component created');
+        },
         mounted() {
+            console.log('🔍 [PAGE_LIST_WORDS] Component mounted');
+            console.log('🔍 [LIFECYCLE] PageListWords component mounted');
             this.initialData();
         },
         beforeDestroy: function () {
+            console.log('🔍 [LIFECYCLE] PageListWords component destroying');
             $('.btn-warning').unbind('click');
             $('.btn-danger').unbind('click');
 

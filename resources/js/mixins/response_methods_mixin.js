@@ -7,8 +7,10 @@ export default {
     methods: {
         // проверка backup данных axios
         checkSuccess(response) {
+            console.log('🔍 [RESPONSE_METHODS] checkSuccess called, response status:', response.status);
             // json response
             if(response.data.error === null){
+                console.log('🔍 [RESPONSE_METHODS] Response is successful');
                 return true;
             }
             // not correct validate laravel
@@ -16,10 +18,12 @@ export default {
             // else{
             //     this.message(response.data.message, 'error');
             // }
+            console.log('🔍 [RESPONSE_METHODS] Response has error:', response.data.error);
             return false;
         },
         // alert сообщение на странице
         message(msg = '', icon) {
+            console.log('🔍 [RESPONSE_METHODS] message called, msg:', msg, 'icon:', icon);
             const Toast = this.$swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -34,6 +38,7 @@ export default {
         },
         // confirm сообщение на странице
         confirmMessage(msg = '', icon, id) {
+            console.log('🔍 [RESPONSE_METHODS] confirmMessage called, msg:', msg, 'icon:', icon, 'id:', id);
             this.$swal({
                 title: '',
                 text: msg,
@@ -43,7 +48,9 @@ export default {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
+                console.log('🔍 [RESPONSE_METHODS] Confirm dialog result:', result);
                 if (result.isConfirmed) {
+                    console.log('🔍 [RESPONSE_METHODS] User confirmed deletion, calling deleteWord with id:', id);
                     this.deleteWord(id);
                 }
             })
