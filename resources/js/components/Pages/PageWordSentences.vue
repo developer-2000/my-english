@@ -12,7 +12,7 @@
                     </p>
                 </div>
 
-                <div class="flex items-center space-x-3">
+                <div class="flex items-end space-x-3">
                     <!-- кнопки озвучки предложений -->
                     <div class="box-sound" v-show="getCodeLearnLanguage2 == 'en'">
                         <div id="block_repeat" v-if="!speak.start" class="flex items-center space-x-3">
@@ -25,7 +25,7 @@
                                            @change="speak.repeat_bool = !speak.repeat_bool"
                                            class="checkbox_repeat"
                                            type="checkbox">
-                                    <input class="number_repeat"
+                                    <input class="form-control number_repeat"
                                            min="1"
                                            max="10"
                                            type="number"
@@ -100,32 +100,44 @@
             </div>
 
             <!-- Table -->
-            <vue-good-table
-                :columns="filteredColumns"
-                :isLoading.sync="table.isLoading"
-                :mode="table.mode"
-                :pagination-options="table.optionsPaginate"
-                :rows="table.rows"
-                :search-options="{
-                    enabled: true,
-                    placeholder: 'Search word',
-                }"
-                :totalRows="table.totalRecords"
-                @on-page-change="onPageChange"
-                @on-per-page-change="onPerPageChange"
-                @on-search="onSearch"
-                @on-sort-change="onSortChange"
-                styleClass="vgt-table sentence"
-            >
-                <template slot="loadingContent">
-                    <div></div>
-                </template>
-            </vue-good-table>
+            <div v-if="table.rows.length" class="table_wrapper">
+                <vue-good-table
+                    :columns="filteredColumns"
+                    :isLoading.sync="table.isLoading"
+                    :mode="table.mode"
+                    :pagination-options="{ enabled: false }"
+                    :rows="table.rows"
+                    :search-options="{
+                                enabled: true,
+                                placeholder: 'Search word',
+                            }"
+                    :totalRows="table.totalRecords"
+                    @on-search="onSearch"
+                    @on-sort-change="onSortChange"
+                    styleClass="vgt-table sentence"
+                >
+                    <template slot="loadingContent">
+                        <div></div>
+                    </template>
+                </vue-good-table>
+
+                <!-- Компактная пагинация -->
+                <CompactPagination
+                    v-if="table.rows.length"
+                    :current-page="currentPage"
+                    :total="table.totalRecords"
+                    :per-page="globalPerPage"
+                    :per-page-options="[10, 25, 50, 100]"
+                    @page-changed="onPageChange"
+                    @per-page-changed="onPerPageChange"
+                />
+            </div>
         </div>
 
         <!-- Modals создать предложение -->
         <div aria-hidden="true" aria-labelledby="create_sentence" class="modal fade"
-             id="create_sentence" role="dialog" tabindex="-1">
+             id="create_sentence" role="dialog" tabindex="-1"
+             @click.self="closeCreateSentenceModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
@@ -133,7 +145,7 @@
                         <h5 class="modal-title text-lg font-semibold">
                             {{ $t('all.create_new_sentence') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeCreateSentenceModal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -204,7 +216,8 @@
 
         <!-- Modals обновить предложение -->
         <div aria-hidden="true" aria-labelledby="update_sentence" class="modal fade"
-             id="update_sentence" role="dialog" tabindex="-1">
+             id="update_sentence" role="dialog" tabindex="-1"
+             @click.self="closeUpdateSentenceModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
@@ -212,7 +225,7 @@
                         <h5 class="modal-title text-lg font-semibold">
                             {{ $t('all.update_sentence') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeUpdateSentenceModal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -310,6 +323,7 @@
     import $ from "jquery";
     // components
     import ModalLearnSentence from "../details/ModalLearnSentence.vue";
+    import CompactPagination from "../CompactPagination.vue";
 
     export default {
         data() {
@@ -384,8 +398,8 @@
                 },
                 serverParams: {
                     search: '',
-                    page: 0,
-                    perPage: 50,
+                    page: 1,
+                    perPage: this.$store ? this.$store.getters.getPerPage : 10,
                     sort: [{
                         field: '',
                         type: '',
@@ -405,12 +419,14 @@
             VueGoodTable,
             helpSearchWord,
             BootstrapToggle,
-            ModalLearnSentence
+            ModalLearnSentence,
+            CompactPagination
         },
         computed: {
             ...mapGetters({
                 // Геттер для получения текущего языка изучения
-                getLearnLanguage: 'getLearnLanguage'
+                getLearnLanguage: 'getLearnLanguage',
+                globalPerPage: 'getPerPage'
             }),
             filteredColumns() {
                 return this.table.columns.filter(column => {
@@ -420,12 +436,21 @@
                     }
                     return true;
                 });
+            },
+            currentPage() {
+                return this.serverParams.page;
             }
         },
         watch: {
             getLearnLanguage: {
                 handler: 'learnAnotherLanguage', // Вызывает метод при изменении getLearnLanguage - язык изучения
                 immediate: false // Не Вызов loadData сразу после создания компонента
+            },
+            globalPerPage: {
+                handler(newPerPage) {
+                    this.serverParams.perPage = newPerPage;
+                },
+                immediate: true
             }
         },
         methods: {
@@ -554,14 +579,46 @@
                         let id = queryObj.attr("data-id");
                         let row = this.getSentenceCollection(id);
                         this.setVariableDefault(row.id, row.sentence, row.translation);
-                        $('#update_sentence').modal('show');
+                        // Открываем модалку обновления предложения
+                        const modalElement = document.getElementById('update_sentence');
+                        if (modalElement) {
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                const modal = new bootstrap.Modal(modalElement);
+                                modal.show();
+                            } else {
+                                modalElement.style.display = 'block';
+                                modalElement.classList.add('show');
+                                document.body.classList.add('modal-open');
+                                // Блокируем скролл body
+                                document.body.style.overflow = 'hidden';
+                                const backdrop = document.createElement('div');
+                                backdrop.className = 'modal-backdrop fade show';
+                                document.body.appendChild(backdrop);
+                            }
+                        }
                         this.help_dynamic = '';
                     })
                 }, 1000);
             },
             openModalCreateSentence() {
                 this.setVariableDefault();
-                $('#create_sentence').modal('show');
+                // Открываем модалку создания предложения
+                const modalElement = document.getElementById('create_sentence');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    } else {
+                        modalElement.style.display = 'block';
+                        modalElement.classList.add('show');
+                        document.body.classList.add('modal-open');
+                        // Блокируем скролл body
+                        document.body.style.overflow = 'hidden';
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        document.body.appendChild(backdrop);
+                    }
+                }
             },
             // очистка параметров пагинации
             clearServerParams(){
@@ -608,10 +665,50 @@
                 // Вызов openLearnModal у дочернего компонента через референцию
                 this.$refs.modalLearnSentence.openLearnModal();
                 this.bool_learn_sentences = true;
-                // событие закрытия модалки
-                $('#learn_sentences').on('hidden.bs.modal', () => {
-                    this.bool_learn_sentences = false;
-                })
+            },
+            // Закрыть модалку создания предложения
+            closeCreateSentenceModal() {
+                const modalElement = document.getElementById('create_sentence');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        modalElement.style.display = 'none';
+                        modalElement.classList.remove('show');
+                        document.body.classList.remove('modal-open');
+                        // Восстанавливаем скролл body
+                        document.body.style.overflow = '';
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                }
+            },
+            // Закрыть модалку обновления предложения
+            closeUpdateSentenceModal() {
+                const modalElement = document.getElementById('update_sentence');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        modalElement.style.display = 'none';
+                        modalElement.classList.remove('show');
+                        document.body.classList.remove('modal-open');
+                        // Восстанавливаем скролл body
+                        document.body.style.overflow = '';
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                }
             },
         },
         mounted() {
@@ -768,7 +865,7 @@
     // Sound controls
     .box-sound {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         gap: var(--spacing-3);
 
         #block_repeat {
@@ -800,21 +897,12 @@
                 }
 
                 .number_repeat {
-                    height: 1.125rem;
+                    width: 4rem;
+                    height: 2rem;
+                    padding: 0.25rem 0.5rem;
                     font-size: 0.875rem;
-                    width: 3rem;
-                    margin-left: 0;
-                    padding: 0 0.25rem;
-                    border: 1px solid var(--border);
-                    border-radius: var(--radius);
                     text-align: center;
-
-                    &:focus {
-                        outline: 2px solid transparent;
-                        outline-offset: 2px;
-                        border-color: var(--ring);
-                        box-shadow: 0 0 0 2px var(--ring);
-                    }
+                    margin-left: 0.5rem;
                 }
             }
         }

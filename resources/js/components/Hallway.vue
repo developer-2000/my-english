@@ -4,8 +4,8 @@
         <header class="d-flex justify-content-between align-items-center p-3">
             <!-- Язык изучения -->
             <a href="/" class="header-element header-main-link">
-                <div class="header-logo">M</div>
-                {{getLanguageText("word", "learn")}}
+                <div class="header-logo">{{getLanguageText("word", "learn").charAt(0)}}</div>
+                {{getLanguageText("word", "learn").substring(1)}}
             </a>
 
             <!-- Theme Toggle Button -->
@@ -73,6 +73,7 @@
              tabindex="-1"
              aria-labelledby="languageLearnLabel"
              aria-hidden="true"
+             @click.self="closeLanguageModal"
         >
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -80,7 +81,7 @@
                         <h5 class="modal-title" id="languageLearnLabel">
                             {{ $t('all.study_language') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close" @click="closeLanguageModal" aria-label="Close">
                         </button>
                     </div>
                     <div class="modal-body">
@@ -140,10 +141,9 @@ export default {
                             languagesList.append(languageOption);
 
                             // 2 Язык изучения выбран
-                            languageOption.on('click', (event) => {
+                            languageOption.on('click', async (event) => {
                                 const selectedLanguage = $(event.currentTarget).data('code');
-                                this.selectLanguage(selectedLanguage);
-                                $('#languageLearn').modal('hide');
+                                await this.selectLanguage(selectedLanguage);
                             });
                         });
                     }
@@ -165,18 +165,47 @@ export default {
 
                     this.$store.commit('setLearnLanguage', language)
                     await this.loadTranslations(language);
+                    
+                    // Закрываем модалку после успешного сохранения
+                    this.closeLanguageModal();
                 }
             } catch (e) {
                 console.error('Error fetching languages:', e);
+            }
+        },
+        // Закрыть модалку выбора языка
+        closeLanguageModal() {
+            const modalElement = document.getElementById('languageLearn');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
+                } else {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    // Восстанавливаем скролл body
+                    document.body.style.overflow = '';
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                }
             }
         },
 
 
     },
     mounted() {
-        $('#languageLearn').on('show.bs.modal', (e) => {
-            this.loadLanguages();
-        });
+        // Используем Bootstrap 5 API для события показа модалки
+        const modalElement = document.getElementById('languageLearn');
+        if (modalElement) {
+            modalElement.addEventListener('show.bs.modal', (e) => {
+                this.loadLanguages();
+            });
+        }
         // установить язык интерфейса пользователя
 
         if(this.user?.language_user?.interface_language?.language){

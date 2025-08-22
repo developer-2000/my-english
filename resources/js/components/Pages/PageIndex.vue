@@ -38,22 +38,6 @@
                     </a>
                 </div>
 
-                <!-- Additional Info -->
-                <div class="mt-8 p-4 rounded-lg bg-muted/50 border border-border">
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-6 h-6 bg-info rounded-full flex items-center justify-center">
-                            <svg class="w-3 h-3 text-info-foreground" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-foreground">Совет</p>
-                            <p class="text-sm text-muted-foreground mt-1">
-                                Все ссылки открываются в новой вкладке. Рекомендуем добавить их в закладки для быстрого доступа.
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -106,259 +90,259 @@ export default {
 <style lang="scss" scoped>
 .index-page {
     padding: var(--spacing-6) 0;
-    
+
     .container {
         padding: 0 var(--spacing-4);
-        
+
         @media (min-width: 640px) {
             padding: 0 var(--spacing-6);
         }
     }
-    
+
     .space-y-6 > * + * {
         margin-top: var(--spacing-6);
     }
-    
+
     .space-y-2 > * + * {
         margin-top: var(--spacing-2);
     }
-    
+
     .space-y-4 > * + * {
         margin-top: var(--spacing-4);
     }
-    
+
     .space-y-3 > * + * {
         margin-top: var(--spacing-3);
     }
-    
+
     .space-x-3 > * + * {
         margin-left: var(--spacing-3);
     }
-    
+
     .space-x-4 > * + * {
         margin-left: var(--spacing-4);
     }
-    
+
     .grid {
         display: grid;
         gap: var(--spacing-4);
     }
-    
+
     .max-w-4xl {
         max-width: 56rem;
     }
-    
+
     .mx-auto {
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .text-3xl {
         font-size: 1.875rem;
         line-height: 2.25rem;
     }
-    
+
     .text-sm {
         font-size: 0.875rem;
         line-height: 1.25rem;
     }
-    
+
     .font-bold {
         font-weight: 700;
     }
-    
+
     .font-medium {
         font-weight: 500;
     }
-    
+
     .tracking-tight {
         letter-spacing: -0.025em;
     }
-    
+
     .leading-relaxed {
         line-height: 1.625;
     }
-    
+
     .p-4 {
         padding: var(--spacing-4);
     }
-    
+
     .p-6 {
         padding: var(--spacing-6);
     }
-    
+
     .w-8 {
         width: 2rem;
     }
-    
+
     .h-8 {
         height: 2rem;
     }
-    
+
     .w-6 {
         width: 1.5rem;
     }
-    
+
     .h-6 {
         height: 1.5rem;
     }
-    
+
     .w-4 {
         width: 1rem;
     }
-    
+
     .h-4 {
         height: 1rem;
     }
-    
+
     .w-3 {
         width: 0.75rem;
     }
-    
+
     .h-3 {
         height: 0.75rem;
     }
-    
+
     .rounded-lg {
         border-radius: 0.5rem;
     }
-    
+
     .rounded-full {
         border-radius: 9999px;
     }
-    
+
     .border {
         border: 1px solid var(--border);
     }
-    
+
     .border-border {
         border-color: var(--border);
     }
-    
+
     .bg-card {
         background-color: var(--card);
     }
-    
+
     .bg-primary {
         background-color: var(--primary);
     }
-    
+
     .bg-muted\/50 {
         background-color: rgb(var(--muted) / 0.5);
     }
-    
+
     .bg-info {
         background-color: var(--info);
     }
-    
+
     .text-card-foreground {
         color: var(--card-foreground);
     }
-    
+
     .text-primary-foreground {
         color: var(--primary-foreground);
     }
-    
+
     .text-muted-foreground {
         color: var(--muted-foreground);
     }
-    
+
     .text-foreground {
         color: var(--foreground);
     }
-    
+
     .text-info-foreground {
         color: var(--info-foreground);
     }
-    
+
     .hover\:bg-accent:hover {
         background-color: var(--accent);
     }
-    
+
     .hover\:shadow-md:hover {
         box-shadow: var(--shadow-md);
     }
-    
+
     .hover\:text-primary:hover {
         color: var(--primary);
     }
-    
+
     .group:hover .group-hover\:scale-110 {
         transform: scale(1.1);
     }
-    
+
     .group:hover .group-hover\:opacity-100 {
         opacity: 1;
     }
-    
+
     .transition-all {
         transition: all 200ms ease-in-out;
     }
-    
+
     .transition-colors {
         transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
     }
-    
+
     .transition-transform {
         transition: transform 200ms ease-in-out;
     }
-    
+
     .transition-opacity {
         transition: opacity 200ms ease-in-out;
     }
-    
+
     .duration-200 {
         transition-duration: 200ms;
     }
-    
+
     .flex {
         display: flex;
     }
-    
+
     .items-start {
         align-items: flex-start;
     }
-    
+
     .items-center {
         align-items: center;
     }
-    
+
     .justify-center {
         justify-content: center;
     }
-    
+
     .flex-1 {
         flex: 1 1 0%;
     }
-    
+
     .flex-shrink-0 {
         flex-shrink: 0;
     }
-    
+
     .min-w-0 {
         min-width: 0;
     }
-    
+
     .mt-1 {
         margin-top: 0.25rem;
     }
-    
+
     .mt-8 {
         margin-top: 2rem;
     }
-    
+
     .opacity-0 {
         opacity: 0;
     }
-    
+
     .block {
         display: block;
     }
-    
+
     .text-decoration-none {
         text-decoration: none;
     }
-    
+
     svg {
         display: block;
     }

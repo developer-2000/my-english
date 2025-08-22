@@ -2,6 +2,7 @@
     <!-- Modals учить слова  -->
     <div class="modal fade" id="learn_sentences" tabindex="-1" role="dialog"
          aria-labelledby="learn_sentences_label" aria-hidden="true"
+         @click.self="closeModal"
     >
         <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
             <div class="modal-content">
@@ -17,7 +18,7 @@
                              v-text="viewLanguageLine()"
                         ></div>
                         <!-- закрыть модалку -->
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
                     </div>
                 </div>
                 <!-- body -->
@@ -116,12 +117,51 @@ export default {
             this.know = 0
             this.not_know = 0
 
-            $('#learn_sentences').modal('show');
+            // Открываем модалку изучения предложений
+            const modalElement = document.getElementById('learn_sentences');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                } else {
+                    modalElement.style.display = 'block';
+                    modalElement.classList.add('show');
+                    document.body.classList.add('modal-open');
+                    // Блокируем скролл body
+                    document.body.style.overflow = 'hidden';
+                    const backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+            }
+            
             // инициализация hover на изучаемое слово
             $('body').on('mouseover', '.learn-word-trigger', (event) => {
                 this.outputHelperAlertInLearn(event)
             });
             this.loadLearnSentence()
+        },
+        // Закрыть модалку
+        closeModal() {
+            const modalElement = document.getElementById('learn_sentences');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
+                } else {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    // Восстанавливаем скролл body
+                    document.body.style.overflow = '';
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                }
+            }
         },
         // вывод подсказки при наведении на слово в таблице
         outputHelperAlertInLearn(event){

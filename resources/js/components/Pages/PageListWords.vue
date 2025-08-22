@@ -40,62 +40,68 @@
             </div>
 
             <!-- Table -->
-            <div class="card">
-                <div class="card-body p-0">
-                    <div v-if="table.rows.length" class="table_wrapper">
-                        <vue-good-table
-                            :isLoading.sync="table.isLoading"
-                            :mode="table.mode"
-                            :totalRows="table.totalRecords"
-                            :rows="table.rows"
-                            :columns="table.columns"
-                            :pagination-options="table.optionsPaginate"
-                            :search-options="{
+            <div v-if="table.rows.length" class="table_wrapper">
+                <vue-good-table
+                    :isLoading.sync="table.isLoading"
+                    :mode="table.mode"
+                    :totalRows="table.totalRecords"
+                    :rows="table.rows"
+                    :columns="table.columns"
+                    :pagination-options="{ enabled: false }"
+                    :search-options="{
                                 enabled: true,
                                 placeholder: 'Search word',
                             }"
-                            styleClass="vgt-table"
-                            @on-search="onSearch"
-                            @on-page-change="onPageChange"
-                            @on-per-page-change="onPerPageChange"
-                            @on-sort-change="onSortChange"
-                        >
-                            <template v-slot:table-actions>
-                                <div class="flex items-center justify-end space-x-3">
-                                    <!-- Select поиска типов слов -->
-                                    <div class="relative">
-                                        <select class="form-select search-select-types"
-                                                v-model="table.selectedOption"
-                                                @change="handleSelectChange">
-                                            <option value="null">Типы слов</option>
-                                            <option v-for="(obj, key) in formattedTypes"
-                                                    :key="key"
-                                                    :value="obj.id"
-                                                    v-text="obj.type">
-                                            </option>
-                                        </select>
-                                    </div>
+                    styleClass="vgt-table"
+                    @on-search="onSearch"
+                    @on-sort-change="onSortChange"
+                >
+                    <template v-slot:table-actions>
+                        <div class="flex items-center justify-end space-x-3">
+                            <!-- Select поиска типов слов -->
+                            <div class="relative">
+                                <select class="form-select search-select-types"
+                                        v-model="table.selectedOption"
+                                        @change="handleSelectChange">
+                                    <option value="null">Типы слов</option>
+                                    <option v-for="(obj, key) in formattedTypes"
+                                            :key="key"
+                                            :value="obj.id"
+                                            v-text="obj.type">
+                                    </option>
+                                </select>
+                            </div>
 
-                                    <!-- Кнопки для типа 4 -->
-                                    <button class="btn btn-primary button-present-tense"
-                                            @click="getPresentTenseWords"
-                                            v-if="table.selectedOption === 4">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
-                                        </svg>
-                                        Present Tense
-                                    </button>
-                                </div>
-                            </template>
-                        </vue-good-table>
-                    </div>
-                </div>
+                            <!-- Кнопки для типа 4 -->
+                            <button class="btn btn-primary button-present-tense"
+                                    @click="getPresentTenseWords"
+                                    v-if="table.selectedOption === 4">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
+                                </svg>
+                                Present Tense
+                            </button>
+                        </div>
+                    </template>
+                </vue-good-table>
+
+                <!-- Компактная пагинация -->
+                <CompactPagination
+                    v-if="table.rows.length"
+                    :current-page="currentPage"
+                    :total="table.totalRecords"
+                    :per-page="globalPerPage"
+                    :per-page-options="[10, 25, 50, 100]"
+                    @page-changed="onPageChange"
+                    @per-page-changed="onPerPageChange"
+                />
             </div>
         </div>
 
         <!-- Modals создать слово -->
         <div class="modal fade" id="create_word" tabindex="-1" role="dialog"
-             aria-labelledby="create_word" aria-hidden="true">
+             aria-labelledby="create_word" aria-hidden="true"
+             @click.self="closeCreateModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
@@ -106,7 +112,7 @@
                         <h5 class="modal-title text-lg font-semibold" v-else>
                             {{ $t('all.loading_generate_sentences') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeCreateModal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -336,7 +342,8 @@
 
         <!-- Modals обновить слово  -->
         <div class="modal fade" id="update_word" tabindex="-1" role="dialog"
-             aria-labelledby="update_word" aria-hidden="true">
+             aria-labelledby="update_word" aria-hidden="true"
+             @click.self="closeUpdateModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- header -->
@@ -347,7 +354,7 @@
                         <h5 class="modal-title text-lg font-semibold" v-else>
                             {{ $t('all.loading_generate_sentences') }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeUpdateModal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
                     <div class="modal-body">
@@ -589,6 +596,7 @@
             ref="modalLearnWord"
             @callInitialData="initialData"
             @callOpenUpdateWordModal="openUpdateWordModal"
+            @modalClosed="onModalClosed"
         ></ModalLearnWord>
     </div>
 </template>
@@ -610,6 +618,7 @@
     import translation_i18n_mixin from "../../mixins/translation_i18n_mixin.js";
     // components
     import ModalLearnWord from "../details/ModalLearnWord.vue";
+    import CompactPagination from "../CompactPagination.vue";
     import $ from 'jquery';
     import { mapGetters } from 'vuex';
     import user_mixin from "../../mixins/user_mixin.js";
@@ -648,11 +657,13 @@
                             html: true,
                             field: (val) => {
                                 return '' +
+                                    '<span style="display: flex; justify-content: space-between; align-items: center;">' +
                                     '<div class="trigger">'+val.word1+'</div>' +
                                     '<div class="btn_block_column">' +
                                     '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' +
                                     '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' +
-                                    '</div>';
+                                    '</div>' +
+                                    '</span>';
                             }
                         },
                         {
@@ -663,11 +674,13 @@
                             html: true,
                             field: (val) => {
                                 return '' +
+                                    '<span style="display: flex; justify-content: space-between; align-items: center;">' +
                                     '<div class="trigger">'+val.word2+'</div>' +
                                     '<div class="btn_block_column">' +
                                     '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' +
                                     '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' +
-                                    '</div>';
+                                    '</div>' +
+                                    '</span>';
                             }
                         },
                         {
@@ -678,11 +691,13 @@
                             html: true,
                             field: (val) => {
                                 return '' +
+                                    '<span style="display: flex; justify-content: space-between; align-items: center;">' +
                                     '<div class="trigger">'+val.word3+'</div>' +
                                     '<div class="btn_block_column">' +
                                     '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' +
                                     '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' +
-                                    '</div>';
+                                    '</div>' +
+                                    '</span>';
                             }
                         },
                         {
@@ -693,11 +708,13 @@
                             html: true,
                             field: (val) => {
                                 return '' +
+                                    '<span style="display: flex; justify-content: space-between; align-items: center;">' +
                                     '<div class="trigger">'+val.word4+'</div>' +
                                     '<div class="btn_block_column">' +
                                     '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' +
                                     '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' +
-                                    '</div>';
+                                    '</div>' +
+                                    '</span>';
                             }
                         },
                         {
@@ -708,11 +725,13 @@
                             html: true,
                             field: (val) => {
                                 return '' +
+                                    '<span style="display: flex; justify-content: space-between; align-items: center;">' +
                                     '<div class="trigger">'+val.word5+'</div>' +
                                     '<div class="btn_block_column">' +
                                     '<a class="btn btn-danger btn_word delete" role="button"><span class="far fa-trash-alt"></span></a>' +
                                     '<a class="btn btn-warning btn_word edit" role="button"><span class="fa fa-edit"></span></a>' +
-                                    '</div>';
+                                    '</div>' +
+                                    '</span>';
                             }
                         },
                     ],
@@ -753,8 +772,8 @@
                 serverParams: {
                     selection_type_id: null,
                     search: '',
-                    page: 0,
-                    perPage: 50,
+                    page: 1,
+                    perPage: this.$store ? this.$store.getters.getPerPage : 10,
                     sort: [{
                         field: '',
                         type: '',
@@ -775,11 +794,12 @@
                 required: true
             }
         },
-        components: { VueGoodTable, helpSearchWord, ModalLearnWord },
+        components: { VueGoodTable, helpSearchWord, ModalLearnWord, CompactPagination },
         computed: {
             ...mapGetters({
                 // Геттер для получения текущего языка изучения
-                currentLearnLanguage: 'getLearnLanguage'
+                currentLearnLanguage: 'getLearnLanguage',
+                globalPerPage: 'getPerPage'
             }),
             hasSelectedConjunction() {
                 if (this.arrInputsModal.objConjunction) {
@@ -792,6 +812,9 @@
                     ...type,
                     type: type.type.charAt(0).toUpperCase() + type.type.slice(1)
                 }));
+            },
+            currentPage() {
+                return this.serverParams.page;
             }
         },
         watch: {
@@ -799,6 +822,12 @@
                 // Вызывает метод loadData при изменении currentLearnLanguage
                 handler: 'learnAnotherLanguage',
                 immediate: false // Не Вызов loadData сразу после создания компонента
+            },
+            globalPerPage: {
+                handler(newPerPage) {
+                    this.serverParams.perPage = newPerPage;
+                },
+                immediate: true
             },
             'arrInputsModal.objConjunction': {
                 handler(newVal) {
@@ -876,7 +905,24 @@
 
                     if(this.checkSuccess(response)){
                         this.initialData();
-                        $('#create_word').modal('hide');
+                        // Закрываем модалку создания слова
+                        const modalElement = document.getElementById('create_word');
+                        if (modalElement) {
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                const modal = bootstrap.Modal.getInstance(modalElement);
+                                if (modal) {
+                                    modal.hide();
+                                }
+                            } else {
+                                modalElement.style.display = 'none';
+                                modalElement.classList.remove('show');
+                                document.body.classList.remove('modal-open');
+                                const backdrop = document.querySelector('.modal-backdrop');
+                                if (backdrop) {
+                                    backdrop.remove();
+                                }
+                            }
+                        }
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
@@ -890,7 +936,24 @@
                     const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
                     if(this.checkSuccess(response)){
                         this.initialData();
-                        $('#update_word').modal('hide');
+                        // Закрываем модалку обновления слова
+                        const modalElement = document.getElementById('update_word');
+                        if (modalElement) {
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                const modal = bootstrap.Modal.getInstance(modalElement);
+                                if (modal) {
+                                    modal.hide();
+                                }
+                            } else {
+                                modalElement.style.display = 'none';
+                                modalElement.classList.remove('show');
+                                document.body.classList.remove('modal-open');
+                                const backdrop = document.querySelector('.modal-backdrop');
+                                if (backdrop) {
+                                    backdrop.remove();
+                                }
+                            }
+                        }
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
@@ -915,6 +978,8 @@
             async loadWordsAndTypes() {
                 const url = `selection_type_id=${this.serverParams.selection_type_id}&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
 
+
+
                 try {
                     this.isLoading = true;
                     const response = await this.$http.get(`${this.$http.webUrl()}word?${url}`)
@@ -928,8 +993,9 @@
                     }
                 } catch (e) {
                     console.log(e);
+                } finally {
+                    this.isLoading = false;
                 }
-                this.isLoading = false;
             },
             // выбрать все предложения с этим словом
             async searchSentences(word) {
@@ -1259,7 +1325,23 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             openModalCreateWord(){
                 this.setVariableDefault();
                 this.setStyleDataModal({description:null, type:'', color:'black'});
-                $('#create_word').modal('show');
+                // Открываем модалку создания слова
+                const modalElement = document.getElementById('create_word');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    } else {
+                        modalElement.style.display = 'block';
+                        modalElement.classList.add('show');
+                        document.body.classList.add('modal-open');
+                        // Блокируем скролл body
+                        document.body.style.overflow = 'hidden';
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        document.body.appendChild(backdrop);
+                    }
+                }
                 $('#create_word').on('shown.bs.modal', () => {
                     this.$refs.new_word.focus();
                 });
@@ -1272,7 +1354,23 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.setStyleDataModal(row.type);
                 this.setVariableDefault(row);
                 this.searchSentences(word)
-                $('#update_word').modal('show');
+                // Открываем модалку обновления слова
+                const modalElement = document.getElementById('update_word');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    } else {
+                        modalElement.style.display = 'block';
+                        modalElement.classList.add('show');
+                        document.body.classList.add('modal-open');
+                        // Блокируем скролл body
+                        document.body.style.overflow = 'hidden';
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        document.body.appendChild(backdrop);
+                    }
+                }
             },
             // Закрыть любую модалку
             closeAllModals(){
@@ -1288,10 +1386,54 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // Вызов openLearnModal у дочернего компонента через референцию
                 this.$refs.modalLearnWord.openLearnModal();
                 this.bool_learn_words = true;
-                // событие закрытия модалки
-                $('#learn_word').on('hidden.bs.modal', () => {
-                    this.bool_learn_words = false;
-                })
+            },
+            // Обработчик закрытия модалки изучения слов
+            onModalClosed() {
+                this.bool_learn_words = false;
+            },
+            // Закрыть модалку создания слова
+            closeCreateModal() {
+                const modalElement = document.getElementById('create_word');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        modalElement.style.display = 'none';
+                        modalElement.classList.remove('show');
+                        document.body.classList.remove('modal-open');
+                        // Восстанавливаем скролл body
+                        document.body.style.overflow = '';
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                }
+            },
+            // Закрыть модалку обновления слова
+            closeUpdateModal() {
+                const modalElement = document.getElementById('update_word');
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        modalElement.style.display = 'none';
+                        modalElement.classList.remove('show');
+                        document.body.classList.remove('modal-open');
+                        // Восстанавливаем скролл body
+                        document.body.style.overflow = '';
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                }
             },
             // заполнение переменных для модалок создания и редактирования слова
             setVariableDefault(obj = {id: 0, word: '', translation: '', url_image: '', type: {id: 0}, description: '""', time_forms: null}){
@@ -1327,23 +1469,25 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // Клик по родителю переключателя генерации предложений
             toggleSwitch(event, ref) {
                 setTimeout(()=>{
-                    this.$refs[ref].checked = !this.$refs[ref].checked;
-                    this.objGenerateSentences.status_toggle = this.$refs[ref].checked
+                    if (this.$refs[ref]) {
+                        this.$refs[ref].checked = !this.$refs[ref].checked;
+                        this.objGenerateSentences.status_toggle = this.$refs[ref].checked
 
-                    // Находим родительский элемент div.form-check.form-switch
-                    const parentElement = event.target.closest('.form-switch');
-                    if (!parentElement) {
-                        return;
-                    }
-                    // Находим дочерний label элемент внутри родительского элемента
-                    const label = parentElement.querySelector('label');
+                        // Находим родительский элемент div.form-check.form-switch
+                        const parentElement = event.target.closest('.form-switch');
+                        if (!parentElement) {
+                            return;
+                        }
+                        // Находим дочерний label элемент внутри родительского элемента
+                        const label = parentElement.querySelector('label');
 
-                    // Обновляем текст в зависимости от состояния переключателя
-                    if (this.objGenerateSentences.status_toggle) {
-                        label.textContent = this.$t('all.generation');
-                    }
-                    else {
-                        label.textContent = this.$t('all.sentences');
+                        // Обновляем текст в зависимости от состояния переключателя
+                        if (this.objGenerateSentences.status_toggle) {
+                            label.textContent = this.$t('all.generation');
+                        }
+                        else {
+                            label.textContent = this.$t('all.sentences');
+                        }
                     }
                 },100)
             },
@@ -1355,8 +1499,12 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 this.objGenerateSentences.selectedSentences = []
                 this.objGenerateSentences.arrGenerateSentences = []
                 // Снятие checked состояния после инициализации
-                $(this.$refs.toggle1).prop('checked', false).change();
-                $(this.$refs.toggle2).prop('checked', false).change();
+                if (this.$refs.toggle1) {
+                    $(this.$refs.toggle1).prop('checked', false).change();
+                }
+                if (this.$refs.toggle2) {
+                    $(this.$refs.toggle2).prop('checked', false).change();
+                }
             },
             // очистка параметров пагинации
             clearServerParams(){
@@ -1380,8 +1528,8 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             $('.btn-danger').unbind('click');
 
             // Удаляем инициализацию перед уничтожением компонента
-            $(this.$refs.toggle1).bootstrapToggle('destroy');
-            $(this.$refs.toggle2).bootstrapToggle('destroy');
+            this.safeBootstrapToggle(this.$refs.toggle1, 'destroy');
+            this.safeBootstrapToggle(this.$refs.toggle2, 'destroy');
         },
         validations: {
             arrInputsModal: {

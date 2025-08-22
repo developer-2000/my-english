@@ -23,6 +23,12 @@ import axios from "axios";
 export default {
     async get(url, data = {}, headers = {}) {
         try {
+            // Добавляем CSRF токен в заголовки
+            const csrfToken = this.getCsrfToken();
+            if (csrfToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken;
+            }
+            
             const response = await axios.get(url, {data, headers});
             return response;
         } catch (e) {
@@ -31,6 +37,12 @@ export default {
     },
     async post(url, data = {}, headers = {}) {
         try {
+            // Добавляем CSRF токен в заголовки
+            const csrfToken = this.getCsrfToken();
+            if (csrfToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken;
+            }
+            
             const response = await axios.post(url, data, {headers: headers});
             return response;
         } catch (e) {
@@ -91,5 +103,9 @@ export default {
     },
     webUrl() {
         return 'http://english.my/';
+    },
+    // Получить CSRF токен
+    getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     },
 }

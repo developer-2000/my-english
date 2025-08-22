@@ -2,6 +2,7 @@
     <!-- Modals учить слова  -->
     <div class="modal fade" id="learn_word" tabindex="-1" role="dialog"
          aria-labelledby="learn_word_label" aria-hidden="true"
+         @click.self="closeModal"
     >
         <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
             <div class="modal-content">
@@ -17,7 +18,7 @@
                              v-text="viewLanguageLine()"
                         ></div>
                         <!-- закрыть модалку -->
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
                     </div>
                 </div>
                 <!-- body -->
@@ -171,7 +172,26 @@ export default {
         },
         // открываем модалку изучения слов
         openLearnModal() {
-            $('#learn_word').modal('show');
+            // Добавляем обработчик клавиши Escape
+            document.addEventListener('keydown', this.handleEscapeKey);
+            
+            // Открываем модалку изучения слов
+            const modalElement = document.getElementById('learn_word');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                } else {
+                    modalElement.style.display = 'block';
+                    modalElement.classList.add('show');
+                    document.body.classList.add('modal-open');
+                    // Блокируем скролл body
+                    document.body.style.overflow = 'hidden';
+                    const backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+            }
             // инициализация hover на изучаемое слово
             $('body').on('mouseover', '.learn-word-trigger', (event) => {
                 this.outputHelperAlertInLearn(event)
@@ -186,6 +206,40 @@ export default {
                 this.last_updated_at = date.toISOString();
             }
             this.loadLearnWord()
+        },
+        // Закрыть модалку
+        closeModal() {
+            // Удаляем обработчик клавиши Escape
+            document.removeEventListener('keydown', this.handleEscapeKey);
+            
+            const modalElement = document.getElementById('learn_word');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
+                } else {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    // Восстанавливаем скролл body
+                    document.body.style.overflow = '';
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                }
+            }
+            
+            // Уведомляем родительский компонент о закрытии модалки
+            this.$emit('modalClosed');
+        },
+        // Обработчик клавиши Escape
+        handleEscapeKey(event) {
+            if (event.key === 'Escape') {
+                this.closeModal();
+            }
         },
         // Поменять местами текст и перевод
         switchViewWord() {
@@ -236,7 +290,24 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         // закрыть модалку изучения и открыть модалку редактирования
         goToEditing(word){
             this.clearWritingVariables()
-            $('#learn_word').modal('hide');
+            // Закрываем модалку изучения слов
+            const modalElement = document.getElementById('learn_word');
+            if (modalElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
+                } else {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                }
+            }
             setTimeout(()=>{
                 this.$emit('callOpenUpdateWordModal', word);
             },500)
