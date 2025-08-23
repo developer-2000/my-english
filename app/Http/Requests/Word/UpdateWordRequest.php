@@ -1,26 +1,27 @@
 <?php
+
 namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateWordRequest extends ApiFormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return Auth::check();
     }
 
     /**
      * Get the validation rules that apply to the request.
      */
-    public function rules() {
+    public function rules()
+    {
         $wordId = $this->route('word_id') ?? $this->input('word_id');
 
         return [
@@ -49,10 +50,10 @@ class UpdateWordRequest extends ApiFormRequest
      *
      * @return array
      */
-    public function messages() {
+    public function messages()
+    {
         return [
-            'word.unique' => "Такое слово уже существует в таблице слов.",
+            'word.unique' => 'Такое слово уже существует в таблице слов.',
         ];
     }
-
 }

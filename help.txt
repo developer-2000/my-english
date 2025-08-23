@@ -204,9 +204,6 @@ git push -u origin shamil_dev
 отменить слияние в мастере, и сохранить изменения в ryslan_dev:
 git reset --soft HEAD^
 
-
-
-
 методы response json - \app\Http\Traits\Admin\BaseRestTrait.php
 
 // вернет то что передал, header status - return $this->getResponse($this->user, 201);
@@ -222,3 +219,10 @@ SWAGER
 vuex
 сетеры - this.$store.commit('setLearnLanguage', "данные")
 герет - store.getters.getLearnLanguage
+
+--------
+
+npm run format        # Форматировать весь код
+npm run format:check  # Проверить формат без изменений
+npm run lint:fix      # Найти и исправить ошибки ESLint
+npm run lint          # Только проверить ошибки

@@ -10,11 +10,13 @@ class RoWord extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     protected $casts = [
         'time_forms' => 'json',
     ];
 
-    public function type() {
+    public function type()
+    {
         return $this->belongsTo(RoWordType::class, 'type_id', 'id')
             ->withDefault(function ($type, $word) {
                 $type->type = '';

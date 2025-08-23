@@ -11,7 +11,7 @@
     position: relative;
     overflow: hidden;
     transition: all 200ms ease-in-out;
-    
+
     &::before {
         content: '';
         position: absolute;
@@ -22,14 +22,16 @@
         background: rgba(255, 255, 255, 0.2);
         border-radius: 50%;
         transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
+        transition:
+            width 0.6s,
+            height 0.6s;
     }
-    
+
     &:hover::before {
         width: 300px;
         height: 300px;
     }
-    
+
     &:active {
         transform: scale(0.95);
     }
@@ -39,7 +41,7 @@
 .btn-ripple {
     position: relative;
     overflow: hidden;
-    
+
     .ripple {
         position: absolute;
         border-radius: 50%;
@@ -65,12 +67,12 @@
 .hover-card {
     position: relative;
     transition: all 200ms ease-in-out;
-    
+
     &:hover {
         transform: translateY(-4px);
         box-shadow: var(--shadow-lg);
     }
-    
+
     .hover-card-content {
         position: absolute;
         top: 100%;
@@ -87,7 +89,7 @@
         transition: all 200ms ease-in-out;
         z-index: 1000;
     }
-    
+
     &:hover .hover-card-content {
         opacity: 1;
         visibility: visible;
@@ -99,7 +101,7 @@
 .flip-card {
     perspective: 1000px;
     height: 200px;
-    
+
     .flip-card-inner {
         position: relative;
         width: 100%;
@@ -108,11 +110,11 @@
         transition: transform 0.6s;
         transform-style: preserve-3d;
     }
-    
+
     &:hover .flip-card-inner {
         transform: rotateY(180deg);
     }
-    
+
     .flip-card-front,
     .flip-card-back {
         position: absolute;
@@ -122,12 +124,12 @@
         border-radius: var(--radius);
         padding: 1rem;
     }
-    
+
     .flip-card-front {
         background: var(--background);
         border: 1px solid var(--border);
     }
-    
+
     .flip-card-back {
         background: var(--primary);
         color: var(--primary-foreground);
@@ -143,11 +145,11 @@
 .progress-animated {
     position: relative;
     overflow: hidden;
-    
+
     .progress-bar {
         position: relative;
         transition: width 300ms ease-in-out;
-        
+
         &::after {
             content: '';
             position: absolute;
@@ -155,12 +157,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             animation: progress-shimmer 2s infinite;
         }
     }
@@ -180,22 +177,30 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    
+
     .dot {
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 50%;
         background: currentColor;
         animation: loading-dots 1.4s infinite ease-in-out;
-        
-        &:nth-child(1) { animation-delay: -0.32s; }
-        &:nth-child(2) { animation-delay: -0.16s; }
-        &:nth-child(3) { animation-delay: 0s; }
+
+        &:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        &:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        &:nth-child(3) {
+            animation-delay: 0s;
+        }
     }
 }
 
 @keyframes loading-dots {
-    0%, 80%, 100% {
+    0%,
+    80%,
+    100% {
         transform: scale(0);
         opacity: 0.5;
     }
@@ -219,7 +224,7 @@
     border-radius: 1rem;
     cursor: pointer;
     transition: background-color 200ms ease-in-out;
-    
+
     &::after {
         content: '';
         position: absolute;
@@ -232,10 +237,10 @@
         transition: transform 200ms ease-in-out;
         box-shadow: var(--shadow-sm);
     }
-    
+
     &.active {
         background: var(--primary);
-        
+
         &::after {
             transform: translateX(1.5rem);
         }
@@ -252,7 +257,7 @@
     border-radius: 1rem;
     cursor: pointer;
     transition: background-color 200ms ease-in-out;
-    
+
     .switch-thumb {
         position: absolute;
         top: 0.25rem;
@@ -264,10 +269,10 @@
         transition: transform 200ms ease-in-out;
         box-shadow: var(--shadow-sm);
     }
-    
+
     &.active {
         background: var(--primary);
-        
+
         .switch-thumb {
             transform: translateX(1.5rem);
         }
@@ -283,39 +288,39 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
-    
+
     .accordion-item {
         border-bottom: 1px solid var(--border);
-        
+
         &:last-child {
             border-bottom: none;
         }
     }
-    
+
     .accordion-header {
         padding: 1rem;
         background: var(--background);
         cursor: pointer;
         transition: background-color 200ms ease-in-out;
-        
+
         &:hover {
             background: var(--muted);
         }
-        
+
         .accordion-icon {
             transition: transform 200ms ease-in-out;
         }
-        
+
         &.active .accordion-icon {
             transform: rotate(180deg);
         }
     }
-    
+
     .accordion-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 300ms ease-in-out;
-        
+
         &.active {
             max-height: 500px;
         }
@@ -329,27 +334,27 @@
         border-bottom: 1px solid var(--border);
         margin-bottom: 1rem;
     }
-    
+
     .tab-item {
         padding: 0.75rem 1rem;
         cursor: pointer;
         border-bottom: 2px solid transparent;
         transition: all 200ms ease-in-out;
-        
+
         &:hover {
             color: var(--primary);
         }
-        
+
         &.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
         }
     }
-    
+
     .tab-content {
         display: none;
         animation: fadeIn 200ms ease-out;
-        
+
         &.active {
             display: block;
         }
@@ -372,23 +377,23 @@
     box-shadow: var(--shadow-lg);
     z-index: 1000;
     animation: slideInFromRight 200ms ease-out;
-    
+
     &.toast-success {
         border-left: 4px solid var(--success);
     }
-    
+
     &.toast-error {
         border-left: 4px solid var(--destructive);
     }
-    
+
     &.toast-warning {
         border-left: 4px solid var(--warning);
     }
-    
+
     &.toast-info {
         border-left: 4px solid var(--info);
     }
-    
+
     .toast-close {
         position: absolute;
         top: 0.5rem;
@@ -396,7 +401,7 @@
         cursor: pointer;
         opacity: 0.5;
         transition: opacity 200ms ease-in-out;
-        
+
         &:hover {
             opacity: 1;
         }
@@ -407,7 +412,7 @@
 .notification-badge {
     position: relative;
     display: inline-block;
-    
+
     .badge {
         position: absolute;
         top: -0.5rem;
@@ -435,11 +440,11 @@
 .draggable {
     cursor: grab;
     transition: all 200ms ease-in-out;
-    
+
     &:active {
         cursor: grabbing;
     }
-    
+
     &.dragging {
         opacity: 0.5;
         transform: rotate(5deg);
@@ -454,12 +459,12 @@
     padding: 2rem;
     text-align: center;
     transition: all 200ms ease-in-out;
-    
+
     &.drag-over {
         border-color: var(--primary);
         background: var(--accent);
     }
-    
+
     &.drop-active {
         border-color: var(--success);
         background: var(--success);
@@ -476,16 +481,16 @@
     .modal-dialog {
         animation: scaleIn 200ms ease-out;
     }
-    
+
     .modal-content {
         animation: slideInFromTop 200ms ease-out;
     }
-    
+
     &.modal-closing {
         .modal-dialog {
             animation: scaleOut 200ms ease-out;
         }
-        
+
         .modal-content {
             animation: slideOutToTop 200ms ease-out;
         }
@@ -504,11 +509,11 @@
     transform: translateX(100%);
     transition: transform 300ms ease-in-out;
     z-index: 1050;
-    
+
     &.drawer-open {
         transform: translateX(0);
     }
-    
+
     .drawer-header {
         padding: 1rem;
         border-bottom: 1px solid var(--border);
@@ -516,7 +521,7 @@
         align-items: center;
         justify-content: space-between;
     }
-    
+
     .drawer-content {
         padding: 1rem;
         height: calc(100% - 4rem);
@@ -533,17 +538,17 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--radius);
-    
+
     .carousel-container {
         display: flex;
         transition: transform 300ms ease-in-out;
     }
-    
+
     .carousel-item {
         flex: 0 0 100%;
         min-width: 100%;
     }
-    
+
     .carousel-nav {
         position: absolute;
         top: 50%;
@@ -559,20 +564,20 @@
         justify-content: center;
         cursor: pointer;
         transition: all 200ms ease-in-out;
-        
+
         &:hover {
             background: rgba(0, 0, 0, 0.7);
         }
-        
+
         &.carousel-prev {
             left: 1rem;
         }
-        
+
         &.carousel-next {
             right: 1rem;
         }
     }
-    
+
     .carousel-indicators {
         position: absolute;
         bottom: 1rem;
@@ -580,7 +585,7 @@
         transform: translateX(-50%);
         display: flex;
         gap: 0.5rem;
-        
+
         .indicator {
             width: 0.5rem;
             height: 0.5rem;
@@ -588,7 +593,7 @@
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             transition: all 200ms ease-in-out;
-            
+
             &.active {
                 background: white;
                 transform: scale(1.2);
@@ -602,40 +607,94 @@
 // ========================================
 
 // Animation delays
-.animate-delay-100 { animation-delay: 100ms; }
-.animate-delay-200 { animation-delay: 200ms; }
-.animate-delay-300 { animation-delay: 300ms; }
-.animate-delay-400 { animation-delay: 400ms; }
-.animate-delay-500 { animation-delay: 500ms; }
+.animate-delay-100 {
+    animation-delay: 100ms;
+}
+.animate-delay-200 {
+    animation-delay: 200ms;
+}
+.animate-delay-300 {
+    animation-delay: 300ms;
+}
+.animate-delay-400 {
+    animation-delay: 400ms;
+}
+.animate-delay-500 {
+    animation-delay: 500ms;
+}
 
 // Animation durations
-.animate-duration-75 { animation-duration: 75ms; }
-.animate-duration-100 { animation-duration: 100ms; }
-.animate-duration-150 { animation-duration: 150ms; }
-.animate-duration-200 { animation-duration: 200ms; }
-.animate-duration-300 { animation-duration: 300ms; }
-.animate-duration-500 { animation-duration: 500ms; }
-.animate-duration-700 { animation-duration: 700ms; }
-.animate-duration-1000 { animation-duration: 1000ms; }
+.animate-duration-75 {
+    animation-duration: 75ms;
+}
+.animate-duration-100 {
+    animation-duration: 100ms;
+}
+.animate-duration-150 {
+    animation-duration: 150ms;
+}
+.animate-duration-200 {
+    animation-duration: 200ms;
+}
+.animate-duration-300 {
+    animation-duration: 300ms;
+}
+.animate-duration-500 {
+    animation-duration: 500ms;
+}
+.animate-duration-700 {
+    animation-duration: 700ms;
+}
+.animate-duration-1000 {
+    animation-duration: 1000ms;
+}
 
 // Animation fill modes
-.animate-fill-none { animation-fill-mode: none; }
-.animate-fill-forwards { animation-fill-mode: forwards; }
-.animate-fill-backwards { animation-fill-mode: backwards; }
-.animate-fill-both { animation-fill-mode: both; }
+.animate-fill-none {
+    animation-fill-mode: none;
+}
+.animate-fill-forwards {
+    animation-fill-mode: forwards;
+}
+.animate-fill-backwards {
+    animation-fill-mode: backwards;
+}
+.animate-fill-both {
+    animation-fill-mode: both;
+}
 
 // Animation iteration counts
-.animate-iterate-1 { animation-iteration-count: 1; }
-.animate-iterate-2 { animation-iteration-count: 2; }
-.animate-iterate-3 { animation-iteration-count: 3; }
-.animate-iterate-infinite { animation-iteration-count: infinite; }
+.animate-iterate-1 {
+    animation-iteration-count: 1;
+}
+.animate-iterate-2 {
+    animation-iteration-count: 2;
+}
+.animate-iterate-3 {
+    animation-iteration-count: 3;
+}
+.animate-iterate-infinite {
+    animation-iteration-count: infinite;
+}
 
 // Animation directions
-.animate-normal { animation-direction: normal; }
-.animate-reverse { animation-direction: reverse; }
-.animate-alternate { animation-direction: alternate; }
-.animate-alternate-reverse { animation-direction: alternate-reverse; }
+.animate-normal {
+    animation-direction: normal;
+}
+.animate-reverse {
+    animation-direction: reverse;
+}
+.animate-alternate {
+    animation-direction: alternate;
+}
+.animate-alternate-reverse {
+    animation-direction: alternate-reverse;
+}
 
 // Animation play states
-.animate-play { animation-play-state: running; }
-.animate-pause { animation-play-state: paused; }
+.animate-play {
+    animation-play-state: running;
+}
+.animate-pause {
+    animation-play-state: paused;
+}

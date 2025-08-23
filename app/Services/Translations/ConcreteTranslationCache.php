@@ -11,7 +11,7 @@ class ConcreteTranslationCache extends TranslationCache
     /**
      * Реализация метода для загрузки переводов по ключу.
      *
-     * @param string $key Ключ переводов
+     * @param  string  $key  Ключ переводов
      * @return array Массив переводов
      */
     protected function loadTranslations($key): array
@@ -20,8 +20,9 @@ class ConcreteTranslationCache extends TranslationCache
         $directory = resource_path("lang/{$key}");
 
         // Проверяем существование каталога с переводами для указанной локали
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             Log::warning("Translations directory not found for locale: {$key}");
+
             return [];
         }
 
@@ -38,4 +39,3 @@ class ConcreteTranslationCache extends TranslationCache
         return $translations;
     }
 }
-

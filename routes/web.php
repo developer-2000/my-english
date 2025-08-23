@@ -1,24 +1,23 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GeneratingSentencesAiController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\SentenceController;
+use App\Http\Controllers\WordController;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use \Illuminate\Support\Facades\Artisan;
-use \Illuminate\Support\Facades\Auth;
-use \App\Http\Controllers\AuthController;
-use \App\Http\Controllers\SpaController;
-use \App\Http\Middleware\BackupDatabase;
-use \App\Http\Controllers\LanguageController;
-use \App\Http\Controllers\WordController;
-use \App\Http\Controllers\SentenceController;
-use \App\Http\Controllers\GeneratingSentencesAiController;
 
 // технический роут /technical/artisan/clear_all
-Route::group(['prefix'=>'technical'], function (){
-    Route::get('/artisan/clear_all', function() {
+Route::group(['prefix' => 'technical'], function () {
+    Route::get('/artisan/clear_all', function () {
         Artisan::call('route:clear');
         Artisan::call('view:clear');
         Artisan::call('config:clear');
         Artisan::call('cache:clear');
-        return "<h1>all_clear</h1>";
+
+        return '<h1>all_clear</h1>';
     });
 });
 
@@ -26,7 +25,7 @@ Route::get('/translations', [LanguageController::class, 'getTranslations'])
     ->name('translations');
 
 // >>> AUTH
-Route::group(['prefix'=>'auth'], function (){
+Route::group(['prefix' => 'auth'], function () {
     // Маршруты для отображения формы логина и регистрации, и их обработки
     Route::get('login', [AuthController::class, 'showLoginForm'])
         ->middleware(['guest'])->name('auth.showLoginForm');
@@ -46,7 +45,7 @@ Route::group(['prefix'=>'auth'], function (){
 // >>> Отображаем главную страницу для авторизованных пользователей
 // Перенаправляем на страницу логина для неавторизованных пользователей
 Route::get('/', function () {
-    
+
     // Очищаем любой возможный output buffer
     if (ob_get_level()) {
         ob_clean();
@@ -55,8 +54,7 @@ Route::get('/', function () {
     // Проверяем имеет ли роль 'user' и старше
     if (Auth::check() && Auth::user()->hasRole('user')) {
         return view('index');
-    }
-    else {
+    } else {
         return redirect()->route('auth.showLoginForm');
     }
 })->name('index');
@@ -64,23 +62,23 @@ Route::get('/', function () {
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group([], function () {
 
-// 1 word
+    // 1 word
     Route::resource('word', WordController::class)->only([
-        'index','store'
+        'index', 'store',
     ])->middleware(['auth', 'role:user']);
-    Route::group(['prefix'=>'word', 'middleware' => ['auth', 'role:user']], function (){
+    Route::group(['prefix' => 'word', 'middleware' => ['auth', 'role:user']], function () {
         Route::post('update-word', [WordController::class, 'updateWord']);
         Route::post('delete-word', [WordController::class, 'deleteWord']);
         Route::get('get-present-tense', [WordController::class, 'getPresentTense']);
         Route::post('learn/get-word', [WordController::class, 'getLearnWord']);
     });
 
-// 2 sentence
+    // 2 sentence
     Route::middleware(['throttle:200,1', 'auth', 'role:user'])->group(function () {
         Route::resource('sentence', SentenceController::class)->only([
-            'index', 'store'
+            'index', 'store',
         ]);
-        Route::group(['prefix'=>'sentence'], function (){
+        Route::group(['prefix' => 'sentence'], function () {
             Route::post('update-sentence', [SentenceController::class, 'updateSentence']);
             Route::get('search-word', [SentenceController::class, 'searchWord']);
             Route::post('search-sentences', [SentenceController::class, 'searchSentences']);
@@ -89,31 +87,33 @@ Route::group([], function () {
         });
     });
 
-// 4
+    // 4
     Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence'])
         ->middleware(['auth', 'role:user']);
 
-// 5
+    // 5
     Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
         ->name('get.languages')
         ->middleware(['auth', 'role:user']);
 
-// 6
+    // 6
     Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
         ->name('set.language.learn.user')
         ->middleware(['auth', 'role:user']);
 
-// 7 - Vue Router маршруты (должны быть защищены авторизацией)
-    Route::get('/page-list-words', function() {
-        if (!Auth::check()) {
+    // 7 - Vue Router маршруты (должны быть защищены авторизацией)
+    Route::get('/page-list-words', function () {
+        if (! Auth::check()) {
             return redirect()->route('auth.showLoginForm');
         }
+
         return view('index');
     });
-    Route::get('/page-word-sentences', function() {
-        if (!Auth::check()) {
+    Route::get('/page-word-sentences', function () {
+        if (! Auth::check()) {
             return redirect()->route('auth.showLoginForm');
         }
+
         return view('index');
     });
 });
@@ -127,10 +127,10 @@ Route::fallback(function () {
     if (ob_get_level()) {
         ob_clean();
     }
-    
+
     if (Auth::check() && Auth::user()->hasRole('user')) {
         return redirect()->route('index');
     }
+
     return redirect()->route('auth.showLoginForm');
 });
-

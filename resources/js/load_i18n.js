@@ -8,10 +8,10 @@ Vue.use(VueI18n);
 const i18n = new VueI18n({
     locale: store.getters.getLearnLanguage,
     fallbackLocale: 'en',
-    messages: {}
+    messages: {},
 });
 
-const loadTranslations = async (locale) => {
+const loadTranslations = async locale => {
     // Проверяем, есть ли переводы в sessionStorage
     const storedTranslations = sessionStorage.getItem(`translations_${locale}`);
     if (storedTranslations) {
@@ -36,7 +36,6 @@ const loadTranslations = async (locale) => {
 
         // Устанавливаем переводы для текущего языка
         i18n.setLocaleMessage(locale, translations);
-
     } catch (error) {
         console.error('Error loading translations:', error);
     }

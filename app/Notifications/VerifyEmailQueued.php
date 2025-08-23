@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 
 class VerifyEmailQueued extends Notification implements ShouldQueue
 {
@@ -33,22 +32,3 @@ class VerifyEmailQueued extends Notification implements ShouldQueue
             ->line('If you did not create an account, no further action is required.');
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

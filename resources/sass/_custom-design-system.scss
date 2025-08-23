@@ -59,18 +59,18 @@
     --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
     // Отступы
-    --spacing-1: 0.25rem;   // 4px
-    --spacing-2: 0.5rem;    // 8px
-    --spacing-3: 0.75rem;   // 12px
-    --spacing-4: 1rem;      // 16px
-    --spacing-5: 1.25rem;   // 20px
-    --spacing-6: 1.5rem;    // 24px
-    --spacing-8: 2rem;      // 32px
-    --spacing-10: 2.5rem;   // 40px
-    --spacing-12: 3rem;     // 48px
-    --spacing-16: 4rem;     // 64px
-    --spacing-20: 5rem;     // 80px
-    --spacing-24: 6rem;     // 96px
+    --spacing-1: 0.25rem; // 4px
+    --spacing-2: 0.5rem; // 8px
+    --spacing-3: 0.75rem; // 12px
+    --spacing-4: 1rem; // 16px
+    --spacing-5: 1.25rem; // 20px
+    --spacing-6: 1.5rem; // 24px
+    --spacing-8: 2rem; // 32px
+    --spacing-10: 2.5rem; // 40px
+    --spacing-12: 3rem; // 48px
+    --spacing-16: 4rem; // 64px
+    --spacing-20: 5rem; // 80px
+    --spacing-24: 6rem; // 96px
 
     // Legacy support (для совместимости с Bootstrap)
     --bs-primary: var(--primary);
@@ -86,20 +86,26 @@
 // ========================================
 
 // Font family
-$font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-sans:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 $font-family-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
 
 // Font sizes (shadcn/ui scale)
-$font-size-xs: 0.75rem;    // 12px
-$font-size-sm: 0.875rem;   // 14px
-$font-size-base: 1rem;     // 16px
-$font-size-lg: 1.125rem;   // 18px
-$font-size-xl: 1.25rem;    // 20px
-$font-size-2xl: 1.5rem;    // 24px
-$font-size-3xl: 1.875rem;  // 30px
-$font-size-4xl: 2.25rem;   // 36px
-$font-size-5xl: 3rem;      // 48px
-$font-size-6xl: 3.75rem;   // 60px
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+$font-size-5xl: 3rem; // 48px
+$font-size-6xl: 3.75rem; // 60px
 
 // Line heights
 $line-height-none: 1;
@@ -123,13 +129,13 @@ $font-weight-extrabold: 800;
 
 // Border radius
 $radius-none: 0;
-$radius-sm: 0.125rem;  // 2px
-$radius: 0.25rem;      // 4px
-$radius-md: 0.375rem;  // 6px
-$radius-lg: 0.5rem;    // 8px
-$radius-xl: 0.75rem;   // 12px
-$radius-2xl: 1rem;     // 16px
-$radius-3xl: 1.5rem;   // 24px
+$radius-sm: 0.125rem; // 2px
+$radius: 0.25rem; // 4px
+$radius-md: 0.375rem; // 6px
+$radius-lg: 0.5rem; // 8px
+$radius-xl: 0.75rem; // 12px
+$radius-2xl: 1rem; // 16px
+$radius-3xl: 1.5rem; // 24px
 $radius-full: 9999px;
 
 // Breakpoints
@@ -168,90 +174,96 @@ $ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 // ТИПОГРАФИЧЕСКИЕ КЛАССЫ
 // ========================================
 
-.text-xs { 
-    font-size: $font-size-xs; 
-    line-height: $line-height-tight; 
+.text-xs {
+    font-size: $font-size-xs;
+    line-height: $line-height-tight;
 }
 
-.text-sm { 
-    font-size: $font-size-sm; 
-    line-height: $line-height-normal; 
+.text-sm {
+    font-size: $font-size-sm;
+    line-height: $line-height-normal;
 }
 
-.text-base { 
-    font-size: $font-size-base; 
-    line-height: $line-height-normal; 
+.text-base {
+    font-size: $font-size-base;
+    line-height: $line-height-normal;
 }
 
-.text-lg { 
-    font-size: $font-size-lg; 
-    line-height: $line-height-normal; 
+.text-lg {
+    font-size: $font-size-lg;
+    line-height: $line-height-normal;
 }
 
-.text-xl { 
-    font-size: $font-size-xl; 
-    line-height: $line-height-snug; 
+.text-xl {
+    font-size: $font-size-xl;
+    line-height: $line-height-snug;
 }
 
-.text-2xl { 
-    font-size: $font-size-2xl; 
-    line-height: $line-height-tight; 
+.text-2xl {
+    font-size: $font-size-2xl;
+    line-height: $line-height-tight;
 }
 
-.text-3xl { 
-    font-size: $font-size-3xl; 
-    line-height: $line-height-tight; 
+.text-3xl {
+    font-size: $font-size-3xl;
+    line-height: $line-height-tight;
 }
 
-.text-4xl { 
-    font-size: $font-size-4xl; 
-    line-height: $line-height-none; 
+.text-4xl {
+    font-size: $font-size-4xl;
+    line-height: $line-height-none;
 }
 
-.text-5xl { 
-    font-size: $font-size-5xl; 
-    line-height: $line-height-none; 
+.text-5xl {
+    font-size: $font-size-5xl;
+    line-height: $line-height-none;
 }
 
-.text-6xl { 
-    font-size: $font-size-6xl; 
-    line-height: $line-height-none; 
+.text-6xl {
+    font-size: $font-size-6xl;
+    line-height: $line-height-none;
 }
 
 // Heading styles
-h1, .h1 {
+h1,
+.h1 {
     font-size: $font-size-4xl;
     font-weight: $font-weight-bold;
     line-height: $line-height-tight;
     letter-spacing: -0.025em;
 }
 
-h2, .h2 {
+h2,
+.h2 {
     font-size: $font-size-3xl;
     font-weight: $font-weight-semibold;
     line-height: $line-height-tight;
     letter-spacing: -0.025em;
 }
 
-h3, .h3 {
+h3,
+.h3 {
     font-size: $font-size-2xl;
     font-weight: $font-weight-semibold;
     line-height: $line-height-snug;
 }
 
-h4, .h4 {
+h4,
+.h4 {
     font-size: $font-size-xl;
     font-weight: $font-weight-semibold;
     line-height: $line-height-snug;
 }
 
-h5, .h5 {
+h5,
+.h5 {
     font-size: $font-size-lg;
     font-weight: $font-weight-medium;
     line-height: $line-height-normal;
 }
 
-h6, .h6 {
+h6,
+.h6 {
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
     line-height: $line-height-normal;
@@ -262,49 +274,121 @@ h6, .h6 {
 // ========================================
 
 // Border radius utilities
-.rounded-sm { border-radius: $radius-sm; }
-.rounded { border-radius: $radius; }
-.rounded-md { border-radius: $radius-md; }
-.rounded-lg { border-radius: $radius-lg; }
-.rounded-xl { border-radius: $radius-xl; }
-.rounded-2xl { border-radius: $radius-2xl; }
-.rounded-3xl { border-radius: $radius-3xl; }
-.rounded-full { border-radius: $radius-full; }
+.rounded-sm {
+    border-radius: $radius-sm;
+}
+.rounded {
+    border-radius: $radius;
+}
+.rounded-md {
+    border-radius: $radius-md;
+}
+.rounded-lg {
+    border-radius: $radius-lg;
+}
+.rounded-xl {
+    border-radius: $radius-xl;
+}
+.rounded-2xl {
+    border-radius: $radius-2xl;
+}
+.rounded-3xl {
+    border-radius: $radius-3xl;
+}
+.rounded-full {
+    border-radius: $radius-full;
+}
 
 // Shadow utilities
-.shadow-xs { box-shadow: var(--shadow-sm); }
-.shadow-sm { box-shadow: var(--shadow-sm); }
-.shadow { box-shadow: var(--shadow); }
-.shadow-md { box-shadow: var(--shadow-md); }
-.shadow-lg { box-shadow: var(--shadow-lg); }
-.shadow-xl { box-shadow: var(--shadow-xl); }
-.shadow-2xl { box-shadow: var(--shadow-2xl); }
+.shadow-xs {
+    box-shadow: var(--shadow-sm);
+}
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+.shadow {
+    box-shadow: var(--shadow);
+}
+.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+.shadow-xl {
+    box-shadow: var(--shadow-xl);
+}
+.shadow-2xl {
+    box-shadow: var(--shadow-2xl);
+}
 
 // Transition utilities
-.transition { transition: all $duration-200 $ease-in-out; }
-.transition-fast { transition: all $duration-150 $ease-in-out; }
-.transition-slow { transition: all $duration-300 $ease-in-out; }
+.transition {
+    transition: all $duration-200 $ease-in-out;
+}
+.transition-fast {
+    transition: all $duration-150 $ease-in-out;
+}
+.transition-slow {
+    transition: all $duration-300 $ease-in-out;
+}
 
 // Spacing utilities
-.space-y-1 > * + * { margin-top: var(--spacing-1); }
-.space-y-2 > * + * { margin-top: var(--spacing-2); }
-.space-y-3 > * + * { margin-top: var(--spacing-3); }
-.space-y-4 > * + * { margin-top: var(--spacing-4); }
-.space-y-5 > * + * { margin-top: var(--spacing-5); }
-.space-y-6 > * + * { margin-top: var(--spacing-6); }
-.space-y-8 > * + * { margin-top: var(--spacing-8); }
-.space-y-10 > * + * { margin-top: var(--spacing-10); }
-.space-y-12 > * + * { margin-top: var(--spacing-12); }
+.space-y-1 > * + * {
+    margin-top: var(--spacing-1);
+}
+.space-y-2 > * + * {
+    margin-top: var(--spacing-2);
+}
+.space-y-3 > * + * {
+    margin-top: var(--spacing-3);
+}
+.space-y-4 > * + * {
+    margin-top: var(--spacing-4);
+}
+.space-y-5 > * + * {
+    margin-top: var(--spacing-5);
+}
+.space-y-6 > * + * {
+    margin-top: var(--spacing-6);
+}
+.space-y-8 > * + * {
+    margin-top: var(--spacing-8);
+}
+.space-y-10 > * + * {
+    margin-top: var(--spacing-10);
+}
+.space-y-12 > * + * {
+    margin-top: var(--spacing-12);
+}
 
-.space-x-1 > * + * { margin-left: var(--spacing-1); }
-.space-x-2 > * + * { margin-left: var(--spacing-2); }
-.space-x-3 > * + * { margin-left: var(--spacing-3); }
-.space-x-4 > * + * { margin-left: var(--spacing-4); }
-.space-x-5 > * + * { margin-left: var(--spacing-5); }
-.space-x-6 > * + * { margin-left: var(--spacing-6); }
-.space-x-8 > * + * { margin-left: var(--spacing-8); }
-.space-x-10 > * + * { margin-left: var(--spacing-10); }
-.space-x-12 > * + * { margin-left: var(--spacing-12); }
+.space-x-1 > * + * {
+    margin-left: var(--spacing-1);
+}
+.space-x-2 > * + * {
+    margin-left: var(--spacing-2);
+}
+.space-x-3 > * + * {
+    margin-left: var(--spacing-3);
+}
+.space-x-4 > * + * {
+    margin-left: var(--spacing-4);
+}
+.space-x-5 > * + * {
+    margin-left: var(--spacing-5);
+}
+.space-x-6 > * + * {
+    margin-left: var(--spacing-6);
+}
+.space-x-8 > * + * {
+    margin-left: var(--spacing-8);
+}
+.space-x-10 > * + * {
+    margin-left: var(--spacing-10);
+}
+.space-x-12 > * + * {
+    margin-left: var(--spacing-12);
+}
 
 // ========================================
 // АНИМАЦИИ В СТИЛЕ SHADCN/UI
@@ -444,12 +528,17 @@ h6, .h6 {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes ping {
-    75%, 100% {
+    75%,
+    100% {
         transform: scale(2);
         opacity: 0;
     }
@@ -462,7 +551,8 @@ h6, .h6 {
 }
 
 @keyframes bounce {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(-25%);
         animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
     }

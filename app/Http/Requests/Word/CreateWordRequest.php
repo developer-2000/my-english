@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class CreateWordRequest extends ApiFormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return Auth::check();
     }
 
@@ -21,11 +21,12 @@ class CreateWordRequest extends ApiFormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
-     * правила проверки
+     *               правила проверки
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            'word' => [ 'required','string','min:1',
+            'word' => ['required', 'string', 'min:1',
                 $this->CheckUniqueInDB('_words', 'word'),
             ],
             'translation' => 'required|string|min:1',
@@ -42,9 +43,10 @@ class CreateWordRequest extends ApiFormRequest
      *
      * @return array
      */
-    public function messages() {
+    public function messages()
+    {
         return [
-            'word.unique' => "Такое слово уже существует в таблице слов.",
+            'word.unique' => 'Такое слово уже существует в таблице слов.',
         ];
     }
 }

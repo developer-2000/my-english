@@ -1,29 +1,28 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: '/',
         name: 'PAGE_INDEX',
-        component: () => import('../components/Pages/PageIndex.vue')
+        component: () => import('../components/Pages/PageIndex.vue'),
     },
     {
         path: '/page-list-words',
         name: 'PAGE_LIST_WORDS',
-        component: () => import('../components/Pages/PageListWords.vue')
+        component: () => import('../components/Pages/PageListWords.vue'),
     },
     {
         path: '/page-word-sentences',
         name: 'PAGE_WORD_SENTENCES',
-        component: () => import('../components/Pages/PageWordSentences.vue')
+        component: () => import('../components/Pages/PageWordSentences.vue'),
     },
 ];
-
 
 const index = new VueRouter({
     mode: 'history',
     routes,
 });
 
-export default index
+export default index;

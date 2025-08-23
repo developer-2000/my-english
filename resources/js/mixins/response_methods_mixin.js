@@ -2,12 +2,12 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
     data() {
-        return { }
+        return {};
     },
     methods: {
         // проверка backup данных axios
         checkSuccess(response) {
-            if(response?.data?.error === null){
+            if (response?.data?.error === null) {
                 return true;
             }
 
@@ -15,7 +15,6 @@ export default {
         },
         // alert сообщение на странице
         message(msg = '', icon) {
-            console.log('🔍 [RESPONSE_METHODS] message called, msg:', msg, 'icon:', icon);
             const Toast = this.$swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -25,12 +24,11 @@ export default {
             });
             Toast.fire({
                 icon: icon,
-                title: msg
-            })
+                title: msg,
+            });
         },
         // confirm сообщение на странице
         confirmMessage(msg = '', icon, id) {
-            console.log('🔍 [RESPONSE_METHODS] confirmMessage called, msg:', msg, 'icon:', icon, 'id:', id);
             this.$swal({
                 title: '',
                 text: msg,
@@ -38,17 +36,14 @@ export default {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                console.log('🔍 [RESPONSE_METHODS] Confirm dialog result:', result);
+                confirmButtonText: 'Yes, delete it!',
+            }).then(result => {
                 if (result.isConfirmed) {
-                    console.log('🔍 [RESPONSE_METHODS] User confirmed deletion, calling deleteWord with id:', id);
                     this.deleteWord(id);
                 }
-            })
+            });
         },
     },
-    props: [ ],
-    mounted() { }
-}
-
+    props: [],
+    mounted() {},
+};

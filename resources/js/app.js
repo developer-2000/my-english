@@ -1,6 +1,6 @@
 // Полифил для Node.js переменных в браузере
 if (typeof global === 'undefined') {
-    var global = globalThis;
+    globalThis.global = globalThis;
 }
 
 import './bootstrap';
@@ -17,16 +17,16 @@ Vue.config.productionTip = false;
 Vue.config.devtools = false;
 Vue.config.silent = true;
 
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 Vue.use(VueRouter);
-import router from './router'
+import router from './router';
 
-import Vuelidate from 'vuelidate'
-Vue.use(Vuelidate)
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
 
-import VueTippy, { TippyComponent } from "vue-tippy";
+import VueTippy, { TippyComponent } from 'vue-tippy';
 Vue.use(VueTippy);
-Vue.component("tippy", TippyComponent);
+Vue.component('Tippy', TippyComponent);
 
 import http_client from './services/http_client';
 Vue.prototype.$http = http_client;
@@ -41,14 +41,13 @@ Vue.use(Vuex);
 // Импортируем наш store
 import store from './store';
 
-import hallway from './components/Hallway.vue'
+import hallway from './components/Hallway.vue';
 
-const app = new Vue({
+new Vue({
     el: '#app',
     router,
     store, // подключаем Vuex хранилище к приложению
-    components:{
-        hallway
+    components: {
+        hallway,
     },
 });
-

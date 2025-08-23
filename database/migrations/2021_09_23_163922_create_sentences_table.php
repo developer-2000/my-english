@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSentencesTable extends Migration {
+class CreateSentencesTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('en_sentences', function (Blueprint $table) {
             $table->id();
             $table->text('sentence');
@@ -25,7 +27,8 @@ class CreateSentencesTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('en_sentences');
     }
 }

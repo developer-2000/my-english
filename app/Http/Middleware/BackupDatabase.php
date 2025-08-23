@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use Spatie\DbDumper\Databases\MySql;
+use Closure;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
+use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\DumpFailed;
 
@@ -18,13 +18,14 @@ class BackupDatabase
         if (ob_get_level()) {
             ob_clean();
         }
-        
+
         try {
             $this->backupIfNeeded();
         } catch (\Exception $e) {
             // Логируем ошибку, но не прерываем выполнение
-            \Log::error('Backup error: ' . $e->getMessage());
+            \Log::error('Backup error: '.$e->getMessage());
         }
+
         return $next($request);
     }
 
@@ -45,7 +46,7 @@ class BackupDatabase
         // Удаляем бэкапы, которые старше 3 дней
         $backupFiles->each(function ($file) {
             $date = basename($file, '.sql');
-            if ( Carbon::createFromFormat('Y-m-d', $date)->isBefore(Carbon::today()->subDays(3)) ) {
+            if (Carbon::createFromFormat('Y-m-d', $date)->isBefore(Carbon::today()->subDays(3))) {
                 Storage::delete($file);
             }
         });
@@ -57,12 +58,13 @@ class BackupDatabase
     /**
      * Адрес бекапов - \storage\app\backups\2025-02-02.sql
      *
-     * @param $date
      * @return void
+     *
      * @throws CannotStartDump
      * @throws DumpFailed
      */
-    protected function createBackup($date) {
+    protected function createBackup($date)
+    {
         // Получаем настройки базы данных из конфигурации Laravel
         $dbName = Config::get('database.connections.mysql.database');
         $dbUser = Config::get('database.connections.mysql.username');

@@ -11,7 +11,8 @@ class RoSentence extends Model
 
     protected $guarded = [];
 
-    public function sound() {
+    public function sound()
+    {
         return $this->hasOne(RoSentenceSound::class, 'sentence_id', 'id');
     }
 }

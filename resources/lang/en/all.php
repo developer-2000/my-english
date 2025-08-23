@@ -59,5 +59,4 @@ return [
     'correct_spelling_of_the_word' => 'Correct spelling of the word',
     'no_words_in_database_to_study' => 'No words in database to study',
 
-
 ];

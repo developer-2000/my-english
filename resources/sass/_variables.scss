@@ -8,20 +8,20 @@ $line-height-base: 1.6;
 
 // Colors - SEMANTIC & WCAG COMPLIANT
 // Using semantic color names for better maintainability
-$primary: #007bff;               // Primary brand color
-$secondary: #6c757d;             // Secondary text and borders
-$success: #28a745;               // Success states
-$info: #17a2b8;                  // Information states
-$warning: #ffc107;               // Warning states
-$danger: #dc3545;                // Error states
-$light: #f8f9fa;                 // Light backgrounds
-$dark: #343a40;                  // Dark text
+$primary: #007bff; // Primary brand color
+$secondary: #6c757d; // Secondary text and borders
+$success: #28a745; // Success states
+$info: #17a2b8; // Information states
+$warning: #ffc107; // Warning states
+$danger: #dc3545; // Error states
+$light: #f8f9fa; // Light backgrounds
+$dark: #343a40; // Dark text
 
 // Semantic color variations
-$primary-light: #4da6ff;         // Lighter primary
-$primary-dark: #0056b3;          // Darker primary
-$success-light: #5cb85c;         // Lighter success
-$danger-light: #e74c3c;          // Lighter danger
+$primary-light: #4da6ff; // Lighter primary
+$primary-dark: #0056b3; // Darker primary
+$success-light: #5cb85c; // Lighter success
+$danger-light: #e74c3c; // Lighter danger
 
 // Legacy color support (for backward compatibility)
 $blue: $primary;
@@ -32,20 +32,20 @@ $green: $success;
 $cyan: $info;
 
 // Enhanced contrast variables - WCAG AA compliant
-$grey-border: #c1c5cb;           // Contrast ratio: 3.1:1
-$grey-border-modal: #e9ecef;     // Contrast ratio: 4.5:1
+$grey-border: #c1c5cb; // Contrast ratio: 3.1:1
+$grey-border-modal: #e9ecef; // Contrast ratio: 4.5:1
 $transparent-border: rgba(255, 255, 255, 0);
-$grey-background: #f0f2f5;       // Contrast ratio: 4.5:1
+$grey-background: #f0f2f5; // Contrast ratio: 4.5:1
 $primary-border: $primary;
 $success-border: $success;
 $sort-blue: #409eff;
 $modal-grey-border: #dfdfdf;
 
 // Text colors with proper contrast
-$text-primary: $dark;            // Main text color
-$text-secondary: $secondary;     // Secondary text
-$text-muted: #6c757d;           // Muted text
-$text-light: #495057;           // Light text on dark backgrounds
+$text-primary: $dark; // Main text color
+$text-secondary: $secondary; // Secondary text
+$text-muted: #6c757d; // Muted text
+$text-light: #495057; // Light text on dark backgrounds
 
 // CSS Variables for shadcn/ui style
 :root {
@@ -57,7 +57,7 @@ $text-light: #495057;           // Light text on dark backgrounds
     --popover: #ffffff;
     --popover-foreground: #0f172a;
 
-    // Primary colors  
+    // Primary colors
     --primary: #3b82f6;
     --primary-foreground: #f8fafc;
     --secondary: #f1f5f9;

@@ -1,17 +1,20 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\EnWordType;
 use Illuminate\Database\Seeder;
 
-class TypeSeeder extends Seeder {
+class TypeSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run() {
-        $object = new \stdClass();
+    public function run()
+    {
+        $object = new \stdClass;
         $object->text = 'отвечает на вопросы что делать? что сделать?';
         $object->object = null;
         $arrData = [];
@@ -50,9 +53,9 @@ class TypeSeeder extends Seeder {
         // 4
         $object->text = null;
         $object->object = [
-            "past" => ["word" => null, "translation" => null, "accent" => null],
-            "present" => ["word" => null, "translation" => null, "accent" => null],
-            "future" => ["word" => null, "translation" => null, "accent" => null]
+            'past' => ['word' => null, 'translation' => null, 'accent' => null],
+            'present' => ['word' => null, 'translation' => null, 'accent' => null],
+            'future' => ['word' => null, 'translation' => null, 'accent' => null],
         ];
         $arrData[] = [
             'type' => 'формы времени',
@@ -62,7 +65,7 @@ class TypeSeeder extends Seeder {
 
         // 5
         $object->text = 'Целые и дробные цифры';
-        $object->object = ["number" => null];
+        $object->object = ['number' => null];
         $arrData[] = [
             'type' => 'числительные',
             'color' => 'rgb(118, 0, 151)',
@@ -72,20 +75,20 @@ class TypeSeeder extends Seeder {
         // 6
         $object->text = null;
         $object->object = [
-            "coordinating" => [
-                "select" => false,
-                "about" => 'Эти союзы соединяют слова, фразы или предложения, которые имеют равное значение',
-                "name" => 'Сочинительные',
+            'coordinating' => [
+                'select' => false,
+                'about' => 'Эти союзы соединяют слова, фразы или предложения, которые имеют равное значение',
+                'name' => 'Сочинительные',
             ],
-            "subordinating" => [
-                "select" => false,
-                "about" => 'Эти союзы соединяют главное предложение с придаточным, показывая зависимость одного от другого',
-                "name" => 'Подчинительные',
+            'subordinating' => [
+                'select' => false,
+                'about' => 'Эти союзы соединяют главное предложение с придаточным, показывая зависимость одного от другого',
+                'name' => 'Подчинительные',
             ],
-            "correlative" => [
-                "select" => false,
-                "about" => 'Эти союзы работают парами для соединения слов, фраз или предложений',
-                "name" => 'Коррелативные',
+            'correlative' => [
+                'select' => false,
+                'about' => 'Эти союзы работают парами для соединения слов, фраз или предложений',
+                'name' => 'Коррелативные',
             ],
         ];
         $arrData[] = [
@@ -97,4 +100,3 @@ class TypeSeeder extends Seeder {
         EnWordType::insert($arrData);
     }
 }
-

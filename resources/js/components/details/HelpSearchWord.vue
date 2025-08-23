@@ -6,18 +6,16 @@
 
 <script>
     export default {
-        props: [
-            'helpDynamic',
-        ],
+        name: 'HelpSearchWord',
+        props: ['helpDynamic'],
         watch: {
-            helpDynamic : function (value) {},
+            helpDynamic: function () {},
         },
-        name: "HelpSearchWord",
-    }
+    };
 </script>
 
 <style scoped>
-    .help_search_words{
+    .help_search_words {
         font-size: 14px;
     }
 </style>

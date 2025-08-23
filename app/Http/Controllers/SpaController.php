@@ -15,7 +15,7 @@ class SpaController extends Controller
         if (ob_get_level()) {
             ob_clean();
         }
-        
+
         return view('index');
     }
 }

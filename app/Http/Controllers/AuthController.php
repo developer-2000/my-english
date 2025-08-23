@@ -57,18 +57,18 @@ class AuthController extends Controller
     public function verifyEmail(Request $request)
     {
         // Валидация временной подписи
-        if (!$request->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             return redirect('/login')->withErrors(['message' => 'Invalid or expired verification link']);
         }
 
         $user = User::find($request->route('id'));
 
-        if (!$user) {
+        if (! $user) {
             return redirect('/login')->withErrors(['message' => 'User not found']);
         }
 
         // Проверка совпадения хеша email
-        if (!hash_equals((string) $request->route('hash'), sha1($user->email))) {
+        if (! hash_equals((string) $request->route('hash'), sha1($user->email))) {
             return redirect('/login')->withErrors(['message' => 'Invalid hash']);
         }
 
@@ -88,7 +88,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+
         return redirect()->route('auth.showLoginForm');
     }
 }
-

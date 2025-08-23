@@ -10,23 +10,20 @@ use App\Models\LanguageUser;
 use App\Services\Translations\ConcreteTranslationCache;
 use Illuminate\Support\Facades\DB;
 
-
 class LanguageController extends Controller
 {
     /**
      * Выбрать языки изучения
-     * @return ApiResponse
      */
     public function getLanguages(): ApiResponse
     {
         $languages = config('program.languages');
+
         return new ApiResponse($languages);
     }
 
     /**
      * Пользователь выбрал язык изучения
-     * @param SetLearnLanguageUser $request
-     * @return ApiResponse
      */
     public function setLearnLanguageUser(SetLearnLanguageUser $request): ApiResponse
     {
@@ -43,13 +40,11 @@ class LanguageController extends Controller
         // Обновляем объект $user после транзакции
         $user->refresh();
 
-        return new ApiResponse(compact("user"));
+        return new ApiResponse(compact('user'));
     }
 
     /**
      * Возвращает все переводы интерфейса юзера
-     * @param GetTranslation $request
-     * @return ApiResponse
      */
     public function getTranslations(GetTranslation $request, ConcreteTranslationCache $translationCache): ApiResponse
     {
@@ -58,7 +53,7 @@ class LanguageController extends Controller
             $translations = $translationCache->getTranslations($request->lang);
 
             // Возвращаем переводы
-            return new ApiResponse(compact("translations"));
+            return new ApiResponse(compact('translations'));
         } catch (\Throwable $th) {
             // Обработка ошибок, если файлы переводов не найдены или возникают другие проблемы
             return new ApiResponse([], 'Translations not found', 404);

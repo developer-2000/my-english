@@ -10,6 +10,7 @@ use Tests\TestCase;
 class VerifyEmailTest extends TestCase
 {
     protected $user;
+
     protected $verificationUrl;
 
     /**

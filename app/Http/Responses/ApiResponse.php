@@ -4,9 +4,11 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
 
-class ApiResponse extends JsonResponse {
-    public function __construct($data = null, $error = null, $status = 200, $headers = [], $options = 0) {
-        $success = !$error; // success = true только если error = false/null
+class ApiResponse extends JsonResponse
+{
+    public function __construct($data = null, $error = null, $status = 200, $headers = [], $options = 0)
+    {
+        $success = ! $error; // success = true только если error = false/null
         parent::__construct(compact('success', 'data', 'error'), $status, $headers, $options);
     }
 }

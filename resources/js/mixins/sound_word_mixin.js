@@ -14,22 +14,83 @@ export default {
                 lang: [
                     {
                         lang: 'en-US',
-                        alpha: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+                        alpha: [
+                            'a',
+                            'b',
+                            'c',
+                            'd',
+                            'e',
+                            'f',
+                            'g',
+                            'h',
+                            'i',
+                            'j',
+                            'k',
+                            'l',
+                            'm',
+                            'n',
+                            'o',
+                            'p',
+                            'q',
+                            'r',
+                            's',
+                            't',
+                            'u',
+                            'v',
+                            'w',
+                            'x',
+                            'y',
+                            'z',
+                        ],
                     },
                     {
                         lang: 'ru-RU',
-                        alpha: ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я']
+                        alpha: [
+                            'а',
+                            'б',
+                            'в',
+                            'г',
+                            'д',
+                            'е',
+                            'ё',
+                            'ж',
+                            'з',
+                            'и',
+                            'й',
+                            'к',
+                            'л',
+                            'м',
+                            'н',
+                            'о',
+                            'п',
+                            'р',
+                            'с',
+                            'т',
+                            'у',
+                            'ф',
+                            'х',
+                            'ц',
+                            'ч',
+                            'ш',
+                            'щ',
+                            'ь',
+                            'ы',
+                            'ъ',
+                            'э',
+                            'ю',
+                            'я',
+                        ],
                     },
-                ]
+                ],
             },
-        }
+        };
     },
     methods: {
         initialSpeak() {
-            this.voiceActingStatus({name:'start_true'});
+            this.voiceActingStatus({ name: 'start_true' });
             // остановить возможно предыдущий запущеный sound
             this.speak.synthesis.cancel();
-            this.voiceActingStatus({name:'stop_true'});
+            this.voiceActingStatus({ name: 'stop_true' });
             if (this.setText()) {
                 this.forSpeak();
             }
@@ -37,7 +98,7 @@ export default {
         // сбор текста в выбранных checkbox eng и перевод
         // [ ['eng','ru'], [] ]
         setText() {
-            let checkboxes = document.getElementsByClassName('memorable_checkbox');
+            const checkboxes = document.getElementsByClassName('memorable_checkbox');
             this.speak.arrText = [];
             this.speak.arrIdCollText = [];
             let id = 0;
@@ -53,13 +114,12 @@ export default {
 
                         if (id == this.table.rows[r].id) {
                             // без повторений
-                            if(!this.speak.repeat_bool){
+                            if (!this.speak.repeat_bool) {
                                 this.speak.arrText.push([
                                     this.table.rows[r].sentence,
-                                    this.table.rows[r].translation
+                                    this.table.rows[r].translation,
                                 ]);
-                            }
-                            else{
+                            } else {
                                 arrBox.push(this.table.rows[r].translation);
                                 for (let s = 0; s < this.speak.count_repeat; s++) {
                                     arrBox.push(this.table.rows[r].sentence);
@@ -76,46 +136,45 @@ export default {
             return true;
         },
         forSpeak() {
-            console.log('🔍 [SOUND] forSpeak called, arrText length:', this.speak.arrText.length);
-            console.log('🔍 [SOUND] speak.start:', this.speak.start);
-            console.log('🔍 [SOUND] repeat_bool:', this.speak.repeat_bool);
-            console.log('🔍 [SOUND] count_repeat:', this.speak.count_repeat);
-            
             let item_count = 0;
-            let arr_count = this.speak.arrText.length;
+            const arr_count = this.speak.arrText.length;
 
             setTimeout(() => {
-                this.voiceActingStatus({name:'stop_false'});
+                this.voiceActingStatus({ name: 'stop_false' });
                 // 1 прокрутка к тексту
                 this.scrollingToText(this.speak.arrIdCollText[0]);
 
-                this.speak.arrText.forEach((arrRow, index) => {
+                this.speak.arrText.forEach((arrRow) => {
                     // по очереди прочесть эти языки
                     Promise.all(arrRow.map(this.readSound)).then(data => {
-                        if(this.speak.start){
+                        if (this.speak.start) {
                             // количество отработаных индексов озвучки
                             item_count++;
                             // прокрутка к тексту
                             this.scrollingToText(this.speak.arrIdCollText[item_count]);
-                            this.voiceActingStatus({name:'arr_count', arr_count:arr_count, data:data, item_count:item_count});
+                            this.voiceActingStatus({
+                                name: 'arr_count',
+                                arr_count: arr_count,
+                                data: data,
+                                item_count: item_count,
+                            });
                         }
                     });
-                })
+                });
             }, 200);
         },
         async readSound(text, index) {
-            console.log('🔍 [SOUND] readSound called for:', text);
             return new Promise(resolve => {
-                let utterance = new SpeechSynthesisUtterance(text);
+                const utterance = new SpeechSynthesisUtterance(text);
                 // определить язык текста
-                let index_lang = this.getIndexLanguage(text, this.speak.synthesis.getVoices());
+                const index_lang = this.getIndexLanguage(text, this.speak.synthesis.getVoices());
                 // установить переводчика
                 utterance.voice = this.speak.synthesis.getVoices()[index_lang];
                 // озвучить текст
                 this.speak.synthesis.speak(utterance);
 
                 // событие завершения озвучки
-                utterance.addEventListener('end', (event) => {
+                utterance.addEventListener('end', () => {
                     if (!this.speak.stop) {
                         // чистка масива для pause
                         if (index == 1) {
@@ -145,57 +204,47 @@ export default {
             }
         },
         pauseReadSound() {
-            console.log('🔍 [SOUND] pauseReadSound called');
-            console.log('🔍 [SOUND] speak.stop before:', this.speak.stop);
-            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
-            this.voiceActingStatus({name:'stop_true'});
-            this.voiceActingStatus({name:'pause_true'});
+            this.voiceActingStatus({ name: 'stop_true' });
+            this.voiceActingStatus({ name: 'pause_true' });
             this.speak.synthesis.cancel();
             this.speak.arrText = [...this.speak.pauseArrText];
             this.speak.arrIdCollText = [...this.speak.pauseIdCollText];
-            console.log('🔍 [SOUND] speak.stop after:', this.speak.stop);
-            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
         },
         stopReadSound() {
-            console.log('🔍 [SOUND] stopReadSound called');
-            console.log('🔍 [SOUND] speak.stop before:', this.speak.stop);
-            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
-            console.log('🔍 [SOUND] speak.start before:', this.speak.start);
-            this.voiceActingStatus({name:'stop_false'});
-            this.voiceActingStatus({name:'pause_false'});
-            this.voiceActingStatus({name:'start_false'});
+            this.voiceActingStatus({ name: 'stop_false' });
+            this.voiceActingStatus({ name: 'pause_false' });
+            this.voiceActingStatus({ name: 'start_false' });
             this.speak.synthesis.cancel();
             this.changeColorLineSound();
-            console.log('🔍 [SOUND] speak.stop after:', this.speak.stop);
-            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
-            console.log('🔍 [SOUND] speak.start after:', this.speak.start);
         },
         continueReadSound() {
-            console.log('🔍 [SOUND] continueReadSound called');
-            console.log('🔍 [SOUND] speak.pause before:', this.speak.pause);
-            this.voiceActingStatus({name:'pause_false'});
+            this.voiceActingStatus({ name: 'pause_false' });
             this.forSpeak();
-            console.log('🔍 [SOUND] speak.pause after:', this.speak.pause);
         },
         scrollingToText(id) {
             if (id !== undefined) {
-                let parent = $('#content-wrapper');
+                const parent = $('#content-wrapper');
                 // положение скроллинга
-                let scrolling = parent.scrollTop();
-                let elTop = document.getElementById('memorable_checkbox_' + id).getBoundingClientRect().top;
-                elTop = scrolling == 0 ? elTop : (elTop + scrolling);
-                let elHeight = $('#memorable_checkbox_' + id).height();
-                let parentHeight = parent.height();
-                let offset = elTop - ((parentHeight - elHeight) / 2);
+                const scrolling = parent.scrollTop();
+                let elTop = document
+                    .getElementById('memorable_checkbox_' + id)
+                    .getBoundingClientRect().top;
+                elTop = scrolling == 0 ? elTop : elTop + scrolling;
+                const elHeight = $('#memorable_checkbox_' + id).height();
+                const parentHeight = parent.height();
+                const offset = elTop - (parentHeight - elHeight) / 2;
 
                 this.changeColorLineSound($('#memorable_checkbox_' + id));
-                parent.animate({scrollTop: offset}, 700);
+                parent.animate({ scrollTop: offset }, 700);
             }
         },
         changeColorLineSound(obj = false) {
-            $('tr').css({'outline': 'none', 'background': 'none'});
+            $('tr').css({ outline: 'none', background: 'none' });
             if (obj) {
-                obj.parent().parent().parent().css({'outline': '1px solid rgb(192, 249, 190)', 'background': '#ecffed'});
+                obj.parent()
+                    .parent()
+                    .parent()
+                    .css({ outline: '1px solid rgb(192, 249, 190)', background: '#ecffed' });
             }
         },
         voiceActingStatus(object) {
@@ -227,14 +276,14 @@ export default {
                 // востановить кнопку озвучки
                 case 'arr_count':
                     if (object.item_count === object.arr_count) {
-                        this.voiceActingStatus({name:'start_false'});
+                        this.voiceActingStatus({ name: 'start_false' });
                         this.changeColorLineSound();
                     }
                     break;
             }
         },
         preloadLanguages() {
-            let object = new SpeechSynthesisUtterance('hello');
+            const object = new SpeechSynthesisUtterance('hello');
             this.speak.synthesis.speak(object);
             this.speak.synthesis.cancel();
         },
@@ -242,9 +291,8 @@ export default {
     mounted() {
         this.preloadLanguages();
 
-        window.speechSynthesis.onvoiceschanged = function() {
-            // console.log(window.speechSynthesis.getVoices())
-        }
+        window.speechSynthesis.onvoiceschanged = function () {
+            // Get available voices
+        };
     },
-}
-
+};

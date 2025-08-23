@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+public/css/
+public/js/
+public/mix-manifest.json
+
+# Laravel
+bootstrap/cache/
+storage/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Compiled assets
+*.min.js
+*.min.css
+
+# Package files
+package-lock.json
+composer.lock

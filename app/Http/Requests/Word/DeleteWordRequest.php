@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Http\Requests\Word;
 
 use App\Http\Requests\ApiFormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class DeleteWordRequest extends ApiFormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return Auth::check();
     }
 
@@ -22,7 +22,8 @@ class DeleteWordRequest extends ApiFormRequest
      *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             'id' => [
                 'required',
@@ -31,5 +32,4 @@ class DeleteWordRequest extends ApiFormRequest
             ],
         ];
     }
-
 }

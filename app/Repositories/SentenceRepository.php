@@ -8,22 +8,23 @@ use App\Http\Requests\Word\UpdateSentenceRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
-class SentenceRepository extends CoreRepository {
-
-    public function getSentences($request): array {
+class SentenceRepository extends CoreRepository
+{
+    public function getSentences($request): array
+    {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('sound');
 
         // 1 Найти все предложения в которых есть все указанные слова
         $searchArray = $vars['search'] ?? [];
-        if (!empty($searchArray) && !empty($searchArray[0])) {
+        if (! empty($searchArray) && ! empty($searchArray[0])) {
             // word language
             if ($language = $this->getLanguage($searchArray[0])) {
                 // Select a column name depending on the language
                 $column_name = $language === 'en' ? 'sentence' : 'translation';
                 foreach ($searchArray as $word) {
                     // Используем LIKE для более гибкого поиска, нечувствительного к регистру
-                    $collection = $collection->whereRaw("LOWER({$column_name}) LIKE ?", ['%' . strtolower($word) . '%']);
+                    $collection = $collection->whereRaw("LOWER({$column_name}) LIKE ?", ['%'.strtolower($word).'%']);
                 }
             }
         }
@@ -57,51 +58,71 @@ class SentenceRepository extends CoreRepository {
         return compact('total_count', 'list');
     }
 
-    public function checkSentenceExists($request): bool {
+    public function checkSentenceExists($request): bool
+    {
         // Удаляем лишние пробелы из предложения для сравнения
         $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);
-        
+
         // Проверяем существование предложения (без учета регистра)
         return $this->startConditions()
             ->whereRaw('LOWER(sentence) = ?', [strtolower($sentence)])
             ->exists();
     }
 
-    public function storeSentences($request): void {
+    public function checkSentenceExistsForUpdate($request): bool
+    {
+        // Удаляем лишние пробелы из предложения для сравнения
+        $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);
+
+        // Проверяем существование предложения (без учета регистра), исключая текущее предложение
+        return $this->startConditions()
+            ->whereRaw('LOWER(sentence) = ?', [strtolower($sentence)])
+            ->where('id', '!=', $request['sentence_id'])
+            ->exists();
+    }
+
+    public function storeSentences($request): void
+    {
         // Удаляем лишние пробелы из предложения
         $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);
         // Разбиваем предложение на массив слов
-        $words = explode(" ", trim($sentence));
+        $words = explode(' ', trim($sentence));
 
         // добавить слова которых нет
-        $this->getDynamicModelClone("Word")::processWords($words);
+        $this->getDynamicModelClone('Word')::processWords($words);
         // добавить предложение
         $this->startConditions()::create($request);
     }
 
-    public function searchWord(SearchWordRequest $request) {
-        return $this->getDynamicModelClone("Word")::where('word', 'like', $request->word . '%')->get()->pluck('word');
+    public function searchWord(SearchWordRequest $request)
+    {
+        return $this->getDynamicModelClone('Word')::where('word', 'like', $request->word.'%')->get()->pluck('word');
     }
 
-    public function updateSentence(UpdateSentenceRequest $request) {
-        return $this->getDynamicModelClone("Sentence")::where('id', $request->sentence_id)->update(Arr::except($request->validated(), 'sentence_id'));
+    public function updateSentence(UpdateSentenceRequest $request)
+    {
+        return $this->getDynamicModelClone('Sentence')::where('id', $request->sentence_id)->update(Arr::except($request->validated(), 'sentence_id'));
     }
 
-    public function searchSentences(SearchWordRequest $request) {
-//        return $this->getDynamicModelClone("Sentence")::where('sentence', 'like', '%' . $request->word . '%')->get();
-        return $this->getDynamicModelClone("Sentence")::where('sentence', 'REGEXP', '\\b' . preg_quote($request->word, '\\') . '\\b')->get();
+    public function searchSentences(SearchWordRequest $request)
+    {
+        //        return $this->getDynamicModelClone("Sentence")::where('sentence', 'like', '%' . $request->word . '%')->get();
+        return $this->getDynamicModelClone('Sentence')::where('sentence', 'REGEXP', '\\b'.preg_quote($request->word, '\\').'\\b')->get();
     }
 
-    public function bindCheckboxSound(BindCheckboxSoundRequest $request) {
+    public function bindCheckboxSound(BindCheckboxSoundRequest $request)
+    {
         if ($request['status']) {
-            $this->getDynamicModelClone("SentenceSound")::firstOrCreate(['sentence_id' => $request->sentence_id]);
+            $this->getDynamicModelClone('SentenceSound')::firstOrCreate(['sentence_id' => $request->sentence_id]);
         } else {
-            $this->getDynamicModelClone("SentenceSound")::where('sentence_id', $request->sentence_id)->delete();
+            $this->getDynamicModelClone('SentenceSound')::where('sentence_id', $request->sentence_id)->delete();
         }
     }
 
-    protected function getModelClass(): string {
+    protected function getModelClass(): string
+    {
         $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
+
         return "App\\Models\\{$learnLanguage}Sentence";
     }
 }

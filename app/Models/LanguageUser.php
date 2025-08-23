@@ -27,14 +27,14 @@ class LanguageUser extends Model
     public function interfaceLanguage()
     {
         return $this->belongsTo(Language::class, 'interface_id')
-            ->withDefault([ 'language' => 'en' ]);
+            ->withDefault(['language' => 'en']);
     }
 
     // Связь с моделью Language для learn_id
     public function learnLanguage()
     {
         return $this->belongsTo(Language::class, 'learn_id')
-            ->withDefault([ 'language' => 'en' ]);
+            ->withDefault(['language' => 'en']);
     }
 
     // Автообновление auth()->user() после изменений данных связанных с ним
@@ -45,5 +45,4 @@ class LanguageUser extends Model
             $languageUser->user->refresh();
         });
     }
-
 }

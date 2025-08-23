@@ -258,7 +258,9 @@
 
 // Modal fade animation
 .modal.fade .modal-content {
-    transition: transform 200ms ease-out, opacity 200ms ease-out;
+    transition:
+        transform 200ms ease-out,
+        opacity 200ms ease-out;
 }
 
 .modal.fade.show .modal-content {
@@ -543,11 +545,11 @@
 }
 
 // Modal accessibility
-.modal[aria-hidden="true"] {
+.modal[aria-hidden='true'] {
     display: none;
 }
 
-.modal[aria-hidden="false"] {
+.modal[aria-hidden='false'] {
     display: flex;
 }
 
@@ -659,7 +661,7 @@
 // Modal backdrop animations
 .modal-backdrop {
     animation: modalFadeIn 200ms ease-out;
-    
+
     &.fade-out {
         animation: modalFadeOut 200ms ease-out;
     }

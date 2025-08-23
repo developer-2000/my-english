@@ -8,26 +8,22 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         pagination: {
-            perPage: parseInt(localStorage.getItem('pagination_per_page')) || 10
-        }
+            perPage: parseInt(localStorage.getItem('pagination_per_page')) || 10,
+        },
     },
     mutations: {
         SET_PER_PAGE(state, perPage) {
-            console.log('🔍 [VUEX] SET_PER_PAGE mutation called with:', perPage);
-            console.log('🔍 [VUEX] Old perPage value:', state.pagination.perPage);
             state.pagination.perPage = perPage;
             localStorage.setItem('pagination_per_page', perPage);
-            console.log('🔍 [VUEX] New perPage value:', state.pagination.perPage);
-        }
+        },
     },
     getters: {
         getPerPage: state => {
-            console.log('🔍 [VUEX] getPerPage getter called, returning:', state.pagination.perPage);
             return state.pagination.perPage;
-        }
+        },
     },
     modules: {
         language,
         user,
-    }
+    },
 });

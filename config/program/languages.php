@@ -2,7 +2,7 @@
 
 return [
     'learn_languages' => [
-        'English'=>"en",
-        'Română'=>"ro"
+        'English' => 'en',
+        'Română' => 'ro',
     ],
 ];

@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckRoleMiddleware
 {
-
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('auth.showLoginForm');
         }
 

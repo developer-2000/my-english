@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use \Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -38,6 +38,7 @@ class User extends Authenticatable
         if (is_string($role)) {
             $role = Role::where('name', $role)->firstOrFail()->id;
         }
+
         return $this->roles()->syncWithoutDetaching($role);
     }
 
@@ -48,15 +49,13 @@ class User extends Authenticatable
     }
 
     // Определение отношения "один к одному" с моделью Language
-//    public function languages()
-//    {
-//        return $this->belongsToMany(Language::class, 'language_users');
-//    }
-
+    //    public function languages()
+    //    {
+    //        return $this->belongsToMany(Language::class, 'language_users');
+    //    }
 
     /**
      * Делает выборку языков пользователя через LanguageUser
-     * @return HasOne
      */
     public function languageUser(): HasOne
     {
@@ -78,6 +77,7 @@ class User extends Authenticatable
 
     /**
      * Автоматические функции таблицы
+     *
      * @return void
      */
     protected static function boot()
@@ -91,6 +91,7 @@ class User extends Authenticatable
 
     /**
      * Назначает юзеру языки по умолчанию
+     *
      * @return void
      */
     public function assignDefaultLanguages()
@@ -102,9 +103,9 @@ class User extends Authenticatable
 
         if ($interfaceLanguage && $learnLanguage) {
             LanguageUser::create([
-                "user_id" => $this->id,
-                "learn_id" => $learnLanguage->id,
-                "interface_id" => $interfaceLanguage->id,
+                'user_id' => $this->id,
+                'learn_id' => $learnLanguage->id,
+                'interface_id' => $interfaceLanguage->id,
             ]);
         }
     }
