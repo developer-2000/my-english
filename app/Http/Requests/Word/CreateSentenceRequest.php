@@ -29,7 +29,6 @@ class CreateSentenceRequest extends ApiFormRequest
                 'required',
                 'string',
                 'min:3',
-                $this->CheckUniqueInDB('_sentences', 'sentence'),
             ],
             'translation' => 'required|string|min:3',
         ];

@@ -23,7 +23,25 @@
                 </div>
                 <!-- body -->
                 <div class="modal-body">
-                    <template v-if="currentSentence">
+                    <!-- Загрузка -->
+                    <template v-if="isLoading || !currentSentence">
+                        <div class="box-word">
+                            <div class="learn-word-trigger" style="text-align: center; color: #666;">
+                                <div v-if="isLoading">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Загрузка...</span>
+                                    </div>
+                                    <div style="margin-top: 10px;">Загрузка предложения...</div>
+                                </div>
+                                <div v-else>
+                                    Загрузка...
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- слово и кнопки -->
+                    <template v-else>
                         <!-- слово и кнопки -->
                         <div class="box-word">
                             <!-- слово -->
@@ -72,6 +90,7 @@ export default {
             last_updated_at: null,
             currentSentence: null,
             copySentence: null,
+            isLoading: false, // Состояние загрузки
             objLanguage:{
                 languageIndex:0,
                 languages: ['Eng', 'Ru'],
@@ -85,11 +104,21 @@ export default {
     methods: {
         // загрузка изучаемого слова
         async loadLearnSentence(action = null) {
+            console.log('🔍 [MODAL_LEARN_SENTENCE] loadLearnSentence called, action:', action);
+            
+            // Устанавливаем состояние загрузки только при первой загрузке (когда action = null)
+            if (action === null) {
+                this.isLoading = true;
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Loading state set to true');
+            }
+            
             if(action == "up"){
                 this.not_know++
+                console.log('🔍 [MODAL_LEARN_SENTENCE] not_know incremented to:', this.not_know);
             }
             else if(action == "down"){
                 this.know++
+                console.log('🔍 [MODAL_LEARN_SENTENCE] know incremented to:', this.know);
             }
 
             try {
@@ -97,32 +126,44 @@ export default {
                     action: action,
                     sentence_id: this.currentSentence ? this.currentSentence.id : null,
                 }
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Request data:', data);
 
                 const response = await this.$http.post(`${this.$http.webUrl()}sentence/learn/get-sentence`, data);
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Response received:', response.status);
 
                 if(this.checkSuccess(response)){
                     const nextSentence = response.data.data.nextSentence;
+                    console.log('🔍 [MODAL_LEARN_SENTENCE] Next sentence loaded:', nextSentence);
                     this.currentSentence = nextSentence;
                     this.copySentence = JSON.parse(JSON.stringify(nextSentence)); // Глубокая копия
                     this.switchViewWord()
+                    
+                    // Сбрасываем состояние загрузки
+                    this.isLoading = false;
+                    console.log('🔍 [MODAL_LEARN_SENTENCE] Loading state set to false');
                 }
             }
             catch (e) {
-                console.log(e);
+                console.error('🔍 [MODAL_LEARN_SENTENCE] Error in loadLearnSentence:', e);
+                // Сбрасываем состояние загрузки при ошибке
+                this.isLoading = false;
+                console.log('🔍 [MODAL_LEARN_SENTENCE] Loading state set to false due to error');
             }
         },
         // открываем модалку изучения слов
-        openLearnModal() {
+        async openLearnModal() {
+            console.log('🔍 [MODAL_LEARN_SENTENCE] openLearnModal called');
             this.currentSentence = null
             this.know = 0
             this.not_know = 0
 
-            // Открываем модалку изучения предложений
+            // Сначала открываем модалку изучения предложений
             const modalElement = document.getElementById('learn_sentences');
             if (modalElement) {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                     const modal = new bootstrap.Modal(modalElement);
                     modal.show();
+                    console.log('🔍 [MODAL_LEARN_SENTENCE] Bootstrap modal shown');
                 } else {
                     modalElement.style.display = 'block';
                     modalElement.classList.add('show');
@@ -132,6 +173,7 @@ export default {
                     const backdrop = document.createElement('div');
                     backdrop.className = 'modal-backdrop fade show';
                     document.body.appendChild(backdrop);
+                    console.log('🔍 [MODAL_LEARN_SENTENCE] Modal shown manually');
                 }
             }
             
@@ -139,7 +181,9 @@ export default {
             $('body').on('mouseover', '.learn-word-trigger', (event) => {
                 this.outputHelperAlertInLearn(event)
             });
-            this.loadLearnSentence()
+            
+            // Затем загружаем данные
+            await this.loadLearnSentence();
         },
         // Закрыть модалку
         closeModal() {
@@ -216,6 +260,12 @@ export default {
                 this.objLanguage.languages[0] + ' ~ ' + this.objLanguage.languages[1] :
                 this.objLanguage.languages[1] + ' ~ ' + this.objLanguage.languages[0]
         },
+    },
+    beforeDestroy() {
+        console.log('🔍 [LIFECYCLE] ModalLearnSentence component destroying');
+        // Очищаем обработчики событий
+        $('body').off('mouseover', '.learn-word-trigger');
+        console.log('🔍 [MODAL_LEARN_SENTENCE] Event listeners removed');
     },
     mounted() {
         let languageIndex = localStorage.getItem('languageIndex');

@@ -43,9 +43,8 @@ class CreateWordRequest extends ApiFormRequest
      * @return array
      */
     public function messages() {
-        $table = $this->userLearnLanguage() . '_words';
         return [
-            'word.unique' => "Слово уже существует в таблице {$table}.",
+            'word.unique' => "Такое слово уже существует в таблице слов.",
         ];
     }
 }

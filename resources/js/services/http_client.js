@@ -60,7 +60,7 @@ export default {
             return this.handleError(e);  // Обработка ошибки
         }
     },
-    async post(url, data = {}, headers = {}) {
+    async post(url, data = {}, headers = {}, showAlert = true) {
         try {
             // Добавляем CSRF токен в заголовки
             const csrfToken = this.getCsrfToken();
@@ -71,7 +71,7 @@ export default {
             const response = await axios.post(url, data, {headers: headers});
             return response;
         } catch (e) {
-            return this.handleError(e);  // Обработка ошибки
+            return this.handleError(e, showAlert);  // Обработка ошибки с флагом
         }
     },
     async patch(url, data = {}, headers = {}) {
@@ -83,33 +83,54 @@ export default {
         }
     },
     // Обработка ошибок
-    handleError(e) {
+    handleError(e, showAlert = true) {
         if (e.response) {
             // Если ответ от сервера есть, обрабатываем ошибку
             if (e.response.status === 422) {
-                // Пример обработки ошибки валидации
-                const errors = e.response.data; // Получаем ошибки из ответа
+                // Обработка ошибки валидации
+                const responseData = e.response.data;
+                console.log('🔍 [HTTP] 422 error response data:', responseData);
 
-                // Массив для сбора сообщений об ошибках
-                let errorMessages = [];
-
-                // Проходим по ошибкам и собираем сообщения
-                for (let field in errors) {
-                    if (errors.hasOwnProperty(field)) {
-                        const fieldErrors = errors[field];
-                        fieldErrors.forEach(error => {
-                            errorMessages.push(error);  // Добавляем каждую ошибку в массив
-                        });
+                // Проверяем если это наш кастомный формат с message
+                if (responseData && responseData.data && responseData.data.message) {
+                    const errorMessage = responseData.data.message;
+                    console.log('🔍 [HTTP] Custom error message:', errorMessage);
+                    
+                    if (showAlert) {
+                        alert('Ошибка:\n' + errorMessage);
                     }
+                    
+                    return { error: { message: errorMessage } };
                 }
-
-                // Собираем все ошибки в одну строку, разделяя их новой строкой
-                const errorString = errorMessages.join('\n'); // Соединяем ошибки через новую строку
-
-                // Выводим все ошибки в одном alert
-                alert('Ошибки:\n' + errorString);
-
-                return { error: e.response.data };
+                
+                // Стандартный формат ошибок валидации Laravel
+                if (responseData && typeof responseData === 'object') {
+                    let errorMessages = [];
+                    
+                    for (let field in responseData) {
+                        if (responseData.hasOwnProperty(field)) {
+                            const fieldErrors = responseData[field];
+                            if (Array.isArray(fieldErrors)) {
+                                fieldErrors.forEach(error => {
+                                    errorMessages.push(error);
+                                });
+                            } else if (typeof fieldErrors === 'string') {
+                                errorMessages.push(fieldErrors);
+                            }
+                        }
+                    }
+                    
+                    const errorString = errorMessages.join('\n');
+                    
+                    if (showAlert) {
+                        alert('Ошибки:\n' + errorString);
+                    }
+                    console.log('🔍 [HTTP] Validation errors:', errorString);
+                    
+                    return { error: responseData };
+                }
+                
+                return { error: 'Ошибка валидации' };
             }
             else {
                 // Обрабатываем другие ошибки (например, 500 или 404)

@@ -57,6 +57,16 @@ class SentenceRepository extends CoreRepository {
         return compact('total_count', 'list');
     }
 
+    public function checkSentenceExists($request): bool {
+        // Удаляем лишние пробелы из предложения для сравнения
+        $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);
+        
+        // Проверяем существование предложения (без учета регистра)
+        return $this->startConditions()
+            ->whereRaw('LOWER(sentence) = ?', [strtolower($sentence)])
+            ->exists();
+    }
+
     public function storeSentences($request): void {
         // Удаляем лишние пробелы из предложения
         $sentence = preg_replace('|[\s]+|s', ' ', $request['sentence']);

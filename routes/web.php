@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Artisan;
 use \Illuminate\Support\Facades\Auth;
 use \App\Http\Controllers\AuthController;
+use \App\Http\Controllers\SpaController;
 use \App\Http\Middleware\BackupDatabase;
 use \App\Http\Controllers\LanguageController;
 use \App\Http\Controllers\WordController;
@@ -45,24 +46,29 @@ Route::group(['prefix'=>'auth'], function (){
 // >>> Отображаем главную страницу для авторизованных пользователей
 // Перенаправляем на страницу логина для неавторизованных пользователей
 Route::get('/', function () {
+    
+    // Очищаем любой возможный output buffer
+    if (ob_get_level()) {
+        ob_clean();
+    }
 
     // Проверяем имеет ли роль 'user' и старше
     if (Auth::check() && Auth::user()->hasRole('user')) {
         return view('index');
     }
     else {
-        return redirect("/login");
+        return redirect()->route('auth.showLoginForm');
     }
 })->name('index');
 
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
-Route::group(['middleware' => ['auth', 'role:user']], function () {
+Route::group([], function () {
 
 // 1 word
     Route::resource('word', WordController::class)->only([
         'index','store'
-    ]);
-    Route::group(['prefix'=>'word'], function (){
+    ])->middleware(['auth', 'role:user']);
+    Route::group(['prefix'=>'word', 'middleware' => ['auth', 'role:user']], function (){
         Route::post('update-word', [WordController::class, 'updateWord']);
         Route::post('delete-word', [WordController::class, 'deleteWord']);
         Route::get('get-present-tense', [WordController::class, 'getPresentTense']);
@@ -70,7 +76,7 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     });
 
 // 2 sentence
-    Route::middleware(['throttle:200,1'])->group(function () {
+    Route::middleware(['throttle:200,1', 'auth', 'role:user'])->group(function () {
         Route::resource('sentence', SentenceController::class)->only([
             'index', 'store'
         ]);
@@ -84,37 +90,47 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     });
 
 // 4
-    Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence']);
+    Route::post('ai/generate-sentences', [GeneratingSentencesAiController::class, 'generateSentence'])
+        ->middleware(['auth', 'role:user']);
 
 // 5
     Route::post('/get-languages', [LanguageController::class, 'getLanguages'])
-        ->name('get.languages');
+        ->name('get.languages')
+        ->middleware(['auth', 'role:user']);
 
 // 6
     Route::post('/set-language-learn-user', [LanguageController::class, 'setLearnLanguageUser'])
-        ->name('set.language.learn.user');
+        ->name('set.language.learn.user')
+        ->middleware(['auth', 'role:user']);
 
-// 7
-    Route::get('/page-list-words', function () {
+// 7 - Vue Router маршруты (должны быть защищены авторизацией)
+    Route::get('/page-list-words', function() {
+        if (!Auth::check()) {
+            return redirect()->route('auth.showLoginForm');
+        }
         return view('index');
-    })->middleware(BackupDatabase::class);
-    Route::get('/page-word-sentences', function () {
+    });
+    Route::get('/page-word-sentences', function() {
+        if (!Auth::check()) {
+            return redirect()->route('auth.showLoginForm');
+        }
         return view('index');
-    })->middleware(BackupDatabase::class);
+    });
 });
 
 // >>> Error
 Route::view('/errors', 'errors')->name('errors');
 
-// >>> Любой другой маршрут перенаправляется
-Route::any('{all}', function () {
-    // на index, если авторизован
+// >>> Любой другой маршрут перенаправляется (кроме API и auth маршрутов)
+Route::fallback(function () {
+    // Очищаем любой возможный output buffer
+    if (ob_get_level()) {
+        ob_clean();
+    }
+    
     if (Auth::check() && Auth::user()->hasRole('user')) {
         return redirect()->route('index');
     }
-    // иначе на login
-    else {
-        return redirect()->route('auth.showLoginForm');
-    }
-})->where('all', '.*');
+    return redirect()->route('auth.showLoginForm');
+});
 

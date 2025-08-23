@@ -7,18 +7,10 @@ export default {
     methods: {
         // проверка backup данных axios
         checkSuccess(response) {
-            console.log('🔍 [RESPONSE_METHODS] checkSuccess called, response status:', response.status);
-            // json response
-            if(response.data.error === null){
-                console.log('🔍 [RESPONSE_METHODS] Response is successful');
+            if(response?.data?.error === null){
                 return true;
             }
-            // not correct validate laravel
-            // else if(response?.data?.status && response.data.status === 'error'){
-            // else{
-            //     this.message(response.data.message, 'error');
-            // }
-            console.log('🔍 [RESPONSE_METHODS] Response has error:', response.data.error);
+
             return false;
         },
         // alert сообщение на странице

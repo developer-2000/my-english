@@ -123,7 +123,8 @@ export default {
             eventListenersCount: {
                 escape: 0,
                 mouseover: 0
-            }
+            },
+            updateWordModalTimer: null, // Таймер для открытия модалки обновления слова
         };
     },
     components: { helpSearchWord, },
@@ -365,7 +366,7 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
                     }
                 }
             }
-            setTimeout(()=>{
+            this.updateWordModalTimer = setTimeout(()=>{
                 this.$emit('callOpenUpdateWordModal', word);
             },500)
         },
@@ -412,6 +413,12 @@ ${this.objLearnWord.description == null ? '' : this.objLearnWord.description.toL
         this.eventListenersCount.escape = 0;
         this.eventListenersCount.mouseover = 0;
         console.log('🔍 [MODAL_LEARN_WORD] Event listeners count reset to 0');
+        
+        // Очищаем таймеры
+        if (this.updateWordModalTimer) {
+            clearTimeout(this.updateWordModalTimer);
+            console.log('🔍 [MODAL_LEARN_WORD] updateWordModalTimer cleared');
+        }
     },
     name: "ModalLearnWord"
 }

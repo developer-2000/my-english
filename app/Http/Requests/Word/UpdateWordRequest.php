@@ -44,4 +44,15 @@ class UpdateWordRequest extends ApiFormRequest
         ];
     }
 
+    /**
+     * Получаем пользовательские сообщения об ошибках для правил валидации.
+     *
+     * @return array
+     */
+    public function messages() {
+        return [
+            'word.unique' => "Такое слово уже существует в таблице слов.",
+        ];
+    }
+
 }

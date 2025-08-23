@@ -36,8 +36,12 @@ export default {
             
             this.updateParams({search: search.searchTerm, page: 1});
             this.initialData();
-            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'flex');
-            $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
+            
+            // Показываем кнопку очистки поиска только если есть текст поиска
+            if (search.searchTerm && search.searchTerm.trim() !== '') {
+                $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'flex');
+                $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
+            }
             
             // Сброс флага через 1 секунду
             const timerId = setTimeout(() => {
@@ -118,6 +122,9 @@ export default {
                 console.log('🔍 [GOOD_TABLE] makeButtonClearSearch timer executed, ID:', timerId);
                 $('.vgt-global-search__input span.sr-only').html('<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="w-4 h-4"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>');
 
+                // Удаляем предыдущие обработчики чтобы избежать дублирования
+                $('.vgt-global-search__input span.sr-only').unbind('click');
+                
                 $('.vgt-global-search__input span.sr-only').bind('click', (e) => {
                     console.log('🔍 [GOOD_TABLE] Clear search button clicked');
                     this.serverParams.selection_type_id = null
@@ -134,11 +141,10 @@ export default {
                     },50)
                     console.log('🔍 [GOOD_TABLE] Inner timer created, ID:', innerTimerId);
 
-                    // На странице page-list-words
-                    if (typeof this.handleSelectChange === 'function') {
-                        console.log('🔍 [GOOD_TABLE] handleSelectChange function exists, calling it');
-                        this.handleSelectChange();
-                        this.table.selectedOption = 'null'
+                    // Сбрасываем select типов слов без вызова handleSelectChange
+                    if (this.table && this.table.selectedOption) {
+                        console.log('🔍 [GOOD_TABLE] Resetting table.selectedOption to null');
+                        this.table.selectedOption = 'null';
                     }
                 });
             }, 500);
@@ -168,8 +174,9 @@ export default {
                     searchInput.dispatchEvent(event);
                 }
 
-                console.log('🔍 [GOOD_TABLE] Calling initialData');
-                this.initialData();
+                console.log('🔍 [GOOD_TABLE] NOT calling initialData - avoiding duplicate calls');
+                // Убираем вызов initialData() - он будет вызван через onSearch() при диспатче события input
+                // this.initialData();
             } else {
                 console.log('🔍 [GOOD_TABLE] Clear search button not found');
             }

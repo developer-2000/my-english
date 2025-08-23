@@ -34,13 +34,24 @@ class SentenceController extends Controller {
 
     /**
      * Записывает новое предложение и слова из предложения с переводом
+     *
      * @param CreateSentenceRequest $request
      * @return ApiResponse
      */
     public function store(CreateSentenceRequest $request): ApiResponse {
-        $this->sentenceRepository->storeSentences($request->validated());
+        // Проверяем существование предложения
+        $exists = $this->sentenceRepository->checkSentenceExists($request->validated());
 
-        return new ApiResponse([]);
+        if ($exists) {
+            return new ApiResponse(['message' => 'Такое предложение уже существует'], true, 422);
+        }
+
+        try {
+            $this->sentenceRepository->storeSentences($request->validated());
+            return new ApiResponse([]);
+        } catch (\Exception $e) {
+            return new ApiResponse(['message' => 'Ошибка при создании предложения'], true, 422);
+        }
     }
 
     /**

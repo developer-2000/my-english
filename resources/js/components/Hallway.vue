@@ -106,6 +106,9 @@ export default {
         return {
             // Добавляем переменную для хранения списка языков
             languages: [],
+            // Ссылки на элементы для удаления обработчиков событий
+            modalElement: null,
+            modalShowHandler: null,
         };
     },
     mixins: [
@@ -202,9 +205,12 @@ export default {
         // Используем Bootstrap 5 API для события показа модалки
         const modalElement = document.getElementById('languageLearn');
         if (modalElement) {
-            modalElement.addEventListener('show.bs.modal', (e) => {
+            this.modalShowHandler = (e) => {
                 this.loadLanguages();
-            });
+            };
+            modalElement.addEventListener('show.bs.modal', this.modalShowHandler);
+            // Сохраняем ссылку на элемент для последующего удаления
+            this.modalElement = modalElement;
         }
         // установить язык интерфейса пользователя
 
@@ -213,6 +219,15 @@ export default {
             const code_interface = this.getLanguageText()
             this.$store.commit('setLearnLanguage', code_interface)
             this.loadTranslations(code_interface)
+        }
+    },
+    beforeDestroy() {
+        console.log('🔍 [HALLWAY] Component destroying, cleaning up event listeners');
+        
+        // Удаляем обработчик события модалки
+        if (this.modalElement && this.modalShowHandler) {
+            this.modalElement.removeEventListener('show.bs.modal', this.modalShowHandler);
+            console.log('🔍 [HALLWAY] Modal show event listener removed');
         }
     },
 };

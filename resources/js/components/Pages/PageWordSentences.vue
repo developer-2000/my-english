@@ -90,8 +90,7 @@
 
                     <!-- learn sentences -->
                     <button class="btn btn-secondary"
-                            @click="openLearnModal()"
-                            v-if="!bool_learn_sentences">
+                            @click="openLearnModal()">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
@@ -156,17 +155,17 @@
                                 <label class="form-label" for="new_sentence">
                                     {{ $t('all.new_sentence') }}
                                 </label>
-                                <textarea class="form-control entry-field-help"
+                                <textarea class="form-control"
                                           :class="{'is-invalid': $v.new_sentence.$error}"
                                           @blur="touchNewSentence()"
-                                          @keyup="searchHelpWord(new_sentence)"
-                                          @paste="handlePaste"
                                           id="new_sentence"
                                           placeholder="New sentence"
                                           required
                                           v-model="new_sentence"
                                           rows="3"></textarea>
-                                <help-search-word :help-dynamic="help_dynamic"/>
+                                <div class="text-danger text-sm mt-1" v-if="sentenceError">
+                                    {{ sentenceError }}
+                                </div>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -238,14 +237,15 @@
                                 </label>
                                 <textarea :class="{'is-invalid': $v.new_sentence.$error}"
                                           @blur="touchNewSentence()"
-                                          @keyup="searchHelpWord(new_sentence)"
-                                          class="form-control entry-field-help"
+                                          class="form-control"
                                           id="old_sentence"
                                           placeholder="Insert new sentence"
                                           required
                                           v-model="new_sentence"
                                           rows="3"></textarea>
-                                <help-search-word :help-dynamic="help_dynamic"/>
+                                <div class="text-danger text-sm mt-1" v-if="sentenceError">
+                                    {{ sentenceError }}
+                                </div>
                                 <div class="invalid-feedback" v-if="!$v.new_sentence.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -333,6 +333,8 @@
                 sentence_id: 0,
                 new_sentence: '',
                 translation_sentence: '',
+                sentenceError: '', // Ошибка при создании предложения
+
                 table: {
                     // max rows in database
                     totalRecords: 0,
@@ -406,7 +408,7 @@
                         type: '',
                     }],
                 },
-                bool_learn_sentences: false,
+                timers: [], // Массив для хранения таймеров
             };
         },
         mixins: [
@@ -475,8 +477,9 @@
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/bind-checkbox-sound`, data);
                     console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
                     if (this.checkSuccess(response)) {
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Checkbox sound binding successful, calling initialData');
-                        this.initialData();
+                        console.log('🔍 [PAGE_WORD_SENTENCES] Checkbox sound binding successful');
+                        // НЕ вызываем initialData() - это вызывает перезагрузку всей таблицы
+                        // Состояние чекбокса уже обновлено на сервере
                     }
                 } catch (e) {
                     console.error('🔍 [PAGE_WORD_SENTENCES] Error in bindCheckboxSound:', e);
@@ -486,7 +489,7 @@
             async loadSentences() {
                 console.log('🔍 [PAGE_WORD_SENTENCES] loadSentences called');
                 console.log('🔍 [PAGE_WORD_SENTENCES] isLoading before:', this.isLoading);
-                
+
                 try {
                     this.isLoading = true;
                     let field = this.serverParams.sort[0].field;
@@ -497,20 +500,20 @@
 
                     const url = `selection_type_id=&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${field}&sortType=${this.serverParams.sort[0].type}`
                     console.log('🔍 [PAGE_WORD_SENTENCES] Request URL:', url);
-                    
+
                     console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request');
                     const response = await this.$http.get(`${this.$http.webUrl()}sentence?${url}`
                     );
                     console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
-                    
+
                     if (this.checkSuccess(response)) {
                         this.table.totalRecords = response.data.data.sentences.total_count;
                         console.log('🔍 [PAGE_WORD_SENTENCES] Total records:', this.table.totalRecords);
                         console.log('🔍 [PAGE_WORD_SENTENCES] Sentences list length:', response.data.data.sentences.list.length);
-                        
+
                         this.makeObjectDataForTable(response.data.data.sentences.list);
                         this.table.origin_rows = response.data.data.sentences.list;
-                        
+
                         console.log('🔍 [PAGE_WORD_SENTENCES] Table rows after processing:', this.table.rows.length);
                     }
                 } catch (e) {
@@ -519,54 +522,68 @@
                 this.isLoading = false;
                 console.log('🔍 [PAGE_WORD_SENTENCES] isLoading after:', this.isLoading);
             },
+            // Server - create предложение
             async createSentence() {
-                console.log('🔍 [PAGE_WORD_SENTENCES] createSentence called');
-                try {
-                    let data = {
-                        sentence: this.new_sentence,
-                        translation: this.translation_sentence,
-                    };
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Data to save:', JSON.stringify(data));
-                    
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Closing create modal');
-                    $('#create_sentence').modal('hide');
-                    $('.modal-backdrop.fade.show').remove();
-                    
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request to create sentence');
-                    const response = await this.$http.post(`${this.$http.webUrl()}sentence`, data);
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
-                    
-                    if (this.checkSuccess(response)) {
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence created successfully, calling initialData');
-                        this.initialData();
+                this.sentenceError = '';
+
+                const data = {
+                    sentence: this.new_sentence,             // Английское предложение
+                    translation: this.translation_sentence,  // Русский перевод
+                };
+
+                // showAlert = false - не показываем стандартные alert'ы
+                const response = await this.$http.post(`${this.$http.webUrl()}sentence`, data, {}, false);
+
+                // если сервер вернул ошибку
+                if (response.error) {
+                    if (response.error?.message) {
+                        this.sentenceError = response.error.message;
+                    } else {
+                        this.sentenceError = response.error;
                     }
-                } catch (e) {
-                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in createSentence:', e);
+
+                    return;
+                }
+
+                if (this.checkSuccess(response)) {
+                    // Находим элемент модального окна
+                    const modalElement = document.getElementById('create_sentence');
+
+                    // Закрываем модальное окно через Bootstrap API
+                    if (modalElement) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        modal.hide();
+                    } else {
+                        console.log('Modal element not found');
+                    }
+
+                    // Обновляем список предложений на странице
+                    this.initialData();
+                } else {
+                    console.log('checkSuccess returned false');
                 }
             },
+            // Server - update предложение
             async updateSentence() {
-                console.log('🔍 [PAGE_WORD_SENTENCES] updateSentence called');
                 try {
                     let data = {
                         sentence_id: this.sentence_id,
                         sentence: this.new_sentence,
                         translation: this.translation_sentence,
                     };
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Data to update:', JSON.stringify(data));
-                    
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Making HTTP request to update sentence');
+
                     const response = await this.$http.post(`${this.$http.webUrl()}sentence/update-sentence`, data);
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Response received:', response.status);
-                    
+
                     if (this.checkSuccess(response)) {
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Sentence updated successfully, calling initialData');
                         this.initialData();
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Closing update modal');
-                        $('#update_sentence').modal('hide');
-                        $('.modal-backdrop.fade.show').remove();
+                        const modalElement = document.getElementById('update_sentence');
+                        if (modalElement) {
+                            const modal = bootstrap.Modal.getInstance(modalElement);
+                            modal.hide();
+                        }
                     }
                 } catch (e) {
-                    console.error('🔍 [PAGE_WORD_SENTENCES] Error in updateSentence:', e);
+                    console.error('Error in updateSentence:', e);
                 }
             },
             // --- validate
@@ -579,10 +596,26 @@
             // set all
             initialData() {
                 console.log('🔍 [PAGE_WORD_SENTENCES] initialData called');
+                // Очищаем предыдущие таймеры перед созданием новых
+                if (this.timers && this.timers.length > 0) {
+                    this.timers.forEach(timerId => {
+                        clearTimeout(timerId);
+                        clearInterval(timerId);
+                    });
+                    this.timers = [];
+                    console.log('🔍 [PAGE_WORD_SENTENCES] Previous timers cleared');
+                }
+
+                // Очищаем предыдущие обработчики событий
+                $('.btn_sentence').off('click');
+                $(".memorable_checkbox").off('change');
+                console.log('🔍 [PAGE_WORD_SENTENCES] Previous event handlers cleared');
+
                 this.loadSentences();
                 this.initialClickButSentenceUpdate();
                 this.initialCheckbox();
-                this.makeButtonClearSearch();
+                // Убираем makeButtonClearSearch() - он создает зацикливание
+                // this.makeButtonClearSearch();
             },
             // --- checkbox
             initialCheckbox() {
@@ -596,11 +629,7 @@
                     // состояние кнопки sound по умолчанию
                     this.disabled_play = $('.memorable_checkbox:checked').length ? false : true;
                     console.log('🔍 [PAGE_WORD_SENTENCES] disabled_play set to:', this.disabled_play);
-                    
-                    // Сначала отвязываем предыдущие обработчики
-                    $(".memorable_checkbox").off('change');
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Previous event handlers removed');
-                    
+
                     // изменнеие одного из sound checkbox
                     $(".memorable_checkbox").on('change', (e) => {
                         console.log('🔍 [PAGE_WORD_SENTENCES] Checkbox change event triggered');
@@ -608,6 +637,7 @@
                         this.bindCheckboxSound($(e.target).attr('data-id'), e.target.checked);
                     });
                 }, 1000);
+                this.timers.push(timerId); // Добавляем таймер в массив
                 console.log('🔍 [PAGE_WORD_SENTENCES] activationButtonSoundInMenu timer created, ID:', timerId);
             },
             setVariableDefault(sentence_id = 0, sentence = '', translation = '') {
@@ -636,9 +666,6 @@
                 // открываем редактирование предложения
                 const timerId = setTimeout(() => {
                     console.log('🔍 [PAGE_WORD_SENTENCES] initialClickButSentenceUpdate timer executed, ID:', timerId);
-                    $('.btn_sentence').off('click');
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Previous btn_sentence handlers removed');
-                    
                     $('.btn_sentence').on('click', (e) => {
                         console.log('🔍 [PAGE_WORD_SENTENCES] btn_sentence clicked');
                         let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
@@ -666,11 +693,13 @@
                         this.help_dynamic = '';
                     })
                 }, 1000);
+                this.timers.push(timerId); // Добавляем таймер в массив
                 console.log('🔍 [PAGE_WORD_SENTENCES] initialClickButSentenceUpdate timer created, ID:', timerId);
             },
             openModalCreateSentence() {
                 console.log('🔍 [PAGE_WORD_SENTENCES] openModalCreateSentence called');
                 this.setVariableDefault();
+                this.sentenceError = ''; // Очищаем ошибку при открытии модального окна
                 // Открываем модалку создания предложения
                 const modalElement = document.getElementById('create_sentence');
                 if (modalElement) {
@@ -710,49 +739,11 @@
                 this.clearServerParams()
                 this.initialData()
             },
-            handlePaste(event) {
-                console.log('🔍 [PAGE_WORD_SENTENCES] handlePaste called');
-                event.preventDefault();
-                const pastedText = event.clipboardData.getData('text');
-                console.log('🔍 [PAGE_WORD_SENTENCES] Pasted text:', pastedText);
-
-                // Ищем пары предложений, разделенные тире с пробелами по бокам
-                const parts = pastedText.split(/\s+[-–—]\s+/);
-                console.log('🔍 [PAGE_WORD_SENTENCES] Parts after split:', parts);
-
-                if (parts.length >= 2) {
-                    // Очищаем и получаем первое предложение (английское)
-                    const englishSentence = parts[0].trim();
-
-                    // Очищаем и получаем второе предложение (русское)
-                    const russianSentence = parts[1].trim();
-
-                    this.new_sentence = englishSentence;
-                    this.translation_sentence = russianSentence;
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Set english sentence:', englishSentence);
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Set russian sentence:', russianSentence);
-                } else {
-                    // Если нет разделителя, определяем язык предложения
-                    const cleanedText = pastedText.trim();
-                    const isRussian = /[а-яА-ЯёЁ]/.test(cleanedText);
-                    console.log('🔍 [PAGE_WORD_SENTENCES] Is Russian text:', isRussian);
-
-                    if (isRussian) {
-                        this.translation_sentence = cleanedText;
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Set as translation:', cleanedText);
-                    } else {
-                        this.new_sentence = cleanedText;
-                        console.log('🔍 [PAGE_WORD_SENTENCES] Set as new sentence:', cleanedText);
-                    }
-                }
-            },
             // Открыть модалку изучения предложений
             openLearnModal() {
                 console.log('🔍 [PAGE_WORD_SENTENCES] openLearnModal called');
                 // Вызов openLearnModal у дочернего компонента через референцию
                 this.$refs.modalLearnSentence.openLearnModal();
-                this.bool_learn_sentences = true;
-                console.log('🔍 [PAGE_WORD_SENTENCES] bool_learn_sentences set to:', this.bool_learn_sentences);
             },
             // Закрыть модалку создания предложения
             closeCreateSentenceModal() {
@@ -831,6 +822,10 @@
             console.log('🔍 [PAGE_WORD_SENTENCES] Component mounted');
             console.log('🔍 [LIFECYCLE] PageWordSentences component mounted');
             this.initialData();
+
+            // Инициализируем кнопку очистки поиска только один раз при загрузке
+            // this.makeButtonClearSearch(); // Убираем - создает зацикливание
+
             $(".modal").on("hidden.bs.modal", () => {
                 console.log('🔍 [LIFECYCLE] Modal hidden event triggered in PageWordSentences');
                 this.help_dynamic = "";
@@ -851,6 +846,17 @@
             $('.btn_sentence').off('click');
             $('#clear_search').unbind('click');
             $(".memorable_checkbox").unbind('change');
+            $(".modal").off("hidden.bs.modal");
+
+            // Очищаем все таймеры
+            if (this.timers && this.timers.length > 0) {
+                this.timers.forEach(timerId => {
+                    clearTimeout(timerId);
+                    clearInterval(timerId);
+                });
+                console.log('🔍 [PAGE_WORD_SENTENCES] Cleared', this.timers.length, 'timers');
+            }
+
         },
         name: "PageWordSentences.vue"
     }

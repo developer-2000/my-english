@@ -17,15 +17,22 @@ class WordRepository extends CoreRepository {
         // search
         $searchArray = $vars['search'] ?? [];
         if (!empty($searchArray) && !empty($searchArray[0])) {
-            // word language
-            if ($language = $this->getLanguage($searchArray[0])) {
-                // Select a column name depending on the language
-                $column_name = $language === 'en' ? 'word' : 'translation';
-                foreach ($searchArray as $word) {
+            foreach ($searchArray as $word) {
+                // word language
+                $language = $this->getLanguage($word);
+                if ($language) {
+                    // Select a column name depending on the language
+                    $column_name = $language === 'en' ? 'word' : 'translation';
                     if ($column_name == 'translation') {
                         $word = '%' . $word;
                     }
                     $collection = $collection->Orwhere($column_name, 'like', $word . '%');
+                } else {
+                    // Если не удалось определить язык, ищем в обоих полях
+                    $collection = $collection->where(function($query) use ($word) {
+                        $query->where('word', 'like', $word . '%')
+                              ->orWhere('translation', 'like', '%' . $word . '%');
+                    });
                 }
             }
         }

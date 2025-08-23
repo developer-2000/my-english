@@ -146,16 +146,14 @@
                                     {{ $t('all.new_word') }}
                                 </label>
                                 <input type="text"
-                                       class="form-control entry-field-help"
+                                       class="form-control"
                                        placeholder="Insert new word"
                                        id="new_word"
                                        ref="new_word"
                                        v-model="arrInputsModal.new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord(arrInputsModal.new_word)"
-                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
+                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error || wordError}"
                                        required>
-                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -163,6 +161,9 @@
                                     {{ $t('all.number_of_characters') }}
                                     {{ this.arrInputsModal.new_word.length }}
                                     {{ $t('all.less_needed') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="wordError">
+                                    {{ wordError }}
                                 </div>
                             </div>
 
@@ -388,15 +389,13 @@
                                     {{ $t('all.update_word') }}
                                 </label>
                                 <input type="text"
-                                       class="form-control entry-field-help"
+                                       class="form-control"
                                        placeholder="Insert word"
                                        id="old_word"
                                        v-model="arrInputsModal.new_word"
                                        @blur="touchNewWord()"
-                                       @keyup="searchHelpWord(arrInputsModal.new_word)"
-                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error}"
+                                       :class="{'is-invalid': $v.arrInputsModal.new_word.$error || wordError}"
                                        required>
-                                <help-search-word :help-dynamic="help_dynamic"/>
                                 <div class="invalid-feedback" v-if="!$v.arrInputsModal.new_word.required">
                                     {{ $t('all.field_is_empty') }}
                                 </div>
@@ -404,6 +403,9 @@
                                     {{ $t('all.number_of_characters') }}
                                     {{ this.arrInputsModal.new_word.length }}
                                     {{ $t('all.less_needed') }}
+                                </div>
+                                <div class="invalid-feedback" v-if="wordError">
+                                    {{ wordError }}
                                 </div>
                             </div>
 
@@ -626,6 +628,14 @@
     export default {
         data() {
             return {
+                wordMap: new Map(), // Map для быстрого поиска слов
+                updateColumnTableTimer: null, // Таймер для updateColumnTable
+                initialClickButWordUpdateTimer: null, // Таймер для initialClickButWordUpdate
+                tippyInitTimer: null, // Таймер для инициализации tippy
+                selectTypeElement: null, // Ссылка на элемент select_type для удаления обработчика
+                updateSelectTypeElement: null, // Ссылка на элемент update_select_type для удаления обработчика
+                clearSearchButtonTimer: null, // Таймер для initClearSearchButtonHandler
+                toggleSwitchTimer: null, // Таймер для toggleSwitch
                 objGenerateSentences: {
                     status_toggle: false,         // Статус on/off кнопки добавления предложений к слову
                     boolAddSentences: false,      // Статус нажатой кнопки Next для генерации предложений
@@ -753,6 +763,7 @@
                 allTypes: [],
                 allColor: [],
                 objUpdateWord: null,
+                wordError: '', // Ошибка валидации слова
                 objWordFromTable: {
                     bool_click_button_word_from_table: false,
                     word: '',
@@ -779,6 +790,7 @@
                         type: '',
                     }],
                 },
+                tippyInitTimer: null, // Таймер для инициализации tippy
             };
         },
         mixins: [
@@ -921,103 +933,112 @@
                 console.log('🔍 [PAGE_LIST_WORDS] Data for server:', JSON.stringify(data));
                 return data
             },
+            // Обработка ошибок с сервера
+            handleServerError(response) {
+                // валидации
+                if (response.error.word) {
+                    this.wordError = response.error.word[0];
+                }
+                // отправленная скриптом
+                else if (response.error.message) {
+                    this.wordError = response.error.message;
+                } else {
+                    this.wordError = response.error;
+                }
+            },
+            // Закрытие модального окна по ID
+            closeModalById(modalId) {
+                const modalElement = document.getElementById(modalId);
+                if (modalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        // Используем Bootstrap API для закрытия модалки
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        // Ручное закрытие модалки если Bootstrap недоступен
+                        modalElement.style.display = 'none'; // Скрываем модалку
+                        modalElement.classList.remove('show'); // Убираем класс показа
+                        document.body.classList.remove('modal-open'); // Убираем блокировку скролла
+                        const backdrop = document.querySelector('.modal-backdrop'); // Ищем фон модалки
+                        if (backdrop) {
+                            backdrop.remove(); // Удаляем фон модалки
+                        }
+                    }
+                }
+            },
+            // Server - create слова
             async createWord() {
-                console.log('🔍 [PAGE_LIST_WORDS] createWord called');
+                this.wordError = '';
+
                 try {
                     const data = this.getDataSaveServer()
-                    console.log('🔍 [PAGE_LIST_WORDS] Data to save:', JSON.stringify(data));
+                    // showAlert = false - не показываем стандартные alert'ы
+                    const response = await this.$http.post(`${this.$http.webUrl()}word`, data, {}, false);
 
-                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to create word');
-                    const response = await this.$http.post(`${this.$http.webUrl()}word`, data);
-                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
+                    // если сервер вернул ошибку
+                    if (response.error) {
+                        this.handleServerError(response);
+                        return;
+                    }
 
                     if(this.checkSuccess(response)){
-                        console.log('🔍 [PAGE_LIST_WORDS] Word created successfully, calling initialData');
                         this.initialData();
                         // Закрываем модалку создания слова
-                        console.log('🔍 [PAGE_LIST_WORDS] Closing create modal');
-                        const modalElement = document.getElementById('create_word');
-                        if (modalElement) {
-                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                                const modal = bootstrap.Modal.getInstance(modalElement);
-                                if (modal) {
-                                    modal.hide();
-                                }
-                            } else {
-                                modalElement.style.display = 'none';
-                                modalElement.classList.remove('show');
-                                document.body.classList.remove('modal-open');
-                                const backdrop = document.querySelector('.modal-backdrop');
-                                if (backdrop) {
-                                    backdrop.remove();
-                                }
-                            }
-                        }
-                        $('.modal-backdrop.fade.show').remove();
+                        this.closeModalById('create_word');
                     }
                 } catch (e) {
-                    console.error('🔍 [PAGE_LIST_WORDS] Error in createWord:', e);
+                    console.error('Error in createWord:', e);
                 }
             },
+            // Server - update слова
             async updateWord() {
-                console.log('🔍 [PAGE_LIST_WORDS] updateWord called');
+                this.wordError = '';
+
                 let data = this.getDataSaveServer()
                 data.word_id = this.arrInputsModal.word_id
-                console.log('🔍 [PAGE_LIST_WORDS] Data for update:', JSON.stringify(data));
+
                 try {
-                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to update word');
-                    const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data);
-                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
+                    // showAlert = false - не показываем стандартные alert'ы
+                    const response = await this.$http.post(`${this.$http.webUrl()}word/update-word`, data, {}, false);
+
+                    // если сервер вернул ошибку
+                    if (response.error) {
+                        this.handleServerError(response);
+                        return;
+                    }
+
                     if(this.checkSuccess(response)){
-                        console.log('🔍 [PAGE_LIST_WORDS] Word updated successfully, calling initialData');
                         this.initialData();
-                        // Закрываем модалку обновления слова
-                        console.log('🔍 [PAGE_LIST_WORDS] Closing update modal');
-                        const modalElement = document.getElementById('update_word');
-                        if (modalElement) {
-                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                                const modal = bootstrap.Modal.getInstance(modalElement);
-                                if (modal) {
-                                    modal.hide();
-                                }
-                            } else {
-                                modalElement.style.display = 'none';
-                                modalElement.classList.remove('show');
-                                document.body.classList.remove('modal-open');
-                                const backdrop = document.querySelector('.modal-backdrop');
-                                if (backdrop) {
-                                    backdrop.remove();
-                                }
-                            }
-                        }
+                        // Закрываем модалку обновления слова только при успехе
+                        this.closeModalById('update_word');
                         $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
-                    console.error('🔍 [PAGE_LIST_WORDS] Error in updateWord:', e);
+                    console.error('Error in updateWord:', e);
                 }
             },
+            // Server - delete слова
             async deleteWord(word_id) {
-                console.log('🔍 [PAGE_LIST_WORDS] deleteWord called, word_id:', word_id);
                 let data = { id: word_id };
+
                 try {
-                    console.log('🔍 [PAGE_LIST_WORDS] Making HTTP request to delete word');
                     const response = await this.$http.post(`${this.$http.webUrl()}word/delete-word`, data);
-                    console.log('🔍 [PAGE_LIST_WORDS] Response received:', response.status);
                     if(this.checkSuccess(response)){
-                        console.log('🔍 [PAGE_LIST_WORDS] Word deleted successfully, calling initialData');
                         this.$swal.close()
                         this.initialData();
                     }
                 } catch (e) {
-                    console.error('🔍 [PAGE_LIST_WORDS] Error in deleteWord:', e);
+                    console.error('Error in deleteWord:', e);
                 }
             },
-            // выборка слов и типов слов с пагинацией
+            // Server - выборка слов и типов слов с пагинацией
             // http://english.my/word?search=&page=0&perPage=50&sortField=&sortType=
             async loadWordsAndTypes() {
                 console.log('🔍 [PAGE_LIST_WORDS] loadWordsAndTypes called');
                 console.log('🔍 [PAGE_LIST_WORDS] isLoading before:', this.isLoading);
-                
+
                 const url = `selection_type_id=${this.serverParams.selection_type_id}&search=${this.serverParams.search}&page=${this.serverParams.page}&perPage=${this.serverParams.perPage}&sortField=${this.serverParams.sort[0].field}&sortType=${this.serverParams.sort[0].type}`
                 console.log('🔍 [PAGE_LIST_WORDS] Request URL:', url);
 
@@ -1031,13 +1052,21 @@
                         this.table.totalRecords = response.data.data.total_count;
                         console.log('🔍 [PAGE_LIST_WORDS] Total records:', this.table.totalRecords);
                         console.log('🔍 [PAGE_LIST_WORDS] Data list length:', response.data.data.list.length);
-                        
+
                         this.makeObjectDataForTable(response.data.data.list);
                         this.table.origin_rows = response.data.data.list;
                         this.allTypes = response.data.data.types;
                         this.deleteColorFromArrColor(response.data.data.colors);
-                        
+
+                        // Создаем Map для быстрого поиска слов
+                        this.createWordMap();
+
                         console.log('🔍 [PAGE_LIST_WORDS] Table rows after processing:', this.table.rows.length);
+                        
+                        // Инициализируем tippy после обновления данных
+                        this.$nextTick(() => {
+                            this.hoverWordShowTitle();
+                        });
                     }
                 } catch (e) {
                     console.error('🔍 [PAGE_LIST_WORDS] Error in loadWordsAndTypes:', e);
@@ -1154,8 +1183,10 @@
                 this.showStyleDataOnSelectType();
                 this.updateColumnTable();
                 this.initialClickButWordUpdate();
-                this.makeButtonClearSearch();
-                this.closeAllModals()
+                // Инициализируем кнопку очистки поиска только если есть текст поиска
+                if (this.serverParams.search && this.serverParams.search.trim() !== '') {
+                    this.makeButtonClearSearch();
+                }
             },
             deleteColorFromArrColor(arrColor) {
                 console.log('🔍 [PAGE_LIST_WORDS] deleteColorFromArrColor called, arrColor length:', arrColor.length);
@@ -1200,52 +1231,109 @@
             // methods table
             updateColumnTable(){
                 console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable called');
-                let timerId = setTimeout(() => {
-                    console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer executed, ID:', timerId);
+                
+                // Очищаем предыдущий таймер если есть
+                if (this.updateColumnTableTimer) {
+                    clearTimeout(this.updateColumnTableTimer);
+                }
+                
+                this.updateColumnTableTimer = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer executed, ID:', this.updateColumnTableTimer);
                     let row = '';
                     let prev = '';
 
                     const elements = document.querySelectorAll("#vgt-table .btn_block_column");
                     console.log('🔍 [PAGE_LIST_WORDS] Found elements to process:', elements.length);
+
+                    // Оптимизация: batch обработка элементов для уменьшения вызовов getRowForWordFast
+                    const wordElements = [];
+                    const emptyElements = [];
                     
+                    // Сначала собираем все элементы
                     elements.forEach((tag, index) => {
                         prev = $(tag).prev();
-                        // нет слова в столбце
-                        if(prev.text() == ''){
-                            $(tag).parent().css('display','none');
-                        }
-                        // преобразовать слово в столбце
-                        else{
-                            row = this.getRowForWord(prev.text());
-                            // if (row == null || row.type == null) { return false; }
-                            if(row.translation != '' && row.translation != null){
-                                prev.css('color',row.type.color);
-                            }
-                            else{
-                                prev.css({'color':'#959595','font-weight':'bold'});
-                            }
-                            $(tag).parent().css('display','flex');
+                        const wordText = prev.text().trim();
+                        
+                        if(wordText === ''){
+                            emptyElements.push({tag, prev});
+                        } else {
+                            wordElements.push({tag, prev, wordText});
                         }
                     });
+                    
+                    // Обрабатываем пустые элементы
+                    emptyElements.forEach(({tag}) => {
+                        $(tag).parent().css('display','none');
+                    });
+                    
+                    // Обрабатываем элементы со словами
+                    wordElements.forEach(({tag, prev, wordText}) => {
+                        row = this.getRowForWordFast(wordText);
+                        if(row && row.translation != '' && row.translation != null){
+                            prev.css('color',row.type.color);
+                        }
+                        else{
+                            prev.css({'color':'#959595','font-weight':'bold'});
+                        }
+                        $(tag).parent().css('display','flex');
+                    });
                 }, 500);
-                console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer created, ID:', timerId);
+                console.log('🔍 [PAGE_LIST_WORDS] updateColumnTable timer created, ID:', this.updateColumnTableTimer);
             },
             // навести на слово в таблице
             hoverWordShowTitle() {
                 console.log('🔍 [PAGE_LIST_WORDS] hoverWordShowTitle called');
-                $('body').on('mouseover', '.trigger', (event) => {
-                    console.log('🔍 [PAGE_LIST_WORDS] Mouse over trigger element:', event.target.textContent);
-                    this.outputHelperAlertInTable(event)
-                });
+                
+                // Очищаем предыдущий таймер если есть
+                if (this.tippyInitTimer) {
+                    clearTimeout(this.tippyInitTimer);
+                }
+
+                // Добавляем задержку чтобы DOM успел обновиться
+                this.tippyInitTimer = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Initializing tippy after delay');
+                    
+                    // Очищаем существующие tippy instances
+                    $('.trigger').each((index, element) => {
+                        if (element._tippy) {
+                            element._tippy.destroy();
+                        }
+                    });
+
+                    // Оптимизация: инициализируем tippy только для элементов без существующих instances
+                    $('.trigger').each((index, element) => {
+                        if (!element._tippy) {
+                            console.log('🔍 [PAGE_LIST_WORDS] Initializing tippy for element:', element.textContent);
+                            tippy(element, {
+                                content: '',
+                                theme: 'light-border',
+                                allowHTML: true,
+                                onShow: (instance) => {
+                                    // Обновляем содержимое при показе
+                                    this.updateTippyContent(instance, element.textContent);
+                                }
+                            });
+                        }
+                    });
+                }, 1000); // Задержка 1 секунда
             },
-            // вывод подсказки при наведении на слово в таблице
-            outputHelperAlertInTable(event){
-                console.log('🔍 [PAGE_LIST_WORDS] outputHelperAlertInTable called');
+            // обновление содержимого tippy
+            updateTippyContent(instance, wordText) {
+                console.log('🔍 [PAGE_LIST_WORDS] updateTippyContent called for word:', wordText);
+
+                // Проверяем что wordText не пустой
+                if (!wordText || wordText.trim() === '') {
+                    console.log('🔍 [PAGE_LIST_WORDS] Skipping empty word:', wordText);
+                    instance.setContent('');
+                    return false;
+                }
+
                 // выбрать колекцию слова
-                let row = this.getRowForWord($(event.target).text());
-                if (row == null) { 
-                    console.log('🔍 [PAGE_LIST_WORDS] Row not found, returning false');
-                    return false; 
+                let row = this.getRowForWordFast(wordText);
+                if (row == null) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Row not found, setting empty content');
+                    instance.setContent('');
+                    return false;
                 }
 
                 let text_type = (row.type !== null) ? row.type.type : ""
@@ -1280,32 +1368,53 @@
                 }
                 let span_style = row.type == null ? '' : 'color:'+row.type.color
 
-                // строка html для таблицы
-                let html = `<div style="text-align: left;">
-<div style="font-weight: 700;">${row.translation == null ? '' : row.translation.toLowerCase()}
-<span style="${span_style};">${text_type.charAt(0).toUpperCase() + text_type.slice(1)} ${text_description}</span>
-</div>
-${row.description == null ? '' : row.description.toLowerCase()}
-</div>
-${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.url_image}" alt="Image">` : ''}
-`;
+                // Проверяем есть ли данные для отображения
+                let hasTranslation = row.translation != null && row.translation.trim() !== '';
+                let hasType = text_type !== '';
+                let hasDescription = row.description != null && row.description.trim() !== '';
+                let hasImage = row.url_image != null;
+                let hasTimeForms = text_description !== '';
 
-                // Получить ссылку на экземпляр tippy
-                let instance = $(event.target)[0]._tippy;
-                // Если экземпляр tippy существует, обновить его содержимое
-                if (instance) {
-                    console.log('🔍 [PAGE_LIST_WORDS] Updating existing tippy instance');
-                    instance.setContent(html);
+                // Если нет данных для отображения, показываем пустую строку
+                if (!hasTranslation && !hasType && !hasDescription && !hasImage && !hasTimeForms) {
+                    console.log('🔍 [PAGE_LIST_WORDS] No data to display, setting empty content');
+                    instance.setContent('');
+                    return false;
                 }
-                else {
-                    console.log('🔍 [PAGE_LIST_WORDS] Creating new tippy instance');
-                    // 2 показ подсказки
-                    tippy(event.target, {
-                        content: html,
-                        theme: 'light-border',
-                        allowHTML: true,
-                    });
+
+                // строка html для таблицы
+                let html = `<div style="text-align: left;">`;
+
+                if (hasTranslation || hasType || hasTimeForms) {
+                    html += `<div style="font-weight: 700;">`;
+                    if (hasTranslation) {
+                        html += row.translation.toLowerCase();
+                    }
+                    if (hasType || hasTimeForms) {
+                        html += `<span style="${span_style};">`;
+                        if (hasType) {
+                            html += text_type.charAt(0).toUpperCase() + text_type.slice(1);
+                        }
+                        if (hasTimeForms) {
+                            html += ' ' + text_description;
+                        }
+                        html += `</span>`;
+                    }
+                    html += `</div>`;
                 }
+
+                if (hasDescription) {
+                    html += row.description.toLowerCase();
+                }
+
+                html += `</div>`;
+
+                if (hasImage) {
+                    html += `<img style="width: auto; height: 100px;" src="${row.url_image}" alt="Image">`;
+                }
+
+                console.log('🔍 [PAGE_LIST_WORDS] Setting tippy content');
+                instance.setContent(html);
             },
             // события выборки значения в select типов слов
             showStyleDataOnSelectType(){
@@ -1313,31 +1422,43 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 // в модалке создания слова
                 const selectTypeElement = document.getElementById("select_type");
                 if (selectTypeElement) {
+                    // Удаляем предыдущие обработчики чтобы избежать дублирования
+                    selectTypeElement.removeEventListener('change', this.handleSelectTypeChange);
                     console.log('🔍 [PAGE_LIST_WORDS] Adding event listener to select_type');
-                    selectTypeElement.addEventListener('change', () => {
-                        console.log('🔍 [PAGE_LIST_WORDS] select_type changed, value:', this.arrInputsModal.select_type_id);
-                        for(let i=0; i < this.allTypes.length; i++){
-                            if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
-                                this.setStyleDataModal(this.allTypes[i]);
-                                break;
-                            }
-                        }
-                    });
+                    selectTypeElement.addEventListener('change', this.handleSelectTypeChange);
+                    // Сохраняем ссылку на элемент для последующего удаления
+                    this.selectTypeElement = selectTypeElement;
                 }
 
                 // в модалке обновления слова - select type
                 const updateSelectTypeElement = document.getElementById("update_select_type");
                 if (updateSelectTypeElement) {
+                    // Удаляем предыдущие обработчики чтобы избежать дублирования
+                    updateSelectTypeElement.removeEventListener('change', this.handleUpdateSelectTypeChange);
                     console.log('🔍 [PAGE_LIST_WORDS] Adding event listener to update_select_type');
-                    updateSelectTypeElement.addEventListener('change', () => {
-                        console.log('🔍 [PAGE_LIST_WORDS] update_select_type changed, value:', this.arrInputsModal.select_type_id);
-                        for(let i = 0; i < this.allTypes.length; i++) {
-                            if (this.allTypes[i].id == this.arrInputsModal.select_type_id) {
-                                this.setStyleDataModal(this.allTypes[i]);
-                                break;
-                            }
-                        }
-                    });
+                    updateSelectTypeElement.addEventListener('change', this.handleUpdateSelectTypeChange);
+                    // Сохраняем ссылку на элемент для последующего удаления
+                    this.updateSelectTypeElement = updateSelectTypeElement;
+                }
+            },
+            // Обработчик изменения select_type в модалке создания
+            handleSelectTypeChange() {
+                console.log('🔍 [PAGE_LIST_WORDS] select_type changed, value:', this.arrInputsModal.select_type_id);
+                for(let i=0; i < this.allTypes.length; i++){
+                    if(this.allTypes[i].id === this.arrInputsModal.select_type_id){
+                        this.setStyleDataModal(this.allTypes[i]);
+                        break;
+                    }
+                }
+            },
+            // Обработчик изменения update_select_type в модалке обновления
+            handleUpdateSelectTypeChange() {
+                console.log('🔍 [PAGE_LIST_WORDS] update_select_type changed, value:', this.arrInputsModal.select_type_id);
+                for(let i = 0; i < this.allTypes.length; i++) {
+                    if (this.allTypes[i].id == this.arrInputsModal.select_type_id) {
+                        this.setStyleDataModal(this.allTypes[i]);
+                        break;
+                    }
                 }
             },
             // Возвращает по слову обьект слова
@@ -1353,6 +1474,27 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                 }
                 if (!row) {
                     console.log('🔍 [PAGE_LIST_WORDS] Word not found for:', word);
+                }
+                return row;
+            },
+            // Создает Map для быстрого поиска слов
+            createWordMap(){
+                console.log('🔍 [PAGE_LIST_WORDS] createWordMap called');
+                this.wordMap = new Map();
+                for (let i = 0; i < this.table.origin_rows.length; i++) {
+                    const word = this.table.origin_rows[i].word.toLowerCase();
+                    this.wordMap.set(word, this.table.origin_rows[i]);
+                }
+                console.log('🔍 [PAGE_LIST_WORDS] WordMap created with', this.wordMap.size, 'entries');
+            },
+            // Быстрый поиск слова через Map
+            getRowForWordFast(word){
+                console.log('🔍 [PAGE_LIST_WORDS] getRowForWordFast called, word:', word);
+                const row = this.wordMap.get(word.toLowerCase());
+                if (row) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Word found via Map:', row);
+                } else {
+                    console.log('🔍 [PAGE_LIST_WORDS] Word not found in Map for:', word);
                 }
                 return row;
             },
@@ -1404,27 +1546,16 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // события клика по кнопкам - удалить или редактировать слово
             initialClickButWordUpdate(){
                 console.log('🔍 [PAGE_LIST_WORDS] initialClickButWordUpdate called');
-                let a = setTimeout(() => {
-                    console.log('🔍 [PAGE_LIST_WORDS] initialClickButWordUpdate timer executed, ID:', a);
-                    // удалить
-                    $('.btn-danger.delete').bind('click', (e) => {
-                        console.log('🔍 [PAGE_LIST_WORDS] Delete button clicked');
-                        let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
-                        let word = queryObj.parent().prev(".trigger").text();
-                        console.log('🔍 [PAGE_LIST_WORDS] Word to delete:', word);
-                        let row = this.getRowForWord(word);
-                        // confirm delete
-                        this.confirmMessage('Really delete word ?', 'success', row.id)
-                    });
-                    // редактировать
-                    $('.btn-warning.edit').bind('click', (e) => {
-                        console.log('🔍 [PAGE_LIST_WORDS] Edit button clicked');
-                        let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
-                        let word = queryObj.parent().prev(".trigger").text();
-                        console.log('🔍 [PAGE_LIST_WORDS] Word to edit:', word);
-                        // открытие модалки редактирования
-                        this.openUpdateWordModal(word)
-                    });
+                
+                // Очищаем предыдущий таймер если есть
+                if (this.initialClickButWordUpdateTimer) {
+                    clearTimeout(this.initialClickButWordUpdateTimer);
+                }
+                
+                // Инициализируем обработчики кнопок с задержкой чтобы DOM успел обновиться
+                this.initialClickButWordUpdateTimer = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] initialClickButWordUpdate timer executed, ID:', this.initialClickButWordUpdateTimer);
+                    this.initButtonEventHandlers();
                 }, 1000);
             },
             // Открыть модалку создания
@@ -1463,7 +1594,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             openUpdateWordModal(word){
                 console.log('🔍 [PAGE_LIST_WORDS] openUpdateWordModal called, word:', word);
                 // Выбрать обьект слова по слову
-                let row = this.getRowForWord(word);
+                let row = this.getRowForWordFast(word);
                 this.objUpdateWord = row
                 this.setStyleDataModal(row.type);
                 this.setVariableDefault(row);
@@ -1491,16 +1622,71 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                     console.log('🔍 [PAGE_LIST_WORDS] Update modal element not found');
                 }
             },
+            // Инициализация обработчиков событий модалок (вызывается только один раз)
+            initModalEventHandlers(){
+                console.log('🔍 [PAGE_LIST_WORDS] initModalEventHandlers called');
+                // Удаляем предыдущие обработчики чтобы избежать дублирования
+                $(".modal").off("hidden.bs.modal");
+                $(".modal").on("hidden.bs.modal", () => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Modal hidden event triggered');
+
+                    // Сброс валидации
+                    if (this.$v) {
+                        this.$v.$reset();
+                        console.log('🔍 [PAGE_LIST_WORDS] Validation reset in closeAllModals');
+                    }
+
+                    // Очистка параметров модального окна
+                    this.setVariableDefault();
+                    this.clearGenerateSentences();
+                    this.help_dynamic = "";
+                    this.wordError = ""; // Очищаем ошибку валидации
+                    this.objWordFromTable.bool_click_button_word_from_table = false
+                    this.objUpdateWord = null
+                    console.log('🔍 [PAGE_LIST_WORDS] Modal parameters cleared in closeAllModals');
+                })
+            },
+                        // Инициализация обработчиков кнопок (вызывается только один раз)
+            initButtonEventHandlers(){
+                console.log('🔍 [PAGE_LIST_WORDS] initButtonEventHandlers called');
+                // Удаляем предыдущие обработчики чтобы избежать дублирования
+                $('.btn-danger.delete').unbind('click');
+                $('.btn-warning.edit').unbind('click');
+                
+                // Обработчик кнопки удаления
+                $('.btn-danger.delete').bind('click', (e) => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Delete button clicked');
+                    let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
+                    let word = queryObj.parent().prev(".trigger").text();
+                    console.log('🔍 [PAGE_LIST_WORDS] Word to delete:', word);
+                    let row = this.getRowForWordFast(word);
+                    // confirm delete
+                    this.confirmMessage('Really delete word ?', 'success', row.id)
+                });
+                
+                // Обработчик кнопки редактирования
+                $('.btn-warning.edit').bind('click', (e) => {
+                    console.log('🔍 [PAGE_LIST_WORDS] Edit button clicked');
+                    let queryObj = ($(e.target).prop("tagName") !== "A") ? $(e.target).parent() : $(e.target);
+                    let word = queryObj.parent().prev(".trigger").text();
+                    console.log('🔍 [PAGE_LIST_WORDS] Word to edit:', word);
+                    // открытие модалки редактирования
+                    this.openUpdateWordModal(word)
+                });
+            },
+            // Инициализация обработчиков кнопки очистки поиска (вызывается только один раз)
+            initClearSearchButtonHandler(){
+                console.log('🔍 [PAGE_LIST_WORDS] initClearSearchButtonHandler called');
+                // Инициализируем кнопку очистки поиска с задержкой чтобы DOM успел обновиться
+                this.clearSearchButtonTimer = setTimeout(() => {
+                    console.log('🔍 [PAGE_LIST_WORDS] initClearSearchButtonHandler timer executed, ID:', this.clearSearchButtonTimer);
+                    this.makeButtonClearSearch();
+                }, 1000);
+            },
             // Закрыть любую модалку
             closeAllModals(){
                 console.log('🔍 [PAGE_LIST_WORDS] closeAllModals called');
-                $(".modal").on("hidden.bs.modal", () => {
-                    console.log('🔍 [PAGE_LIST_WORDS] Modal hidden event triggered');
-                    this.help_dynamic = "";
-                    this.objWordFromTable.bool_click_button_word_from_table = false
-                    this.objUpdateWord = null
-                    this.clearGenerateSentences()
-                })
+                // Этот метод теперь только для логирования, обработчики устанавливаются в initModalEventHandlers
             },
             // Открыть модалку изучения слова
             openLearnModal() {
@@ -1519,6 +1705,20 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // Закрыть модалку создания слова
             closeCreateModal() {
                 console.log('🔍 [PAGE_LIST_WORDS] closeCreateModal called');
+
+                // Сброс валидации
+                if (this.$v) {
+                    this.$v.$reset();
+                    console.log('🔍 [PAGE_LIST_WORDS] Validation reset');
+                }
+
+                // Очистка параметров модального окна
+                this.setVariableDefault();
+                this.clearGenerateSentences();
+                this.help_dynamic = "";
+                this.wordError = ""; // Очищаем ошибку валидации
+                console.log('🔍 [PAGE_LIST_WORDS] Modal parameters cleared');
+
                 const modalElement = document.getElementById('create_word');
                 if (modalElement) {
                     console.log('🔍 [PAGE_LIST_WORDS] Modal element found');
@@ -1547,6 +1747,21 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // Закрыть модалку обновления слова
             closeUpdateModal() {
                 console.log('🔍 [PAGE_LIST_WORDS] closeUpdateModal called');
+
+                // Сброс валидации
+                if (this.$v) {
+                    this.$v.$reset();
+                    console.log('🔍 [PAGE_LIST_WORDS] Validation reset');
+                }
+
+                // Очистка параметров модального окна
+                this.setVariableDefault();
+                this.clearGenerateSentences();
+                this.objUpdateWord = null;
+                this.help_dynamic = "";
+                this.wordError = ""; // Очищаем ошибку валидации
+                console.log('🔍 [PAGE_LIST_WORDS] Modal parameters cleared');
+
                 const modalElement = document.getElementById('update_word');
                 if (modalElement) {
                     console.log('🔍 [PAGE_LIST_WORDS] Update modal element found');
@@ -1609,8 +1824,8 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
             // Клик по родителю переключателя генерации предложений
             toggleSwitch(event, ref) {
                 console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch called, ref:', ref);
-                const timerId = setTimeout(()=>{
-                    console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer executed, ID:', timerId);
+                this.toggleSwitchTimer = setTimeout(()=>{
+                    console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer executed, ID:', this.toggleSwitchTimer);
                     if (this.$refs[ref]) {
                         this.$refs[ref].checked = !this.$refs[ref].checked;
                         this.objGenerateSentences.status_toggle = this.$refs[ref].checked
@@ -1637,7 +1852,7 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
                         console.log('🔍 [PAGE_LIST_WORDS] Ref not found:', ref);
                     }
                 },100)
-                console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer created, ID:', timerId);
+                console.log('🔍 [PAGE_LIST_WORDS] toggleSwitch timer created, ID:', this.toggleSwitchTimer);
             },
             // Очистка переменных модалки
             clearGenerateSentences() {
@@ -1682,16 +1897,64 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
         mounted() {
             console.log('🔍 [PAGE_LIST_WORDS] Component mounted');
             console.log('🔍 [LIFECYCLE] PageListWords component mounted');
+            this.initModalEventHandlers(); // Инициализируем обработчики модалок один раз
+            this.initButtonEventHandlers(); // Инициализируем обработчики кнопок один раз
+            this.initClearSearchButtonHandler(); // Инициализируем обработчики кнопки очистки поиска один раз
             this.initialData();
         },
         beforeDestroy: function () {
             console.log('🔍 [LIFECYCLE] PageListWords component destroying');
+            
+            // Очищаем все таймеры
+            if (this.updateColumnTableTimer) {
+                clearTimeout(this.updateColumnTableTimer);
+            }
+            if (this.initialClickButWordUpdateTimer) {
+                clearTimeout(this.initialClickButWordUpdateTimer);
+            }
+            if (this.tippyInitTimer) {
+                clearTimeout(this.tippyInitTimer);
+            }
+            if (this.clearSearchButtonTimer) {
+                clearTimeout(this.clearSearchButtonTimer);
+                console.log('🔍 [PAGE_LIST_WORDS] clearSearchButtonTimer cleared');
+            }
+            if (this.toggleSwitchTimer) {
+                clearTimeout(this.toggleSwitchTimer);
+                console.log('🔍 [PAGE_LIST_WORDS] toggleSwitchTimer cleared');
+            }
+            
+            // Удаляем обработчики кнопок
             $('.btn-warning').unbind('click');
             $('.btn-danger').unbind('click');
+
+            // Удаляем обработчики кнопки очистки поиска
+            $('.vgt-global-search__input span.sr-only').unbind('click');
+
+            // Удаляем обработчики событий модалок
+            $(".modal").off("hidden.bs.modal");
+            
+            // Удаляем обработчики событий select_type и update_select_type
+            if (this.selectTypeElement) {
+                this.selectTypeElement.removeEventListener('change', this.handleSelectTypeChange);
+                console.log('🔍 [PAGE_LIST_WORDS] select_type event listener removed');
+            }
+            if (this.updateSelectTypeElement) {
+                this.updateSelectTypeElement.removeEventListener('change', this.handleUpdateSelectTypeChange);
+                console.log('🔍 [PAGE_LIST_WORDS] update_select_type event listener removed');
+            }
 
             // Удаляем инициализацию перед уничтожением компонента
             this.safeBootstrapToggle(this.$refs.toggle1, 'destroy');
             this.safeBootstrapToggle(this.$refs.toggle2, 'destroy');
+
+            // Очищаем все tippy instances
+            $('.trigger').each((index, element) => {
+                if (element._tippy) {
+                    console.log('🔍 [PAGE_LIST_WORDS] Destroying tippy instance for:', element.textContent);
+                    element._tippy.destroy();
+                }
+            });
         },
         validations: {
             arrInputsModal: {
@@ -1896,7 +2159,9 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
         }
 
         .modal-body {
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - 200px);
             padding: var(--spacing-4) 0;
 
             .box-time-forms {
@@ -2111,6 +2376,10 @@ ${row.url_image != null ? `<img style="width: auto; height: 100px;" src="${row.u
 
     #create_word {
         .modal-body {
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - 200px);
+
             .box-content-sentences {
                 justify-content: flex-end;
             }

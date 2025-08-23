@@ -4,8 +4,11 @@ if (typeof global === 'undefined') {
 }
 
 import './bootstrap';
-import 'bootstrap';
+import * as bootstrap from 'bootstrap';
 import '@popperjs/core';
+
+// Делаем bootstrap доступным глобально
+window.bootstrap = bootstrap;
 
 import Vue from 'vue';
 

@@ -14,7 +14,17 @@ class BackupDatabase
 {
     public function handle($request, Closure $next)
     {
-        $this->backupIfNeeded();
+        // Очищаем любой возможный output buffer
+        if (ob_get_level()) {
+            ob_clean();
+        }
+        
+        try {
+            $this->backupIfNeeded();
+        } catch (\Exception $e) {
+            // Логируем ошибку, но не прерываем выполнение
+            \Log::error('Backup error: ' . $e->getMessage());
+        }
         return $next($request);
     }
 
