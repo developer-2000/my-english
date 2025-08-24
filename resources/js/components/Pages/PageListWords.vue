@@ -1453,7 +1453,6 @@
                         this.initialData();
                         // Закрываем модалку обновления слова только при успехе
                         this.closeModalById('update_word');
-                        $('.modal-backdrop.fade.show').remove();
                     }
                 } catch (e) {
                     console.error('Error in updateWord:', e);
@@ -1978,19 +1977,14 @@
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
                     } else {
-                        modalElement.style.display = 'block';
-                        modalElement.classList.add('show');
-                        document.body.classList.add('modal-open');
-                        // Блокируем скролл body
-                        document.body.style.overflow = 'hidden';
-                        const backdrop = document.createElement('div');
-                        backdrop.className = 'modal-backdrop fade show';
-                        document.body.appendChild(backdrop);
+                        console.error('Bootstrap Modal не найден');
+                        return;
                     }
                 }
-                $('#create_word').on('shown.bs.modal', () => {
-                    this.$refs.new_word.focus();
-                });
+                // Убираем автофокус чтобы избежать моргания
+                // $('#create_word').on('shown.bs.modal', () => {
+                //     this.$refs.new_word.focus();
+                // });
             },
             // Открыть модалку редактирования
             openUpdateWordModal(word) {
@@ -2007,14 +2001,8 @@
                         const modal = new bootstrap.Modal(modalElement);
                         modal.show();
                     } else {
-                        modalElement.style.display = 'block';
-                        modalElement.classList.add('show');
-                        document.body.classList.add('modal-open');
-                        // Блокируем скролл body
-                        document.body.style.overflow = 'hidden';
-                        const backdrop = document.createElement('div');
-                        backdrop.className = 'modal-backdrop fade show';
-                        document.body.appendChild(backdrop);
+                        console.error('Bootstrap Modal не найден');
+                        return;
                     }
                 }
             },
@@ -2100,15 +2088,8 @@
                             modal.hide();
                         }
                     } else {
-                        modalElement.style.display = 'none';
-                        modalElement.classList.remove('show');
-                        document.body.classList.remove('modal-open');
-                        // Восстанавливаем скролл body
-                        document.body.style.overflow = '';
-                        const backdrop = document.querySelector('.modal-backdrop');
-                        if (backdrop) {
-                            backdrop.remove();
-                        }
+                        console.error('Bootstrap Modal не найден');
+                        return;
                     }
                 }
             },
@@ -2134,15 +2115,8 @@
                             modal.hide();
                         }
                     } else {
-                        modalElement.style.display = 'none';
-                        modalElement.classList.remove('show');
-                        document.body.classList.remove('modal-open');
-                        // Восстанавливаем скролл body
-                        document.body.style.overflow = '';
-                        const backdrop = document.querySelector('.modal-backdrop');
-                        if (backdrop) {
-                            backdrop.remove();
-                        }
+                        console.error('Bootstrap Modal не найден');
+                        return;
                     }
                 }
             },
