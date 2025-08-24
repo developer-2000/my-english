@@ -2653,3 +2653,27 @@ a {
         margin-left: 5px;
     }
 }
+
+// ============================================================================
+// VUE ROUTER LINK STYLES
+// ============================================================================
+
+// Убираем подчеркивание для всех router-link
+.router-link-active,
+.router-link-exact-active {
+    text-decoration: none !important;
+}
+
+// Глобальные стили для всех ссылок router-link
+a.router-link-active,
+a.router-link-exact-active {
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+// Специфичные стили для header-main-link
+.header-main-link.router-link-active,
+.header-main-link.router-link-exact-active {
+    text-decoration: none !important;
+    cursor: pointer;
+}

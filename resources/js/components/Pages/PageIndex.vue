@@ -105,8 +105,23 @@
             };
         },
         created() {},
-        mounted() {},
-        methods: {},
+        mounted() {
+            // Добавляем стили для YouTube ссылок
+            this.addYouTubeLinkStyles();
+        },
+        methods: {
+            addYouTubeLinkStyles() {
+                const style = document.createElement('style');
+                style.textContent = `
+                    /* Принудительно меняем цвет только для заголовка */
+                    .group:hover p.text-sm.font-medium.text-card-foreground.group-hover\\:text-primary {
+                        color: #007bff !important;
+                        transition: color 0.3s ease-in-out !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        },
     };
 </script>
 
@@ -287,7 +302,7 @@
         }
 
         .hover\:text-primary:hover {
-            color: var(--primary);
+            color: #007bff;
         }
 
         .group:hover .group-hover\:scale-110 {
@@ -296,6 +311,10 @@
 
         .group:hover .group-hover\:opacity-100 {
             opacity: 1;
+        }
+
+        .group:hover .group-hover\:text-primary {
+            color: #007bff;
         }
 
         .transition-all {
@@ -372,5 +391,11 @@
         svg {
             display: block;
         }
+    }
+
+    /* Принудительно меняем цвет при наведении только для заголовка */
+    .group:hover p.text-sm.font-medium.text-card-foreground.group-hover\:text-primary {
+        color: #007bff !important;
+        transition: color 0.3s ease-in-out;
     }
 </style>

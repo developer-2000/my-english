@@ -3,10 +3,10 @@
         <!-- Header меню -->
         <header class="d-flex justify-content-between align-items-center p-3">
             <!-- Язык изучения -->
-            <a href="/" class="header-element header-main-link">
+            <router-link to="/" class="header-element header-main-link">
                 <div class="header-logo">{{ getLanguageText('word', 'learn').charAt(0) }}</div>
                 {{ getLanguageText('word', 'learn').substring(1) }}
-            </a>
+            </router-link>
 
             <!-- Theme Toggle Button -->
 
@@ -155,6 +155,14 @@
                 this.$store.commit('setLearnLanguage', code_interface);
                 this.loadTranslations(code_interface);
             }
+
+            // Добавляем стили для убирания подчеркивания
+            this.addRouterLinkStyles();
+            
+            // Дополнительно применяем стили после рендера
+            this.$nextTick(() => {
+                this.applyRouterLinkStyles();
+            });
         },
         beforeDestroy() {
             // Удаляем обработчик события модалки
@@ -242,10 +250,131 @@
                     }
                 }
             },
+            // Добавляем стили для router-link
+            addRouterLinkStyles() {
+                const style = document.createElement('style');
+                style.textContent = `
+                    /* Убираем псевдоэлемент ::after который создает подчеркивание */
+                    .router-link-active::after,
+                    .router-link-exact-active::after,
+                    .header-main-link.router-link-active::after,
+                    .header-main-link.router-link-exact-active::after,
+                    a.router-link-active::after,
+                    a.router-link-exact-active::after,
+                    a.header-main-link.router-link-active::after,
+                    a.header-main-link.router-link-exact-active::after {
+                        display: none !important;
+                        content: none !important;
+                    }
+                    
+                    /* Максимальная специфичность для убирания подчеркивания */
+                    a.router-link-active,
+                    a.router-link-exact-active,
+                    a.header-main-link.router-link-active,
+                    a.header-main-link.router-link-exact-active,
+                    .header-main-link.router-link-active,
+                    .header-main-link.router-link-exact-active,
+                    .header-element.header-main-link.router-link-active,
+                    .header-element.header-main-link.router-link-exact-active,
+                    a.header-element.header-main-link.router-link-active,
+                    a.header-element.header-main-link.router-link-exact-active {
+                        text-decoration: none !important;
+                        text-decoration-line: none !important;
+                        text-decoration-style: none !important;
+                        text-decoration-color: transparent !important;
+                        cursor: pointer !important;
+                    }
+                    
+                    /* Убираем подчеркивание для всех header-main-link */
+                    .header-main-link,
+                    a.header-main-link,
+                    .header-element.header-main-link,
+                    a.header-element.header-main-link {
+                        text-decoration: none !important;
+                        text-decoration-line: none !important;
+                        text-decoration-style: none !important;
+                        text-decoration-color: transparent !important;
+                        cursor: pointer !important;
+                    }
+                    
+                    /* Убираем подчеркивание при наведении */
+                    .header-main-link:hover,
+                    a.header-main-link:hover,
+                    .header-element.header-main-link:hover,
+                    a.header-element.header-main-link:hover {
+                        text-decoration: none !important;
+                        text-decoration-line: none !important;
+                        text-decoration-style: none !important;
+                        text-decoration-color: transparent !important;
+                    }
+                    
+                    /* Глобально убираем подчеркивание для всех router-link */
+                    a[class*="router-link"] {
+                        text-decoration: none !important;
+                        text-decoration-line: none !important;
+                        text-decoration-style: none !important;
+                        text-decoration-color: transparent !important;
+                        cursor: pointer !important;
+                    }
+                    
+                    /* Изменяем цвет фона логотипа на #007bff */
+                    .header-logo {
+                        background-color: #007bff !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            },
+            // Применяем стили напрямую к элементам
+            applyRouterLinkStyles() {
+                const routerLinks = document.querySelectorAll('.router-link-active, .router-link-exact-active, .header-main-link');
+                routerLinks.forEach(link => {
+                    link.style.textDecoration = 'none';
+                    link.style.textDecorationLine = 'none';
+                    link.style.textDecorationStyle = 'none';
+                    link.style.textDecorationColor = 'transparent';
+                    link.style.cursor = 'pointer';
+                });
+                
+                // Изменяем цвет фона логотипа
+                const headerLogos = document.querySelectorAll('.header-logo');
+                headerLogos.forEach(logo => {
+                    logo.style.backgroundColor = '#007bff';
+                });
+            },
         },
     };
 </script>
 
 <style scoped>
     /* Ваши стили */
+</style>
+
+<style>
+/* Глобальные стили для router-link */
+.router-link-active,
+.router-link-exact-active {
+    text-decoration: none !important;
+}
+
+a.router-link-active,
+a.router-link-exact-active {
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.header-main-link.router-link-active,
+.header-main-link.router-link-exact-active {
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+/* Убираем подчеркивание для всех ссылок с классом header-main-link */
+.header-main-link {
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.header-main-link:hover {
+    text-decoration: none !important;
+}
 </style>

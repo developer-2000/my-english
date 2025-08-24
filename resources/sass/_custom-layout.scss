@@ -26,9 +26,16 @@ header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        cursor: pointer;
 
         &:hover {
             color: var(--muted-foreground);
+            text-decoration: none;
+        }
+
+        // Убираем подчеркивание для router-link
+        &.router-link-active,
+        &.router-link-exact-active {
             text-decoration: none;
         }
 
