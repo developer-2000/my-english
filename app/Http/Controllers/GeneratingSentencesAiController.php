@@ -2,42 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AIStudio\GenerateSentencesRequest;
 use App\Http\Responses\ApiResponse;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
-use Stichoza\GoogleTranslate\GoogleTranslate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class GeneratingSentencesAiController extends Controller
 {
     /**
-     * Генерирует предложения
-     *
-     * @param  Request  $request
-     *
-     * @throws GuzzleException
+     * Генерирует предложения через Google Gemini API
      */
-    public function generateSentence(GenerateSentencesRequest $request): ApiResponse
+    public function generateSentence(Request $request)
     {
-        // масив слов которые будут в предложениях
-        $words = $request->arr_words;
+        $words = $request->input('arr_words', []);
+
+        if (empty($words)) {
+            Log::error('Empty words array received');
+            return response()->json(['sentences' => [], 'error' => 'No words provided'], 400);
+        }
+
         $sentences = [];
 
         foreach ($words as $word) {
-            $response = $this->getSentencesAIStudio($word);
-            $individualSentences = $this->processResponse($response, $word);
+            $word = trim($word);
+            if (empty($word)) {
+                Log::warning('Empty word skipped', ['word' => $word]);
+                continue;
+            }
 
-            foreach ($individualSentences as $sentence) {
-                if (strpos($sentence, 'Error') === false && strpos($sentence, 'Failed') === false) {
-                    // Переводим предложение на русский язык
-                    $translatedSentence = $this->translateToRussian($sentence);
-                    // Добавляем в массив результатов
-                    $sentences[] = [
-                        'original' => $sentence,
-                        'translated' => $translatedSentence,
-                    ];
+            $responseArray = $this->getSentencesFromGemini($word);
+
+            foreach ($responseArray as $item) {
+                // Проверка на ошибки
+                if (!isset($item['en']) || !isset($item['ru'])) {
+                    $sentences[] = ['original' => $item['en'] ?? 'Error', 'translated' => $item['ru'] ?? ''];
+                    continue;
                 }
+
+                $enClean = $this->sanitizeText($item['en']);
+                $ruClean = $this->sanitizeText($item['ru']);
+
+                $sentences[] = [
+                    'original' => $enClean,
+                    'translated' => $ruClean,
+                ];
             }
         }
 
@@ -45,84 +53,101 @@ class GeneratingSentencesAiController extends Controller
     }
 
     /**
-     * Запрос на AI21 Studio и получение ответа
+     * Генерирует 5 простых литературных предложений с указанным словом и их перевод на русский
+     * через Google Gemini API.
      *
-     * @throws GuzzleException
+     * @param string $word Слово, которое должно присутствовать в предложениях.
+     * @return array Массив объектов ['en' => английское предложение, 'ru' => перевод на русский].
+     *               В случае ошибки возвращается массив с одной записью с ключами 'en' и 'ru', где текст описывает ошибку.
      */
-    private function getSentencesAIStudio($word): string
+    private function getSentencesFromGemini(string $word): array
     {
-        $client = new Client;
-        // Поместите ваш API ключ в файл .env
-        $apiKey = env('STUDIO_AI_API_KEY');
-        $prompt = 'Create five simple literary sentences that are not similar to each other in English and separate them with a vertical symbol | using the given word: '.$word;
+        // Получаем ключ Gemini API из .env
+        $apiKey = env('GOOGLE_AI_API_KEY');
+        if (empty($apiKey)) {
+            // Если ключ не задан, возвращаем ошибку
+            return [['en' => "Error: API key not configured", 'ru' => "Ошибка: API ключ не настроен"]];
+        }
+
+        // URL для запроса к модели Gemini
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+        // Промпт для Gemini: 5 предложений на английском + перевод на русский,
+        // строго в формате JSON массива объектов с ключами 'en' и 'ru'
+        $prompt = "Generate 5 simple literary sentences using the word: {$word}.
+For each sentence, also provide the Russian translation.
+Return result strictly as JSON array of objects with fields 'en' and 'ru'.";
+
+        // Формируем тело POST запроса
+        $payload = [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $prompt]
+                    ]
+                ]
+            ]
+        ];
 
         try {
-            // Используем правильный URL-адрес для AI21 Studio API
-            $response = $client->post('https://api.ai21.com/studio/v1/j2-ultra/complete', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$apiKey,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'prompt' => $prompt,
-                    'numResults' => 1,
-                    'maxTokens' => 100, // Ограничиваем количество токенов
-                    'temperature' => 0.7,
-                    'topP' => 0.9,
-                ],
-            ]);
+            // Отправляем POST запрос с заголовком API ключа
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'X-goog-api-key' => $apiKey
+            ])->post($url, $payload);
 
-            $data = json_decode($response->getBody(), true);
+            // Если запрос неуспешен, возвращаем ошибку
+            if ($response->failed()) {
+                return [['en' => "Error: Google API request failed", 'ru' => "Ошибка: запрос к API не удался"]];
+            }
 
-            // Убираем лишние пробелы и переносы строк
-            return trim($data['completions'][0]['data']['text']) ?? 'Failed to generate sentence.';
+            // Декодируем JSON ответ
+            $data = $response->json();
+            $generatedText = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
+            // Убираем обёртку ```json ... ```
+            $generatedText = preg_replace('/^```json\s*|\s*```$/', '', trim($generatedText));
+
+            // Преобразуем текст в массив PHP
+            $parsed = json_decode($generatedText, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return [['en' => "Error: Invalid JSON from Gemini", 'ru' => "Ошибка: некорректный JSON от Gemini"]];
+            }
+
+            // Возвращаем массив предложений с переводом
+            return $parsed;
+
         } catch (\Exception $e) {
-            // Обрабатываем ошибки
-            return 'Error: '.$e->getMessage();
+            // Ловим исключения и возвращаем в виде ошибки
+            return [['en' => "Error: {$e->getMessage()}", 'ru' => "Ошибка: {$e->getMessage()}"]];
         }
     }
 
     /**
-     * Обрабатывает ответ API и извлекает предложения
+     * Обрабатывает текст, очищает от markdown и нормализует пробелы.
      */
-    private function processResponse(string $response, string $word): array
+    private function sanitizeText(string $text): string
     {
-        $sentencesArray = explode('.', $response);
+        // Убираем markdown (** , *, __, _, `)
+        $text = preg_replace('/\*\*\s*(.*?)\s*\*\*/s', '$1', $text);
+        $text = preg_replace('/\*\s*(.*?)\s*\*/s', '$1', $text);
+        $text = preg_replace('/__\s*(.*?)\s*__/s', '$1', $text);
+        $text = preg_replace('/_\s*(.*?)\s*_/', '$1', $text);
+        $text = preg_replace('/`(.*?)`/s', '$1', $text);
+        $text = str_replace('*', '', $text);
 
-        // Фильтруем массив, оставляем только предложения, содержащие ключевое слово
-        $filteredSentences = array_filter($sentencesArray, function ($sentence) use ($word) {
-            return stripos($sentence, $word) !== false;
-        });
+        // Удаляем управляющие символы
+        $text = preg_replace('/[\x00-\x1F\x7F]/u', '', $text);
 
-        // Удаляем символы '|'
-        $filteredSentences = array_map(function ($sentence) {
-            return str_replace('|', '', $sentence);
-        }, $filteredSentences);
+        // Нормализуем пробелы
+        $text = preg_replace('/\s+/u', ' ', $text);
 
-        // Удаляем лишние пробелы (больше 1) и пробелы в начале и конце строки
-        // Добавляем точку в конце предложения, если её нет
-        return array_map(function ($sentence) {
-            $cleanedSentence = preg_replace('/\s{2,}/', ' ', trim($sentence));
-            if (substr($cleanedSentence, -1) !== '.') {
-                $cleanedSentence .= '.';
-            }
+        // Убираем пробел перед знаками пунктуации
+        $text = preg_replace('/\s+([.,!?;:])/u', '$1', $text);
 
-            return $cleanedSentence;
-        }, $filteredSentences);
+        $text = trim($text);
+
+        return $text;
     }
 
-    /**
-     * Переводит текст на русский язык
-     */
-    private function translateToRussian(string $text): string
-    {
-        // Инициализируем объект для перевода
-        $translator = new GoogleTranslate;
-        // Устанавливаем исходный и целевой языки
-        $translator->setSource('en'); // Исходный язык - английский
-        $translator->setTarget('ru'); // Целевой язык - русский
-
-        // Переводим текст
-        return $translator->translate($text);
-    }
 }

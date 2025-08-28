@@ -25,9 +25,9 @@ class GetLearnWordRequest extends ApiFormRequest
     public function rules()
     {
         return [
-            'last_updated_at' => 'nullable|string',
-            'last_word_id' => 'nullable|integer',
-            'action_with_word' => 'nullable|string',
+            'word_id' => 'nullable|integer',
+            'unknown_order' => 'nullable|integer',
+            'status'  => 'nullable|string|in:known,unknown',
         ];
     }
 }

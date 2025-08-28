@@ -9,10 +9,23 @@ class RoWord extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $table = 'ro_words';
+
+    protected $fillable = [
+        'word',
+        'translation',
+        'url_image',
+        'description',
+        'type_id',
+        'time_forms',
+        'is_known',
+        'unknown_order',
+    ];
 
     protected $casts = [
         'time_forms' => 'json',
+        'is_known' => 'integer',
+        'unknown_order' => 'integer',
     ];
 
     public function type()

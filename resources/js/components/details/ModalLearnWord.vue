@@ -49,7 +49,7 @@
                                 <a
                                     class="btn btn-success"
                                     role="button"
-                                    @click="loadLearnWord('up')"
+                                    @click="loadLearnWord('unknown')"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                         <path
@@ -63,7 +63,7 @@
                                 <a
                                     class="btn btn-warning"
                                     role="button"
-                                    @click="loadLearnWord('down')"
+                                    @click="loadLearnWord('known')"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                         <path
@@ -161,12 +161,14 @@
                     viewWord: '',
                     translationWord: '',
                 },
-                objLearnWord: null, // изучаемое слово
+                prevObjLearnWord: null, // предыдущее изучаемое слово
+                objLearnWord: null,     // изучаемое слово
                 objOldLearnWord: null,
                 last_updated_at: null, // дата изменения изучаемого слова
                 write_word: '',
                 know: 0,
                 not_know: 0,
+                shownWords: [],
                 // Обработчики событий
                 escapeHandler: null,
                 mouseoverHandler: null,
@@ -211,24 +213,36 @@
             // загрузка изучаемого слова
             async loadLearnWord(action = null) {
                 this.clearWritingVariables();
-                if (action == 'up') {
+
+                // не знаю
+                if (action == 'unknown') {
                     this.not_know++;
-                } else if (action == 'down') {
+                } else if (action == 'known') {
                     this.know++;
                 }
+
                 try {
+                    if(this.objLearnWord !== null){
+                        this.prevObjLearnWord = this.objLearnWord;
+                    }
+
+                    const word_id = this.objLearnWord?.id ?? this.prevObjLearnWord?.id ?? null;
+                    const unknown_order = this.objLearnWord?.unknown_order ?? this.prevObjLearnWord?.unknown_order ?? null;
+
                     const data = {
-                        last_updated_at: this.last_updated_at,
-                        last_word_id: this.objLearnWord !== null ? this.objLearnWord.id : null,
-                        action_with_word: action,
+                        word_id,
+                        unknown_order,
+                        status: action,
                     };
+
                     const response = await this.$http.post(
                         `${this.$http.webUrl()}word/learn/get-word`,
                         data
                     );
 
                     if (this.checkSuccess(response)) {
-                        this.objLearnWord = response.data.data;
+                        this.objLearnWord = JSON.parse(JSON.stringify(response.data.data));
+
                         // копия обьекта
                         this.objOldLearnWord = JSON.parse(JSON.stringify(this.objLearnWord));
                         this.last_updated_at = this.objLearnWord.updated_at;
@@ -324,6 +338,9 @@
                         }
                     }
                 }
+
+                // Сбрасываем объект изучаемого слова
+                this.objLearnWord = null;
 
                 // Уведомляем родительский компонент о закрытии модалки
                 this.$emit('modalClosed');

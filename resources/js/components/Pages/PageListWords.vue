@@ -1525,6 +1525,7 @@
             async loadGenerateSentences() {
                 this.objGenerateSentences.boolAddSentences = true;
                 this.objGenerateSentences.boolLoadingIndicator = false;
+                
                 const data = {
                     arr_words: Array.isArray(this.arrInputsModal.new_word)
                         ? this.arrInputsModal.new_word
@@ -1536,6 +1537,7 @@
                         `${this.$http.webUrl()}ai/generate-sentences`,
                         data
                     );
+                    
                     if (this.checkSuccess(response)) {
                         this.objGenerateSentences.arrGenerateSentences =
                             response.data.data.sentences;

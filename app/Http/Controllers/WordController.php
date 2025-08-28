@@ -9,6 +9,7 @@ use App\Http\Requests\Word\SelectGetPaginateRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\EnWord;
+use App\Models\Test;
 use App\Repositories\WordRepository;
 
 class WordController extends Controller
@@ -20,6 +21,12 @@ class WordController extends Controller
         $this->wordRepository = new WordRepository;
     }
 
+    /**
+     * Выборка в пагинации страницы слов
+     *
+     * @param SelectGetPaginateRequest $request
+     * @return ApiResponse
+     */
     public function index(SelectGetPaginateRequest $request): ApiResponse
     {
         $words = $this->wordRepository->getWords($request->validated());
@@ -66,26 +73,30 @@ class WordController extends Controller
     }
 
     /**
-     * Получить слово для изучения и обновить метку времени предыдущего слова, если необходимо.
+     * Получить слово для изучения и обновить статус предыдущего слова.
+     *
+     * @param GetLearnWordRequest $request
+     * @return ApiResponse
      */
     public function getLearnWord(GetLearnWordRequest $request): ApiResponse
     {
-        // Получаем слово для изучения из репозитория
-        $latestWord = $this->wordRepository->getLearnWord($request);
+        $validateData = $request->validated();
 
-        // Если слово найдено
-        if ($latestWord) {
-            // Если передано предыдущее слово и действие с ним
-            if (! is_null($request->last_word_id) && ! is_null($request->action_with_word)) {
-                // Обновляем метку времени предыдущего слова
-                $this->wordRepository->updateWordTimestamp($request->last_word_id, $request->action_with_word);
-            }
-
-            // Возвращаем найденное слово
-            return new ApiResponse($latestWord);
+        // Обновляем статус предыдущего слова
+        if (
+            !empty($validateData['word_id']) &&
+            !empty($validateData['status'])
+        ) {
+            $this->wordRepository->updateWordStatus((int)$validateData['word_id'], $validateData['status']);
         }
 
-        // Если слова не найдены, возвращаем сообщение об ошибке
+        // Получаем следующее слово
+        $nextWord = $this->wordRepository->getNextLearnWord($validateData);
+
+        if ($nextWord) {
+            return new ApiResponse($nextWord);
+        }
+
         return new ApiResponse(['message' => 'No more words available'], true, 404);
     }
 }

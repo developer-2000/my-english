@@ -7,10 +7,16 @@ export default {
     methods: {
         // проверка backup данных axios
         checkSuccess(response) {
+            // Проверяем структуру ApiResponse: {success: true/false, data: ..., error: ...}
+            if (response?.data?.success === true) {
+                return true;
+            }
+            
+            // Проверяем старую структуру для совместимости
             if (response?.data?.error === null) {
                 return true;
             }
-
+            
             return false;
         },
         // alert сообщение на странице

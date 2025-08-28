@@ -5,12 +5,24 @@ namespace App\Repositories;
 use App\Http\Requests\Word\CreateWordRequest;
 use App\Http\Requests\Word\DeleteWordRequest;
 use App\Http\Requests\Word\UpdateWordRequest;
+use App\Models\Test;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class WordRepository extends CoreRepository
 {
-    public function getWords($request)
+
+    /**
+     * Выборка в пагинации страницы слов
+     *
+     * @param $request
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getWords($request): array
     {
         $vars = $this->getVariablesForTables($request);
         $collection = $this->startConditions()->with('type');
@@ -59,16 +71,10 @@ class WordRepository extends CoreRepository
             $collection = $collection->where('updated_at', '>=', $minUpdatedAt);
         }
 
-        // paginate
-        //        $list = $collection->skip($vars['offset'])
-        //            ->take($vars['limit'])
-        //            ->orderBy('updated_at', 'desc')
-        //            ->get();
         $list = $collection
-            ->orderBy('updated_at', 'desc') // Сначала сортируем по priority
-            ->orderBy('id', 'desc') // Затем сортируем по id, если priority одинаковый
+            ->orderBy('id', 'desc') // сортировка на убывание
             ->skip($vars['offset']) // Пропускаем нужное количество записей
-            ->take($vars['limit']) // Берем нужное количество записей
+            ->take($vars['limit'])  // Берем нужное количество записей
             ->get();
 
         $types = $this->getDynamicModelClone('WordType')::get();
@@ -82,7 +88,7 @@ class WordRepository extends CoreRepository
         DB::beginTransaction();
 
         try {
-            // Создаем слово с помощью метода create
+            // 1 Создаем слово
             $wordData = $request->except('arr_new_sentences');
             $word = $this->startConditions()::create($wordData);
 
@@ -132,68 +138,103 @@ class WordRepository extends CoreRepository
     }
 
     /**
-     * Получить слово для изучения на основе переданного запроса.
-     *
-     * @return null
+     * Обновить статус слова (known / unknown).
      */
-    public function getLearnWord($request)
+    public function updateWordStatus(int $wordId, string $status): void
     {
-        // Проверка наличия параметра last_updated_at
-        if (! is_null($request->last_updated_at)) {
-            $lastUpdatedAt = Carbon::parse($request->last_updated_at);
-
-            // Поиск слова с updated_at, более старым, чем last_updated_at
-            $latestWord = $this->getDynamicModelClone('Word')::where('updated_at', '<', $lastUpdatedAt)
-                ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
-                ->first();
-        } else {
-            // Если last_updated_at не указан, выбираем самое свежее слово
-            $latestWord = $this->getDynamicModelClone('Word')::orderBy('updated_at', 'desc')
-                ->orderBy('id', 'desc') // Берем запись с наибольшим ID при равном priority
-                ->first();
+        try {
+            $model = $this->getDynamicModelClone('Word');
+        } catch (\Throwable $e) {
+            return;
         }
 
-        // Если слово найдено, выбираем предложения с его участием
-        if ($latestWord) {
-            $latestWord->sentences = $this->getDynamicModelClone('Sentence')::where('sentence', 'like', '%'.$latestWord->word.'%')->get();
-
-            return $latestWord;
+        $word = $model::find($wordId);
+        if (!$word) {
+            return;
         }
 
-        // Если слово не найдено, возвращаем null
-        return null;
+        if ($status === 'unknown') {
+            $word->is_known = 0;
+
+            // Если ещё не было порядка — проставляем next order
+            if (is_null($word->unknown_order)) {
+                $max = $model::max('unknown_order');
+                $word->unknown_order = $max ? $max + 1 : 1;
+            }
+        } elseif ($status === 'known') {
+            $word->is_known = 1;
+            $word->unknown_order = null; // сбросить порядок
+        }
+
+        $word->save();
     }
 
     /**
-     * Обновить метку времени 'updated_at' у слова на основе действия.
+     * Получить следующее слово для изучения:
      *
-     * @param  int  $wordId
-     * @param  string  $action
-     * @return void
+     * Логика:
+     * 1. Если это первый запрос (word_id и unknown_order = null) —
+     *    берём "не знание" с наименьшим unknown_order.
+     * 2. Иначе пробуем найти "не знание" с unknown_order > текущего.
+     * 3. Если не нашли — берём слово с id > текущего.
+     * 4. К найденному слову подгружаем предложения.
+     *
+     * @param array $validateData
+     * @return object|null
      */
-    public function updateWordTimestamp($wordId, $action)
+    public function getNextLearnWord(
+        array $validateData = ['word_id'=>null,'unknown_order'=>null,'status'=>null]
+    ): ?object
     {
-        $newDate = null;
+        try {
+            $model = $this->getDynamicModelClone('Word');
+        } catch (\Throwable $e) {
+            return null;
+        }
 
-        // Если действие 'up', обновить время до самой свежей
-        if ($action === 'up') {
-            $newDate = now();
-        } // Если действие 'down', обновить время до самой старой
-        elseif ($action === 'down') {
-            $oldestWord = $this->getDynamicModelClone('Word')::orderBy('updated_at', 'asc')->first();
-            if ($oldestWord) {
-                // Отнимаем 1 секунду от самой старой даты
-                $newDate = Carbon::parse($oldestWord->updated_at)->subSeconds(1);
+        $nextWord = null;
+        // достаём из параметров или из сессии
+        $wordId       = $validateData['word_id'] ?? null;
+        $unknownOrder = $validateData['unknown_order'] ?? null;
+
+        // 1. в первом запросе - свойства приходят - null
+        // выбрать слово "не знания" у которого наименьший unknown_order
+        if (!$wordId && !$unknownOrder) {
+            $nextWord = $model::query()
+                ->where('is_known', 0)
+                ->whereNotNull('unknown_order')
+                ->orderBy('unknown_order', 'asc')
+                ->first();
+        }
+
+        // 2. нужно выбрать слово "не знания" у которого unknown_order на 1 больше чем у предыдущего
+        if (!$nextWord && $wordId && $unknownOrder) {
+            $nextWord = $model::query()
+                ->where('is_known', 0)
+                ->where('unknown_order', '>', $unknownOrder)
+                ->orderBy('unknown_order', 'asc')
+                ->first();
+        }
+
+        // 3. если нет "Следующего" слова выбрать слово у которого id больше предыдущего
+        if ($wordId && !$nextWord) {
+            $nextWord = $model::query()
+                ->where('id', '>', $wordId)
+                ->orderBy('id', 'asc')
+                ->first();
+        }
+
+        // 4 Подгружаем предложения с этим словом
+        if ($nextWord) {
+            try {
+                $sentenceModel = $this->getDynamicModelClone('Sentence');
+                $nextWord->sentences = $sentenceModel::where('sentence', 'like', '%'.$nextWord->word.'%')->get();
+            } catch (\Throwable $e) {
+                $nextWord->sentences = collect();
             }
         }
 
-        // Если новая дата установлена, обновляем слово
-        if (! is_null($newDate)) {
-            $wordToUpdate = $this->getDynamicModelClone('Word')::where('id', $wordId)->first();
-            if ($wordToUpdate) {
-                $wordToUpdate->update(['updated_at' => $newDate]);
-            }
-        }
+        return $nextWord;
     }
 
     protected function updateWordData(UpdateWordRequest $request)
@@ -227,9 +268,10 @@ class WordRepository extends CoreRepository
     }
 
     /**
-     * Вставляем новые предложения
+     * Вставляем новые слова
      *
-     * @param  $request
+     * @param $arrSentences
+     * @return void
      */
     protected function insertNewWords($arrSentences): void
     {
@@ -238,7 +280,13 @@ class WordRepository extends CoreRepository
             $sentence = preg_replace('|[\s]+|s', ' ', $obj['original']);
             // Разбиваем предложение на массив слов
             $words = explode(' ', trim($sentence));
-            // добавить слова которых нет
+
+            // Фильтруем — пропускаем слова, которые состоят только из цифр
+            $words = array_filter($words, function($word) {
+                return !preg_match('/^\d+$/', $word);
+            });
+
+            // Добавляем слова которых нет
             $this->startConditions()::processWords($words);
         }
     }

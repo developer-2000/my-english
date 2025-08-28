@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Test;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -66,7 +67,6 @@ abstract class CoreRepository
     {
         $learnLanguage = ucfirst($this->user->languageUser->learnLanguage->language);
 
-        //        return "App\\Models\\{$learnLanguage}{$string}";
         return clone app("App\\Models\\{$learnLanguage}{$string}");
     }
 }
