@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GeneratingSentencesAiController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\SentenceController;
+use App\Http\Controllers\TechnicalController;
 use App\Http\Controllers\WordController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,20 @@ Route::group(['prefix' => 'technical'], function () {
 
         return '<h1>all_clear</h1>';
     });
+
+
+    Route::group(['middleware' => ['auth', 'role:admin']], function () {
+        Route::get('/page', [TechnicalController::class, 'index']);
+        // Сохранить в JSON Правильные глаголы
+        Route::get('/regular-verbs', [TechnicalController::class, 'getRegularVerbs']);
+        // Сохранить в JSON Неправильные глаголы
+        Route::get('/irregular-verbs', [TechnicalController::class, 'getIrregularVerbs']);
+        // Сохранить в базу Правильные глаголы
+        Route::post('/save-regular-verbs-db', [TechnicalController::class, 'saveRegularVerbsInDatabase']);
+        // Сохранить в базу Неправильные глаголы
+        Route::post('/save-irregular-verbs-db', [TechnicalController::class, 'saveIrregularVerbsInDatabase']);
+    });
+
 });
 
 Route::get('/translations', [LanguageController::class, 'getTranslations'])
@@ -57,7 +72,7 @@ Route::get('/', function () {
     } else {
         return redirect()->route('auth.showLoginForm');
     }
-})->name('index');
+})->middleware(['BackupDatabase'])->name('index');
 
 // >>> Группа маршрутов, доступных только авторизованным пользователям с ролью 'user' и старше
 Route::group([], function () {
@@ -116,6 +131,13 @@ Route::group([], function () {
 
         return view('index');
     });
+//    Route::get('/technical/page', function () {
+//        if (! Auth::check()) {
+//            return redirect()->route('auth.showLoginForm');
+//        }
+//
+//        return view('index');
+//    });
 });
 
 // >>> Error

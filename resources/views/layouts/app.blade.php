@@ -41,7 +41,7 @@
 </head>
 <body>
 <div id="app">
-    <hallway :user="{{ json_encode(Auth::user()) }}"></hallway>
+    <hallway :user="{{ json_encode(Auth::user()->load('roles')) }}"></hallway>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>

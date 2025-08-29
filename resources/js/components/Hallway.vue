@@ -33,6 +33,14 @@
                     >
                         {{ $t('all.language_learning') }}
                     </a>
+                    <!-- Технический пункт для админов -->
+                    <router-link
+                        v-if="userHasAdminRole"
+                        class="dropdown-item"
+                        to="/technical/page"
+                    >
+                        Техническая страница
+                    </router-link>
                     <!-- кнопка выхода -->
                     <a class="dropdown-item" href="/auth/logout">
                         {{ $t('all.logout') }}
@@ -136,6 +144,12 @@
                 modalShowHandler: null,
             };
         },
+        computed: {
+            // Проверяем есть ли у пользователя роль admin
+            userHasAdminRole() {
+                return this.user && this.user.roles && this.user.roles.some(role => role.name === 'admin');
+            },
+        },
         mounted() {
             // Используем Bootstrap 5 API для события показа модалки
             const modalElement = document.getElementById('languageLearn');
@@ -158,7 +172,7 @@
 
             // Добавляем стили для убирания подчеркивания
             this.addRouterLinkStyles();
-            
+
             // Дополнительно применяем стили после рендера
             this.$nextTick(() => {
                 this.applyRouterLinkStyles();
@@ -266,7 +280,7 @@
                         display: none !important;
                         content: none !important;
                     }
-                    
+
                     /* Максимальная специфичность для убирания подчеркивания */
                     a.router-link-active,
                     a.router-link-exact-active,
@@ -284,7 +298,7 @@
                         text-decoration-color: transparent !important;
                         cursor: pointer !important;
                     }
-                    
+
                     /* Убираем подчеркивание для всех header-main-link */
                     .header-main-link,
                     a.header-main-link,
@@ -296,7 +310,7 @@
                         text-decoration-color: transparent !important;
                         cursor: pointer !important;
                     }
-                    
+
                     /* Убираем подчеркивание при наведении */
                     .header-main-link:hover,
                     a.header-main-link:hover,
@@ -307,7 +321,7 @@
                         text-decoration-style: none !important;
                         text-decoration-color: transparent !important;
                     }
-                    
+
                     /* Глобально убираем подчеркивание для всех router-link */
                     a[class*="router-link"] {
                         text-decoration: none !important;
@@ -316,7 +330,7 @@
                         text-decoration-color: transparent !important;
                         cursor: pointer !important;
                     }
-                    
+
                     /* Изменяем цвет фона логотипа на #007bff */
                     .header-logo {
                         background-color: #007bff !important;
@@ -334,7 +348,7 @@
                     link.style.textDecorationColor = 'transparent';
                     link.style.cursor = 'pointer';
                 });
-                
+
                 // Изменяем цвет фона логотипа
                 const headerLogos = document.querySelectorAll('.header-logo');
                 headerLogos.forEach(logo => {

@@ -976,7 +976,7 @@
     import good_table_mixin from '../../mixins/good_table_mixin.js';
     import response_methods_mixin from '../../mixins/response_methods_mixin.js';
     import help_search_word_mixin from '../../mixins/help_search_word_mixin.js';
-    
+
     import translation_i18n_mixin from '../../mixins/translation_i18n_mixin.js';
     // components
     import ModalLearnWord from '../details/ModalLearnWord.vue';
@@ -1269,6 +1269,10 @@
             if (this.toggleSwitchTimer) {
                 clearTimeout(this.toggleSwitchTimer);
             }
+            // Очищаем таймер debounce поиска
+            if (this.searchDebounceTimer) {
+                clearTimeout(this.searchDebounceTimer);
+            }
 
             // Удаляем обработчики кнопок
             $('.btn-warning').unbind('click');
@@ -1525,7 +1529,7 @@
             async loadGenerateSentences() {
                 this.objGenerateSentences.boolAddSentences = true;
                 this.objGenerateSentences.boolLoadingIndicator = false;
-                
+
                 const data = {
                     arr_words: Array.isArray(this.arrInputsModal.new_word)
                         ? this.arrInputsModal.new_word
@@ -1537,7 +1541,7 @@
                         `${this.$http.webUrl()}ai/generate-sentences`,
                         data
                     );
-                    
+
                     if (this.checkSuccess(response)) {
                         this.objGenerateSentences.arrGenerateSentences =
                             response.data.data.sentences;
@@ -1743,7 +1747,7 @@
                 const text_type = row.type !== null ? row.type.type : '';
                 let text_description =
                     row.time_forms === null && row.type.description !== undefined
-                        ? ' - ' + row.type.description.text
+                        ? row.type.description.text
                         : '';
 
                 // типы слова
@@ -1751,50 +1755,44 @@
                     // формы времени
                     if (row.time_forms.past !== undefined) {
                         text_description =
-                            ' - Прошлое: ' +
+                            'Прошлое: ' +
                             row.time_forms.past.word +
                             ', ' +
                             row.time_forms.past.translation +
-                            ', ' +
-                            row.time_forms.past.accent +
-                            '.';
+                            '.<br>';
                         text_description +=
-                            ' Настоящее: ' +
+                            'Настоящее: ' +
                             row.time_forms.present.word +
                             ', ' +
                             row.time_forms.present.translation +
-                            ', ' +
-                            row.time_forms.present.accent +
-                            '.';
+                            '.<br>';
                         text_description +=
-                            ' Будущее: ' +
+                            'Будущее: ' +
                             row.time_forms.future.word +
                             ', ' +
                             row.time_forms.future.translation +
-                            ', ' +
-                            row.time_forms.future.accent +
                             '.';
                     }
                     // числительные
                     else if (row.time_forms.number !== undefined) {
-                        text_description = ' - ' + row.time_forms.number;
+                        text_description = row.time_forms.number;
                     }
-                    // числительные
+                    // союзы
                     else if (row.time_forms.coordinating !== undefined) {
                         if (row.time_forms.coordinating.select) {
                             text_description =
                                 row.time_forms.coordinating.name +
-                                ' - ' +
+                                '<br> - ' +
                                 row.time_forms.coordinating.about;
                         } else if (row.time_forms.correlative.select) {
                             text_description =
                                 row.time_forms.correlative.name +
-                                ' - ' +
+                                '<br> - ' +
                                 row.time_forms.correlative.about;
                         } else if (row.time_forms.subordinating.select) {
                             text_description =
                                 row.time_forms.subordinating.name +
-                                ' - ' +
+                                '<br> - ' +
                                 row.time_forms.subordinating.about;
                         }
                     }
@@ -1818,25 +1816,28 @@
                 let html = `<div style="text-align: left;">`;
 
                 if (hasTranslation || hasType || hasTimeForms) {
-                    html += `<div style="font-weight: 700;">`;
                     if (hasTranslation) {
+                        html += `<div style="font-weight: 700;">`;
                         html += row.translation.toLowerCase();
+                        if (hasDescription) {
+                            html += ' - ' + row.description.toLowerCase();
+                        }
+                        html += `</div>`;
                     }
-                    if (hasType || hasTimeForms) {
+                    if (hasType) {
+                        html += `<div style="font-weight: 700; margin-top: 5px;">`;
                         html += `<span style="${span_style};">`;
-                        if (hasType) {
-                            html += text_type.charAt(0).toUpperCase() + text_type.slice(1);
-                        }
-                        if (hasTimeForms) {
-                            html += ' ' + text_description;
-                        }
+                        html += text_type.charAt(0).toUpperCase() + text_type.slice(1);
                         html += `</span>`;
+                        html += `</div>`;
                     }
-                    html += `</div>`;
                 }
 
-                if (hasDescription) {
-                    html += row.description.toLowerCase();
+                // Отдельно отображаем time_forms для союзов с переносами строк
+                if (hasTimeForms) {
+                    html += `<div style="margin-top: 5px;">`;
+                    html += text_description;
+                    html += `</div>`;
                 }
 
                 html += `</div>`;

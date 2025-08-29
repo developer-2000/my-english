@@ -244,7 +244,8 @@ php artisan test
 
 Проект создает бекапы базы данных MySQL с пакетом `spatie/laravel-backup`. Пакет работает с такими базами - MySQL, PostgreSQL, SQLite, MongoDB.
 
-**Файл middleware:** `app/Http/Middleware/BackupDatabase.php`
+ - **Файл middleware:** `app/Http/Middleware/BackupDatabase.php`
+ - **Адрес бекапов** `\storage\app\backups\2025-02-02.sql`
 
 ## 🧩 Составные компоненты
 

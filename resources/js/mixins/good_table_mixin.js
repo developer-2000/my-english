@@ -1,10 +1,41 @@
 export default {
     data() {
         return {
-            isRequestInProgress: false,
+            requestInProgressFlag: false, // Флаг запроса на сервер
+            searchDebounceTimer: null,  // Таймер для debounce поиска
         };
     },
     methods: {
+        // Проверка флага запроса и его установка
+        checkAndSetRequestFlag() {
+            if (this.requestInProgressFlag) {
+                return false;
+            }
+            this.requestInProgressFlag = true;
+            return true;
+        },
+        // Сброс флага запроса через 1 секунду
+        resetRequestFlag() {
+            setTimeout(() => {
+                this.requestInProgressFlag = false;
+            }, 1000);
+        },
+        // Обновление параметров и запрос данных
+        updateParamsAndFetch(newProps) {
+            this.updateParams(newProps);
+            this.initialData();
+            this.resetRequestFlag();
+        },
+        // Показать кнопку очистки поиска
+        showClearSearchButton() {
+            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'flex');
+            $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
+        },
+        // Скрыть кнопку очистки поиска
+        hideClearSearchButton() {
+            $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'none');
+            $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
+        },
         // заполнить обьект данных для таблицы
         makeObjectDataForTable(list) {
             let row = '';
@@ -21,70 +52,67 @@ export default {
                 this.table.rows.push(row);
             });
         },
-        // изменение input search
+        // изменение input search с debounce
         onSearch(search) {
-            if (this.isRequestInProgress) {
-                return;
-            }
-            this.isRequestInProgress = true;
 
-            this.updateParams({ search: search.searchTerm, page: 1 });
-            this.initialData();
-
-            // Показываем кнопку очистки поиска только если есть текст поиска
-            if (search.searchTerm && search.searchTerm.trim() !== '') {
-                $('.vgt-global-search__input.vgt-pull-left span.sr-only').css('display', 'flex');
-                $('input.vgt-input.vgt-pull-left').css('margin-left', '34px');
+            // Очищаем предыдущий таймер если есть
+            if (this.searchDebounceTimer) {
+                clearTimeout(this.searchDebounceTimer);
             }
 
-            // Сброс флага через 1 секунду
-            setTimeout(() => {
-                this.isRequestInProgress = false;
-            }, 1000);
+            // Создаем новый таймер с задержкой 0.5 секунды
+            this.searchDebounceTimer = setTimeout(() => {
+
+                if (this.requestInProgressFlag) {
+                    return;
+                }
+
+                // Проверяем если поле поиска пустое после debounce
+                if (!search.searchTerm || search.searchTerm.trim() === '') {
+                    this.requestInProgressFlag = true;
+
+                    this.updateParams({search: '', page: 1});
+                    this.initialData();
+
+                    // Скрываем кнопку очистки поиска
+                    this.hideClearSearchButton();
+
+                    this.resetRequestFlag();
+                    return;
+                }
+
+                this.requestInProgressFlag = true;
+
+                this.updateParams({search: search.searchTerm, page: 1});
+                this.initialData();
+
+                // Показываем кнопку очистки поиска только если есть текст поиска
+                if (search.searchTerm && search.searchTerm.trim() !== '') {
+                    this.showClearSearchButton();
+                }
+
+                this.resetRequestFlag();
+            }, 500); // Задержка 0.5 секунды
         },
         // шаги в пагинации
         onPageChange(page) {
-            if (this.isRequestInProgress) {
+            if (!this.checkAndSetRequestFlag()) {
                 return;
             }
-            this.isRequestInProgress = true;
-
-            this.updateParams({ page: page });
-            this.initialData();
-
-            // Сброс флага через 1 секунду
-            setTimeout(() => {
-                this.isRequestInProgress = false;
-            }, 1000);
+            this.updateParamsAndFetch({page: page});
         },
         // по сколько показывать на странице
         onPerPageChange(perPage) {
-            if (this.isRequestInProgress) {
+            if (!this.checkAndSetRequestFlag()) {
                 return;
             }
-            this.isRequestInProgress = true;
-
-            this.updateParams({ page: 1, perPage: perPage });
-            this.initialData();
-
-            // Сброс флага через 1 секунду
-            setTimeout(() => {
-                this.isRequestInProgress = false;
-            }, 1000);
+            this.updateParamsAndFetch({page: 1, perPage: perPage});
         },
         onSortChange(params) {
-            if (this.isRequestInProgress) {
+            if (!this.checkAndSetRequestFlag()) {
                 return;
             }
-            this.isRequestInProgress = true;
-
-            this.updateParams({ page: 1, sort: params });
-            this.initialData();
-
-            // Сброс флага через 1 секунду
-            setTimeout(() => {
-                this.isRequestInProgress = false;
-            }, 1000);
+            this.updateParamsAndFetch({page: 1, sort: params});
         },
         updateParams(newProps) {
             this.serverParams = Object.assign({}, this.serverParams, newProps);
@@ -106,13 +134,7 @@ export default {
                     this.resetButtonClearSearch();
 
                     setTimeout(() => {
-                        // сместить search
-                        $('input.vgt-input.vgt-pull-left').css('margin-left', '0');
-                        // спрятать кнопку
-                        $('.vgt-global-search__input.vgt-pull-left span.sr-only').css(
-                            'display',
-                            'none'
-                        );
+                        this.hideClearSearchButton();
                     }, 50);
 
                     // Сбрасываем select типов слов без вызова handleSelectChange
@@ -124,6 +146,12 @@ export default {
         },
         // очистка поля поиска слов
         resetButtonClearSearch() {
+            // Очищаем таймер debounce поиска
+            if (this.searchDebounceTimer) {
+                clearTimeout(this.searchDebounceTimer);
+                this.searchDebounceTimer = null;
+            }
+
             // обратиться к кнопке зачистки поля поиска
             const clearSearchButton = document.querySelector(
                 '.vgt-global-search__input span.sr-only'
@@ -136,22 +164,20 @@ export default {
                 const searchInput = document.querySelector('.vgt-global-search__input input');
                 if (searchInput) {
                     // Создаем новое событие ввода
-                    const event = new Event('input', { bubbles: true });
+                    const event = new Event('input', {bubbles: true});
                     // Устанавливаем значение поля ввода в пустую строку
                     searchInput.value = '';
                     // Диспатчим событие ввода
                     searchInput.dispatchEvent(event);
                 }
             } else {
-                // Clear search button not found
+                console.log('⚠️ Кнопка очистки поиска не найдена');
             }
         },
         // Безопасное использование bootstrapToggle
         safeBootstrapToggle(element, action) {
             if (typeof $.fn.bootstrapToggle !== 'undefined' && element) {
                 $(element).bootstrapToggle(action);
-            } else {
-                // bootstrapToggle not available or element not found
             }
         },
     },

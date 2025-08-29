@@ -99,4 +99,6 @@ class WordController extends Controller
 
         return new ApiResponse(['message' => 'No more words available'], true, 404);
     }
+
+
 }

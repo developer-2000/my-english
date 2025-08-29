@@ -18,6 +18,11 @@ const routes = [
         name: 'PAGE_WORD_SENTENCES',
         component: () => import('../components/Pages/PageWordSentences.vue'),
     },
+    {
+        path: '/technical/page',
+        name: 'PAGE_TECHNICAL',
+        component: () => import('../components/Pages/PageTechnical.vue'),
+    },
 ];
 
 const index = new VueRouter({
