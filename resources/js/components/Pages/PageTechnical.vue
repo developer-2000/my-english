@@ -34,7 +34,7 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                <button id="but-regular-verbs" class="btn btn-success btn-sm me-2" @click="saveRegularVerbsInJSON">
+                                <button id="but-regular-verbs" class="btn btn-success btn-sm me-2" @click="serverSaveRegularVerbsInJSON">
                                     <i class="fas fa-download me-1"></i>
                                     Сохранить в JSON
                                 </button>
@@ -57,7 +57,7 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                <button id="but-irregular-verbs"  class="btn btn-success btn-sm me-2" @click="saveIrregularVerbsInJSON">
+                                <button id="but-irregular-verbs"  class="btn btn-success btn-sm me-2" @click="serverSaveIrregularVerbsInJSON">
                                     <i class="fas fa-download me-1"></i>
                                     Сохранить в JSON
                                 </button>
@@ -187,19 +187,10 @@ export default {
                 String(today.getMonth() + 1).padStart(2, '0') + '-' +
                 String(today.getDate()).padStart(2, '0');
             const verbTypeText = verbType === 'regular' ? 'правильные' : 'неправильные';
-            const fileName = `but-${verbType}-verbs-${dateString}.json`;
+            const fileName = `${verbType}-verbs-${dateString}.json`;
             const text = `Вы собираетесь заменить в базе данных ${verbTypeText} глаголы из файла \\storage\\app\\json words\\${fileName}. Подтвердите это действие.`;
 
             return await this.showConfirmDialog(verbTypeText.charAt(0).toUpperCase() + verbTypeText.slice(1) + ' глаголы', text);
-        },
-        // ===== BUTTON HANDLERS =====
-        // Сохранение правильных глаголов в JSON
-        async saveRegularVerbsInJSON() {
-            await this.serverSaveRegularVerbsInJSON();
-        },
-        // Сохранение неправильных глаголов в JSON
-        async saveIrregularVerbsInJSON() {
-            await this.serverSaveIrregularVerbsInJSON();
         },
     }
 };

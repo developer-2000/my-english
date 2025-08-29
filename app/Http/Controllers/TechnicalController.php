@@ -49,7 +49,7 @@ class TechnicalController extends Controller
         // Создаем JSON файл в storage/app/json words
         $jsonContent = json_encode($filteredVerbs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $date = date('Y-m-d');
-        $filename = 'but-regular-verbs-' . $date . '.json';
+        $filename = 'regular-verbs-' . $date . '.json';
         $filepath = storage_path('app/json words/' . $filename);
 
         // Создаем директорию если не существует
@@ -57,12 +57,27 @@ class TechnicalController extends Controller
             mkdir(dirname($filepath), 0755, true);
         }
 
-        // Записываем файл
+        // 1 Записываем .JSON файл
         $result = file_put_contents($filepath, $jsonContent);
+        if ($result === false) {
+            return new ApiResponse([
+                'message' => 'Ошибка при создании .JSON файла ' . $filename
+            ], true);
+        }
+
+        // 2 Записываем .TXT файл
+        $txtFilename = 'words-regular-verbs-' . $date . '.txt';
+        $txtResult = $this->createWordsTextFile($regularVerbs, $txtFilename);
+        if (!$txtResult) {
+            return new ApiResponse([
+                'message' => 'Ошибка при создании .TXT файла ' . $txtFilename
+            ], true);
+        }
 
         return new ApiResponse([
-            'message' => 'Файл ' . $filename . ' успешно создан в storage/app/json words/',
-            'file_name' => $filename
+            'message' => 'Файлы ' . $filename . ' и ' . $txtFilename . ' успешно созданы в storage/app/json words/',
+            'file_name' => $filename,
+            'txt_file_name' => $txtFilename
         ]);
     }
 
@@ -96,7 +111,7 @@ class TechnicalController extends Controller
         // Создаем JSON файл в storage/app/json words
         $jsonContent = json_encode($filteredVerbs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $date = date('Y-m-d');
-        $filename = 'but-irregular-verbs-' . $date . '.json';
+        $filename = 'irregular-verbs-' . $date . '.json';
         $filepath = storage_path('app/json words/' . $filename);
 
         // Создаем директорию если не существует
@@ -104,12 +119,27 @@ class TechnicalController extends Controller
             mkdir(dirname($filepath), 0755, true);
         }
 
-        // Записываем файл
+        // 1 Записываем .JSON файл
         $result = file_put_contents($filepath, $jsonContent);
+        if ($result === false) {
+            return new ApiResponse([
+                'message' => 'Ошибка при создании .JSON файла ' . $filename
+            ], true);
+        }
+
+        // 2 Записываем .TXT файл
+        $txtFilename = 'words-irregular-verbs-' . $date . '.txt';
+        $txtResult = $this->createWordsTextFile($irregularVerbs, $txtFilename);
+        if (!$txtResult) {
+            return new ApiResponse([
+                'message' => 'Ошибка при создании .TXT файла ' . $txtFilename
+            ], true);
+        }
 
         return new ApiResponse([
-            'message' => 'Файл ' . $filename . ' успешно создан в storage/app/json words/',
-            'file_name' => $filename
+            'message' => 'Файлы ' . $filename . ' и ' . $txtFilename . ' успешно созданы в storage/app/json words/',
+            'file_name' => $filename,
+            'txt_file_name' => $txtFilename
         ]);
     }
 
@@ -123,7 +153,7 @@ class TechnicalController extends Controller
         try {
             // Получаем сегодняшнюю дату в формате Y-m-d
             $date = date('Y-m-d');
-            $filename = 'but-regular-verbs-' . $date . '.json';
+            $filename = 'regular-verbs-' . $date . '.json';
 
             // 1 Загружаем данные из JSON файла
             $result = $this->loadVerbsFromJsonFile($filename);
@@ -175,7 +205,7 @@ class TechnicalController extends Controller
         try {
             // Получаем сегодняшнюю дату в формате Y-m-d
             $date = date('Y-m-d');
-            $filename = 'but-irregular-verbs-' . $date . '.json';
+            $filename = 'irregular-verbs-' . $date . '.json';
 
             // 1 Загружаем данные из JSON файла
             $result = $this->loadVerbsFromJsonFile($filename);
@@ -298,5 +328,23 @@ class TechnicalController extends Controller
                 'message' => 'Ошибка при сохранении глаголов: ' . $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Создать текстовый файл со словами через запятую
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $words
+     * @param string $filename
+     * @return bool
+     */
+    private function createWordsTextFile($words, string $filename): bool
+    {
+        $wordsString = $words->pluck('word')->map(function($word) {
+            return strtolower($word);
+        })->implode(', ');
+
+        $filepath = storage_path('app/json words/' . $filename);
+
+        return file_put_contents($filepath, $wordsString) !== false;
     }
 }
