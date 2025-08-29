@@ -2,4 +2,5 @@
 !public/
 !backups/
 !json words/
+!json words/*.json
 !.gitignore

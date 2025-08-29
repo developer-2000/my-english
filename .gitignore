@@ -13,3 +13,7 @@ yarn-error.log
 /.idea
 /.vscode
 /public/build
+
+# Исключения для определенных папок в storage
+!storage/app/backups/
+!storage/app/json words/
