@@ -1756,21 +1756,27 @@
                     if (row.time_forms.past !== undefined) {
                         text_description =
                             'Прошлое: ' +
-                            row.time_forms.past.word +
+                            '<strong>' + row.time_forms.past.word + '</strong>' +
                             ', ' +
                             row.time_forms.past.translation +
+                            ', ' +
+                            '<strong>' + row.time_forms.past.accent + '</strong>' +
                             '.<br>';
                         text_description +=
                             'Настоящее: ' +
-                            row.time_forms.present.word +
+                            '<strong>' + row.time_forms.present.word + '</strong>' +
                             ', ' +
                             row.time_forms.present.translation +
+                            ', ' +
+                            '<strong>' + row.time_forms.present.accent + '</strong>' +
                             '.<br>';
                         text_description +=
                             'Будущее: ' +
-                            row.time_forms.future.word +
+                            '<strong>' + row.time_forms.future.word + '</strong>' +
                             ', ' +
                             row.time_forms.future.translation +
+                            ', ' +
+                            '<strong>' + row.time_forms.future.accent + '</strong>' +
                             '.';
                     }
                     // числительные
